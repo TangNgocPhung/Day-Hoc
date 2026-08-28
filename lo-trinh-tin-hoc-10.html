@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lộ Trình Tin Học 10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #EFF1EC;
+    --surface: #FFFFFF;
+    --surface-2: #F6F7F1;
+    --ink: #232823;
+    --ink-muted: #5B6259;
+    --ink-faint: #8B9186;
+    --rule: #DEE2D5;
+    --border: #D6DACC;
+    --on-accent: #FFFFFF;
+
+    --accent-1: #34618F;
+    --accent-2: #B5762A;
+    --accent-exam: #A33B3B;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+    --shadow: 0 10px 30px -14px rgba(35, 40, 35, 0.28);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1B1D18;
+      --surface: #232620;
+      --surface-2: #292C24;
+      --ink: #ECEEE5;
+      --ink-muted: #ABB2A0;
+      --ink-faint: #767C6B;
+      --rule: #363A30;
+      --border: #383C31;
+      --on-accent: #15160F;
+
+      --accent-1: #82B2E1;
+      --accent-2: #E3A868;
+      --accent-exam: #E38080;
+
+      --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1B1D18;
+    --surface: #232620;
+    --surface-2: #292C24;
+    --ink: #ECEEE5;
+    --ink-muted: #ABB2A0;
+    --ink-faint: #767C6B;
+    --rule: #363A30;
+    --border: #383C31;
+    --on-accent: #15160F;
+
+    --accent-1: #82B2E1;
+    --accent-2: #E3A868;
+    --accent-exam: #E38080;
+
+    --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 2rem) 4rem;
+  }
+
+  .masthead { max-width: 720px; margin-bottom: 1.75rem; }
+
+  .masthead-eyebrow {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    margin-bottom: 0.85rem;
+  }
+
+  .masthead-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2rem, 4.6vw, 2.85rem);
+    line-height: 1.05;
+    margin: 0 0 0.6rem;
+    text-wrap: balance;
+  }
+
+  .masthead-sub {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    margin: 0;
+    max-width: 62ch;
+  }
+
+  .exam-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .exam-pill {
+    appearance: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--accent-exam) 45%, var(--border));
+    background: color-mix(in srgb, var(--accent-exam) 9%, var(--surface));
+    color: var(--ink);
+    font-family: var(--font-body);
+    transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .exam-pill:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--accent-exam) 16%, var(--surface)); }
+  .exam-pill:focus-visible { outline: 2px solid var(--accent-exam); outline-offset: 2px; }
+
+  .exam-pill-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent-exam);
+  }
+
+  .exam-pill-date {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 1.1rem; align-items: center; }
+
+  .legend-item { display: flex; align-items: center; gap: 0.45rem; font-size: 0.82rem; color: var(--ink-muted); }
+
+  .legend-swatch { width: 0.65rem; height: 0.65rem; border-radius: 3px; flex: 0 0 auto; }
+
+  .controls { display: flex; gap: 0.5rem; }
+
+  .ctrl-btn {
+    appearance: none;
+    cursor: pointer;
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--ink-muted);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+  }
+
+  .ctrl-btn:hover { color: var(--ink); border-color: color-mix(in srgb, var(--ink) 30%, var(--border)); }
+  .ctrl-btn:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+
+  .canvas-wrap {
+    position: relative;
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .connectors { position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible; }
+
+  .tree { position: relative; z-index: 1; width: max-content; min-width: 100%; }
+
+  .node { display: flex; align-items: flex-start; gap: 1.85rem; position: relative; }
+
+  .node-card {
+    --accent: var(--ink-faint);
+    flex: 0 0 auto;
+    width: 300px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+  }
+
+  .node-card.clickable { cursor: pointer; }
+  .node-card.clickable:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+  .node-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .node-card.flash {
+    animation: flashPulse 1.1s ease;
+  }
+  @keyframes flashPulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-exam) 55%, transparent); }
+    100% { box-shadow: 0 0 0 14px color-mix(in srgb, var(--accent-exam) 0%, transparent); }
+  }
+
+  .node-card-root {
+    width: 260px;
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .node-card-root .node-title { color: var(--surface); }
+  .node-card-root .node-sub { color: color-mix(in srgb, var(--surface) 70%, var(--ink)); }
+  .node-card-root .node-count { color: color-mix(in srgb, var(--surface) 55%, var(--ink)); }
+
+  .node-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+
+  .node-kicker {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .node-title {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.98rem;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .node-card-root .node-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; }
+
+  .node-sub {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--ink-muted);
+    margin-top: 0.35rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .node-count {
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    margin-top: 0.3rem;
+  }
+
+  .chevron {
+    flex: 0 0 auto;
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--accent);
+    transition: transform 0.25s ease;
+  }
+  .node-card.open .chevron { transform: rotate(90deg); }
+
+  .exam-badge {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--accent-exam) 13%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent-exam) 38%, var(--border));
+  }
+  .exam-badge-label { font-size: 0.72rem; font-weight: 700; color: var(--accent-exam); }
+  .exam-badge-date { font-family: var(--font-mono); font-size: 0.74rem; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+
+  .topic-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+  .topic-dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--accent); }
+
+  .node-marker .node-card {
+    background: transparent;
+    border-style: dashed;
+    padding: 0.6rem 0.9rem;
+    width: 300px;
+  }
+  .node-marker .node-title { font-weight: 500; font-style: italic; color: var(--ink-faint); font-size: 0.86rem; }
+  .node-marker .node-sub { margin-top: 0.2rem; }
+
+  .children-grid {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.38s cubic-bezier(.4,0,.2,1);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .children-grid.open { grid-template-rows: 1fr; }
+  .children-inner { overflow: hidden; min-height: 0; }
+  .children-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.15rem 0.15rem 0.15rem 0;
+  }
+
+  .lesson-detail {
+    width: 360px;
+    margin-top: 0.65rem;
+    padding-top: 0.65rem;
+    border-top: 1px dashed var(--border);
+  }
+  .lesson-detail ul { margin: 0 0 0.55rem; padding-left: 1.1rem; }
+  .lesson-detail li { font-size: 0.82rem; line-height: 1.55; color: var(--ink-muted); margin-bottom: 0.25rem; }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.55rem; }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink-faint);
+  }
+
+  .detail-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    margin-bottom: 0.2rem;
+  }
+  .detail-block { margin-bottom: 0.55rem; }
+  .detail-block p { margin: 0; font-size: 0.82rem; line-height: 1.55; color: var(--ink-muted); }
+  .detail-block:last-child { margin-bottom: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .children-grid, .chevron, .node-card, .exam-pill { transition: none !important; animation: none !important; }
+  }
+
+  @media (max-width: 640px) {
+    .node-card, .node-marker .node-card { width: 250px; }
+  }
+</style>
+</head>
+<body>
+
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="icon-chevron" viewBox="0 0 24 24">
+    <polyline points="9,5 16,12 9,19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+  </symbol>
+</svg>
+
+<div class="page">
+  <header class="masthead">
+    <span class="masthead-eyebrow">SƠ ĐỒ TƯ DUY · TỰ ĐỘNG DỰNG TỪ KẾ HOẠCH BÀI DẠY</span>
+    <h1 class="masthead-title">Lộ Trình Tin Học 10</h1>
+    <p class="masthead-sub" id="mastheadSub"></p>
+  </header>
+
+  <section class="exam-strip" id="examStrip" aria-label="Lịch kiểm tra định kỳ dự kiến"></section>
+
+  <div class="toolbar">
+    <div class="legend">
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--accent-1)"></span>Học kỳ 1 (GHK1 · CHK1)</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--accent-2)"></span>Học kỳ 2 (GHK2 · CHK2)</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--accent-exam)"></span>Kiểm tra định kỳ</span>
+    </div>
+    <div class="controls">
+      <button class="ctrl-btn" id="expandAllBtn" type="button">Mở rộng tất cả</button>
+      <button class="ctrl-btn" id="collapseAllBtn" type="button">Thu gọn tất cả</button>
+    </div>
+  </div>
+
+  <div class="canvas-wrap" id="canvasWrap">
+    <svg class="connectors" id="connectors"></svg>
+    <div class="tree" id="tree"></div>
+  </div>
+</div>
+
+<script>
+const DATA = {"meta": {"title": "Tin học 10", "subtitle": "Kế hoạch bài dạy 2026–2027", "span": "07/9/2026 – 29/05/2027", "lessonCount": 29}, "topics": {"A": "Máy tính và xã hội tri thức", "B": "Mạng máy tính và Internet", "D": "Đạo đức, pháp luật và văn hoá trong môi trường số", "E": "Ứng dụng tin học", "F": "Giải quyết vấn đề với sự trợ giúp của máy tính", "G": "Hướng nghiệp với tin học"}, "periods": [{"id": "p-ghk1", "code": "GHK1", "title": "Trước kiểm tra giữa kỳ 1", "exam": {"label": "Ôn tập và kiểm tra giữa học kỳ 1", "date": "26-31/10/2026", "tiet": "13, 14", "tuan": 7}, "items": [{"type": "lesson", "id": "l-1", "title": "Bài 16 Ngôn ngữ lập trình bậc cao và Python", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "07-12/9/2026", "tiet": "1, 2", "tuan": 1, "yccd": ["– Viết và thực hiện được một vài chương trình Python đơn giản có sử dụng biểu thức số học", "– Bước đầu nhận thấy được cách báo lỗi của Python", "– Biết được Python dùng màu sắc để hỗ trợ người dùng", "– Viết được câu lệnh nhập dữ liệu là một dòng chữ"], "nls": ["3.4.NC1a", "5.1.NC1a"], "ai": ["Nhận biết vai trò của ngôn ngữ lập trình trong phát triển AI; hiểu Python là công cụ phổ biến để xây dựng các ứng dụng AI."], "khung": ["10.C3.2: Trình bày được ví dụ mô tả một số công nghệ để thiết kế và tạo AI."]}, {"type": "lesson", "id": "l-2", "title": "Bài 17 Biến và lệnh gán", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "14-19/9/2026", "tiet": "3, 4", "tuan": 2, "yccd": ["– Biết được hai kiểu dữ liệu số trong lập trình: kiểu số nguyên, kiểu số thực", "– Biết được cách nhập dữ liệu số trong Python"], "nls": ["3.4.NC1a"], "ai": ["Hiểu vai trò của biến trong lưu trữ dữ liệu; liên hệ biến với việc biểu diễn dữ liệu trong hệ thống AI."], "khung": ["10.C4.1 – Phân tích được các dạng dữ liệu được sử dụng để huấn luyện AI."]}, {"type": "lesson", "id": "l-3", "title": "Bài 18 Các lệnh vào ra đơn giản", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "21-26/9/2026", "tiet": "5, 6", "tuan": 3, "yccd": ["– Biết được cách đưa ra kết quả trong Python", "– Biết khái niệm hằng trong chương trình."], "nls": ["3.4.NC1a"], "ai": ["Hiểu quá trình nhập dữ liệu đầu vào và xuất kết quả đầu ra; liên hệ với cấu trúc đầu vào – xử lí – đầu ra của hệ thống AI."], "khung": ["10.D2.1 – Mô tả được các thành phần cơ bản của hệ thống AI."]}, {"type": "lesson", "id": "l-4", "title": "Bài 19 Câu lệnh rẽ nhánh if", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "28/9-03/10/2026", "tiet": "7, 8", "tuan": 4, "yccd": ["– Biết được loại cấu trúc rẽ nhánh để mô tả thuật toán: rẽ nhánh thiếu, đủ, lồng (if, else, elif)"], "nls": ["3.4.NC1a", "5.1.NC1b"], "ai": ["Hiểu cấu trúc rẽ nhánh trong thuật toán; liên hệ với cách AI đưa ra quyết định dựa trên điều kiện và dữ liệu."], "khung": ["10.D2.1 – Mô tả được các thành phần cơ bản của hệ thống AI."]}, {"type": "lesson", "id": "l-5", "title": "Bài 20 Câu lệnh lặp for", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "05-10/10/2026", "tiet": "9, 10", "tuan": 5, "yccd": ["– Viết được chương trình đơn giản có sử dụng lệnh lặp for", "– Viết được chương trình đơn giản có sử dụng câu lệnh lặp và rẽ nhánh"], "nls": ["3.4.NC1a"], "ai": ["Phân tích cách thuật toán AI xử lí dữ liệu theo tập; hiểu vai trò của lệnh lặp trong quá trình xử lí dữ liệu."], "khung": ["10.D2.1 – Mô tả được các thành phần cơ bản của hệ thống AI."]}, {"type": "lesson", "id": "l-6", "title": "Bài 21 Câu lệnh lặp while", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "12-17/10/2026", "tiet": "11, 12", "tuan": 6, "yccd": ["– Biết được có hai loại cấu trúc lặp để mô tả thuật toán: lặp với số lần Biết trước và lặp với số lần không Biết trước", "– Viết được chương trình đơn giản có sử dụng câu lệnh lặp while/for"], "nls": ["3.4.NC1a", "5.1.NC1b"], "ai": ["Hiểu cơ chế lặp có điều kiện; liên hệ với quá trình AI lặp xử lí cho đến khi đạt yêu cầu."], "khung": ["10.D2.1 – Mô tả được các thành phần cơ bản của hệ thống AI."]}]}, {"id": "p-chk1", "code": "CHK1", "title": "Trước kiểm tra cuối kỳ 1", "exam": {"label": "Ôn tập & Kiểm tra học kỳ 1", "date": "21-26/12/2026", "tiet": "29, 30", "tuan": 15}, "items": [{"type": "lesson", "id": "l-7", "title": "Bài 22 Kiểu dữ liệu danh sách", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "02-07/11/2026", "tiet": "15, 16", "tuan": 8, "yccd": ["– Biết được kiểu dữ liệu mảng là kiểu dữ liệu có cấu trúc thường gặp trong các ngôn ngữ lập trình bậc cao", "– Biết được kiểu danh sách (list) trong Python là kiểu dữ liệu có cấu trúc như kiểu mảng", "– Khởi tạo và truy cập được tới các phần tử của danh sách", "– Kiểu được một số hàm xử lí danh sách thường dùng"], "nls": ["3.4.NC1a"], "ai": ["Hiểu được vai trò của dữ liệu trong AI; biết tổ chức dữ liệu dạng danh sách làm đầu vào cho các bài toán AI đơn giản."], "khung": ["10.C4.1 - Phân tích được sự ảnh hưởng của chất lượng dữ liệu đến chất lượng AI; Phân tích được các dạng dữ liệu được sử dụng để huấn luyện AI."]}, {"type": "lesson", "id": "l-8", "title": "Bài 23 Một số lệnh làm việc với dữ liệu danh sách", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "09-14/11/2026", "tiet": "17, 18", "tuan": 9, "yccd": ["– Viết được chương trình đơn giản sử dụng kiểu dữ liệu danh sách", "– Làm quen và khai thác được một số hàm xử lí danh sách"], "nls": ["3.4.NC1a", "5.1.NC1b"], "ai": ["Hiểu vai trò của dữ liệu dạng danh sách trong AI; biết sử dụng các lệnh xử lí danh sách để tiền xử lí và tổ chức dữ liệu phục vụ bài toán AI đơn giản."], "khung": ["10.C4.1 - Phân tích được sự ảnh hưởng của chất lượng dữ liệu đến chất lượng AI; Phân tích được các dạng dữ liệu được sử dụng để huấn luyện AI."]}, {"type": "lesson", "id": "l-9", "title": "Bài 24 Xâu Ký tự", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "16-21/11/2026", "tiet": "19, 20", "tuan": 10, "yccd": ["– Biết dữ liệu kiểu xâu", "– Biết cách trích xâu con từ xâu cho trước", "– Biết các phép xử lí xâu thường dùng"], "nls": ["3.4.NC1a"], "ai": ["Phân tích được cách AI xử lí dữ liệu văn bản (xâu kí tự): tách, trích xuất, làm sạch văn bản để phục vụ các bài toán xử lí ngôn ngữ tự nhiên (NLP)."], "khung": ["10.C4.1 - Phân tích được sự ảnh hưởng của chất lượng dữ liệu đến chất lượng AI; Phân tích được các dạng dữ liệu được sử dụng để huấn luyện AI."]}, {"type": "lesson", "id": "l-10", "title": "Bài 25 Một số lệnh làm việc với xâu", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "23-28/11/2026", "tiet": "21, 22", "tuan": 11, "yccd": ["– Tìm và xóa được kí tự trong xâu", "– Tách được xâu con, thay thế được xâu con.", "– Đếm được số lần xuất hiện kí tự cho trước trong xâu"], "nls": ["3.4.NC1a", "5.1.NC1b"], "ai": ["Liên hệ các phép xử lí xâu với quá trình tiền xử lí dữ liệu văn bản trong AI: chuẩn hoá dữ liệu, loại bỏ nhiễu, đếm tần suất từ/kí tự."], "khung": ["10.C4.1 - Phân tích được sự ảnh hưởng của chất lượng dữ liệu đến chất lượng AI; Phân tích được các dạng dữ liệu được sử dụng để huấn luyện AI."]}, {"type": "lesson", "id": "l-11", "title": "Bài 26 Hàm trong python", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "30/11-05/12/2026", "tiet": "23, 24", "tuan": 12, "yccd": ["– Rèn luyện được kĩ năng viết chương trình có khai báo và gọi hàm", "– Tìm hiểu và sử dụng được hàm time có trong thư viện"], "nls": ["3.4.NC1a"], "ai": ["Nhận biết vai trò của hàm trong việc xây dựng và tái sử dụng thuật toán; liên hệ hàm như các mô-đun xử lí trong hệ thống AI."], "khung": ["10.D2.1 - Mô tả được các thành phần cơ bản của hệ thống AI (dữ liệu, mô hình, thuật toán, đầu ra, phản hồi) phù hợp với nhiệm vụ cụ thể."]}, {"type": "lesson", "id": "l-12", "title": "Bài 27 Tham số của Hàm", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "07-12/12/2026", "tiet": "25, 26", "tuan": 13, "yccd": ["– Rèn luyện được kĩ năng viết chương trình có khai báo và gọi hàm", "– Tìm hiểu và sử dụng được hàm time có trong thư việnhức liên môn."], "nls": ["3.4.NC1a", "5.3.NC1a"], "ai": ["Hiểu tham số như dữ liệu đầu vào của mô-đun xử lí; nhận biết vai trò của tham số trong điều chỉnh hoạt động của hệ thống AI."], "khung": ["10.D2.1 - Mô tả được các thành phần cơ bản của hệ thống AI (dữ liệu, mô hình, thuật toán, đầu ra, phản hồi) phù hợp với nhiệm vụ cụ thể."]}, {"type": "marker", "title": "Ôn tập & Trường KTTT", "date": "14-19/12/2026", "tuan": 14}]}, {"id": "p-ghk2", "code": "GHK2", "title": "Trước kiểm tra giữa kỳ 2", "exam": {"label": "Ôn tập và kiểm tra giữa học kỳ 2", "date": "8-13/3/2027", "tiet": "47, 48", "tuan": 6}, "items": [{"type": "lesson", "id": "l-13", "title": "Bài 28 Phạm vi của biến", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "28/12/2026-02/01/2027", "tiet": "31, 32", "tuan": 16, "yccd": ["– Đọc hiểu được chương trình đơn giản."], "nls": ["3.4.NC1a", "5.1.NC1a"], "ai": ["Hiểu phạm vi của biến trong chương trình; liên hệ với việc quản lí dữ liệu và tham số trong các mô-đun của hệ thống AI."], "khung": ["10.D2.1 - Mô tả được các thành phần cơ bản của hệ thống AI (dữ liệu, mô hình, thuật toán, đầu ra, phản hồi) phù hợp với nhiệm vụ cụ thể."]}, {"type": "lesson", "id": "l-14", "title": "Bài 29 Nhận biết lỗi chương trình", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "04-09/01/2027", "tiet": "33, 34", "tuan": 17, "yccd": ["– Biết và khắc phục được một số lỗi thường gặp khi viết chương trình", "– Biết cách sử dụng công cụ gỡ lỗi trong Python để truy vết tìm lỗi nhằm sửa lỗi trong chương trình"], "nls": ["5.1.NC1a", "3.4.NC1a"], "ai": ["Nhận biết lỗi trong chương trình; liên hệ với việc phát hiện sai sót trong mô hình AI (dữ liệu sai, thuật toán sai, kết quả sai)."], "khung": ["10.B2.1 - Nêu được ví dụ về các hành vi hoặc sự cố do AI gây ra như vi phạm quy định của nhà trường hoặc các văn bản pháp luật liên quan đến sử dụng công nghệ thông tin."]}, {"type": "lesson", "id": "l-15", "title": "Bài 30 Kiểm thử và gỡ lỗi chương trình", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "11-16/01/2027", "tiet": "35, 36", "tuan": 18, "yccd": ["– Biết được một vài phương pháp đơn giản kiểm thử chương trình", "– Biết được một vài cách gỡ lỗi đơn giản một chương trình"], "nls": ["3.4.NC1a"], "ai": ["Hiểu vai trò của kiểm thử và gỡ lỗi; liên hệ với việc đánh giá, cải thiện độ chính xác của hệ thống AI."], "khung": ["10.B2.1 - Nêu được ví dụ về các hành vi hoặc sự cố do AI gây ra như vi phạm quy định của nhà trường hoặc các văn bản pháp luật liên quan đến sử dụng công nghệ thông tin."]}, {"type": "lesson", "id": "l-16", "title": "Bài 31 Thực hành viết chương trình đơn giản", "topic": "F", "topicName": "GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH", "date": "18-23/01/2027", "tiet": "37, 38", "tuan": 1, "yccd": ["– Thực hành viết chương trình đơn giản bằng ngôn ngữ Python", "– Thực hành được các bước gỡ rối chương trình bằng công cụ debug – thiết lập điểm dừng và chạy theo thừng lệnh."], "nls": ["3.4.NC1a"], "ai": ["Vận dụng kiến thức lập trình để xây dựng chương trình đơn giản; liên hệ với việc tạo ra các mô hình/ứng dụng AI cơ bản."], "khung": ["10.D1.1 - Nêu được ví dụ cụ thể, xác định nhiệm vụ hoặc mục tiêu cụ thể mà một hệ thống AI cần thực hiện, nêu được mối liên hệ giữa mục tiêu đó với các thành phần chính của hệ thống."]}, {"type": "lesson", "id": "l-17", "title": "Bài 12 Phần mềm thiết kế đồ hoạ", "topic": "E", "topicName": "ỨNG DỤNG TIN HỌC", "date": "25-30/01/2027", "tiet": "39, 40", "tuan": 2, "yccd": ["– Sử dụng được một số chức năng cơ bản của phần mềm thiết kế đồ hoạ."], "nls": ["3.1.NC1a", "5.2.NC1a", "5.2.NC1b"], "ai": ["Nhận biết vai trò của AI trong các phần mềm thiết kế đồ hoạ (tự động gợi ý, chỉnh sửa hình ảnh); bước đầu sử dụng công cụ có tích hợp AI để hỗ trợ tạo sản phẩm đồ hoạ."], "khung": ["10.C2.2 - Nêu được ví dụ một số trường hợp sử dụng AI hỗ trợ quá trình học tập."]}, {"type": "marker", "title": "NGHỈ TẾT", "date": "01-06/02/2027", "tuan": null}, {"type": "marker", "title": "NGHỈ TẾT", "date": "08-13/02/2027", "tuan": null}, {"type": "lesson", "id": "l-18", "title": "Bài 13 Bổ sung các đối tượng đồ họa", "topic": "E", "topicName": "ỨNG DỤNG TIN HỌC", "date": "15-20/02/2027", "tiet": "41, 42", "tuan": 3, "yccd": ["– Sử dụng được một số chức năng cơ bản về các đối tượng đồ họa"], "nls": ["3.1.NC1a", "3.2.NC1a", "5.2.NC1a", "5.2.NC1b"], "ai": ["Hiểu cách AI hỗ trợ tạo và chỉnh sửa đối tượng đồ hoạ (tạo hình, nhận diện hình ảnh); biết vận dụng công cụ AI để hoàn thiện sản phẩm thiết kế."], "khung": ["10.C3.2 - Trình bày được ví dụ mô tả một số công nghệ để thiết kế và tạo AI."]}, {"type": "lesson", "id": "l-19", "title": "Bài 14 Làm việc các đối tượng đường và văn bản", "topic": "E", "topicName": "ỨNG DỤNG TIN HỌC", "date": "22-27/2/2027", "tiet": "43, 44", "tuan": 4, "yccd": ["– Sử dụng được một số chức năng cơ bản về các đối tượng đường và văn bản"], "nls": ["3.1.NC1a", "3.2.NC1a", "5.2.NC1a", "5.2.NC1b"], "ai": ["Hiểu cách AI hỗ trợ xử lí và nhận diện đối tượng hình học và văn bản (OCR, nhận diện chữ); biết sử dụng công cụ có tích hợp AI để chỉnh sửa và tạo nội dung đồ hoạ."], "khung": ["10.C3.2 - Trình bày được ví dụ mô tả một số công nghệ để thiết kế và tạo AI."]}, {"type": "lesson", "id": "l-20", "title": "Bài 15 Hoàn thiện hình ảnh đồ họa", "topic": "E", "topicName": "ỨNG DỤNG TIN HỌC", "date": "1-6/3/2027", "tiet": "45, 46", "tuan": 5, "yccd": ["– Tạo được sản phẩm số đơn giản, hữu ích và thực tế như thiết kế logo, tạo banner, topic quảng cáo, băng-rôn, áp phích, poster và thiệp chúc mừng,..."], "nls": ["3.1.NC1a", "3.2.NC1a", "5.2.NC1a", "5.2.NC1b"], "ai": ["Vận dụng công cụ AI để hoàn thiện sản phẩm đồ hoạ (tự động chỉnh sửa, tạo nội dung, tối ưu hình ảnh); bước đầu đánh giá chất lượng sản phẩm do AI hỗ trợ."], "khung": ["10.C2.2 - Nêu được ví dụ một số trường hợp sử dụng AI hỗ trợ quá trình học tập."]}]}, {"id": "p-chk2", "code": "CHK2", "title": "Trước kiểm tra cuối kỳ 2", "exam": {"label": "Ôn tập và Kiểm tra cuối học kỳ 2", "date": "26-29/04/2027", "tiet": "61, 62", "tuan": 13}, "items": [{"type": "lesson", "id": "l-21", "title": "Bài 01 Thông tin và xử lí thông tin", "topic": "A", "topicName": "MÁY TÍNH VÀ XÃ HỘI TRI THỨC", "date": "15-20/03/2027", "tiet": "49, 50", "tuan": 7, "yccd": ["– Phân biệt được thông tin và dữ liệu, nêu được ví dụ minh hoạ.", "– Chuyển đổi được giữa các đơn vị lưu trữ thông tin: B, KB, MB,…", "– Nêu được sự ưu việt của việc lưu trữ, xử lí và truyền thông tin bằng thiết bị số."], "nls": ["1.1.NC1a"], "ai": ["Nhận biết vai trò của dữ liệu trong hệ thống AI; hiểu quá trình thu thập, lưu trữ và xử lí thông tin là nền tảng cho hoạt động của AI."], "khung": ["10.C4.1 - Phân tích được sự ảnh hưởng của chất lượng dữ liệu đến chất lượng AI; Phân tích được các dạng dữ liệu được sử dụng để huấn luyện AI."]}, {"type": "lesson", "id": "l-22", "title": "Bài 02 Vai trò của thiết bị thông minh và tin học đối với xã hội", "topic": "A", "topicName": "MÁY TÍNH VÀ XÃ HỘI TRI THỨC", "date": "22-27/03/2027", "tiet": "51, 52", "tuan": 8, "yccd": ["– Trình bày được những đóng góp cơ bản của tin học đối với xã hội, nêu được một số mốc thời gian, neeu được ví dụ minh hoạ.", "– Nhận biết được một vài thiết bị số thông dụng khác ngoài máy tính để bàn và laptop, giải thích được các thiết bị đó cũng là những hệ thống xử lí thông tin.", "– Vai trò của máy tính và các thiết bị thông minh đối với sự phát triển của xã hội và cuộc cách mạng công nghiệp 4.0.", "– Nêu được ví dụ cụ thể về thiết bị thông minh. Giải thích được vai trò của những thiết bị"], "nls": ["2.1.NC1b", "2.1.NC1a"], "ai": ["Phân tích vai trò của AI trong các thiết bị thông minh và tác động của AI đối với xã hội; nhận biết lợi ích và ảnh hưởng của AI trong cuộc sống."], "khung": ["10.A1.1 - Thực hành xác định được vai trò của con người trong sử dụng, vận hành, tuỳ chỉnh một hệ thống AI cụ thể."]}, {"type": "lesson", "id": "l-23", "title": "Bài 07 Thực hành sử dụng thiết bị số thông dụng", "topic": "A", "topicName": "MÁY TÍNH VÀ XÃ HỘI TRI THỨC", "date": "29/03-03/04/2027", "tiet": "53, 54", "tuan": 9, "yccd": ["– Khởi động được một số thiết bị số thông dụng, sử dụng được các tệp dữ liệu, các chức năng và phần mềm ứng dụng cơ bản cài sẵn trên các thiết bị đó."], "nls": ["2.2.NC1a", "2.1.NC1a"], "ai": ["Biết sử dụng một số thiết bị số có tích hợp AI (trợ lý ảo, nhận diện giọng nói); nhận thức được cách AI hỗ trợ người dùng trong thực tế."], "khung": ["10.C2.2 - Nêu được ví dụ một số trường hợp sử dụng AI hỗ trợ quá trình học tập."]}, {"type": "lesson", "id": "l-24", "title": "Bài 08 Mạng máy tính trong cuộc sống hiện đại", "topic": "B", "topicName": "MẠNG MÁY TÍNH VÀ INTERNET", "date": "05-10/04/2027", "tiet": "55, 56", "tuan": 10, "yccd": ["– Trình bày được những thay đổi về chất lượng cuộc sống, phương thức học tập và làm việc trong xã hội mà ở đó mạng máy tính được sử dụng phổ biến.", "– So sánh được mạng LAN và Internet.", "– Nêu được một số dịch vụ cụ thể mà Điện toán đám mây cung cấp cho người dùng.", "– Nêu được khái niệm Internet vạn vật (IoT).", "– Nêu được ví dụ cụ thể về thay đổi trong cuộc sống mà IoT đem lại. Phát biểu ý kiến cá nhân về ích lợi của IoT."], "nls": ["1.3.NC1a", "2.2.NC1a"], "ai": ["Nhận biết vai trò của AI trong các hệ thống mạng và Internet (IoT, điện toán đám mây); hiểu cách AI khai thác dữ liệu từ mạng để phục vụ đời sống."], "khung": ["10.C2.1 - Xác định các vấn đề thực tế có thể ứng dụng AI để thực hiện; Xác định được các yêu cầu cần có đối với việc ứng dụng AI thực hiện nhiệm vụ cụ thể; Liệt kê được tên các ứng dụng AI theo các tính năng của hệ thống."]}, {"type": "lesson", "id": "l-25", "title": "Bài 09 An toàn trên không gian mạng", "topic": "B", "topicName": "MẠNG MÁY TÍNH VÀ INTERNET", "date": "12-17/04/2027", "tiet": "57, 58", "tuan": 11, "yccd": ["– Nêu được những nguy cơ và tác hại nếu tham gia các hoạt động trên Internet một cách bất cẩn và thiếu hiểu biết. Trình bày được một số cách đề phòng những tác hại đó.", "– Nêu được một vài cách phòng vệ khi bị bắt nạt trên mạng.", "– Biết cách tự bảo vệ dữ liệu của cá nhân.", "– Trình bày được sơ lược về phần mềm độc hại."], "nls": ["2.6.NC1b", "4.1.NC1a", "4.1.NC1b", "4.1.NC1c", "4.1.NC1d", "4.2.NC1a"], "ai": ["Hiểu các rủi ro khi sử dụng AI và Internet (lộ dữ liệu, tin giả, lừa đảo); biết cách sử dụng AI an toàn, có trách nhiệm trong môi trường số."], "khung": ["10.B2.1 - Nêu được ví dụ về các hành vi hoặc sự cố do AI gây ra như vi phạm quy định của nhà trường hoặc các văn bản pháp luật liên quan đến sử dụng công nghệ thông tin."]}, {"type": "marker", "title": "Ôn tập & Trường KTTT", "date": "19-24/04/2027", "tuan": 12}]}, {"id": "p-sauchk2", "code": "SAU CHK2", "title": "Sau kiểm tra cuối kỳ 2", "exam": null, "items": [{"type": "lesson", "id": "l-26", "title": "Bài 10 Thực hành khai thác tài nguyên trên Internet", "topic": "B", "topicName": "MẠNG MÁY TÍNH VÀ INTERNET", "date": "03-08/05/2027", "tiet": "63, 64", "tuan": 14, "yccd": ["– Sử dụng được một số công cụ thông dụng để ngăn ngừa và diệt phần mềm độc hại.", "– Sử dụng được một số chức năng xử lí thông tin trên máy PC và thiết bị số, ví dụ dịch tự động văn bản hay tiếng nói."], "nls": ["1.3.NC1a", "2.2.NC1a", "2.3.NC1b", "2.6.NC1c"], "ai": ["Biết sử dụng các công cụ AI để tìm kiếm, khai thác và xử lí thông tin trên Internet; bước đầu đánh giá độ tin cậy của thông tin do AI cung cấp."], "khung": ["10.C2.2 - Nêu được ví dụ một số trường hợp sử dụng AI hỗ trợ quá trình học tập."]}, {"type": "lesson", "id": "l-27", "title": "Bài 11 Ứng xử trên môi trường số - Nghĩa vụ tôn trọng bản quyền", "topic": "D", "topicName": "ĐẠO ĐỨC, PHÁP LUẬT VÀ VĂN HÓA TRONG MÔI TRƯỜNG SỐ", "date": "10-15/05/2027", "tiet": "65, 66", "tuan": 15, "yccd": ["– Nêu được một số vấn đề nảy sinh về pháp luật, đạo đức, văn hoá khi việc giao tiếp qua mạng trở nên phổ biến.", "– Nêu được ví dụ minh hoạ sự vi phạm bản quyền thông tin và sản phẩm số, qua ví dụ đó giải thích được sự vi phạm đã diễn ra thế nào và có thể dẫn tới hậu quả gì.", "– Trình bày và giải thích được một số nội dung cơ bản của Luật Công nghệ thông tin, Nghị định về quản lí, cung cấp, sử dụng các sản phẩm và dịch vụ Công nghệ thông tin, Luật An ninh mạng. Nêu được ví dụ minh hoạ.", "– Giải thích được một số khía cạnh pháp lí của vấn đề bản quyền, của việc sở hữu, sử dụng và trao đổi thông tin trong môi trường số. Nêu được ví dụ minh hoạ.", "– Vận dụng được Luật và Nghị định nêu trên để xác định được tính hợp pháp của một hành vi nào đó trong lĩnh vực quản lí, cung cấp, sử dụng các sản phẩm và dịch vụ Công nghệ thông tin.", "– Nêu được ví dụ về những tác hại của việc chia sẻ và phổ biến thông tin một cách bất cẩn.", "– Nêu được một vài biện pháp đơn giản và thông dụng để nâng cao tính an toàn và hợp pháp của việc chia sẻ thông tin trong môi trường số."], "nls": ["2.5.NC1a", "2.5.NC1b", "3.3.NC1a", "4.2.NC1a", "4.1.NC1b", "4.3.NC1a", "4.3.NC1b"], "ai": ["Hiểu các vấn đề đạo đức, pháp luật khi sử dụng AI và chia sẻ thông tin số (bản quyền, tin giả, dữ liệu cá nhân); biết sử dụng AI có trách nhiệm trong môi trường số."], "khung": ["10.A3.1 - Kể tên được một vài quy định hoặc luật lệ (ở mức độ khái niệm, ví dụ: luật an ninh mạng, luật bảo vệ dữ liệu) có chức năng bảo vệ người dùng trong không gian số."]}, {"type": "lesson", "id": "l-28", "title": "Bài 33 Nghề thiết kế đồ họa máy tính", "topic": "G", "topicName": "HƯỚNG NGHIỆP VỚI TIN HỌC", "date": "17-22/05/2027", "tiet": "67, 68", "tuan": 16, "yccd": ["– Trình bày được thông tin hướng nghiệp về nhóm nghề Nghề thiết kế đồ họa: Những nét sơ lược về công việc chính mà người làm nghề phải thực hiện; Yêu cầu thiết yếu về kiến thức và kĩ năng cần có để làm nghề; Ngành học có liên quan ở các bậc học tiếp theo; Nhu cầu nhân lực hiện tại và tương lai của nhóm nghề đó.", "– Biết tự tìm kiếm và khai thác được thông tin hướng nghiệp (qua các chương trình đào tạo, thông báo tuyển dụng nhân lực,...) về một vài ngành nghề khác trong lĩnh vực tin học.", "– Giao lưu được với bạn bè qua các kênh truyền thông tin số để tham khảo và trao đổi ý kiến về những thông tin trên."], "nls": ["1.1.NC1a", "1.1.NC1b", "1.2.NC1a", "2.2.NC1a", "2.2.NC1c", "5.2.NC1a"], "ai": ["Nhận biết vai trò của AI trong lĩnh vực thiết kế đồ hoạ (tạo ảnh, chỉnh sửa tự động); hiểu ảnh hưởng của AI đến nghề nghiệp trong tương lai."], "khung": ["10.C3.2 - Trình bày được ví dụ mô tả một số công nghệ để thiết kế và tạo AI."]}, {"type": "lesson", "id": "l-29", "title": "Bài 34 Nghề phát triển phần mềm", "topic": "G", "topicName": "HƯỚNG NGHIỆP VỚI TIN HỌC", "date": "24-29/05/2027", "tiet": "69, 70", "tuan": 17, "yccd": ["– Trình bày được thông tin hướng nghiệp về nhóm nghề Phát triển phần mềm: Những nét sơ lược về công việc chính mà người làm nghề phải thực hiện; Yêu cầu thiết yếu về kiến thức và kĩ năng cần có để làm nghề; Ngành học có liên quan ở các bậc học tiếp theo; Nhu cầu nhân lực hiện tại và tương lai của nhóm nghề đó.", "– Biết tự tìm kiếm và khai thác được thông tin hướng nghiệp (qua các chương trình đào tạo, thông báo tuyển dụng nhân lực,...) về một vài ngành nghề khác trong lĩnh vực tin học.", "– Giao lưu được với bạn bè qua các kênh truyền thông tin số để tham khảo và trao đổi ý kiến về những thông tin trên."], "nls": ["1.1.NC1a", "1.1.NC1b", "1.2.NC1a", "5.2.NC1a", "2.2.NC1a", "2.2.NC1c"], "ai": ["Hiểu vai trò của AI trong phát triển phần mềm (tự động sinh mã, hỗ trợ lập trình); nhận thức được xu hướng nghề nghiệp liên quan đến AI."], "khung": ["10.C3.2 - Trình bày được ví dụ mô tả một số công nghệ để thiết kế và tạo AI."]}]}]};
+
+const state = {};
+const connections = [];
+const wrap = document.getElementById('canvasWrap');
+const svg = document.getElementById('connectors');
+const treeEl = document.getElementById('tree');
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+function renderLessonDetail(lesson) {
+  const wrapEl = el('div', 'lesson-detail');
+
+  if (lesson.yccd && lesson.yccd.length) {
+    const block = el('div', 'detail-block');
+    block.appendChild(el('span', 'detail-label', 'Yêu cầu cần đạt'));
+    const ul = el('ul');
+    lesson.yccd.forEach(t => ul.appendChild(el('li', null, t.replace(/^[\u2013-]\s*/, ''))));
+    block.appendChild(ul);
+    wrapEl.appendChild(block);
+  }
+
+  if (lesson.nls && lesson.nls.length) {
+    const block = el('div', 'detail-block');
+    block.appendChild(el('span', 'detail-label', 'Năng lực số'));
+    const row = el('div', 'chip-row');
+    lesson.nls.forEach(code => row.appendChild(el('span', 'chip', code)));
+    block.appendChild(row);
+    wrapEl.appendChild(block);
+  }
+
+  if (lesson.ai && lesson.ai.length) {
+    const block = el('div', 'detail-block');
+    block.appendChild(el('span', 'detail-label', 'Tích hợp AI'));
+    block.appendChild(el('p', null, lesson.ai.join(' ')));
+    wrapEl.appendChild(block);
+  }
+
+  if (lesson.khung && lesson.khung.length) {
+    const block = el('div', 'detail-block');
+    block.appendChild(el('span', 'detail-label', 'Khung năng lực số 3439'));
+    block.appendChild(el('p', null, lesson.khung.join(' ')));
+    wrapEl.appendChild(block);
+  }
+
+  return wrapEl;
+}
+
+function makeToggleCard(id, accentVar, headContent, detailBuilder) {
+  const card = el('div', 'node-card clickable');
+  card.dataset.id = id;
+  card.style.setProperty('--accent', accentVar);
+  card.tabIndex = 0;
+  card.setAttribute('role', 'button');
+  card.appendChild(headContent);
+
+  const grid = el('div', 'children-grid');
+  const inner = el('div', 'children-inner');
+  const detail = detailBuilder(card);
+  inner.appendChild(detail);
+  grid.appendChild(inner);
+
+  state[id] = false;
+
+  function apply() {
+    card.classList.toggle('open', state[id]);
+    grid.classList.toggle('open', state[id]);
+  }
+  function toggle() {
+    state[id] = !state[id];
+    apply();
+    scheduleRedraw();
+  }
+  card.addEventListener('click', toggle);
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+  });
+  apply();
+
+  return { card, grid };
+}
+
+function buildLessonNode(lesson, accentVar) {
+  const head = el('div');
+  const kicker = el('span', 'topic-tag');
+  kicker.appendChild(el('span', 'topic-dot'));
+  kicker.appendChild(document.createTextNode('Chủ đề ' + lesson.topic));
+  if (DATA.topics[lesson.topic]) kicker.title = DATA.topics[lesson.topic];
+  head.appendChild(kicker);
+
+  const headRow = el('div', 'node-head');
+  const titleWrap = el('div');
+  titleWrap.appendChild(el('p', 'node-title', lesson.title));
+  const sub = el('div', 'node-sub');
+  sub.textContent = (lesson.date || '') + (lesson.tiet ? '  ·  Tiết ' + lesson.tiet : '');
+  titleWrap.appendChild(sub);
+  headRow.appendChild(titleWrap);
+  const chev = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  chev.setAttribute('class', 'chevron');
+  chev.innerHTML = '<use href="#icon-chevron"></use>';
+  headRow.appendChild(chev);
+  head.appendChild(headRow);
+
+  const { card, grid } = makeToggleCard(lesson.id, accentVar, head, () => renderLessonDetail(lesson));
+
+  const row = el('div', 'node');
+  row.appendChild(card);
+  row.appendChild(grid);
+  return row;
+}
+
+function buildMarkerNode(marker) {
+  const row = el('div', 'node node-marker');
+  const card = el('div', 'node-card');
+  card.appendChild(el('p', 'node-title', marker.title));
+  const sub = el('div', 'node-sub', marker.date || '');
+  card.appendChild(sub);
+  row.appendChild(card);
+  return row;
+}
+
+function buildPeriodNode(period, accentVar) {
+  const head = el('div');
+  const kicker = el('span', 'node-kicker', period.code);
+  head.appendChild(kicker);
+
+  const headRow = el('div', 'node-head');
+  const titleWrap = el('div');
+  titleWrap.appendChild(el('p', 'node-title', period.title));
+  const lessonCount = period.items.filter(it => it.type === 'lesson').length;
+  titleWrap.appendChild(el('div', 'node-count', lessonCount + ' bài học'));
+  headRow.appendChild(titleWrap);
+  const chev = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  chev.setAttribute('class', 'chevron');
+  chev.innerHTML = '<use href="#icon-chevron"></use>';
+  headRow.appendChild(chev);
+  head.appendChild(headRow);
+
+  if (period.exam) {
+    const badge = el('div', 'exam-badge');
+    badge.appendChild(el('span', 'exam-badge-label', period.exam.label));
+    badge.appendChild(el('span', 'exam-badge-date', period.exam.date + (period.exam.tiet ? ' · Tiết ' + period.exam.tiet : '')));
+    head.appendChild(badge);
+  }
+
+  const { card, grid } = makeToggleCard(period.id, accentVar, head, (selfCard) => {
+    const list = el('div', 'children-list');
+    period.items.forEach(it => {
+      const node = it.type === 'lesson' ? buildLessonNode(it, accentVar) : buildMarkerNode(it);
+      list.appendChild(node);
+      if (it.type === 'lesson') {
+        connections.push({ parent: selfCard, child: node.querySelector('.node-card') });
+      }
+    });
+    const holder = el('div');
+    holder.appendChild(list);
+    return holder;
+  });
+
+  const row = el('div', 'node');
+  row.appendChild(card);
+  row.appendChild(grid);
+  return { row, card };
+}
+
+function buildTree() {
+  const rootRow = el('div', 'node node-root');
+  const rootCard = el('div', 'node-card node-card-root open');
+  rootCard.style.setProperty('--accent', 'var(--ink-faint)');
+  rootCard.appendChild(el('p', 'node-title', DATA.meta.title));
+  rootCard.appendChild(el('div', 'node-sub', DATA.meta.subtitle));
+  rootCard.appendChild(el('div', 'node-count', DATA.meta.span + '  ·  ' + DATA.meta.lessonCount + ' bài học'));
+  rootRow.appendChild(rootCard);
+
+  const rootGrid = el('div', 'children-grid open');
+  const rootInner = el('div', 'children-inner');
+  const rootList = el('div', 'children-list');
+
+  DATA.periods.forEach((period, i) => {
+    const accentVar = (period.code === 'GHK1' || period.code === 'CHK1') ? 'var(--accent-1)' : 'var(--accent-2)';
+    const { row, card } = buildPeriodNode(period, accentVar);
+    rootList.appendChild(row);
+    connections.push({ parent: rootCard, child: card });
+    if (i === 0) {
+      state[period.id] = true;
+      card.classList.add('open');
+      row.querySelector('.children-grid').classList.add('open');
+    }
+  });
+
+  rootInner.appendChild(rootList);
+  rootGrid.appendChild(rootInner);
+  rootRow.appendChild(rootGrid);
+  treeEl.appendChild(rootRow);
+}
+
+function buildExamStrip() {
+  const stripEl = document.getElementById('examStrip');
+  DATA.periods.forEach(period => {
+    if (!period.exam) return;
+    const btn = el('button', 'exam-pill');
+    btn.type = 'button';
+    btn.appendChild(el('span', 'exam-pill-kicker', period.code));
+    btn.appendChild(el('span', 'exam-pill-date', period.exam.date));
+    btn.addEventListener('click', () => jumpTo(period.id));
+    stripEl.appendChild(btn);
+  });
+}
+
+function jumpTo(nodeId) {
+  const card = document.querySelector('[data-id="' + nodeId + '"]');
+  if (!card) return;
+  if (!state[nodeId]) {
+    state[nodeId] = true;
+    card.classList.add('open');
+    card.parentElement.querySelector('.children-grid').classList.add('open');
+    scheduleRedraw(500);
+  }
+  card.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+  card.classList.remove('flash');
+  void card.offsetWidth;
+  card.classList.add('flash');
+  setTimeout(() => card.classList.remove('flash'), 1200);
+}
+
+function pathFor(sx, sy, ex, ey) {
+  const mx = (sx + ex) / 2;
+  return 'M ' + sx + ',' + sy + ' C ' + mx + ',' + sy + ' ' + mx + ',' + ey + ' ' + ex + ',' + ey;
+}
+
+function drawConnectors() {
+  const wrapRect = wrap.getBoundingClientRect();
+  const scrollW = treeEl.scrollWidth;
+  const scrollH = treeEl.scrollHeight;
+  svg.setAttribute('width', scrollW);
+  svg.setAttribute('height', scrollH);
+  svg.setAttribute('viewBox', '0 0 ' + scrollW + ' ' + scrollH);
+
+  let markup = '';
+  connections.forEach(({ parent, child }) => {
+    const pr = parent.getBoundingClientRect();
+    const cr = child.getBoundingClientRect();
+    if (cr.height < 2 || cr.width < 2) return;
+    const sx = pr.right - wrapRect.left + wrap.scrollLeft;
+    const sy = pr.top + pr.height / 2 - wrapRect.top + wrap.scrollTop;
+    const ex = cr.left - wrapRect.left + wrap.scrollLeft;
+    const ey = cr.top + cr.height / 2 - wrapRect.top + wrap.scrollTop;
+    const color = (getComputedStyle(parent).getPropertyValue('--accent') || '').trim() || 'var(--ink-faint)';
+    markup += '<path d="' + pathFor(sx, sy, ex, ey) + '" fill="none" stroke="' + color + '" stroke-width="1.75" stroke-linecap="round" opacity="0.85"></path>';
+  });
+  svg.innerHTML = markup;
+}
+
+let redrawRAF = null;
+function scheduleRedraw(duration) {
+  duration = duration || 420;
+  const start = performance.now();
+  if (redrawRAF) cancelAnimationFrame(redrawRAF);
+  function step(t) {
+    drawConnectors();
+    if (t - start < duration) {
+      redrawRAF = requestAnimationFrame(step);
+    } else {
+      redrawRAF = null;
+      drawConnectors();
+    }
+  }
+  redrawRAF = requestAnimationFrame(step);
+}
+
+document.getElementById('expandAllBtn').addEventListener('click', () => {
+  Object.keys(state).forEach(id => state[id] = true);
+  document.querySelectorAll('.node-card.clickable').forEach(c => c.classList.add('open'));
+  document.querySelectorAll('.children-grid').forEach(g => g.classList.add('open'));
+  scheduleRedraw(600);
+});
+
+document.getElementById('collapseAllBtn').addEventListener('click', () => {
+  Object.keys(state).forEach(id => state[id] = false);
+  document.querySelectorAll('.node-card.clickable').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.children-grid').forEach(g => g.classList.remove('open'));
+  scheduleRedraw(600);
+});
+
+buildTree();
+buildExamStrip();
+document.getElementById('mastheadSub').textContent =
+  'Sơ đồ tư duy tương tác dựng từ Ke_hoach_bai_day_Tin_hoc_10.xlsx — ' + DATA.meta.lessonCount + ' bài học, ' + DATA.meta.span + '. Bấm vào từng nhánh để mở rộng hoặc thu gọn; bấm mốc kiểm tra phía trên để nhảy tới nhánh tương ứng.';
+
+window.addEventListener('resize', () => scheduleRedraw(200));
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => scheduleRedraw(300));
+}
+scheduleRedraw(700);
+</script>
+</body>
+</html>

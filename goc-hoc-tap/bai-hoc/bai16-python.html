@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bài 16: Ngôn ngữ lập trình bậc cao và Python</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #EFF1EC;
+    --surface: #FFFFFF;
+    --surface-2: #F6F7F1;
+    --ink: #232823;
+    --ink-muted: #5B6259;
+    --ink-faint: #8B9186;
+    --rule: #DEE2D5;
+    --border: #D6DACC;
+    --on-accent: #FFFFFF;
+
+    --accent-1: #34618F;
+    --accent-2: #B5762A;
+    --ok: #2E7D4F;
+    --ok-on: #FFFFFF;
+    --bad: #B23B3B;
+    --bad-on: #FFFFFF;
+    --warn: #9C6B1F;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+    --shadow: 0 10px 30px -14px rgba(35, 40, 35, 0.28);
+    --accent: var(--accent-1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1B1D18;
+      --surface: #232620;
+      --surface-2: #292C24;
+      --ink: #ECEEE5;
+      --ink-muted: #ABB2A0;
+      --ink-faint: #767C6B;
+      --rule: #363A30;
+      --border: #383C31;
+      --on-accent: #15160F;
+
+      --accent-1: #82B2E1;
+      --accent-2: #E3A868;
+      --ok: #79C795;
+      --ok-on: #10230F;
+      --bad: #E58A8A;
+      --bad-on: #2A0E0E;
+      --warn: #E3B45E;
+
+      --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1B1D18;
+    --surface: #232620;
+    --surface-2: #292C24;
+    --ink: #ECEEE5;
+    --ink-muted: #ABB2A0;
+    --ink-faint: #767C6B;
+    --rule: #363A30;
+    --border: #383C31;
+    --on-accent: #15160F;
+
+    --accent-1: #82B2E1;
+    --accent-2: #E3A868;
+    --ok: #79C795;
+    --ok-on: #10230F;
+    --bad: #E58A8A;
+    --bad-on: #2A0E0E;
+    --warn: #E3B45E;
+
+    --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  a { color: var(--accent-1); }
+
+  .skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    background: var(--ink);
+    color: var(--surface);
+    padding: 0.6rem 1rem;
+    border-radius: 0 0 8px 0;
+    z-index: 100;
+  }
+  .skip-link:focus { left: 0; }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    border-bottom: 1px solid var(--border);
+    border-top: 4px solid var(--accent-1);
+    backdrop-filter: blur(10px);
+  }
+
+  .topbar-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0.7rem clamp(1rem, 4vw, 2rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.84rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--ink-muted);
+  }
+  .back-link:hover { color: var(--accent-1); }
+  .back-link svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .lesson-tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent-1);
+  }
+
+  .lesson-nav {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding: 0.6rem clamp(1rem, 4vw, 2rem) 0.8rem;
+    max-width: 1080px;
+    margin: 0 auto;
+    scrollbar-width: thin;
+  }
+  .lesson-nav::-webkit-scrollbar { height: 6px; }
+  .lesson-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .lesson-nav-link {
+    flex: 0 0 auto;
+    display: inline-block;
+    padding: 0.5rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--ink-muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+  }
+  .lesson-nav-link:hover { color: var(--ink); }
+  .lesson-nav-link.active {
+    background: var(--accent-1);
+    border-color: var(--accent-1);
+    color: var(--on-accent);
+  }
+  .lesson-nav-link:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2rem) 4rem;
+  }
+
+  .masthead { max-width: 720px; margin-bottom: 2rem; }
+
+  .masthead-eyebrow {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    margin-bottom: 0.75rem;
+  }
+
+  .masthead-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.9rem, 4.4vw, 2.6rem);
+    line-height: 1.08;
+    margin: 0 0 0.6rem;
+    text-wrap: balance;
+  }
+
+  .masthead-sub {
+    font-size: 1rem;
+    color: var(--ink-muted);
+    margin: 0;
+    max-width: 62ch;
+  }
+
+  .lesson-section { display: block; margin-bottom: 2rem; }
+  html.js-enabled .lesson-section { display: none; margin-bottom: 0; }
+  html.js-enabled .lesson-section.active { display: block; }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .section-eyebrow {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent-1);
+    margin-bottom: 0.6rem;
+  }
+
+  .section-card h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    margin: 0 0 1rem;
+    text-wrap: balance;
+  }
+
+  .section-card h3 {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin: 1.8rem 0 0.75rem;
+  }
+  .section-card h3:first-of-type { margin-top: 0; }
+
+  .section-card p { margin: 0 0 1rem; color: var(--ink); }
+  .section-card p.muted { color: var(--ink-muted); }
+
+  .objective-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .objective-list li {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    padding: 0.85rem 1rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .objective-list svg {
+    flex: 0 0 auto;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0.15rem;
+    color: var(--accent-1);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  .compare-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    background: var(--surface-2);
+  }
+  .compare-card h4 {
+    margin: 0 0 0.6rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .compare-card pre {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--ink);
+  }
+
+  .inline-check {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.1rem 1.2rem;
+    background: var(--surface-2);
+    margin: 1.25rem 0;
+  }
+  .inline-check-q { font-weight: 600; margin: 0 0 0.85rem; }
+  .inline-check-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .inline-check-option {
+    text-align: left;
+    appearance: none;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    padding: 0.6rem 0.85rem;
+    border-radius: 9px;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+  }
+  .inline-check-option:hover:not(:disabled) { border-color: var(--accent-1); }
+  .inline-check-option:disabled { cursor: default; opacity: 0.85; }
+  .inline-check-option:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+  .inline-check-option.is-correct { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 14%, var(--surface)); font-weight: 600; }
+  .inline-check-option.is-incorrect { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 12%, var(--surface)); }
+  .inline-check-option.selected { border-color: var(--accent-1); }
+  .inline-check-feedback {
+    margin: 0.85rem 0 0;
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+  }
+  .inline-check-feedback[hidden] { display: none; }
+
+  .memo-box {
+    border: 1px solid color-mix(in srgb, var(--accent-1) 40%, var(--border));
+    background: color-mix(in srgb, var(--accent-1) 8%, var(--surface-2));
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin: 1.25rem 0;
+  }
+  .memo-box-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--accent-1);
+    margin-bottom: 0.5rem;
+  }
+  .memo-box ul { margin: 0; padding-left: 1.15rem; }
+  .memo-box li { margin-bottom: 0.35rem; font-size: 0.92rem; }
+  .memo-box li:last-child { margin-bottom: 0; }
+
+  .mock-window {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin: 1.1rem 0;
+  }
+  .mock-titlebar {
+    background: var(--surface-2);
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .mock-dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; }
+  .mock-dot--r { background: #E5675F; }
+  .mock-dot--y { background: #E5B84B; }
+  .mock-dot--g { background: #59B96B; }
+  .mock-titlebar-text { margin-left: 0.35rem; }
+  .mock-body {
+    padding: 0.9rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .mock-body--shell { background: #1E1F1C; color: #D8DCD2; }
+  .mock-body--editor { background: var(--surface); color: var(--ink); }
+  .mock-prompt { color: #7FC49A; }
+  .mock-comment { color: #8B9186; }
+  .mock-string { color: #D6A85B; }
+
+  .repl {
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    line-height: 1.75;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0.9rem 0;
+  }
+  .repl .prompt { color: var(--accent-1); font-weight: 600; }
+  .repl .result { color: var(--ink-muted); }
+
+  .diagram-figure { margin: 1.5rem 0; }
+  .diagram-figure svg { width: 100%; height: auto; display: block; }
+  .diagram-figure figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    text-align: center;
+  }
+
+  .step-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .step-item {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    background: var(--surface-2);
+  }
+  .step-toggle {
+    flex: 0 0 auto;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 7px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    padding: 0;
+  }
+  .step-toggle svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .step-toggle.is-done { background: var(--ok); border-color: var(--ok); color: var(--ok-on); }
+  .step-toggle:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+  .step-text { flex: 1 1 auto; }
+  .step-text strong { display: block; margin-bottom: 0.15rem; }
+  .step-text span { color: var(--ink-muted); font-size: 0.9rem; }
+
+  .step-counter {
+    display: inline-block;
+    margin: 1rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+  }
+
+  .target-code {
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    background: #1E1F1C;
+    color: #D8DCD2;
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0.9rem 0 1.3rem;
+  }
+
+  .btn {
+    appearance: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.62rem 1rem;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    font-weight: 600;
+    line-height: 1;
+    transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+  }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); border-color: color-mix(in srgb, var(--ink) 30%, var(--border)); }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+  .btn:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+
+  .btn--primary {
+    background: var(--accent-1);
+    border-color: var(--accent-1);
+    color: var(--on-accent);
+  }
+  .btn--primary:hover:not(:disabled) { background: color-mix(in srgb, var(--accent-1) 88%, black 0%); }
+
+  .btn-row { display: flex; flex-wrap: wrap; gap: 0.55rem; margin: 1rem 0; }
+
+  .runner-panel { margin-top: 1.25rem; }
+
+  .runner-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    font-size: 0.84rem;
+    color: var(--ink-muted);
+    margin-bottom: 1rem;
+  }
+  .runner-status--loading { border-color: color-mix(in srgb, var(--warn) 45%, var(--border)); color: var(--warn); }
+  .runner-status--ok { border-color: color-mix(in srgb, var(--ok) 45%, var(--border)); color: var(--ok); }
+  .runner-status--error { border-color: color-mix(in srgb, var(--bad) 45%, var(--border)); color: var(--bad); }
+
+  .code-editor {
+    width: 100%;
+    min-height: 200px;
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    line-height: 1.6;
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--ink);
+    resize: vertical;
+  }
+  .code-editor:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 1px; }
+
+  .code-output {
+    margin-top: 1rem;
+    min-height: 90px;
+    max-height: 320px;
+    overflow-y: auto;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: #1E1F1C;
+    color: #D8DCD2;
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+  }
+
+  .hidden-source { display: none; }
+
+  .quiz-progress {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+  .quiz-progress-fill {
+    height: 100%;
+    background: var(--accent-1);
+    width: 20%;
+    transition: width 0.3s ease;
+  }
+  .quiz-progress-label {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--ink-muted);
+    margin: 0 0 1.4rem;
+  }
+
+  .quiz-question { display: none; }
+  .quiz-question.active { display: block; }
+  .quiz-q-text { font-weight: 600; font-size: 1.02rem; margin: 0 0 1rem; }
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .quiz-option {
+    text-align: left;
+    appearance: none;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--ink);
+    padding: 0.7rem 0.95rem;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+  }
+  .quiz-option:hover:not(:disabled) { border-color: var(--accent-1); }
+  .quiz-option:disabled { cursor: default; }
+  .quiz-option:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+  .quiz-option.is-correct { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 16%, var(--surface)); font-weight: 600; }
+  .quiz-option.is-incorrect { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 14%, var(--surface)); }
+
+  .quiz-feedback { margin: 0.9rem 0 0; font-weight: 700; font-size: 0.92rem; min-height: 1.3em; }
+  .quiz-feedback.is-correct { color: var(--ok); }
+  .quiz-feedback.is-incorrect { color: var(--bad); }
+
+  .quiz-explain {
+    margin-top: 0.5rem;
+    padding-top: 0.7rem;
+    border-top: 1px dashed var(--border);
+    color: var(--ink-muted);
+    font-size: 0.88rem;
+  }
+  .quiz-explain[hidden] { display: none; }
+
+  .quiz-nav { margin-top: 1.5rem; display: flex; justify-content: flex-end; }
+
+  .score-display {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 1rem 0;
+  }
+  .score-display strong {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    color: var(--accent-1);
+  }
+
+  .summary-list { margin: 0 0 1.5rem; padding-left: 1.2rem; }
+  .summary-list li { margin-bottom: 0.5rem; }
+
+  .spinner-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, 340px) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+  @media (max-width: 680px) {
+    .spinner-grid { grid-template-columns: 1fr; }
+  }
+
+  .names-textarea {
+    width: 100%;
+    min-height: 160px;
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    padding: 0.8rem 0.9rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--ink);
+    resize: vertical;
+  }
+
+  .names-status { font-size: 0.82rem; color: var(--ink-muted); margin: 0.6rem 0 0; }
+
+  .spin-stage {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-2);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .spin-result {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    font-weight: 600;
+    color: var(--accent-1);
+    min-height: 1.4em;
+    word-break: break-word;
+  }
+
+  .history-list {
+    list-style: none;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .history-list li {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-2);
+    font-size: 0.86rem;
+  }
+  .history-list li.history-empty { color: var(--ink-faint); font-style: italic; }
+
+  dialog#historyDialog {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    max-width: 420px;
+    width: min(92vw, 420px);
+    color: var(--ink);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  dialog#historyDialog::backdrop { background: rgba(20, 22, 18, 0.45); }
+  .dialog-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+  .dialog-head h3 { margin: 0; font-family: var(--font-display); font-size: 1.2rem; }
+
+  .site-footer {
+    border-top: 1px solid var(--border);
+    background: var(--surface-2);
+    margin-top: 3rem;
+  }
+  .footer-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 1.4rem clamp(1.25rem, 4vw, 2rem);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .footer-logo { width: 44px; height: 44px; object-fit: contain; flex: 0 0 auto; }
+  .footer-text { font-size: 0.82rem; color: var(--ink-muted); }
+  .footer-text strong { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#lessonMain">Bỏ qua để vào nội dung bài học</a>
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="icon-back" viewBox="0 0 24 24"><polyline points="15,5 8,12 15,19"></polyline></symbol>
+  <symbol id="icon-check-mark" viewBox="0 0 24 24"><polyline points="5,13 10,18 19,7"></polyline></symbol>
+  <symbol id="icon-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></symbol>
+  <symbol id="icon-close" viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="back-link" href="../index.html">
+      <svg aria-hidden="true"><use href="#icon-back"></use></svg>
+      Về Góc Học Tập
+    </a>
+    <span class="lesson-tag">TIN HỌC 10 · CHỦ ĐỀ F · BÀI 16</span>
+  </div>
+  <nav class="lesson-nav" role="tablist" aria-label="Các phần của bài học">
+    <a class="lesson-nav-link active" href="#khoidong" role="tab" aria-current="true">Khởi động</a>
+    <a class="lesson-nav-link" href="#muctieu" role="tab" aria-current="false">Mục tiêu</a>
+    <a class="lesson-nav-link" href="#kienthuc" role="tab" aria-current="false">Kiến thức mới</a>
+    <a class="lesson-nav-link" href="#thuchanh" role="tab" aria-current="false">Thực hành</a>
+    <a class="lesson-nav-link" href="#phongma" role="tab" aria-current="false">Phòng chạy mã</a>
+    <a class="lesson-nav-link" href="#luyentap" role="tab" aria-current="false">Luyện tập</a>
+    <a class="lesson-nav-link" href="#tongket" role="tab" aria-current="false">Tổng kết</a>
+    <a class="lesson-nav-link" href="#vongquay" role="tab" aria-current="false">Vòng quay gọi tên</a>
+  </nav>
+</header>
+
+<div class="page" id="lessonMain">
+  <header class="masthead">
+    <span class="masthead-eyebrow">BÀI GIẢNG TƯƠNG TÁC</span>
+    <h1 class="masthead-title">Ngôn ngữ lập trình bậc cao và Python</h1>
+    <p class="masthead-sub">Tìm hiểu vì sao Python dễ học, làm quen với hai chế độ làm việc của Python và viết những câu lệnh đầu tiên — có phòng chạy mã thật để em thử ngay trên trình duyệt.</p>
+  </header>
+
+  <main>
+    <section id="khoidong" class="lesson-section active" aria-labelledby="khoidong-heading">
+      <div class="section-card">
+        <span class="section-eyebrow">KHỞI ĐỘNG</span>
+        <h2 id="khoidong-heading">Câu lệnh nào dễ hiểu nhất?</h2>
+        <p>Cùng một yêu cầu — tính tổng của 5 và 3 — có thể viết bằng nhiều loại ngôn ngữ lập trình khác nhau. Em hãy quan sát ba cách viết dưới đây rồi dự đoán xem câu lệnh trong ngôn ngữ nào dễ đọc, dễ hiểu nhất.</p>
+
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h4>Ngôn ngữ máy</h4>
+            <pre>01101101 01100101
+01101110 00100000
+01100011 01101111
+01101110 01100111</pre>
+          </div>
+          <div class="compare-card">
+            <h4>Hợp ngữ (Assembly)</h4>
+            <pre>LDA A #05
+STA A ACIA
+LDA A #03
+ADD A ACIA
+STA A RESULT</pre>
+          </div>
+          <div class="compare-card">
+            <h4>Ngôn ngữ Python</h4>
+            <pre>a = 5
+b = 3
+print(a + b)</pre>
+          </div>
+        </div>
+
+        <div class="inline-check">
+          <p class="inline-check-q">Theo em, câu lệnh trong ngôn ngữ nào ở trên dễ hiểu nhất?</p>
+          <div class="inline-check-options">
+            <button type="button" class="inline-check-option" data-correct="false" data-explain="Chưa đúng. Ngôn ngữ máy chỉ gồm các số 0 và 1 — đây là dạng con người khó đọc và khó viết nhất, dù máy tính lại hiểu trực tiếp được nó.">A. Ngôn ngữ máy</button>
+            <button type="button" class="inline-check-option" data-correct="false" data-explain="Chưa đúng. Hợp ngữ dùng một số từ viết tắt (như LDA, STA) thay cho mã nhị phân nên đỡ khó hơn ngôn ngữ máy, nhưng vẫn xa lạ với ngôn ngữ tự nhiên của con người.">B. Hợp ngữ</button>
+            <button type="button" class="inline-check-option" data-correct="true" data-explain="Chính xác! Python là ngôn ngữ lập trình bậc cao — câu lệnh được viết gần với ngôn ngữ tự nhiên (ví dụ print nghĩa là in ra) nên dễ đọc và dễ viết hơn hẳn.">C. Ngôn ngữ Python (bậc cao)</button>
+          </div>
+          <p class="inline-check-feedback" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="muctieu" class="lesson-section" aria-labelledby="muctieu-heading">
+      <div class="section-card">
+        <span class="section-eyebrow">MỤC TIÊU BÀI HỌC</span>
+        <h2 id="muctieu-heading">Sau bài học này, em sẽ</h2>
+        <ul class="objective-list">
+          <li>
+            <svg aria-hidden="true"><use href="#icon-target"></use></svg>
+            <span>Biết khái niệm ngôn ngữ lập trình bậc cao và ngôn ngữ lập trình bậc cao Python.</span>
+          </li>
+          <li>
+            <svg aria-hidden="true"><use href="#icon-target"></use></svg>
+            <span>Phân biệt được chế độ gõ lệnh trực tiếp và chế độ soạn thảo chương trình trong môi trường lập trình Python.</span>
+          </li>
+          <li>
+            <svg aria-hidden="true"><use href="#icon-target"></use></svg>
+            <span>Biết cách thực hiện một chương trình Python.</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="kienthuc" class="lesson-section" aria-labelledby="kienthuc-heading">
+      <div class="section-card">
+        <span class="section-eyebrow">KIẾN THỨC MỚI</span>
+        <h2 id="kienthuc-heading">1. Ngôn ngữ lập trình bậc cao</h2>
+        <p>Các lệnh viết bằng <strong>ngôn ngữ máy</strong> ở dạng mã nhị phân hay <strong>hợp ngữ</strong> sử dụng một số từ viết tắt (thường là tiếng Anh) không thuận tiện cho việc viết hay hiểu chương trình. Khó khăn đó được giảm bớt khi lập trình bằng <strong>ngôn ngữ bậc cao</strong> với các câu lệnh được viết gần với ngôn ngữ tự nhiên. Tuy nhiên, để máy tính có thể hiểu và thực hiện, các chương trình đó cần được chuyển đổi sang ngôn ngữ máy nhờ một chương trình chuyên dụng gọi là <strong>chương trình dịch</strong>.</p>
+        <p>Hiện nay đã có nhiều ngôn ngữ lập trình bậc cao khác nhau, trong số đó Java, C/C++, Python,... là những ngôn ngữ lập trình thông dụng nhất.</p>
+        <p><strong>Python</strong> là ngôn ngữ lập trình bậc cao do Guido van Rossum, người Hà Lan, tạo ra và ra mắt lần đầu năm 1991. Các câu lệnh của Python có cú pháp đơn giản. Môi trường lập trình Python dễ sử dụng, không phụ thuộc vào hệ điều hành, chạy trên nhiều loại máy tính, điện thoại thông minh, robot giáo dục,... Python có mã nguồn mở nên thu hút nhiều nhà khoa học cùng phát triển. Nhờ có các thư viện chương trình phong phú về trí tuệ nhân tạo, phân tích dữ liệu, kĩ thuật robot,... Python là ngôn ngữ lập trình được dùng phổ biến trong nghiên cứu và giáo dục.</p>
+
+        <div class="memo-box">
+          <span class="memo-box-label">GHI NHỚ</span>
+          <ul>
+            <li>Ngôn ngữ lập trình bậc cao có các câu lệnh được viết gần với ngôn ngữ tự nhiên giúp cho việc đọc, hiểu chương trình dễ dàng hơn.</li>
+            <li>Python là một ngôn ngữ lập trình bậc cao phổ biến trong nghiên cứu và giáo dục.</li>
+          </ul>
+        </div>
+
+        <div class="inline-check">
+          <p class="inline-check-q">Kiểm tra nhanh: Viết chương trình bằng loại ngôn ngữ lập trình nào dễ nhất?</p>
+          <div class="inline-check-options">
+            <button type="button" class="inline-check-option" data-correct="false" data-explain="Chưa đúng. Ngôn ngữ máy là dạng khó viết và khó đọc nhất đối với con người.">A. Ngôn ngữ máy</button>
+            <button type="button" class="inline-check-option" data-correct="false" data-explain="Chưa đúng. Hợp ngữ dễ hơn ngôn ngữ máy nhưng vẫn khó hơn nhiều so với ngôn ngữ lập trình bậc cao.">B. Hợp ngữ</button>
+            <button type="button" class="inline-check-option" data-correct="true" data-explain="Chính xác! Ngôn ngữ lập trình bậc cao có câu lệnh gần với ngôn ngữ tự nhiên nên dễ viết nhất.">C. Ngôn ngữ lập trình bậc cao</button>
+          </div>
+          <p class="inline-check-feedback" hidden></p>
+        </div>
+
+        <h3>2. Môi trường lập trình Python</h3>
+        <p>Phần mềm Python là một môi trường lập trình cho phép soạn thảo chương trình bằng ngôn ngữ Python, hỗ trợ gỡ lỗi, phân tích cú pháp dòng lệnh và thực hiện các chương trình hoàn chỉnh hoặc từng câu lệnh. Môi trường lập trình Python có hai chế độ:</p>
+
+        <p><strong>a) Chế độ gõ lệnh trực tiếp</strong> — thường được dùng để tính toán và kiểm tra nhanh các lệnh. Sau khi khởi động, màn hình làm việc (Shell) hiện dấu nhắc <code>&gt;&gt;&gt;</code>; em gõ lệnh rồi nhấn Enter để thực hiện ngay.</p>
+        <div class="mock-window">
+          <div class="mock-titlebar"><span class="mock-dot mock-dot--r"></span><span class="mock-dot mock-dot--y"></span><span class="mock-dot mock-dot--g"></span><span class="mock-titlebar-text">Python 3.9.1 Shell</span></div>
+          <div class="mock-body mock-body--shell">Python 3.9.1 (tags/v3.9.1, Dec 7 2020)
+Type "help", "copyright" or "license()" for more information.
+<span class="mock-prompt">&gt;&gt;&gt;</span> <span></span></div>
+        </div>
+
+        <p><strong>b) Chế độ soạn thảo</strong> — cho phép soạn thảo chương trình hoàn chỉnh gồm nhiều dòng lệnh bằng cách chọn <strong>File/New File</strong>, sau đó lưu tệp (<strong>Ctrl + S</strong>) và chạy bằng <strong>Run/Run Module</strong> hoặc phím <strong>F5</strong>.</p>
+        <div class="mock-window">
+          <div class="mock-titlebar"><span class="mock-dot mock-dot--r"></span><span class="mock-dot mock-dot--y"></span><span class="mock-dot mock-dot--g"></span><span class="mock-titlebar-text">Bai1.py</span></div>
+          <div class="mock-body mock-body--editor"><span class="mock-comment"># Chương trình đầu tiên</span>
+print(<span class="mock-string">"Xin chào!"</span>)</div>
+        </div>
+
+        <div class="memo-box">
+          <span class="memo-box-label">GHI NHỚ</span>
+          <ul>
+            <li>Môi trường lập trình của Python có hai chế độ: <em>chế độ gõ lệnh trực tiếp</em> và <em>chế độ soạn thảo</em>.</li>
+          </ul>
+        </div>
+
+        <h3>3. Một số lệnh Python đầu tiên</h3>
+        <p><strong>Ví dụ 1.</strong> Các lệnh đầu tiên — Python tự nhận biết kiểu dữ liệu khi em nhập số hoặc xâu kí tự.</p>
+        <pre class="repl"><span class="prompt">&gt;&gt;&gt;</span> 5
+<span class="result">5</span>
+<span class="prompt">&gt;&gt;&gt;</span> 2.6
+<span class="result">2.6</span>
+<span class="prompt">&gt;&gt;&gt;</span> "học sinh lớp 10"
+<span class="result">'học sinh lớp 10'</span></pre>
+
+        <p><strong>Ví dụ 2.</strong> Các lệnh với phép toán — Python thực hiện ngay các phép toán thông thường: cộng (+), trừ (−), nhân (*) và chia (/).</p>
+        <pre class="repl"><span class="prompt">&gt;&gt;&gt;</span> 3 + 7
+<span class="result">10</span>
+<span class="prompt">&gt;&gt;&gt;</span> 12 * 5
+<span class="result">60</span></pre>
+
+        <p><strong>Ví dụ 3.</strong> Lệnh <code>print()</code> dùng để đưa dữ liệu ra màn hình, có thể in một hoặc nhiều giá trị đồng thời và cũng có thể tính toán rồi in kết quả của biểu thức.</p>
+        <pre class="repl"><span class="prompt">&gt;&gt;&gt;</span> print(12)
+<span class="result">12</span>
+<span class="prompt">&gt;&gt;&gt;</span> print("Dãy ba số chẵn:", 2, 4, 6)
+<span class="result">Dãy ba số chẵn: 2 4 6</span>
+<span class="prompt">&gt;&gt;&gt;</span> print("3 + 7 =", 3 + 7)
+<span class="result">3 + 7 = 10</span></pre>
+        <p class="muted">Cú pháp: <code>print(v1, v2, ..., vn)</code> — trong đó v1, v2,..., vn là các giá trị cần đưa ra màn hình, cách nhau bởi dấu phẩy.</p>
+
+        <div class="memo-box">
+          <span class="memo-box-label">GHI NHỚ</span>
+          <ul>
+            <li>Khi nhập giá trị số hoặc xâu kí tự từ dòng lệnh, Python tự nhận biết kiểu dữ liệu.</li>
+            <li>Python có thể thực hiện các phép toán thông thường với số, phân biệt số thực và số nguyên.</li>
+            <li>Lệnh <code>print()</code> có chức năng đưa dữ liệu ra màn hình, có thể in ra một hoặc nhiều giá trị đồng thời.</li>
+          </ul>
+        </div>
+
+        <figure class="diagram-figure">
+          <svg viewBox="0 0 720 150" role="img" aria-label="Sơ đồ luồng chạy chương trình Python: mã nguồn Python được trình thông dịch dịch, máy tính thực hiện lệnh rồi hiển thị kết quả.">
+            <defs>
+              <marker id="arrow16" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+              </marker>
+            </defs>
+            <g fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="10" y="45" width="150" height="60" rx="10"></rect>
+              <rect x="205" y="45" width="150" height="60" rx="10"></rect>
+              <rect x="400" y="45" width="150" height="60" rx="10"></rect>
+              <rect x="560" y="45" width="150" height="60" rx="10" transform="translate(0,0)" opacity="0"></rect>
+            </g>
+            <g font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" text-anchor="middle">
+              <text x="85" y="70">Mã nguồn</text>
+              <text x="85" y="86">Python (.py)</text>
+              <text x="280" y="70">Trình thông dịch</text>
+              <text x="280" y="86">Python</text>
+              <text x="475" y="70">Máy tính</text>
+              <text x="475" y="86">thực hiện lệnh</text>
+              <text x="182" y="35" font-size="11">dịch</text>
+              <text x="377" y="35" font-size="11">chạy</text>
+            </g>
+            <line x1="162" y1="75" x2="203" y2="75" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow16)"></line>
+            <line x1="357" y1="75" x2="398" y2="75" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow16)"></line>
+            <line x1="475" y1="107" x2="475" y2="130" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow16)"></line>
+            <text x="495" y="122" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor">in ra</text>
+            <rect x="400" y="130" width="150" height="0" fill="none"></rect>
+            <text x="475" y="145" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" text-anchor="middle">Kết quả trên màn hình</text>
+          </svg>
+          <figcaption>Hình 16.5. Đường đi của một chương trình Python từ lúc viết mã đến khi thấy kết quả.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="thuchanh" class="lesson-section" aria-labelledby="thuchanh-heading">
+      <div class="section-card">
+        <span class="section-eyebrow">THỰC HÀNH</span>
+        <h2 id="thuchanh-heading">Viết chương trình Python đầu tiên</h2>
+        <p><strong>Nhiệm vụ:</strong> Sử dụng chế độ soạn thảo chương trình của Python để tạo, nhập và chạy chương trình đầu tiên có tên <strong>Bai1.py</strong> như sau:</p>
+        <pre class="target-code" id="starterCode"># Chương trình đầu tiên
+print("Xin chào!")</pre>
+
+        <p><strong>Hướng dẫn:</strong> Đánh dấu vào từng bước sau khi em đã thực hiện xong.</p>
+        <ol class="step-list">
+          <li class="step-item">
+            <button type="button" class="step-toggle" aria-pressed="false" aria-label="Đánh dấu đã hoàn thành bước 1"><svg aria-hidden="true"><use href="#icon-check-mark"></use></svg></button>
+            <span class="step-text"><strong>Bước 1.</strong> <span>Nháy đúp chuột vào biểu tượng của Python để khởi động.</span></span>
+          </li>
+          <li class="step-item">
+            <button type="button" class="step-toggle" aria-pressed="false" aria-label="Đánh dấu đã hoàn thành bước 2"><svg aria-hidden="true"><use href="#icon-check-mark"></use></svg></button>
+            <span class="step-text"><strong>Bước 2.</strong> <span>Chọn chế độ soạn thảo chương trình: trong môi trường lập trình Python, chọn File/New.</span></span>
+          </li>
+          <li class="step-item">
+            <button type="button" class="step-toggle" aria-pressed="false" aria-label="Đánh dấu đã hoàn thành bước 3"><svg aria-hidden="true"><use href="#icon-check-mark"></use></svg></button>
+            <span class="step-text"><strong>Bước 3.</strong> <span>Nhập nội dung chương trình như trên.</span></span>
+          </li>
+          <li class="step-item">
+            <button type="button" class="step-toggle" aria-pressed="false" aria-label="Đánh dấu đã hoàn thành bước 4"><svg aria-hidden="true"><use href="#icon-check-mark"></use></svg></button>
+            <span class="step-text"><strong>Bước 4.</strong> <span>Chọn File/Save hoặc nhấn tổ hợp phím Ctrl + S để lưu tệp.</span></span>
+          </li>
+          <li class="step-item">
+            <button type="button" class="step-toggle" aria-pressed="false" aria-label="Đánh dấu đã hoàn thành bước 5"><svg aria-hidden="true"><use href="#icon-check-mark"></use></svg></button>
+            <span class="step-text"><strong>Bước 5.</strong> <span>Chọn Run/Run module hoặc nhấn phím F5 để thực hiện chương trình.</span></span>
+          </li>
+          <li class="step-item">
+            <button type="button" class="step-toggle" aria-pressed="false" aria-label="Đánh dấu đã hoàn thành bước 6"><svg aria-hidden="true"><use href="#icon-check-mark"></use></svg></button>
+            <span class="step-text"><strong>Bước 6.</strong> <span>Để kết thúc phiên làm việc, đóng cửa sổ hoặc gõ lệnh quit() rồi nhấn Enter.</span></span>
+          </li>
+        </ol>
+        <span class="step-counter" id="stepCounter">Đã hoàn thành 0 / 6 bước</span>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn--primary" id="openSandboxBtn">Mở phòng chạy mã để thử ngay</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="phongma" class="lesson-section" aria-labelledby="phongma-heading">
+      <div class="section-card">
+        <span class="section-eyebrow">PHÒNG CHẠY MÃ PYTHON</span>
+        <h2 id="phongma-heading">Thử chạy chương trình Python thật</h2>
+        <p>Đây là một trình thông dịch Python chạy ngay trên trình duyệt (không cần cài đặt). Em có thể sửa mã trong ô bên dưới rồi bấm <strong>Chạy chương trình</strong> để xem kết quả.</p>
+
+        <div class="runner-panel">
+          <div class="runner-status" id="runnerStatus" role="status">Đang kiểm tra Python...</div>
+
+          <div class="btn-row">
+            <button type="button" class="btn" data-target="exampleCode1">Nạp Ví dụ 1 · Kiểu dữ liệu</button>
+            <button type="button" class="btn load-example-btn" data-target="exampleCode2">Nạp Ví dụ 2 · Phép toán</button>
+            <button type="button" class="btn load-example-btn" data-target="exampleCode3">Nạp Ví dụ 3 · print()</button>
+            <button type="button" class="btn load-example-btn" data-target="exampleCode4">Nạp Ví dụ 4 · input()</button>
+          </div>
+
+          <label for="codeInput" class="muted" style="display:block; font-size:0.82rem; margin-bottom:0.4rem;">Mã chương trình:</label>
+          <textarea id="codeInput" class="code-editor" spellcheck="false"># Chương trình đầu tiên
+print("Xin chào!")</textarea>
+
+          <div class="btn-row">
+            <button type="button" class="btn btn--primary" id="runBtn" disabled>▶ Chạy chương trình</button>
+            <button type="button" class="btn" id="clearOutputBtn">Xóa kết quả</button>
+            <button type="button" class="btn" id="resetCodeBtn">Đặt lại mã</button>
+          </div>
+
+          <label for="codeOutput" class="muted" style="display:block; font-size:0.82rem; margin-bottom:0.4rem;">Kết quả:</label>
+          <pre class="code-output" id="codeOutput" aria-live="polite"></pre>
+        </div>
+
+        <pre class="hidden-source" id="exampleCode1">so_nguyen = 5
+so_thuc = 2.6
+chuoi = "học sinh lớp 10"
+print(so_nguyen)
+print(so_thuc)
+print(chuoi)</pre>
+        <pre class="hidden-source" id="exampleCode2">print(3 + 7)
+print(12 * 5)
+print(20 - 7)
+print(12 / 5)</pre>
+        <pre class="hidden-source" id="exampleCode3">print(10, 3.4 + 4.1, "hoà bình")
+print("Dãy ba số chẵn:", 2, 4, 6)
+print("3 + 7 =", 3 + 7)</pre>
+        <pre class="hidden-source" id="exampleCode4">ten = input("Bạn tên là gì? ")
+print("Xin chào,", ten)</pre>
+      </div>
+    </section>
+
+    <section id="luyentap" class="lesson-section" aria-labelledby="luyentap-heading">
+      <div class="section-card">
+        <span class="section-eyebrow">LUYỆN TẬP</span>
+        <h2 id="luyentap-heading">5 câu hỏi củng cố kiến thức</h2>
+
+        <div class="quiz-progress"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
+        <p class="quiz-progress-label" id="quizProgressLabel">Câu 1 / 5</p>
+
+        <div class="quiz-question active" data-correct="B">
+          <p class="quiz-q-text">Câu 1. Vì sao ngôn ngữ lập trình bậc cao lại dễ sử dụng hơn ngôn ngữ máy?</p>
+          <div class="quiz-options">
+            <button type="button" class="quiz-option" data-choice="A">A. Vì có ít lệnh hơn</button>
+            <button type="button" class="quiz-option" data-choice="B">B. Vì câu lệnh được viết gần với ngôn ngữ tự nhiên</button>
+            <button type="button" class="quiz-option" data-choice="C">C. Vì không cần chương trình dịch</button>
+            <button type="button" class="quiz-option" data-choice="D">D. Vì chạy nhanh hơn ngôn ngữ máy</button>
+          </div>
+          <p class="quiz-feedback" aria-live="polite"></p>
+          <p class="quiz-explain" hidden>Giải thích: Ngôn ngữ lập trình bậc cao dùng từ ngữ và cấu trúc gần với ngôn ngữ tự nhiên của con người nên dễ đọc, dễ viết hơn — nhưng vẫn cần một chương trình dịch để máy tính hiểu và thực hiện.</p>
+        </div>
+
+        <div class="quiz-question" data-correct="A">
+          <p class="quiz-q-text">Câu 2. Python do ai tạo ra và ra mắt lần đầu vào năm nào?</p>
+          <div class="quiz-options">
+            <button type="button" class="quiz-option" data-choice="A">A. Guido van Rossum, năm 1991</button>
+            <button type="button" class="quiz-option" data-choice="B">B. Bill Gates, năm 1995</button>
+            <button type="button" class="quiz-option" data-choice="C">C. Dennis Ritchie, năm 1972</button>
+            <button type="button" class="quiz-option" data-choice="D">D. James Gosling, năm 1995</button>
+          </div>
+          <p class="quiz-feedback" aria-live="polite"></p>
+          <p class="quiz-explain" hidden>Giải thích: Python do Guido van Rossum, người Hà Lan, tạo ra và ra mắt lần đầu năm 1991.</p>
+        </div>
+
+        <div class="quiz-question" data-correct="B">
+          <p class="quiz-q-text">Câu 3. Trong môi trường lập trình Python, dấu nhắc &gt;&gt;&gt; xuất hiện ở chế độ nào?</p>
+          <div class="quiz-options">
+            <button type="button" class="quiz-option" data-choice="A">A. Chế độ soạn thảo</button>
+            <button type="button" class="quiz-option" data-choice="B">B. Chế độ gõ lệnh trực tiếp</button>
+            <button type="button" class="quiz-option" data-choice="C">C. Chế độ gỡ lỗi</button>
+            <button type="button" class="quiz-option" data-choice="D">D. Chế độ biên dịch</button>
+          </div>
+          <p class="quiz-feedback" aria-live="polite"></p>
+          <p class="quiz-explain" hidden>Giải thích: Dấu nhắc &gt;&gt;&gt; là dấu hiệu của chế độ gõ lệnh trực tiếp — nơi em gõ từng lệnh và nhấn Enter để thực hiện ngay.</p>
+        </div>
+
+        <div class="quiz-question" data-correct="C">
+          <p class="quiz-q-text">Câu 4. Để chạy chương trình đã soạn thảo (ví dụ Bai1.py), ta dùng thao tác nào?</p>
+          <div class="quiz-options">
+            <button type="button" class="quiz-option" data-choice="A">A. Nhấn Ctrl + S</button>
+            <button type="button" class="quiz-option" data-choice="B">B. Chọn File/New File</button>
+            <button type="button" class="quiz-option" data-choice="C">C. Chọn Run/Run Module hoặc nhấn F5</button>
+            <button type="button" class="quiz-option" data-choice="D">D. Gõ lệnh quit()</button>
+          </div>
+          <p class="quiz-feedback" aria-live="polite"></p>
+          <p class="quiz-explain" hidden>Giải thích: Sau khi soạn thảo và lưu tệp, ta chọn Run/Run Module hoặc nhấn phím F5 để thực hiện chương trình.</p>
+        </div>
+
+        <div class="quiz-question" data-correct="B">
+          <p class="quiz-q-text">Câu 5. Lệnh nào sau đây hiển thị đúng "Tổng là: 15" ra màn hình?</p>
+          <div class="quiz-options">
+            <button type="button" class="quiz-option" data-choice="A">A. print("Tổng là: " 15)</button>
+            <button type="button" class="quiz-option" data-choice="B">B. print("Tổng là:", 15)</button>
+            <button type="button" class="quiz-option" data-choice="C">C. print(Tổng là:, 15)</button>
+            <button type="button" class="quiz-option" data-choice="D">D. print["Tổng là:", 15]</button>
+          </div>
+          <p class="quiz-feedback" aria-live="polite"></p>
+          <p class="quiz-explain" hidden>Giải thích: Cú pháp đúng là print(v1, v2, ..., vn) — các giá trị cách nhau bằng dấu phẩy trong ngoặc tròn; chuỗi kí tự phải đặt trong dấu nháy kép.</p>
+        </div>
+
+        <div class="quiz-nav">
+          <button type="button" class="btn btn--primary" id="quizNextBtn" disabled>Câu tiếp theo</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tongket" class="lesson-section" aria-labelledby="tongket-heading">
+      <div class="section-card">
+        <span class="section-eyebrow">TỔNG KẾT</span>
+        <h2 id="tongket-heading">Những điều em đã học</h2>
+        <ul class="summary-list">
+          <li>Ngôn ngữ lập trình bậc cao có câu lệnh gần với ngôn ngữ tự nhiên nên dễ đọc, dễ viết hơn ngôn ngữ máy và hợp ngữ.</li>
+          <li>Python là ngôn ngữ lập trình bậc cao phổ biến, đa nền tảng, được dùng nhiều trong nghiên cứu và giáo dục.</li>
+          <li>Môi trường lập trình Python có hai chế độ: gõ lệnh trực tiếp và soạn thảo.</li>
+          <li>Lệnh print() dùng để đưa dữ liệu ra màn hình, có thể in nhiều giá trị cùng lúc và tính toán biểu thức.</li>
+        </ul>
+
+        <p class="muted">Điểm luyện tập của em:</p>
+        <div class="score-display"><strong id="finalScoreDisplay">-- / 5</strong></div>
+        <p id="finalScoreNote" class="muted"></p>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn--primary" id="quizRetryBtn">Làm lại bài luyện tập</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="vongquay" class="lesson-section" aria-labelledby="vongquay-heading">
+      <div class="section-card">
+        <span class="section-eyebrow">CÔNG CỤ GIÁO VIÊN</span>
+        <h2 id="vongquay-heading">Vòng quay gọi tên học sinh</h2>
+        <p>Nhập danh sách học sinh (mỗi tên một dòng), lưu lại rồi bấm Quay ngẫu nhiên. Hệ thống sẽ tránh gọi lại tên đã chọn cho đến khi hết lượt.</p>
+
+        <div class="spinner-grid">
+          <div>
+            <label for="namesInput" class="muted" style="display:block; font-size:0.82rem; margin-bottom:0.4rem;">Danh sách học sinh:</label>
+            <textarea id="namesInput" class="names-textarea" spellcheck="false" placeholder="Nguyễn Văn A
+Trần Thị B
+Lê Văn C"></textarea>
+            <div class="btn-row">
+              <button type="button" class="btn btn--primary" id="saveNamesBtn">Lưu danh sách</button>
+            </div>
+            <p class="names-status" id="namesStatus">Chưa có danh sách. Hãy nhập tên rồi bấm Lưu danh sách.</p>
+          </div>
+
+          <div>
+            <div class="spin-stage">
+              <div class="spin-result" id="spinResult">--</div>
+            </div>
+            <div class="btn-row">
+              <button type="button" class="btn btn--primary" id="spinBtn" disabled>🎲 Quay ngẫu nhiên</button>
+              <button type="button" class="btn" id="openHistoryBtn">Xem lịch sử</button>
+              <button type="button" class="btn" id="resetRoundBtn">Đặt lại lượt gọi</button>
+            </div>
+          </div>
+        </div>
+
+        <dialog id="historyDialog">
+          <div class="dialog-head">
+            <h3>Lịch sử lượt gọi</h3>
+            <button type="button" class="btn" id="closeHistoryBtn" aria-label="Đóng hộp thoại lịch sử">
+              <svg aria-hidden="true" style="width:1rem;height:1rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;"><use href="#icon-close"></use></svg>
+            </button>
+          </div>
+          <ol class="history-list" id="historyList"></ol>
+        </dialog>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <img class="footer-logo" src="../assets/logo-thpt-nguyen-khuyen.png" alt="Logo Trường THPT Nguyễn Khuyến" width="44" height="44" loading="lazy">
+    <p class="footer-text"><strong>Trường THPT Nguyễn Khuyến</strong> · Góc học tập môn Tin học · GV: Tăng Ngọc Phụng</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js" defer></script>
+
+<script>
+(function () {
+  'use strict';
+
+  function initNav() {
+    try {
+      var root = document.documentElement;
+      var navLinks = Array.prototype.slice.call(document.querySelectorAll('.lesson-nav-link'));
+      var sections = Array.prototype.slice.call(document.querySelectorAll('.lesson-section'));
+      if (!navLinks.length || !sections.length) return;
+
+      root.classList.add('js-enabled');
+
+      function activateSection(id, scrollToTop) {
+        var found = false;
+        sections.forEach(function (sec) {
+          var match = sec.id === id;
+          sec.classList.toggle('active', match);
+          if (match) found = true;
+        });
+        if (!found) return;
+        navLinks.forEach(function (a) {
+          var match = a.getAttribute('href') === '#' + id;
+          a.classList.toggle('active', match);
+          a.setAttribute('aria-current', match ? 'true' : 'false');
+        });
+        try { localStorage.setItem('bai16:lastSection', id); } catch (e) {}
+        if (scrollToTop) {
+          var main = document.getElementById('lessonMain');
+          if (main) main.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      navLinks.forEach(function (a) {
+        a.addEventListener('click', function (evt) {
+          var href = a.getAttribute('href') || '';
+          if (href.charAt(0) !== '#') return;
+          evt.preventDefault();
+          activateSection(href.slice(1), true);
+        });
+      });
+
+      window.lessonGoTo = function (id) { activateSection(id, true); };
+
+      var savedId = null;
+      try { savedId = localStorage.getItem('bai16:lastSection'); } catch (e) {}
+      if (savedId && document.getElementById(savedId)) {
+        activateSection(savedId, false);
+      }
+    } catch (err) {
+      console.error('Loi khoi tao dieu huong:', err);
+    }
+  }
+
+  function initInlineCheck() {
+    try {
+      var groups = Array.prototype.slice.call(document.querySelectorAll('.inline-check'));
+      groups.forEach(function (group) {
+        var opts = Array.prototype.slice.call(group.querySelectorAll('.inline-check-option'));
+        var feedback = group.querySelector('.inline-check-feedback');
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            opts.forEach(function (o) {
+              o.disabled = true;
+              o.classList.remove('is-correct', 'is-incorrect');
+            });
+            opts.forEach(function (o) {
+              if (o.getAttribute('data-correct') === 'true') o.classList.add('is-correct');
+            });
+            var correct = opt.getAttribute('data-correct') === 'true';
+            if (!correct) opt.classList.add('is-incorrect');
+            opt.classList.add('selected');
+            if (feedback) {
+              feedback.textContent = opt.getAttribute('data-explain') || '';
+              feedback.hidden = false;
+            }
+          });
+        });
+      });
+    } catch (err) {
+      console.error('Loi khoi tao cau hoi nhanh:', err);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    initNav();
+    initInlineCheck();
+  });
+})();
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  function initQuiz() {
+    try {
+      var questions = Array.prototype.slice.call(document.querySelectorAll('.quiz-question'));
+      var nextBtn = document.getElementById('quizNextBtn');
+      var progressFill = document.getElementById('quizProgressFill');
+      var progressLabel = document.getElementById('quizProgressLabel');
+      var retryBtn = document.getElementById('quizRetryBtn');
+      var finalScoreEl = document.getElementById('finalScoreDisplay');
+      var finalScoreNote = document.getElementById('finalScoreNote');
+      if (!questions.length || !nextBtn) return;
+
+      var total = questions.length;
+      var current = 0;
+      var score = 0;
+      var answeredCurrent = false;
+
+      function updateProgress() {
+        var pct = Math.round(((current + 1) / total) * 100);
+        if (progressFill) progressFill.style.width = pct + '%';
+        if (progressLabel) progressLabel.textContent = 'Câu ' + (current + 1) + ' / ' + total;
+      }
+
+      function showQuestion(index) {
+        questions.forEach(function (q, i) {
+          q.classList.toggle('active', i === index);
+        });
+        answeredCurrent = false;
+        nextBtn.disabled = true;
+        nextBtn.textContent = (index === total - 1) ? 'Xem kết quả' : 'Câu tiếp theo';
+        updateProgress();
+      }
+
+      function handleOptionClick(question, optionBtn) {
+        if (answeredCurrent) return;
+        answeredCurrent = true;
+        var options = Array.prototype.slice.call(question.querySelectorAll('.quiz-option'));
+        var correctChoice = question.getAttribute('data-correct');
+        var chosen = optionBtn.getAttribute('data-choice');
+        var isCorrect = chosen === correctChoice;
+        options.forEach(function (opt) {
+          opt.disabled = true;
+          if (opt.getAttribute('data-choice') === correctChoice) {
+            opt.classList.add('is-correct');
+          } else if (opt === optionBtn) {
+            opt.classList.add('is-incorrect');
+          }
+        });
+        var feedback = question.querySelector('.quiz-feedback');
+        if (feedback) {
+          feedback.textContent = isCorrect ? 'Chính xác!' : 'Chưa đúng.';
+          feedback.classList.toggle('is-correct', isCorrect);
+          feedback.classList.toggle('is-incorrect', !isCorrect);
+        }
+        var explain = question.querySelector('.quiz-explain');
+        if (explain) explain.hidden = false;
+        if (isCorrect) score += 1;
+        nextBtn.disabled = false;
+      }
+
+      questions.forEach(function (q) {
+        var options = Array.prototype.slice.call(q.querySelectorAll('.quiz-option'));
+        options.forEach(function (opt) {
+          opt.addEventListener('click', function () { handleOptionClick(q, opt); });
+        });
+      });
+
+      function finishQuiz() {
+        if (finalScoreEl) finalScoreEl.textContent = score + ' / ' + total;
+        if (finalScoreNote) {
+          var ratio = score / total;
+          var note = '';
+          if (ratio === 1) note = 'Xuất sắc! Em đã nắm vững toàn bộ nội dung Bài 16.';
+          else if (ratio >= 0.6) note = 'Khá tốt! Em nên xem lại những câu còn sai.';
+          else note = 'Em nên đọc lại phần Kiến thức mới rồi làm lại bài luyện tập.';
+          finalScoreNote.textContent = note;
+        }
+        if (typeof window.lessonGoTo === 'function') {
+          window.lessonGoTo('tongket');
+        }
+      }
+
+      nextBtn.addEventListener('click', function () {
+        if (nextBtn.disabled) return;
+        if (current < total - 1) {
+          current += 1;
+          showQuestion(current);
+        } else {
+          finishQuiz();
+        }
+      });
+
+      function resetQuiz() {
+        current = 0;
+        score = 0;
+        answeredCurrent = false;
+        questions.forEach(function (q) {
+          var options = Array.prototype.slice.call(q.querySelectorAll('.quiz-option'));
+          options.forEach(function (opt) {
+            opt.disabled = false;
+            opt.classList.remove('is-correct', 'is-incorrect');
+          });
+          var feedback = q.querySelector('.quiz-feedback');
+          if (feedback) { feedback.textContent = ''; feedback.classList.remove('is-correct', 'is-incorrect'); }
+          var explain = q.querySelector('.quiz-explain');
+          if (explain) explain.hidden = true;
+        });
+        showQuestion(0);
+        if (finalScoreEl) finalScoreEl.textContent = '-- / ' + total;
+        if (finalScoreNote) finalScoreNote.textContent = '';
+        if (typeof window.lessonGoTo === 'function') {
+          window.lessonGoTo('luyentap');
+        }
+      }
+
+      if (retryBtn) {
+        retryBtn.addEventListener('click', resetQuiz);
+      }
+
+      showQuestion(0);
+    } catch (err) {
+      console.error('Loi khoi tao luyen tap:', err);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initQuiz);
+})();
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  function initChecklist() {
+    try {
+      var steps = Array.prototype.slice.call(document.querySelectorAll('.step-toggle'));
+      var counter = document.getElementById('stepCounter');
+      if (!steps.length) return;
+
+      function updateCounter() {
+        var done = steps.filter(function (b) { return b.getAttribute('aria-pressed') === 'true'; }).length;
+        if (counter) counter.textContent = 'Đã hoàn thành ' + done + ' / ' + steps.length + ' bước';
+      }
+
+      steps.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var pressed = btn.getAttribute('aria-pressed') === 'true';
+          btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+          btn.classList.toggle('is-done', !pressed);
+          updateCounter();
+        });
+      });
+
+      updateCounter();
+    } catch (err) {
+      console.error('Loi khoi tao danh sach buoc:', err);
+    }
+  }
+
+  function initOpenSandboxLink() {
+    try {
+      var btn = document.getElementById('openSandboxBtn');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var editor = document.getElementById('codeInput');
+        var starter = document.getElementById('starterCode');
+        if (editor && starter) {
+          editor.value = starter.textContent;
+        }
+        var output = document.getElementById('codeOutput');
+        if (output) output.textContent = '';
+        if (typeof window.lessonGoTo === 'function') {
+          window.lessonGoTo('phongma');
+        }
+      });
+    } catch (err) {
+      console.error('Loi khoi tao nut mo phong ma:', err);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    initChecklist();
+    initOpenSandboxLink();
+  });
+})();
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  function isSkulptReady() {
+    return !!(window.Sk && window.Sk.misceval && typeof window.Sk.misceval.asyncToPromise === 'function' &&
+      typeof window.Sk.importMainWithBody === 'function' && window.Sk.builtinFiles && window.Sk.builtinFiles.files);
+  }
+
+  function builtinRead(filename) {
+    if (!window.Sk.builtinFiles || !window.Sk.builtinFiles.files || window.Sk.builtinFiles.files[filename] === undefined) {
+      throw new Error('File not found: ' + filename);
+    }
+    return window.Sk.builtinFiles.files[filename];
+  }
+
+  function initCodeRunner() {
+    try {
+      var statusEl = document.getElementById('runnerStatus');
+      var runBtn = document.getElementById('runBtn');
+      var clearBtn = document.getElementById('clearOutputBtn');
+      var resetBtn = document.getElementById('resetCodeBtn');
+      var loadButtons = Array.prototype.slice.call(document.querySelectorAll('[data-target]'));
+      var editor = document.getElementById('codeInput');
+      var output = document.getElementById('codeOutput');
+      var starter = document.getElementById('starterCode');
+
+      if (!runBtn || !editor || !output || !statusEl) return;
+
+      function setStatus(text, kind) {
+        statusEl.textContent = text;
+        statusEl.className = 'runner-status' + (kind ? ' runner-status--' + kind : '');
+      }
+
+      function refreshEngineState(showChecking) {
+        if (showChecking) setStatus('Đang kiểm tra Python...', 'loading');
+        if (isSkulptReady()) {
+          setStatus('Sẵn sàng chạy Python', 'ok');
+          runBtn.disabled = false;
+          return true;
+        }
+        setStatus('Chưa tải được Python. Kiểm tra kết nối Internet rồi bấm Chạy để thử lại.', 'error');
+        runBtn.disabled = false;
+        return false;
+      }
+
+      function appendOutput(text) {
+        output.textContent += text;
+      }
+
+      function runProgram() {
+        if (runBtn.getAttribute('aria-busy') === 'true') return;
+        var code = editor.value || '';
+        if (!code.replace(/\s/g, '').length) {
+          setStatus('Chưa có mã nào để chạy.', 'error');
+          return;
+        }
+        if (!isSkulptReady()) {
+          refreshEngineState(false);
+          if (!isSkulptReady()) return;
+        }
+
+        runBtn.disabled = true;
+        runBtn.setAttribute('aria-busy', 'true');
+        output.textContent = '';
+        setStatus('Đang chạy chương trình...', 'loading');
+
+        try {
+          window.Sk.execLimit = 8000;
+          window.Sk.configure({
+            output: appendOutput,
+            read: builtinRead,
+            __future__: window.Sk.python3,
+            inputfun: function (promptText) {
+              var value = window.prompt(promptText || '');
+              return value === null ? '' : value;
+            },
+            inputfunTakesPrompt: true
+          });
+
+          window.Sk.misceval.asyncToPromise(function () {
+            return window.Sk.importMainWithBody('<stdin>', false, code, true);
+          }).then(function () {
+            if (!output.textContent.trim().length) {
+              appendOutput('Chương trình chạy thành công, không có đầu ra.');
+            }
+            setStatus('Chạy xong.', 'ok');
+          }).catch(function (err) {
+            var message = err && err.toString ? err.toString() : String(err);
+            var isTimeout = /time/i.test(message) && /limit/i.test(message);
+            if (isTimeout) {
+              setStatus('Quá thời gian thực thi (quá 8 giây). Kiểm tra vòng lặp vô hạn trong chương trình.', 'error');
+            } else {
+              setStatus('Lỗi: ' + message, 'error');
+            }
+          }).finally(function () {
+            runBtn.disabled = false;
+            runBtn.removeAttribute('aria-busy');
+          });
+        } catch (syncErr) {
+          var syncMsg = syncErr && syncErr.message ? syncErr.message : String(syncErr);
+          setStatus('Lỗi cấu hình Python: ' + syncMsg, 'error');
+          runBtn.disabled = false;
+          runBtn.removeAttribute('aria-busy');
+        }
+      }
+
+      runBtn.addEventListener('click', runProgram);
+
+      if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+          output.textContent = '';
+          setStatus(isSkulptReady() ? 'Sẵn sàng chạy Python' : 'Chưa tải được Python.', isSkulptReady() ? 'ok' : 'error');
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+          if (starter) editor.value = starter.textContent;
+          output.textContent = '';
+        });
+      }
+
+      loadButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var targetId = btn.getAttribute('data-target');
+          var source = targetId ? document.getElementById(targetId) : null;
+          if (source && editor) {
+            editor.value = source.textContent;
+            output.textContent = '';
+            if (typeof window.lessonGoTo === 'function') {
+              window.lessonGoTo('phongma');
+            }
+          }
+        });
+      });
+
+      refreshEngineState(true);
+      setTimeout(function () { refreshEngineState(false); }, 1500);
+    } catch (err) {
+      console.error('Loi khoi tao phong chay ma:', err);
+      var statusFallback = document.getElementById('runnerStatus');
+      if (statusFallback) statusFallback.textContent = 'Không thể khởi tạo phòng chạy mã.';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initCodeRunner);
+})();
+</script>
+
+<script>
+(function () {
+  'use strict';
+  var NEWLINE = String.fromCharCode(10);
+  var CARRIAGE_RETURN = String.fromCharCode(13);
+
+  function initSpinner() {
+    try {
+      var namesInput = document.getElementById('namesInput');
+      var saveBtn = document.getElementById('saveNamesBtn');
+      var spinBtn = document.getElementById('spinBtn');
+      var resultEl = document.getElementById('spinResult');
+      var listStatus = document.getElementById('namesStatus');
+      var historyList = document.getElementById('historyList');
+      var historyDialog = document.getElementById('historyDialog');
+      var openHistoryBtn = document.getElementById('openHistoryBtn');
+      var closeHistoryBtn = document.getElementById('closeHistoryBtn');
+      var resetRoundBtn = document.getElementById('resetRoundBtn');
+
+      if (!namesInput || !saveBtn || !spinBtn) return;
+
+      var roster = [];
+      var calledThisRound = [];
+      var history = [];
+      var spinTimer = null;
+
+      function parseNames(raw) {
+        var cleaned = raw.split(CARRIAGE_RETURN).join('');
+        var parts = cleaned.split(NEWLINE);
+        var result = [];
+        parts.forEach(function (p) {
+          var trimmed = p.trim();
+          if (trimmed.length > 0) result.push(trimmed);
+        });
+        return result;
+      }
+
+      function renderHistory() {
+        if (!historyList) return;
+        historyList.textContent = '';
+        if (!history.length) {
+          var li = document.createElement('li');
+          li.textContent = 'Chưa có lượt gọi nào.';
+          li.className = 'history-empty';
+          historyList.appendChild(li);
+          return;
+        }
+        history.forEach(function (name, idx) {
+          var item = document.createElement('li');
+          item.textContent = (idx + 1) + '. ' + name;
+          historyList.appendChild(item);
+        });
+      }
+
+      function updateListStatus() {
+        if (!listStatus) return;
+        if (!roster.length) {
+          listStatus.textContent = 'Chưa có danh sách. Hãy nhập tên rồi bấm Lưu danh sách.';
+          spinBtn.disabled = true;
+        } else {
+          listStatus.textContent = 'Danh sách có ' + roster.length + ' học sinh. Đã gọi ' + calledThisRound.length + ' / ' + roster.length + ' trong lượt này.';
+          spinBtn.disabled = false;
+        }
+      }
+
+      saveBtn.addEventListener('click', function () {
+        roster = parseNames(namesInput.value || '');
+        calledThisRound = [];
+        history = [];
+        if (resultEl) resultEl.textContent = '--';
+        renderHistory();
+        updateListStatus();
+      });
+
+      function pickRandom(list) {
+        var idx = Math.floor(Math.random() * list.length);
+        return list[idx];
+      }
+
+      function finishSpin(chosen) {
+        if (resultEl) resultEl.textContent = chosen;
+        calledThisRound.push(chosen);
+        history.unshift(chosen);
+        renderHistory();
+        updateListStatus();
+        spinBtn.disabled = false;
+        spinBtn.removeAttribute('aria-busy');
+      }
+
+      spinBtn.addEventListener('click', function () {
+        if (spinBtn.getAttribute('aria-busy') === 'true') return;
+        if (!roster.length) {
+          updateListStatus();
+          return;
+        }
+        var remaining = roster.filter(function (n) { return calledThisRound.indexOf(n) === -1; });
+        if (!remaining.length) {
+          calledThisRound = [];
+          remaining = roster.slice();
+          if (listStatus) listStatus.textContent = 'Đã gọi hết lượt trước, bắt đầu lượt mới.';
+        }
+        var chosen = pickRandom(remaining);
+
+        spinBtn.disabled = true;
+        spinBtn.setAttribute('aria-busy', 'true');
+
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion || remaining.length === 1) {
+          finishSpin(chosen);
+          return;
+        }
+
+        var ticks = 14;
+        var delay = 70;
+        var count = 0;
+        if (spinTimer) clearInterval(spinTimer);
+        spinTimer = setInterval(function () {
+          count += 1;
+          if (resultEl) resultEl.textContent = pickRandom(roster);
+          if (count >= ticks) {
+            clearInterval(spinTimer);
+            spinTimer = null;
+            finishSpin(chosen);
+          }
+        }, delay);
+      });
+
+      if (resetRoundBtn) {
+        resetRoundBtn.addEventListener('click', function () {
+          calledThisRound = [];
+          history = [];
+          renderHistory();
+          updateListStatus();
+          if (resultEl) resultEl.textContent = '--';
+        });
+      }
+
+      if (openHistoryBtn && historyDialog && typeof historyDialog.showModal === 'function') {
+        openHistoryBtn.addEventListener('click', function () {
+          renderHistory();
+          historyDialog.showModal();
+        });
+      } else if (openHistoryBtn && historyDialog) {
+        openHistoryBtn.addEventListener('click', function () {
+          renderHistory();
+          historyDialog.setAttribute('open', 'open');
+        });
+      }
+
+      if (closeHistoryBtn && historyDialog) {
+        closeHistoryBtn.addEventListener('click', function () {
+          if (typeof historyDialog.close === 'function') {
+            historyDialog.close();
+          } else {
+            historyDialog.removeAttribute('open');
+          }
+        });
+      }
+
+      renderHistory();
+      updateListStatus();
+    } catch (err) {
+      console.error('Loi khoi tao vong quay goi ten:', err);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initSpinner);
+})();
+</script>
+</body>
+</html>
