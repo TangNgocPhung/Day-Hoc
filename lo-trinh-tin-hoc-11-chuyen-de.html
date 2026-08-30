@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lộ Trình Tin Học 11 · Chuyên đề</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #EFF1EC;
+    --surface: #FFFFFF;
+    --surface-2: #F6F7F1;
+    --ink: #232823;
+    --ink-muted: #5B6259;
+    --ink-faint: #8B9186;
+    --rule: #DEE2D5;
+    --border: #D6DACC;
+    --on-accent: #FFFFFF;
+
+    --accent-1: #34618F;
+    --accent-2: #B5762A;
+    --accent-exam: #A33B3B;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+    --shadow: 0 10px 30px -14px rgba(35, 40, 35, 0.28);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1B1D18;
+      --surface: #232620;
+      --surface-2: #292C24;
+      --ink: #ECEEE5;
+      --ink-muted: #ABB2A0;
+      --ink-faint: #767C6B;
+      --rule: #363A30;
+      --border: #383C31;
+      --on-accent: #15160F;
+
+      --accent-1: #82B2E1;
+      --accent-2: #E3A868;
+      --accent-exam: #E38080;
+
+      --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1B1D18;
+    --surface: #232620;
+    --surface-2: #292C24;
+    --ink: #ECEEE5;
+    --ink-muted: #ABB2A0;
+    --ink-faint: #767C6B;
+    --rule: #363A30;
+    --border: #383C31;
+    --on-accent: #15160F;
+
+    --accent-1: #82B2E1;
+    --accent-2: #E3A868;
+    --accent-exam: #E38080;
+
+    --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 2rem) 4rem;
+  }
+
+  .masthead { max-width: 720px; margin-bottom: 1.75rem; }
+
+  .masthead-eyebrow {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    margin-bottom: 0.85rem;
+  }
+
+  .masthead-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2rem, 4.6vw, 2.85rem);
+    line-height: 1.05;
+    margin: 0 0 0.6rem;
+    text-wrap: balance;
+  }
+
+  .masthead-sub {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    margin: 0;
+    max-width: 62ch;
+  }
+
+  .exam-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .exam-pill {
+    appearance: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--accent-exam) 45%, var(--border));
+    background: color-mix(in srgb, var(--accent-exam) 9%, var(--surface));
+    color: var(--ink);
+    font-family: var(--font-body);
+    transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .exam-pill:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--accent-exam) 16%, var(--surface)); }
+  .exam-pill:focus-visible { outline: 2px solid var(--accent-exam); outline-offset: 2px; }
+
+  .exam-pill-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent-exam);
+  }
+
+  .exam-pill-date {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 1.1rem; align-items: center; }
+
+  .legend-item { display: flex; align-items: center; gap: 0.45rem; font-size: 0.82rem; color: var(--ink-muted); }
+
+  .legend-swatch { width: 0.65rem; height: 0.65rem; border-radius: 3px; flex: 0 0 auto; }
+
+  .controls { display: flex; gap: 0.5rem; }
+
+  .ctrl-btn {
+    appearance: none;
+    cursor: pointer;
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--ink-muted);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+  }
+
+  .ctrl-btn:hover { color: var(--ink); border-color: color-mix(in srgb, var(--ink) 30%, var(--border)); }
+  .ctrl-btn:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+
+  .canvas-wrap {
+    position: relative;
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .connectors { position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible; }
+
+  .tree { position: relative; z-index: 1; width: max-content; min-width: 100%; }
+
+  .node { display: flex; align-items: flex-start; gap: 1.85rem; position: relative; }
+
+  .node-card {
+    --accent: var(--ink-faint);
+    flex: 0 0 auto;
+    width: 300px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+  }
+
+  .node-card.clickable { cursor: pointer; }
+  .node-card.clickable:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+  .node-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .node-card.flash {
+    animation: flashPulse 1.1s ease;
+  }
+  @keyframes flashPulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-exam) 55%, transparent); }
+    100% { box-shadow: 0 0 0 14px color-mix(in srgb, var(--accent-exam) 0%, transparent); }
+  }
+
+  .node-card-root {
+    width: 260px;
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .node-card-root .node-title { color: var(--surface); }
+  .node-card-root .node-sub { color: color-mix(in srgb, var(--surface) 70%, var(--ink)); }
+  .node-card-root .node-count { color: color-mix(in srgb, var(--surface) 55%, var(--ink)); }
+
+  .node-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+
+  .node-kicker {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .node-title {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.98rem;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .node-card-root .node-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; }
+
+  .node-sub {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--ink-muted);
+    margin-top: 0.35rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .node-count {
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    margin-top: 0.3rem;
+  }
+
+  .chevron {
+    flex: 0 0 auto;
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--accent);
+    transition: transform 0.25s ease;
+  }
+  .node-card.open .chevron { transform: rotate(90deg); }
+
+  .exam-badge {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--accent-exam) 13%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent-exam) 38%, var(--border));
+  }
+  .exam-badge-label { font-size: 0.72rem; font-weight: 700; color: var(--accent-exam); }
+  .exam-badge-date { font-family: var(--font-mono); font-size: 0.74rem; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+
+  .topic-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+  .topic-dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--accent); }
+
+  .node-marker .node-card {
+    background: transparent;
+    border-style: dashed;
+    padding: 0.6rem 0.9rem;
+    width: 300px;
+  }
+  .node-marker .node-title { font-weight: 500; font-style: italic; color: var(--ink-faint); font-size: 0.86rem; }
+  .node-marker .node-sub { margin-top: 0.2rem; }
+
+  .children-grid {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.38s cubic-bezier(.4,0,.2,1);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .children-grid.open { grid-template-rows: 1fr; }
+  .children-inner { overflow: hidden; min-height: 0; }
+  .children-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.15rem 0.15rem 0.15rem 0;
+  }
+
+  .lesson-detail {
+    width: 360px;
+    margin-top: 0.65rem;
+    padding-top: 0.65rem;
+    border-top: 1px dashed var(--border);
+  }
+  .lesson-detail ul { margin: 0 0 0.55rem; padding-left: 1.1rem; }
+  .lesson-detail li { font-size: 0.82rem; line-height: 1.55; color: var(--ink-muted); margin-bottom: 0.25rem; }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.55rem; }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink-faint);
+  }
+
+  .detail-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    margin-bottom: 0.2rem;
+  }
+  .detail-block { margin-bottom: 0.55rem; }
+  .detail-block p { margin: 0; font-size: 0.82rem; line-height: 1.55; color: var(--ink-muted); }
+  .detail-block:last-child { margin-bottom: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .children-grid, .chevron, .node-card, .exam-pill { transition: none !important; animation: none !important; }
+  }
+
+  @media (max-width: 640px) {
+    .node-card, .node-marker .node-card { width: 250px; }
+  }
+</style>
+</head>
+<body>
+
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="icon-chevron" viewBox="0 0 24 24">
+    <polyline points="9,5 16,12 9,19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+  </symbol>
+</svg>
+
+<div class="page">
+  <header class="masthead">
+    <span class="masthead-eyebrow">SƠ ĐỒ TƯ DUY · TỰ ĐỘNG DỰNG TỪ KẾ HOẠCH BÀI DẠY</span>
+    <h1 class="masthead-title">Lộ Trình Tin Học 11 · Chuyên đề</h1>
+    <p class="masthead-sub" id="mastheadSub"></p>
+  </header>
+
+  <section class="exam-strip" id="examStrip" aria-label="Lịch kiểm tra định kỳ dự kiến"></section>
+
+  <div class="toolbar">
+    <div class="legend">
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--accent-1)"></span>Học kỳ 1 (GHK1 · CHK1)</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--accent-2)"></span>Học kỳ 2 (GHK2 · CHK2)</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--accent-exam)"></span>Kiểm tra định kỳ</span>
+    </div>
+    <div class="controls">
+      <button class="ctrl-btn" id="expandAllBtn" type="button">Mở rộng tất cả</button>
+      <button class="ctrl-btn" id="collapseAllBtn" type="button">Thu gọn tất cả</button>
+    </div>
+  </div>
+
+  <div class="canvas-wrap" id="canvasWrap">
+    <svg class="connectors" id="connectors"></svg>
+    <div class="tree" id="tree"></div>
+  </div>
+</div>
+
+<script>
+const DATA = {"meta":{"title":"Tin học 11 · Chuyên đề","subtitle":"Kế hoạch bài dạy 2026–2027","span":"07/9/2026 – 29/05/2027","lessonCount":29},"topics":{"F":"Giải quyết vấn đề với sự trợ giúp của máy tính","CĐ1":"Thực hành sử dụng phần mềm vẽ trang trí (inkscape)","G":"Hướng nghiệp với tin học","E":"Ứng dụng tin học","CĐ3":"Thực hành sử dụng phần mềm chỉnh sửa ảnh","A":"Máy tính và xã hội tri thức","CĐ2":"Thực hành sử dụng phần mềm làm phim hoạt hình","D":"Đạo đức, pháp luật và văn hóa trong mội trường số","C":"Tổ chức lưu trữ, tìm kiếm và trao đổi thông tin"},"periods":[{"id":"p-ghk1","code":"GHK1","title":"Trước kiểm tra giữa kỳ 1","exam":{"label":"Ôn tập và kiểm tra giữa học kỳ 1 (+ 1 tiết ôn tập bổ sung)","date":"26-31/10/2026","tiet":"19-21","tuan":7},"items":[{"type":"lesson","id":"l-1","title":"Bài 10 Lưu trữ dữ liệu và khai thác thông tin phục vụ quản lý · Bài 11 Cơ sở dữ liệu","topic":"F","topicName":"GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH","date":"07-12/9/2026","tiet":"1-3","tuan":1,"yccd":["Biết được sự cần thiết phải lưu trữ dữ liệu và khai thác thông tin từ dữ liệu lưu trữ cho các bài toán quản lí.","Hiểu được khái niệm và các thuộc tính cơ bản của cơ sở dữ liệu."],"nls":["5.2.NC1a","1.2.NC1a"],"ai":["Nhận biết vai trò của dữ liệu trong các hệ thống thông minh; hiểu việc lưu trữ và khai thác dữ liệu là nền tảng để AI phân tích và hỗ trợ ra quyết định.","Hiểu cách tổ chức dữ liệu trong cơ sở dữ liệu; liên hệ với việc chuẩn bị dữ liệu cho các ứng dụng AI."],"khung":["11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống.","11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống."]},{"type":"lesson","id":"l-2","title":"Bài 11 Cơ sở dữ liệu · Bài 12 Hệ quản trị cơ sở dữ liệu và hệ cơ sở dữ liệu","topic":"F","topicName":"GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH","date":"14-19/9/2026","tiet":"4-6","tuan":2,"yccd":["Hiểu được khái niệm và các thuộc tính cơ bản của cơ sở dữ liệu.","– Hiểu được khái niệm hệ quản trị CSDL.","– Hiểu được khái niệm hệ CSDL.","– Phân biệt được CSDL tập trung và CSDL phân tán."],"nls":["1.2.NC1a","1.3.NC1b"],"ai":["Hiểu cách tổ chức dữ liệu trong cơ sở dữ liệu; liên hệ với việc chuẩn bị dữ liệu cho các ứng dụng AI.","Hiểu vai trò của hệ quản trị trong việc lưu trữ, xử lí dữ liệu; liên hệ với cách AI khai thác và quản lí dữ liệu lớn."],"khung":["11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống.","11.D2.1 - Trình bày được cách thức vận hành của công nghệ trong hệ thống AI, thể hiện được mối liên hệ giữa các thành phần của hệ thống trong việc thực hiện một nhiệm vụ cụ thể; Trình bày được các cách thức giải quyết vấn đề phát sinh của hệ thống AI nhằm tối ưu hóa hiệu quả hoạt động của hệ thống."]},{"type":"lesson","id":"l-3","title":"Bài 13 Cơ sở dữ liệu quan hệ · Bài 17 Quản trị cơ sở dữ liệu trên máy tính","topic":"F","topicName":"GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH","date":"21-26/9/2026","tiet":"7-9","tuan":3,"yccd":["– Hiểu được mô hình CSDL quan hệ.","– Hiểu được các thuật ngữ và khái niệm liên quan: bản ghi, trường (thuộc tính), khóa, khóa chính, khóa ngoài, liên kết dữ liệu.","– Biết được lợi ích của việc quản trị CSDL trên máy tính.","– Làm quen với MySQL và HeidiSQL - bộ công cụ hỗ trợ việc quản trị CSDL trên máy tính."],"nls":["1.2.NC1a","1.3.NC1a","1.3.NC1b","1.3.NC1b","5.2.NC1b"],"ai":["Hiểu cách liên kết dữ liệu; liên hệ với việc AI sử dụng dữ liệu có cấu trúc để học và suy luận.","Nhận biết vai trò của công cụ quản trị dữ liệu; liên hệ với việc vận hành hệ thống dữ liệu phục vụ AI."],"khung":["11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống.","11.D2.1 - Trình bày được cách thức vận hành của công nghệ trong hệ thống AI, thể hiện được mối liên hệ giữa các thành phần của hệ thống trong việc thực hiện một nhiệm vụ cụ thể."]},{"type":"lesson","id":"l-4","title":"Bài 17 Quản trị cơ sở dữ liệu trên máy tính · Bài 18 Thực hành xác định cấu trúc bảng và các trường khóa","topic":"F","topicName":"GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH","date":"28/9-03/10/2026","tiet":"10-12","tuan":4,"yccd":["– Biết được lợi ích của việc quản trị CSDL trên máy tính.","– Làm quen với MySQL và HeidiSQL - bộ công cụ hỗ trợ việc quản trị CSDL trên máy tính.","Có được hình dung về công việc xác định các bảng dữ liệu, cấu trúc của chúng và các trường khóa trước khi bước vào tạo lập CSDL."],"nls":["1.3.NC1b","5.2.NC1b","1.3.NC1a","1.3.NC1b","1.2.NC1a"],"ai":["Nhận biết vai trò của công cụ quản trị dữ liệu; liên hệ với việc vận hành hệ thống dữ liệu phục vụ AI.","Biết thiết kế cấu trúc dữ liệu; liên hệ với bước chuẩn bị dữ liệu đầu vào cho hệ thống AI."],"khung":["11.D2.1 - Trình bày được cách thức vận hành của công nghệ trong hệ thống AI, thể hiện được mối liên hệ giữa các thành phần của hệ thống trong việc thực hiện một nhiệm vụ cụ thể.","11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống."]},{"type":"lesson","id":"l-5","title":"Bài 19 Thực hành tạo lập cơ sở dữ liệu và các bảng · Bài 20 Thực hành tạo lập các bảng có khóa ngoại","topic":"F","topicName":"GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH","date":"05-10/10/2026","tiet":"13-15","tuan":5,"yccd":["– Biết tạo mới một CSDL, thực hiện thông qua giao diện của phần mềm khách quản trị CSDL HeidiSQL.","– Tạo được các bảng không có khóa ngoài, chỉ định được khóa chính cho mỗi bảng, khóa cấm trùng lặp cho những trường không được có giá trị trùng lặp.","Biết cách tạo mới các bảng có khóa ngoài."],"nls":["1.3.NC1a","1.3.NC1b","5.2.NC1b","1.3.NC1a","1.3.NC1b","5.2.NC1b"],"ai":["Biết tạo và tổ chức dữ liệu trong CSDL; liên hệ với bước chuẩn bị dữ liệu đầu vào cho các hệ thống AI.","Hiểu mối liên kết giữa các bảng dữ liệu; liên hệ với cách AI khai thác dữ liệu có cấu trúc."],"khung":["11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống.","11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống."]},{"type":"lesson","id":"l-6","title":"Bài 20 Thực hành tạo lập các bảng có khóa ngoại · Bài 14 SQL - Ngôn ngữ truy vấn có cấu trúc","topic":"F","topicName":"GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH","date":"12-17/10/2026","tiet":"16-18","tuan":6,"yccd":["Biết cách tạo mới các bảng có khóa ngoài.","Sử dụng được các truy vấn để tìm kiếm và kết xuất thông tin từ Cơ sở dữ liệu."],"nls":["1.3.NC1a","1.3.NC1b","5.2.NC1b","1.1.NC1b","1.3.NC1a","5.2.NC1b"],"ai":["Hiểu mối liên kết giữa các bảng dữ liệu; liên hệ với cách AI khai thác dữ liệu có cấu trúc.","Biết sử dụng truy vấn để khai thác dữ liệu; liên hệ với việc AI sử dụng dữ liệu để phân tích và đưa ra kết quả."],"khung":["11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống.","11.C3.3 - Xác định được một số phương pháp, nhiệm vụ để tùy chỉnh hệ thống AI."]}]},{"id":"p-chk1","code":"CHK1","title":"Trước kiểm tra cuối kỳ 1","exam":{"label":"Ôn tập và kiểm tra học kỳ 1 (+ 1 tiết ôn tập bổ sung)","date":"21-26/12/2026","tiet":"44-46","tuan":15},"items":[{"type":"lesson","id":"l-7","title":"CĐ1 Bài 1 Giới thiệu phần mềm trang trí · CĐ1 Bài 2 Làm việc với đối tượng hình khối · CĐ1 Bài 3 Tạo các đối tượng đường (Tiết 1)","topic":"CĐ1","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM VẼ TRANG TRÍ (Inkscape)","date":"02-07/11/2026","tiet":"22-24","tuan":8,"yccd":["– Sử dụng được các chức năng cơ bản của phần mềm thiết kế đồ họa Inkscape","– Vẽ được hình đơn giản bằng các đối tượng có sẵn trong Inkscape","– Biết và thao tác được một số chức năng của các lệnh tạo, điều chỉnh các đối tượng đồ họa đơn giản đã được định nghĩa sẵn trong hộp công cụ.","– Biết thiết lập màu sắc một cách đa dạng cho các đối tượng đã vẽ để có họa tiết mang tính thẩm mĩ","Thực hiện được việc vẽ hình bằng các đường cong phức tạp và chỉnh sửa được các hình đã có một cách hợp lí"],"nls":["5.2.NC1b","3.1.NC1a","3.1.NC1a","5.2.NC1b","3.1.NC1a","5.2.NC1b"],"ai":["Nhận biết vai trò của AI trong phần mềm thiết kế đồ hoạ (gợi ý hình, tự động chỉnh sửa); bước đầu làm quen công cụ có tích hợp AI.","Hiểu cách AI hỗ trợ tạo và chỉnh sửa đối tượng đồ hoạ; liên hệ với xử lí hình ảnh trong AI.","Biết tạo và chỉnh sửa đường cong; liên hệ với cách AI nhận diện và xử lí hình dạng."],"khung":["11.C3.2 - Mô tả được cách thức vận hành của một số công nghệ AI; Hiểu cách thức các công nghệ vận hành trong hệ thống AI.","11.C3.2 - Mô tả được cách thức vận hành của một số công nghệ AI; Hiểu cách thức các công nghệ vận hành trong hệ thống AI.","11.C2.1 - Trình bày được cách AI hỗ trợ quá trình học tập và thiết kế các công cụ hỗ trợ; Trình bày các công cụ AI mong muốn nhằm hỗ trợ hoạt động học tập."]},{"type":"lesson","id":"l-8","title":"CĐ1 Bài 3 Tạo các đối tượng đường (Tiết 2) · CĐ1 Bài 4 Chỉnh sửa, ghép nối, kết nối các đối tượng đồ họa + Kiểm tra thường xuyên","topic":"CĐ1","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM VẼ TRANG TRÍ (Inkscape)","date":"09-14/11/2026","tiet":"25-27","tuan":9,"yccd":["Thực hiện được việc vẽ hình bằng các đường cong phức tạp và chỉnh sửa được các hình đã có một cách hợp lí","– Hiểu được các phép ghép các đối tượng đồ họa","– Áp dụng để vẽ đối tượng phức tạp từ các đối tượng đơn giản để tạo bố cục hợp lý.","– Sử dụng ảnh bitmap trong bản vẽ tạo ra bức ảnh sinh động"],"nls":["3.1.NC1a","5.2.NC1b","3.1.NC1a","5.2.NC1b"],"ai":["Củng cố kĩ năng tạo hình; liên hệ với việc AI xử lí và tối ưu hình ảnh.","Hiểu cách kết hợp các đối tượng; liên hệ với việc AI tổng hợp dữ liệu để tạo sản phẩm hoàn chỉnh."],"khung":["11.C2.1 - Trình bày được cách AI hỗ trợ quá trình học tập và thiết kế các công cụ hỗ trợ; Trình bày các công cụ AI mong muốn nhằm hỗ trợ hoạt động học tập.","11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống."]},{"type":"lesson","id":"l-9","title":"CĐ1 Bài 5 Thiết kế sản phẩm trang trí hoàn chỉnh","topic":"CĐ1","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM VẼ TRANG TRÍ (Inkscape)","date":"16-21/11/2026","tiet":"28-30","tuan":10,"yccd":["Tạo được sản phẩm đơn giản, hữu ích và thực tế như bưu thiếp, thiệp mừng, … có tính thẩm mĩ, thể hiện được thông điệp muốn truyền tải"],"nls":["3.1.NC1a","5.2.NC1b"],"ai":["Vận dụng công cụ để tạo sản phẩm; bước đầu sử dụng AI hỗ trợ sáng tạo và đánh giá sản phẩm."],"khung":["11.C2.1 - Trình bày được cách AI hỗ trợ quá trình học tập và thiết kế các công cụ hỗ trợ; Trình bày các công cụ AI mong muốn nhằm hỗ trợ hoạt động học tập."]},{"type":"lesson","id":"l-10","title":"Bài 21 Thực hành cập nhật và truy xuất dữ liệu các bảng · Bài 22 Thực hành cập nhật bảng dữ liệu có tham chiếu","topic":"CĐ1","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM VẼ TRANG TRÍ (Inkscape)","date":"23-28/11/2026","tiet":"31-33","tuan":11,"yccd":["Biết cách cập nhật và truy xuất CSDL.","Hiểu được cách thức nhập dữ liệu đối với các bảng có trường khóa ngoài - trường tham chiếu đến một khóa chính của bảng khác."],"nls":["1.3.NC1a","1.1.NC1b","5.2.NC1b","1.3.NC1a","1.3.NC1b","5.2.NC1b"],"ai":["Biết cập nhật và khai thác dữ liệu; liên hệ với quá trình xử lí dữ liệu trong hệ thống AI.","Hiểu tính toàn vẹn dữ liệu; liên hệ với yêu cầu dữ liệu chính xác trong hệ thống AI."],"khung":["11.D2.1 - Trình bày được cách thức vận hành của công nghệ trong hệ thống AI, thể hiện được mối liên hệ giữa các thành phần của hệ thống trong việc thực hiện một nhiệm vụ cụ thể.","11.B3.1 - Xác định và sơ đồ hóa được các vấn đề đạo đức có thể phát sinh trong từng bước thiết kế và vận hành AI."]},{"type":"lesson","id":"l-11","title":"Bài 22 Thực hành cập nhật bảng dữ liệu có tham chiếu · Bài 23 Thực hành truy xuất dữ liệu qua liên kết các bảng · Bài 24 Thực hành sao lưu dữ liệu","topic":"CĐ1","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM VẼ TRANG TRÍ (Inkscape)","date":"30/11-05/12/2026","tiet":"34-36","tuan":12,"yccd":["Hiểu được cách thức nhập dữ liệu đối với các bảng có trường khóa ngoài - trường tham chiếu đến một khóa chính của bảng khác.","Hiểu được cách thức truy xuất dữ liệu qua liên kết các bảng.","Nắm được các thao tác sao lưu và phục hồi dữ liệu."],"nls":["1.3.NC1a","1.3.NC1b","5.2.NC1b","1.1.NC1b","1.3.NC1a","5.2.NC1b"],"ai":["Hiểu tính toàn vẹn dữ liệu; liên hệ với yêu cầu dữ liệu chính xác trong hệ thống AI.","Biết khai thác dữ liệu từ nhiều bảng; liên hệ với việc AI tổng hợp dữ liệu từ nhiều nguồn để phân tích.","Hiểu tầm quan trọng của sao lưu dữ liệu; liên hệ với việc bảo vệ và duy trì dữ liệu trong các hệ thống AI."],"khung":["11.B3.1 - Xác định và sơ đồ hóa được các vấn đề đạo đức có thể phát sinh trong từng bước thiết kế và vận hành AI.","11.D2.1 - Trình bày được cách thức vận hành của công nghệ trong hệ thống AI, thể hiện được mối liên hệ giữa các thành phần của hệ thống trong việc thực hiện một nhiệm vụ cụ thể.","11.B2.1 - Nhận biết và phân loại được các loại rủi ro hoặc sự cố do AI gây ra có thể vi phạm quy định của nhà trường hoặc các văn bản pháp luật liên quan."]},{"type":"lesson","id":"l-12","title":"Bài 15 Bảo mật và an toàn hệ cơ sở dữ liệu · Bài 16 Công việc quản trị cơ sở dữ liệu","topic":"G","topicName":"HƯỚNG NGHIỆP VỚI TIN HỌC","date":"07-12/12/2026","tiet":"37-40","tuan":13,"yccd":["Hiểu được tầm quan trọng và một số biện pháp bảo vệ hệ CSDL.","– Hiểu được các công việc cần thực hiện cùng các kiến thức và kĩ năng cần thiết để quản trị CSDL, các ngành học có liên quan và nhu cầu xã hội đối với công việc quản trị CSDL.","– Có thể tìm kiếm, khai thác và trao đổi thông tin hướng nghiệp liên quan đến công việc quản trị CSDL."],"nls":["4.1.NC1a","4.1.NC1c","4.2.NC1a","1.1.NC1a","2.1.NC1a","2.3.NC1b","5.2.NC1a"],"ai":["Hiểu các biện pháp bảo mật dữ liệu; liên hệ với yêu cầu bảo vệ dữ liệu trong các hệ thống AI.","Nhận biết vai trò của dữ liệu và quản trị dữ liệu trong các lĩnh vực liên quan đến AI; hiểu nhu cầu nghề nghiệp trong thời đại dữ liệu."],"khung":["11.A3.1 - Trình bày được các quyền cơ bản của người dùng dữ liệu (quyền được biết, quyền được đồng ý, quyền yêu cầu xóa dữ liệu...); Thực hành phân tích, đánh giá mức độ đảm bảo các quyền cơ bản của người dùng đối với một số sản phẩm AI.","11.A1.2 - Thực hành phân tích các trường hợp thực tế để thấy được tầm quan trọng của việc sử dụng AI để nâng cao năng lực của con người mà vẫn đảm bảo sự kiểm soát của con người."]},{"type":"marker","title":"Ôn tập và Trường KTTT (+ 1 tiết ôn tập bổ sung)","date":"14-19/12/2026","tuan":14}]},{"id":"p-ghk2","code":"GHK2","title":"Trước kiểm tra giữa kỳ 2","exam":{"label":"Ôn tập và Kiểm tra giữa học kỳ 2 (+ 1 tiết ôn tập bổ sung)","date":"8-13/3/2027","tiet":"71-73","tuan":26},"items":[{"type":"lesson","id":"l-13","title":"Bài 25 Phần mềm chỉnh sửa ảnh · Bài 26 Công cụ tinh chỉnh màu sắc và công cụ chọn","topic":"E","topicName":"ỨNG DỤNG TIN HỌC","date":"28/12/2026-02/01/2027","tiet":"47-49","tuan":16,"yccd":["– Làm quen vơi phần mềm chỉnh sửa ảnh.","– Thực hiện được một số thao tác cơ bản với ảnh: phóng to, thu nhỏ, xoay, cắt ảnh.","– Biết các tham số biểu diễn màu của ảnh số.","– Biết một số công cụ chọn đơn giản.","– Thực hiện được một số lệnh chỉnh màu đơn giản."],"nls":["3.1.NC1a","5.2.NC1b","3.1.NC1a","5.2.NC1b"],"ai":["Nhận biết vai trò của AI trong chỉnh sửa ảnh (tự động làm đẹp, nhận diện đối tượng); bước đầu sử dụng công cụ có tích hợp AI.","Hiểu cách AI hỗ trợ nhận diện vùng chọn và chỉnh màu; liên hệ với xử lí ảnh trong AI."],"khung":["11.C3.2 - Mô tả được cách thức vận hành của một số công nghệ AI; Hiểu cách thức các công nghệ vận hành trong hệ thống AI.","11.C3.2 - Mô tả được cách thức vận hành của một số công nghệ AI; Hiểu cách thức các công nghệ vận hành trong hệ thống AI."]},{"type":"lesson","id":"l-14","title":"Bài 26 Công cụ tinh chỉnh màu sắc và công cụ chọn · Bài 27 Công cụ vẽ và một số ứng dụng","topic":"E","topicName":"ỨNG DỤNG TIN HỌC","date":"04-09/01/2027","tiet":"50-52","tuan":17,"yccd":["– Biết các tham số biểu diễn màu của ảnh số.","– Biết một số công cụ chọn đơn giản.","– Thực hiện được một số lệnh chỉnh màu đơn giản.","– Biết được khái niệm lớp ảnh.","– Biết một số công cụ vẽ đơn giản.","– Thực hiện được một số ứng dụng để tẩy, làm sạch và xóa các vết xước trên ảnh."],"nls":["3.1.NC1a","5.2.NC1b","3.1.NC1a","5.2.NC1b"],"ai":["Hiểu cách AI hỗ trợ nhận diện vùng chọn và chỉnh màu; liên hệ với xử lí ảnh trong AI.","Nhận biết AI hỗ trợ tạo hình ảnh và thiết kế; liên hệ với các ứng dụng AI trong đồ hoạ."],"khung":["11.C3.2 - Mô tả được cách thức vận hành của một số công nghệ AI; Hiểu cách thức các công nghệ vận hành trong hệ thống AI.","11.C2.1 - Trình bày được cách AI hỗ trợ quá trình học tập và thiết kế các công cụ hỗ trợ; Trình bày các công cụ AI mong muốn nhằm hỗ trợ hoạt động học tập."]},{"type":"lesson","id":"l-15","title":"CĐ3 Bài 11 Thao tác với các lớp ảnh · CĐ3 Bài 12 Tạo ảnh động · CĐ3 Bài 13 Điều chỉnh thời gian trễ và tạo chữ động","topic":"CĐ3","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM CHỈNH SỬA ẢNH","date":"11-16/01/2027","tiet":"53-55","tuan":18,"yccd":["– Củng cố các thao tác trên lớp ảnh để chuẩn bị cho việc tạo ảnh động.","– Tạo được mặt nạ lớp cho lớp ảnh.","Tạo được ảnh động từ các ảnh tĩnh với tốc độ hiển thị mặc định.","– Thay đổi được tốc độ hiển thị ảnh động hợp lí.","– Tạo được hiệu ứng chữ chạy."],"nls":["3.1.NC1a","5.2.NC1b","3.1.NC1a","5.2.NC1b","3.1.NC1a","5.2.NC1b"],"ai":["Hiểu cách tổ chức và xử lí các lớp ảnh; liên hệ với cách AI xử lí dữ liệu hình ảnh theo nhiều lớp.","Hiểu cách tạo ảnh động từ dữ liệu hình ảnh; liên hệ với việc AI xử lí và tạo nội dung đa phương tiện.","Hiểu cách điều chỉnh hiển thị nội dung; liên hệ với việc AI tối ưu hóa trải nghiệm người dùng."],"khung":["11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống.","11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống.","11.D2.1 - Trình bày được cách thức vận hành của công nghệ trong hệ thống AI, thể hiện được mối liên hệ giữa các thành phần của hệ thống trong việc thực hiện một nhiệm vụ cụ thể; Trình bày được các cách thức giải quyết vấn đề phát sinh của hệ thống AI nhằm tối ưu hóa hiệu quả hoạt động của hệ thống."]},{"type":"lesson","id":"l-16","title":"CĐ3 Bài 14 Tạo hiệu ứng cho ảnh động · CĐ3 Bài 15 Thực hành biên tập ảnh động","topic":"CĐ3","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM CHỈNH SỬA ẢNH","date":"18-23/01/2027","tiet":"56-58","tuan":19,"yccd":["Tạo được ảnh động với các hiệu ứng có sẵn và hiệu ứng tự tạo.","– Chỉnh sửa được màu sắc trong ảnh động.","– Thực hiện được thay đổi kích thước khung ảnh, thêm, bớt, sao chép các khung ảnh."],"nls":["3.1.NC1a","5.2.NC1b","3.1.NC1a","5.2.NC1b"],"ai":["Nhận biết cách AI hỗ trợ tạo hiệu ứng hình ảnh; liên hệ với ứng dụng AI trong xử lí đồ họa.","Vận dụng công cụ để chỉnh sửa và hoàn thiện sản phẩm; bước đầu sử dụng AI hỗ trợ sáng tạo nội dung."],"khung":["11.D2.1 - Trình bày được cách thức vận hành của công nghệ trong hệ thống AI, thể hiện được mối liên hệ giữa các thành phần của hệ thống trong việc thực hiện một nhiệm vụ cụ thể; Trình bày được các cách thức giải quyết vấn đề phát sinh của hệ thống AI nhằm tối ưu hóa hiệu quả hoạt động của hệ thống.","11.C2.1 - Trình bày được cách AI hỗ trợ quá trình học tập và thiết kế các công cụ hỗ trợ; Trình bày các công cụ AI mong muốn nhằm hỗ trợ hoạt động học tập."]},{"type":"lesson","id":"l-17","title":"Bài 28 Tạo ảnh động · Bài 29 Khám phá phần mềm làm phim","topic":"CĐ3","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM CHỈNH SỬA ẢNH","date":"25-30/01/2027","tiet":"59-61","tuan":20,"yccd":["– Thực hiện được các thao tác tạo ảnh động từ mô hình lớp ảnh.","– Tạo được ảnh động từ các ảnh tĩnh với tốc độ hiển thị mặc định.","Tạo được các đoạn phim, nhập tư liệu từ ảnh và video có sẵn, biên tập được đoạn phim phục vụ học tập và giải trí."],"nls":["3.1.NC1a","5.2.NC1b","3.1.NC1a","5.2.NC1b"],"ai":["Hiểu cách AI hỗ trợ tạo nội dung đa phương tiện; liên hệ với các ứng dụng AI trong xử lí hình ảnh và video.","Biết sử dụng công cụ hỗ trợ AI trong chỉnh sửa video; bước đầu đánh giá sản phẩm do AI hỗ trợ tạo ra."],"khung":["11.C3.2 - Mô tả được cách thức vận hành của một số công nghệ AI; Hiểu cách thức các công nghệ vận hành trong hệ thống AI.","11.C2.1 - Trình bày được cách AI hỗ trợ quá trình học tập và thiết kế các công cụ hỗ trợ."]},{"type":"marker","title":"NGHỈ TẾT","date":"01-06/02/2027","tuan":null},{"type":"marker","title":"NGHỈ TẾT","date":"08-13/02/2027","tuan":null},{"type":"lesson","id":"l-18","title":"Bài 29 Khám phá phần mềm làm phim · Bài 30 Biên tập phim","topic":"CĐ3","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM CHỈNH SỬA ẢNH","date":"15-20/02/2027","tiet":"62-64","tuan":23,"yccd":["Tạo được các đoạn phim, nhập tư liệu từ ảnh và video có sẵn, biên tập được đoạn phim phục vụ học tập và giải trí.","Sử dụng được một số công cụ cơ bản biên tập phim: chỉnh sửa hình ảnh, âm thanh, tạo phụ đề, tạo các hiệu ứng chuyển cảnh, căn chỉnh thời gian."],"nls":["3.1.NC1a","5.2.NC1b","3.1.NC1a","5.2.NC1b"],"ai":["Biết sử dụng công cụ hỗ trợ AI trong chỉnh sửa video; bước đầu đánh giá sản phẩm do AI hỗ trợ tạo ra.","Nhận biết vai trò của AI trong chỉnh sửa video (tự động cắt ghép, tạo hiệu ứng, xử lí âm thanh); bước đầu sử dụng công cụ có hỗ trợ AI."],"khung":["11.C2.1 - Trình bày được cách AI hỗ trợ quá trình học tập và thiết kế các công cụ hỗ trợ.","11.C3.2 - Mô tả được cách thức vận hành của một số công nghệ AI; Hiểu cách thức các công nghệ vận hành trong hệ thống AI."]},{"type":"lesson","id":"l-19","title":"Bài 31 Thực hành tạo phim hoạt hình · Bài 01 Hệ điều hành · Bài 02 Thực hành sử dụng hệ điều hành","topic":"A","topicName":"MÁY TÍNH VÀ XÃ HỘI TRI THỨC","date":"22-27/2/2027","tiet":"65-67","tuan":24,"yccd":["Tạo được đoạn phim hoạt hình từ ảnh, có hội thoại giữa các nhân vật và có phụ đề.","– Nắm được lịch sử phát triển của các hệ điều hành thông dụng cho máy tính cá nhân, một hệ điều hành thương mại và một hệ điều hành nguồn mở.","– Hiểu được đặc điểm của hệ điều hành cho thiết bị di động.","– Hiểu được một các khái quát mối quan hệ giữa phần cứng, hệ điều hành và phần mềm ứng dụng cũng như vai trò của mỗi thành phần trong hoạt động chung của cả hệ thống.","– Sử dụng được một số chức năng cơ bản của hệ điều hành thương mại, hệ điều hành mã nguồn mở.","– Sử dụng được một số tiện ích cơ bản của hệ điều hành cho điện thoại.","– Sử dụng được một số tiện ích có sẵn của hệ điều hành để nâng cao hiệu suất sử dụng máy tính."],"nls":["3.1.NC1a","5.2.NC1b","5.1.NC1a","4.1.NC1a","1.1.NC1a","5.1.NC1a","4.1.NC1a","1.1.NC1a"],"ai":["Vận dụng công cụ để tạo sản phẩm đa phương tiện; liên hệ với việc sử dụng AI hỗ trợ sáng tạo nội dung.","Hiểu vai trò của hệ điều hành trong quản lí tài nguyên; liên hệ với môi trường vận hành các ứng dụng AI.","Biết sử dụng hệ điều hành để quản lí dữ liệu và phần mềm; liên hệ với việc vận hành các ứng dụng AI trên máy tính."],"khung":["11.C2.1 - Trình bày được cách AI hỗ trợ quá trình học tập và thiết kế các công cụ hỗ trợ.","11.D2.1 - Trình bày được cách thức vận hành của công nghệ trong hệ thống AI, thể hiện được mối liên hệ giữa các thành phần của hệ thống.","11.A1.1 - Thực hành xây dựng quy trình sử dụng một sản phẩm AI cụ thể một cách thích hợp."]},{"type":"lesson","id":"l-20","title":"CĐ2 Bài 6 Làm quen với phần mềm làm phim hoạt hình","topic":"CĐ2","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM LÀM PHIM HOẠT HÌNH","date":"1-6/3/2027","tiet":"68-70","tuan":25,"yccd":["Tạo được đoạn phim hoạt hình 2D hoặc 3D có nhân vật, hành động và hội thoại."],"nls":["3.1.NC1a","5.2.NC1b"],"ai":["Nhận biết vai trò của AI trong phần mềm làm phim (tạo chuyển động, gợi ý nội dung); bước đầu sử dụng công cụ có tích hợp AI."],"khung":["11.C3.2 - Mô tả được cách thức vận hành của một số công nghệ AI; Hiểu cách thức các công nghệ vận hành trong hệ thống AI."]}]},{"id":"p-chk2","code":"CHK2","title":"Trước kiểm tra cuối kỳ 2","exam":{"label":"Ôn tập & Kiểm tra cuối học kỳ 2 (+ 1 tiết ôn tập bổ sung)","date":"26-29/04/2027","tiet":"92-94","tuan":33},"items":[{"type":"lesson","id":"l-21","title":"Bài 01 Hệ điều hành · Bài 02 Thực hành sử dụng hệ điều hành · Bài 03 Phần mềm nguồn mở và phần mềm chạy trên Internet","topic":"CĐ2","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM LÀM PHIM HOẠT HÌNH","date":"15-20/03/2027","tiet":"74-76","tuan":27,"yccd":["– Nắm được lịch sử phát triển của các hệ điều hành thông dụng cho máy tính cá nhân, một hệ điều hành thương mại và một hệ điều hành nguồn mở.","– Hiểu được đặc điểm của hệ điều hành cho thiết bị di động.","– Hiểu được một các khái quát mối quan hệ giữa phần cứng, hệ điều hành và phần mềm ứng dụng cũng như vai trò của mỗi thành phần trong hoạt động chung của cả hệ thống.","– Sử dụng được một số chức năng cơ bản của hệ điều hành thương mại, hệ điều hành mã nguồn mở.","– Sử dụng được một số tiện ích cơ bản của hệ điều hành cho điện thoại.","– Sử dụng được một số tiện ích có sẵn của hệ điều hành để nâng cao hiệu suất sử dụng máy tính.","– Nắm được sự khác nhau giữa phần mềm nguồn mở và phần mềm thương mại.","– Hiều được vai trò cuả phần mềm thương mại và phần mềm nguồn mở đối với sự phát triển của công nghệ thông tin.","– Biết được phần mềm chạy trên Internet và lợi ích của chúng.","– Khi giải quyết công việc bằng máy tính biết lựa chọn phần mềm phù hợp."],"nls":["5.1.NC1a","4.1.NC1a","1.1.NC1a","5.1.NC1a","4.1.NC1a","1.1.NC1a","5.2.NC1a","5.2.NC1b","2.3.NC1b"],"ai":["Hiểu vai trò của hệ điều hành trong quản lí tài nguyên; liên hệ với môi trường vận hành các ứng dụng AI.","Biết sử dụng hệ điều hành để quản lí dữ liệu và phần mềm; liên hệ với việc vận hành các ứng dụng AI trên máy tính.","Nhận biết vai trò của phần mềm và dịch vụ trực tuyến trong việc triển khai AI; hiểu xu hướng ứng dụng AI trên nền tảng Internet."],"khung":["11.D2.1 - Trình bày được cách thức vận hành của công nghệ trong hệ thống AI, thể hiện được mối liên hệ giữa các thành phần của hệ thống.","11.A1.1 - Thực hành xây dựng quy trình sử dụng một sản phẩm AI cụ thể một cách thích hợp.","11.C3.2 - Mô tả được cách thức vận hành của một số công nghệ AI."]},{"type":"lesson","id":"l-22","title":"CĐ2 Bài 7 Thiết kế nhân vật hoạt hình","topic":"CĐ2","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM LÀM PHIM HOẠT HÌNH","date":"22-27/03/2027","tiet":"77-79","tuan":28,"yccd":["Thiết kế được các nhân vật hoạt hình."],"nls":["3.1.NC1a","5.2.NC1b"],"ai":["Hiểu cách AI hỗ trợ tạo và chỉnh sửa nhân vật; liên hệ với xử lí hình ảnh trong AI."],"khung":["11.C2.1 - Trình bày được cách AI hỗ trợ quá trình học tập và thiết kế các công cụ hỗ trợ; Trình bày các công cụ AI mong muốn nhằm hỗ trợ hoạt động học tập."]},{"type":"lesson","id":"l-23","title":"CĐ2 Bài 8 Thực hành sản xuất phim hoạt hình","topic":"CĐ2","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM LÀM PHIM HOẠT HÌNH","date":"29/03-03/04/2027","tiet":"80-82","tuan":29,"yccd":["– Thực hiện được các bước chuẩn bị để sản xuất một phim hoạt hình.","– Sản xuất được một bộ phim hoạt hình"],"nls":["3.1.NC1a","5.2.NC1b"],"ai":["Vận dụng công cụ để tạo sản phẩm; liên hệ với việc sử dụng AI hỗ trợ sản xuất nội dung số."],"khung":["11.C3.2 - Mô tả được cách thức vận hành của một số công nghệ AI; Hiểu cách thức các công nghệ vận hành trong hệ thống AI."]},{"type":"lesson","id":"l-24","title":"Bài 04 Bên trong máy tính · Bài 05 Kết nối máy tính với các thiết bị số","topic":"CĐ2","topicName":"THỰC HÀNH SỬ DỤNG PHẦN MỀM LÀM PHIM HOẠT HÌNH","date":"05-10/04/2027","tiet":"83-85","tuan":30,"yccd":["– Nhận diện được một số thiết bị trong thân máy, nắm được chức năng và các thông số đo hiệu năng của chúng.","– Nhận biết được sơ đồ của các mạch logic AND, OR, NOT và giải thích được vai trò của các mạch logic đó trong thực hiện các tính toán nhị phân.","– Đánh giá được chất lượng của máy tính qua những thông số hiệu năng các thiết bị của máy.","– Biết một số thiết bị vào - ra thông dụng và các thông số.","– Biết cách kết nối với máy tính cũng như tùy chỉnh được vài chức năng cơ bản để nâng cao hiệu quả và đáp ứng nhu cầu sử dụng.","– Đọc hiểu và giải thích được một số thông số cơ bản của các thiết bị số thông dụng trong các tài liệu để kết nối chúng với máy tính."],"nls":["5.1.NC1a","5.2.NC1a","4.1.NC1a","5.1.NC1a","5.2.NC1b","4.1.NC1a"],"ai":["Hiểu cấu trúc phần cứng; liên hệ với việc xử lí dữ liệu và tính toán trong hệ thống AI.","Hiểu cách các thiết bị số kết nối và trao đổi dữ liệu; liên hệ với việc thu thập dữ liệu từ thiết bị cho các hệ thống AI."],"khung":["11.D2.1 - Trình bày được cách thức vận hành của công nghệ trong hệ thống AI.","11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống."]},{"type":"lesson","id":"l-25","title":"Bài 05 Kết nối máy tính với các thiết bị số · Bài 09 Giao tiếp an toàn trên Internet","topic":"D","topicName":"ĐẠO ĐỨC, PHÁP LUẬT VÀ VĂN HÓA TRONG MỘI TRƯỜNG SỐ","date":"12-17/04/2027","tiet":"86-88","tuan":31,"yccd":["– Biết một số thiết bị vào - ra thông dụng và các thông số.","– Biết cách kết nối với máy tính cũng như tùy chỉnh được vài chức năng cơ bản để nâng cao hiệu quả và đáp ứng nhu cầu sử dụng.","– Đọc hiểu và giải thích được một số thông số cơ bản của các thiết bị số thông dụng trong các tài liệu để kết nối chúng với máy tính.","– Nêu được một số dạng lừa đảo phổ biến trên không gian số và những biện pháp phòng tránh.","– Biết giao tiếp một cách văn minh, phù hợp với các quy tắc và văn hóa ứng xử trong môi trường số."],"nls":["5.1.NC1a","5.2.NC1b","4.1.NC1a","2.1.NC1a","4.2.NC1a","2.3.NC1b"],"ai":["Hiểu cách các thiết bị số kết nối và trao đổi dữ liệu; liên hệ với việc thu thập dữ liệu từ thiết bị cho các hệ thống AI.","Nhận biết rủi ro khi giao tiếp trên môi trường số (tin giả, lừa đảo, thông tin sai lệch); hiểu cách sử dụng AI và Internet an toàn, có trách nhiệm."],"khung":["11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống.","11.B2.1 - Nhận biết và phân loại được các loại rủi ro hoặc sự cố do AI gây ra có thể vi phạm quy định của nhà trường hoặc các văn bản pháp luật liên quan."]},{"type":"marker","title":"Ôn tập & Trường KTTT (+ 1 tiết ôn tập bổ sung)","date":"19-24/04/2027","tuan":32}]},{"id":"p-sauchk2","code":"SAU CHK2","title":"Sau kiểm tra cuối kỳ 2","exam":null,"items":[{"type":"lesson","id":"l-26","title":"CĐ2 Bài 9 Tạo các nguồn dữ liệu khác nhau cho phim hoạt hình","topic":"D","topicName":"ĐẠO ĐỨC, PHÁP LUẬT VÀ VĂN HÓA TRONG MỘI TRƯỜNG SỐ","date":"03-08/05/2027","tiet":"95-97","tuan":34,"yccd":["– Tạo các nguồn dữ liệu khác nhau cho phim hoạt hình.","– Cắt chỉnh sửa được ảnh và tạo được bộ sưu tập ảnh.","– Tạo phụ đề cho phim hoạt hình."],"nls":["3.1.NC1a","5.2.NC1b"],"ai":["Hiểu vai trò của dữ liệu (hình ảnh, âm thanh) trong sản xuất nội dung; liên hệ với dữ liệu đầu vào của hệ thống AI."],"khung":["11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống."]},{"type":"lesson","id":"l-27","title":"CĐ2 Bài 10 Ra mắt phim hoạt hình của em","topic":"D","topicName":"ĐẠO ĐỨC, PHÁP LUẬT VÀ VĂN HÓA TRONG MỘI TRƯỜNG SỐ","date":"10-15/05/2027","tiet":"98-100","tuan":35,"yccd":["Hoàn thiện phim hoạt hình từ các nguồn dữ liệu khác nhau."],"nls":["3.1.NC1a","5.2.NC1b","4.1.NC1a","1.1.NC1a"],"ai":["Hoàn thiện và trình bày sản phẩm; bước đầu đánh giá sản phẩm có sự hỗ trợ của AI."],"khung":["11.D1.1 - Trình bày được cách thức thiết kế và vận hành tổng thể của một hệ thống AI, thể hiện được mối quan hệ giữa mục tiêu, dữ liệu và các thành phần trong hệ thống."]},{"type":"lesson","id":"l-28","title":"Bài 06 Lưu trữ và chia sẻ tệp tin trên Internet · Bài 07 Thực hành tìm kiếm thông tin trên Internet","topic":"C","topicName":"TỔ CHỨC LƯU TRỮ, TÌM KIẾM VÀ TRAO ĐỔI THÔNG TIN","date":"17-22/05/2027","tiet":"101-103","tuan":36,"yccd":["– Nắm được kiến thức chung về công cụ để lưu trữ và chia sẻ tệp tin trên mạng Internet.","– Sử dụng được một số công cụ trực tuyến như Google Driver hay Dropbox,… để lưu trữ và chia sẻ tệp tin.","– Nắm được kiến thức chung về tìm kiếm thông tin trên Internet.","– Sử dụng được máy tính tìm kiếm trên máy tính và thiết bị số thông minh bằng cách gõ từ khóa hoặc bằng tiếng nói.","– Xác lập được các lựa chọn theo tiêu chí tìm kiếm để nâng cao hiệu quả tìm kiếm."],"nls":["1.3.NC1a","2.1.NC1a","4.2.NC1a","1.1.NC1a","1.1.NC1b","1.2.NC1a"],"ai":["Hiểu vai trò của lưu trữ dữ liệu trực tuyến; liên hệ với việc AI sử dụng dữ liệu từ các hệ thống đám mây.","Biết tìm kiếm và đánh giá thông tin; liên hệ với việc sử dụng công cụ AI để tìm kiếm và xử lí thông tin."],"khung":["11.D2.1 - Trình bày được cách thức vận hành của công nghệ trong hệ thống AI.","11.C2.1 - Trình bày được cách AI hỗ trợ quá trình học tập và thiết kế các công cụ hỗ trợ."]},{"type":"lesson","id":"l-29","title":"Bài 07 Thực hành tìm kiếm thông tin trên Internet · Bài 08 Thực hành nâng cao sử dụng thư điện tử và mạng xã hội","topic":"C","topicName":"TỔ CHỨC LƯU TRỮ, TÌM KIẾM VÀ TRAO ĐỔI THÔNG TIN","date":"24-29/05/2027","tiet":"104-106","tuan":37,"yccd":["– Nắm được kiến thức chung về tìm kiếm thông tin trên Internet.","– Sử dụng được máy tính tìm kiếm trên máy tính và thiết bị số thông minh bằng cách gõ từ khóa hoặc bằng tiếng nói.","– Xác lập được các lựa chọn theo tiêu chí tìm kiếm để nâng cao hiệu quả tìm kiếm.","– Biết đánh dấu và phân loại thư điện tử.","– Khai thác được một số chức năng nâng cao của mạng xã hội."],"nls":["1.1.NC1a","1.1.NC1b","1.2.NC1a","2.1.NC1a","4.2.NC1a","1.3.NC1a"],"ai":["Biết tìm kiếm và đánh giá thông tin; liên hệ với việc sử dụng công cụ AI để tìm kiếm và xử lí thông tin.","Nhận biết cách các hệ thống AI hỗ trợ trong thư điện tử và mạng xã hội (lọc thư rác, gợi ý nội dung, phân loại thông tin); biết sử dụng các công cụ này hiệu quả và an toàn."],"khung":["11.C2.1 - Trình bày được cách AI hỗ trợ quá trình học tập và thiết kế các công cụ hỗ trợ.","11.C3.2 - Mô tả được cách thức vận hành của một số công nghệ AI; Hiểu cách thức các công nghệ vận hành trong hệ thống AI."]}]}]};
+
+const state = {};
+const connections = [];
+const wrap = document.getElementById('canvasWrap');
+const svg = document.getElementById('connectors');
+const treeEl = document.getElementById('tree');
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+function renderLessonDetail(lesson) {
+  const wrapEl = el('div', 'lesson-detail');
+
+  if (lesson.yccd && lesson.yccd.length) {
+    const block = el('div', 'detail-block');
+    block.appendChild(el('span', 'detail-label', 'Yêu cầu cần đạt'));
+    const ul = el('ul');
+    lesson.yccd.forEach(t => ul.appendChild(el('li', null, t.replace(/^[\u2013-]\s*/, ''))));
+    block.appendChild(ul);
+    wrapEl.appendChild(block);
+  }
+
+  if (lesson.nls && lesson.nls.length) {
+    const block = el('div', 'detail-block');
+    block.appendChild(el('span', 'detail-label', 'Năng lực số'));
+    const row = el('div', 'chip-row');
+    lesson.nls.forEach(code => row.appendChild(el('span', 'chip', code)));
+    block.appendChild(row);
+    wrapEl.appendChild(block);
+  }
+
+  if (lesson.ai && lesson.ai.length) {
+    const block = el('div', 'detail-block');
+    block.appendChild(el('span', 'detail-label', 'Tích hợp AI'));
+    block.appendChild(el('p', null, lesson.ai.join(' ')));
+    wrapEl.appendChild(block);
+  }
+
+  if (lesson.khung && lesson.khung.length) {
+    const block = el('div', 'detail-block');
+    block.appendChild(el('span', 'detail-label', 'Khung năng lực số 3439'));
+    block.appendChild(el('p', null, lesson.khung.join(' ')));
+    wrapEl.appendChild(block);
+  }
+
+  return wrapEl;
+}
+
+function makeToggleCard(id, accentVar, headContent, detailBuilder) {
+  const card = el('div', 'node-card clickable');
+  card.dataset.id = id;
+  card.style.setProperty('--accent', accentVar);
+  card.tabIndex = 0;
+  card.setAttribute('role', 'button');
+  card.appendChild(headContent);
+
+  const grid = el('div', 'children-grid');
+  const inner = el('div', 'children-inner');
+  const detail = detailBuilder(card);
+  inner.appendChild(detail);
+  grid.appendChild(inner);
+
+  state[id] = false;
+
+  function apply() {
+    card.classList.toggle('open', state[id]);
+    grid.classList.toggle('open', state[id]);
+  }
+  function toggle() {
+    state[id] = !state[id];
+    apply();
+    scheduleRedraw();
+  }
+  card.addEventListener('click', toggle);
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+  });
+  apply();
+
+  return { card, grid };
+}
+
+function buildLessonNode(lesson, accentVar) {
+  const head = el('div');
+  const kicker = el('span', 'topic-tag');
+  kicker.appendChild(el('span', 'topic-dot'));
+  kicker.appendChild(document.createTextNode('Chủ đề ' + lesson.topic));
+  if (DATA.topics[lesson.topic]) kicker.title = DATA.topics[lesson.topic];
+  head.appendChild(kicker);
+
+  const headRow = el('div', 'node-head');
+  const titleWrap = el('div');
+  titleWrap.appendChild(el('p', 'node-title', lesson.title));
+  const sub = el('div', 'node-sub');
+  sub.textContent = (lesson.date || '') + (lesson.tiet ? '  ·  Tiết ' + lesson.tiet : '');
+  titleWrap.appendChild(sub);
+  headRow.appendChild(titleWrap);
+  const chev = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  chev.setAttribute('class', 'chevron');
+  chev.innerHTML = '<use href="#icon-chevron"></use>';
+  headRow.appendChild(chev);
+  head.appendChild(headRow);
+
+  const { card, grid } = makeToggleCard(lesson.id, accentVar, head, () => renderLessonDetail(lesson));
+
+  const row = el('div', 'node');
+  row.appendChild(card);
+  row.appendChild(grid);
+  return row;
+}
+
+function buildMarkerNode(marker) {
+  const row = el('div', 'node node-marker');
+  const card = el('div', 'node-card');
+  card.appendChild(el('p', 'node-title', marker.title));
+  const sub = el('div', 'node-sub', marker.date || '');
+  card.appendChild(sub);
+  row.appendChild(card);
+  return row;
+}
+
+function buildPeriodNode(period, accentVar) {
+  const head = el('div');
+  const kicker = el('span', 'node-kicker', period.code);
+  head.appendChild(kicker);
+
+  const headRow = el('div', 'node-head');
+  const titleWrap = el('div');
+  titleWrap.appendChild(el('p', 'node-title', period.title));
+  const lessonCount = period.items.filter(it => it.type === 'lesson').length;
+  titleWrap.appendChild(el('div', 'node-count', lessonCount + ' bài học'));
+  headRow.appendChild(titleWrap);
+  const chev = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  chev.setAttribute('class', 'chevron');
+  chev.innerHTML = '<use href="#icon-chevron"></use>';
+  headRow.appendChild(chev);
+  head.appendChild(headRow);
+
+  if (period.exam) {
+    const badge = el('div', 'exam-badge');
+    badge.appendChild(el('span', 'exam-badge-label', period.exam.label));
+    badge.appendChild(el('span', 'exam-badge-date', period.exam.date + (period.exam.tiet ? ' · Tiết ' + period.exam.tiet : '')));
+    head.appendChild(badge);
+  }
+
+  const { card, grid } = makeToggleCard(period.id, accentVar, head, (selfCard) => {
+    const list = el('div', 'children-list');
+    period.items.forEach(it => {
+      const node = it.type === 'lesson' ? buildLessonNode(it, accentVar) : buildMarkerNode(it);
+      list.appendChild(node);
+      if (it.type === 'lesson') {
+        connections.push({ parent: selfCard, child: node.querySelector('.node-card') });
+      }
+    });
+    const holder = el('div');
+    holder.appendChild(list);
+    return holder;
+  });
+
+  const row = el('div', 'node');
+  row.appendChild(card);
+  row.appendChild(grid);
+  return { row, card };
+}
+
+function buildTree() {
+  const rootRow = el('div', 'node node-root');
+  const rootCard = el('div', 'node-card node-card-root open');
+  rootCard.style.setProperty('--accent', 'var(--ink-faint)');
+  rootCard.appendChild(el('p', 'node-title', DATA.meta.title));
+  rootCard.appendChild(el('div', 'node-sub', DATA.meta.subtitle));
+  rootCard.appendChild(el('div', 'node-count', DATA.meta.span + '  ·  ' + DATA.meta.lessonCount + ' bài học'));
+  rootRow.appendChild(rootCard);
+
+  const rootGrid = el('div', 'children-grid open');
+  const rootInner = el('div', 'children-inner');
+  const rootList = el('div', 'children-list');
+
+  DATA.periods.forEach((period, i) => {
+    const accentVar = (period.code === 'GHK1' || period.code === 'CHK1') ? 'var(--accent-1)' : 'var(--accent-2)';
+    const { row, card } = buildPeriodNode(period, accentVar);
+    rootList.appendChild(row);
+    connections.push({ parent: rootCard, child: card });
+    if (i === 0) {
+      state[period.id] = true;
+      card.classList.add('open');
+      row.querySelector('.children-grid').classList.add('open');
+    }
+  });
+
+  rootInner.appendChild(rootList);
+  rootGrid.appendChild(rootInner);
+  rootRow.appendChild(rootGrid);
+  treeEl.appendChild(rootRow);
+}
+
+function buildExamStrip() {
+  const stripEl = document.getElementById('examStrip');
+  DATA.periods.forEach(period => {
+    if (!period.exam) return;
+    const btn = el('button', 'exam-pill');
+    btn.type = 'button';
+    btn.appendChild(el('span', 'exam-pill-kicker', period.code));
+    btn.appendChild(el('span', 'exam-pill-date', period.exam.date));
+    btn.addEventListener('click', () => jumpTo(period.id));
+    stripEl.appendChild(btn);
+  });
+}
+
+function jumpTo(nodeId) {
+  const card = document.querySelector('[data-id="' + nodeId + '"]');
+  if (!card) return;
+  if (!state[nodeId]) {
+    state[nodeId] = true;
+    card.classList.add('open');
+    card.parentElement.querySelector('.children-grid').classList.add('open');
+    scheduleRedraw(500);
+  }
+  card.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+  card.classList.remove('flash');
+  void card.offsetWidth;
+  card.classList.add('flash');
+  setTimeout(() => card.classList.remove('flash'), 1200);
+}
+
+function pathFor(sx, sy, ex, ey) {
+  const mx = (sx + ex) / 2;
+  return 'M ' + sx + ',' + sy + ' C ' + mx + ',' + sy + ' ' + mx + ',' + ey + ' ' + ex + ',' + ey;
+}
+
+function drawConnectors() {
+  const wrapRect = wrap.getBoundingClientRect();
+  const scrollW = treeEl.scrollWidth;
+  const scrollH = treeEl.scrollHeight;
+  svg.setAttribute('width', scrollW);
+  svg.setAttribute('height', scrollH);
+  svg.setAttribute('viewBox', '0 0 ' + scrollW + ' ' + scrollH);
+
+  let markup = '';
+  connections.forEach(({ parent, child }) => {
+    const pr = parent.getBoundingClientRect();
+    const cr = child.getBoundingClientRect();
+    if (cr.height < 2 || cr.width < 2) return;
+    const sx = pr.right - wrapRect.left + wrap.scrollLeft;
+    const sy = pr.top + pr.height / 2 - wrapRect.top + wrap.scrollTop;
+    const ex = cr.left - wrapRect.left + wrap.scrollLeft;
+    const ey = cr.top + cr.height / 2 - wrapRect.top + wrap.scrollTop;
+    const color = (getComputedStyle(parent).getPropertyValue('--accent') || '').trim() || 'var(--ink-faint)';
+    markup += '<path d="' + pathFor(sx, sy, ex, ey) + '" fill="none" stroke="' + color + '" stroke-width="1.75" stroke-linecap="round" opacity="0.85"></path>';
+  });
+  svg.innerHTML = markup;
+}
+
+let redrawRAF = null;
+function scheduleRedraw(duration) {
+  duration = duration || 420;
+  const start = performance.now();
+  if (redrawRAF) cancelAnimationFrame(redrawRAF);
+  function step(t) {
+    drawConnectors();
+    if (t - start < duration) {
+      redrawRAF = requestAnimationFrame(step);
+    } else {
+      redrawRAF = null;
+      drawConnectors();
+    }
+  }
+  redrawRAF = requestAnimationFrame(step);
+}
+
+document.getElementById('expandAllBtn').addEventListener('click', () => {
+  Object.keys(state).forEach(id => state[id] = true);
+  document.querySelectorAll('.node-card.clickable').forEach(c => c.classList.add('open'));
+  document.querySelectorAll('.children-grid').forEach(g => g.classList.add('open'));
+  scheduleRedraw(600);
+});
+
+document.getElementById('collapseAllBtn').addEventListener('click', () => {
+  Object.keys(state).forEach(id => state[id] = false);
+  document.querySelectorAll('.node-card.clickable').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.children-grid').forEach(g => g.classList.remove('open'));
+  scheduleRedraw(600);
+});
+
+buildTree();
+buildExamStrip();
+document.getElementById('mastheadSub').textContent =
+  'Sơ đồ tư duy tương tác dựng từ Ke_hoach_bai_day_Tin_hoc_11_ChuyenDe.xlsx — ' + DATA.meta.lessonCount + ' bài học, ' + DATA.meta.span + '. Bấm vào từng nhánh để mở rộng hoặc thu gọn; bấm mốc kiểm tra phía trên để nhảy tới nhánh tương ứng.';
+
+window.addEventListener('resize', () => scheduleRedraw(200));
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => scheduleRedraw(300));
+}
+scheduleRedraw(700);
+</script>
+</body>
+</html>
