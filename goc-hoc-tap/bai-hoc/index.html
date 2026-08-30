@@ -214,7 +214,7 @@
     <div class="summary-strip">
       <span class="summary-pill">Học kỳ 1 · <strong>15 bài</strong></span>
       <span class="summary-pill">Học kỳ 2 · <strong>14 bài</strong></span>
-      <span class="summary-pill">Đã có bài giảng · <strong>1 / 29</strong></span>
+      <span class="summary-pill">Đã có bài giảng · <strong id="lesson-progress">4 / 29</strong></span>
     </div>
   </header>
 
@@ -594,6 +594,12 @@
     <p class="footer-text"><strong>Trường THPT Nguyễn Khuyến</strong> · Góc học tập môn Tin học · GV: Tăng Ngọc Phụng</p>
   </div>
 </footer>
+
+<script>
+  const lessonRows = document.querySelectorAll('.lesson-row');
+  const availableLessons = document.querySelectorAll('.lesson-row .lesson-status--link');
+  document.getElementById('lesson-progress').textContent = `${availableLessons.length} / ${lessonRows.length}`;
+</script>
 
 </body>
 </html>
