@@ -177,6 +177,19 @@
     color: color-mix(in srgb, var(--accent-3) 78%, var(--ink));
     font-size: 0.86rem;
     font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .teacher:hover {
+    transform: translateY(-1px);
+    background: color-mix(in srgb, var(--accent-3) 14%, var(--surface));
+    box-shadow: 0 7px 16px -13px var(--accent-3);
+  }
+
+  .teacher:focus-visible {
+    outline: 2px solid var(--accent-3);
+    outline-offset: 3px;
   }
 
   .teacher svg {
@@ -193,6 +206,13 @@
   .teacher-separator {
     color: var(--ink-faint);
     font-weight: 400;
+  }
+
+  .teacher-action {
+    margin-left: 0.12rem;
+    padding-left: 0.6rem;
+    border-left: 1px solid color-mix(in srgb, var(--accent-3) 28%, var(--border));
+    font-size: 0.76rem;
   }
 
   .tabbar {
@@ -456,11 +476,25 @@
   }
 
   .footer-teacher {
+    display: block;
     min-width: 235px;
     padding: 0.9rem 1.05rem;
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.07);
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.16s ease, background 0.16s ease;
+  }
+
+  .footer-teacher:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.11);
+  }
+
+  .footer-teacher:focus-visible {
+    outline: 2px solid #A8D8C9;
+    outline-offset: 3px;
   }
 
   .footer-teacher-label {
@@ -606,12 +640,13 @@
     <span class="masthead-eyebrow">TÀI LIỆU GIẢNG DẠY</span>
     <h1 class="masthead-title">Góc Học Tập</h1>
     <p class="masthead-sub">Nơi lưu bài giảng, tài liệu và bài tập cho từng môn học — chọn một tab phía trên để xem nội dung.</p>
-    <div class="teacher" aria-label="Giáo viên Tăng Ngọc Phụng, môn Tin học">
+    <a class="teacher" href="thoi-khoa-bieu.html" aria-label="Xem các lớp cô Tăng Ngọc Phụng phụ trách">
       <svg aria-hidden="true"><use href="#icon-teacher"></use></svg>
       <span>GV: Tăng Ngọc Phụng</span>
       <span class="teacher-separator" aria-hidden="true">·</span>
       <span>Môn Tin học</span>
-    </div>
+      <span class="teacher-action">Xem lớp dạy →</span>
+    </a>
   </header>
 
   <main class="sheet">
@@ -808,11 +843,11 @@
       </address>
     </div>
 
-    <div class="footer-teacher">
+    <a class="footer-teacher" href="thoi-khoa-bieu.html" aria-label="Xem các lớp cô Tăng Ngọc Phụng phụ trách">
       <span class="footer-teacher-label">Giáo viên phụ trách</span>
       <span class="footer-teacher-name">Tăng Ngọc Phụng</span>
-      <span class="footer-teacher-subject">Giáo viên môn Tin học</span>
-    </div>
+      <span class="footer-teacher-subject">Giáo viên môn Tin học · Xem lớp dạy →</span>
+    </a>
   </div>
 
   <div class="footer-bottom">

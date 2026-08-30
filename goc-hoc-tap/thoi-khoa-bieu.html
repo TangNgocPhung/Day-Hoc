@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Danh sách các lớp và nội dung giảng dạy do cô Tăng Ngọc Phụng phụ trách.">
+<title>Thời khóa biểu cô Phụng | Góc Học Tập</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #eff1ec;
+    --surface: #ffffff;
+    --surface-2: #f6f7f1;
+    --ink: #232823;
+    --ink-muted: #5b6259;
+    --ink-faint: #858d81;
+    --border: #d6dacc;
+    --rule: #dee2d5;
+    --teal: #256f69;
+    --teal-soft: #e4f0ec;
+    --purple: #5e4f96;
+    --purple-soft: #ece9f7;
+    --ochre: #9c5426;
+    --ochre-soft: #f6e9df;
+    --green: #3d7a34;
+    --green-soft: #e8f1e5;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', Consolas, monospace;
+    --shadow: 0 18px 42px -28px rgba(35, 40, 35, 0.42);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1b1d18;
+      --surface: #232620;
+      --surface-2: #292c24;
+      --ink: #eceee5;
+      --ink-muted: #abb2a0;
+      --ink-faint: #858c7a;
+      --border: #3a3e33;
+      --rule: #363a30;
+      --teal: #72cfc3;
+      --teal-soft: #243e39;
+      --purple: #b6a7eb;
+      --purple-soft: #39334c;
+      --ochre: #e39c61;
+      --ochre-soft: #493529;
+      --green: #91d27f;
+      --green-soft: #30412c;
+      --shadow: 0 18px 42px -28px rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-top: 5px solid var(--teal);
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    backdrop-filter: blur(14px);
+  }
+
+  .topbar-inner {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+    padding: 0.85rem clamp(1.15rem, 4vw, 2rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .brand {
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .brand small {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--ochre);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .brand strong {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.5rem;
+    padding: 0.62rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--teal) 50%, var(--border));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--teal) 9%, var(--surface));
+    color: color-mix(in srgb, var(--teal) 82%, var(--ink));
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.16s ease, background 0.16s ease;
+  }
+
+  .back-link:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--teal) 15%, var(--surface)); }
+  .back-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+
+  main {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 4rem) clamp(1.15rem, 4vw, 2rem) clamp(3rem, 7vw, 5rem);
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: end;
+    margin-bottom: clamp(2rem, 5vw, 3.25rem);
+  }
+
+  .eyebrow {
+    display: block;
+    margin-bottom: 0.8rem;
+    color: var(--teal);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+  }
+
+  h1 {
+    max-width: 720px;
+    margin: 0 0 0.8rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.35rem, 6vw, 4.5rem);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  .hero-copy p {
+    max-width: 62ch;
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: clamp(0.94rem, 2vw, 1.05rem);
+    line-height: 1.7;
+  }
+
+  .summary {
+    position: relative;
+    overflow: hidden;
+    padding: 1.35rem;
+    border: 1px solid color-mix(in srgb, var(--teal) 38%, var(--border));
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--teal) 8%, var(--surface));
+    box-shadow: var(--shadow);
+  }
+
+  .summary::after {
+    content: '';
+    position: absolute;
+    right: -3rem;
+    bottom: -4rem;
+    width: 10rem;
+    height: 10rem;
+    border: 1.5rem solid color-mix(in srgb, var(--teal) 8%, transparent);
+    border-radius: 50%;
+  }
+
+  .summary-number {
+    display: block;
+    position: relative;
+    z-index: 1;
+    color: var(--teal);
+    font-family: var(--font-display);
+    font-size: 3.7rem;
+    font-weight: 700;
+    line-height: 0.9;
+  }
+
+  .summary-label {
+    display: block;
+    position: relative;
+    z-index: 1;
+    margin-top: 0.55rem;
+    font-weight: 600;
+  }
+
+  .summary-note {
+    position: relative;
+    z-index: 1;
+    margin: 0.45rem 0 0;
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 0 1rem;
+  }
+
+  .section-heading h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.55rem, 3vw, 2rem);
+    font-weight: 600;
+  }
+
+  .section-heading p {
+    margin: 0;
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .assignment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .assignment-card {
+    --accent: var(--purple);
+    --soft: var(--purple-soft);
+    min-height: 230px;
+    padding: 1.3rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border));
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--soft) 55%, var(--surface));
+    box-shadow: var(--shadow);
+  }
+
+  .assignment-card--elective { --accent: var(--teal); --soft: var(--teal-soft); }
+  .assignment-card--local { --accent: var(--ochre); --soft: var(--ochre-soft); }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-kicker {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .assignment-card h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .count {
+    flex: 0 0 auto;
+    min-width: 2.15rem;
+    height: 2.15rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  @media (prefers-color-scheme: dark) { .count { color: #17201c; } }
+
+  .class-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .class-chip {
+    padding: 0.52rem 0.68rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--border));
+    border-radius: 9px;
+    background: var(--surface);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .card-note {
+    margin: 1rem 0 0;
+    color: var(--ink-muted);
+    font-size: 0.76rem;
+    line-height: 1.5;
+  }
+
+  .detail-sheet {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .detail-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.15rem 1.35rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+
+  .detail-head h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 600;
+  }
+
+  .mos-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--ink-muted);
+    font-size: 0.7rem;
+  }
+
+  .mos-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .table-wrap { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+  }
+
+  th, td {
+    padding: 0.9rem 1.35rem;
+    border-bottom: 1px solid var(--rule);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: color-mix(in srgb, var(--teal) 5%, var(--surface)); }
+
+  .class-name {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .subject-label {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
+    padding: 0.34rem 0.55rem;
+    border-radius: 999px;
+    background: var(--purple-soft);
+    color: var(--purple);
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .subject-label--elective { background: var(--teal-soft); color: var(--teal); }
+  .subject-label--local { background: var(--ochre-soft); color: var(--ochre); }
+
+  .mos-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--green);
+    font-size: 0.74rem;
+    font-weight: 600;
+  }
+
+  .mos-badge::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .empty-mark { color: var(--ink-faint); }
+
+  .source-note {
+    margin: 1rem 0 0;
+    color: var(--ink-faint);
+    font-size: 0.72rem;
+    line-height: 1.55;
+  }
+
+  footer {
+    border-top: 5px solid var(--ochre);
+    background: #173f3a;
+    color: #f5f7f1;
+  }
+
+  .footer-inner {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+    padding: 1.5rem clamp(1.15rem, 4vw, 2rem);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .footer-inner img { width: 58px; height: 58px; object-fit: contain; }
+  .footer-inner strong { display: block; font-family: var(--font-display); font-size: 1.12rem; }
+  .footer-inner span { display: block; margin-top: 0.2rem; color: #c8d8d1; font-size: 0.75rem; }
+
+  @media (max-width: 850px) {
+    .hero { grid-template-columns: 1fr; align-items: start; }
+    .summary { max-width: 420px; }
+    .assignment-grid { grid-template-columns: 1fr; }
+    .assignment-card { min-height: 0; }
+  }
+
+  @media (max-width: 560px) {
+    .brand small { display: none; }
+    .brand strong { font-size: 1.12rem; }
+    .back-link { padding-inline: 0.75rem; font-size: 0.74rem; }
+    .section-heading { display: block; }
+    .section-heading p { margin-top: 0.35rem; }
+    .detail-head { align-items: flex-start; flex-direction: column; }
+    th, td { padding: 0.78rem 0.85rem; }
+  }
+
+  @media print {
+    .topbar, footer { display: none; }
+    body { background: #fff; color: #222; }
+    main { width: 100%; padding: 1cm; }
+    .summary, .assignment-card, .detail-sheet { box-shadow: none; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <small>Tài liệu</small>
+      <strong>Góc Học Tập</strong>
+    </a>
+    <a class="back-link" href="index.html" aria-label="Quay lại Góc Học Tập">← Về trang môn học</a>
+  </div>
+</header>
+
+<main>
+  <header class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">PHÂN CÔNG GIẢNG DẠY</span>
+      <h1>Các lớp cô Phụng phụ trách</h1>
+      <p>Danh sách lớp và nhóm học do cô Tăng Ngọc Phụng giảng dạy, được sắp xếp theo từng nội dung để học sinh dễ tra cứu.</p>
+    </div>
+    <aside class="summary" aria-label="Tổng số lớp và nhóm phụ trách">
+      <span class="summary-number">10</span>
+      <span class="summary-label">lớp / nhóm học</span>
+      <p class="summary-note">Gồm Tin học 11, Tự chọn Tin học và Giáo dục địa phương.</p>
+    </aside>
+  </header>
+
+  <section aria-labelledby="groups-title">
+    <div class="section-heading">
+      <h2 id="groups-title">Nhóm lớp giảng dạy</h2>
+      <p>Tra nhanh theo nội dung</p>
+    </div>
+
+    <div class="assignment-grid">
+      <article class="assignment-card">
+        <div class="card-top">
+          <div>
+            <span class="card-kicker">Môn chính khóa</span>
+            <h3>Tin học 11</h3>
+          </div>
+          <span class="count" aria-label="5 lớp">5</span>
+        </div>
+        <ul class="class-list" aria-label="Các lớp Tin học 11">
+          <li class="class-chip">11A4</li>
+          <li class="class-chip">11A6</li>
+          <li class="class-chip">11H</li>
+          <li class="class-chip">11L2</li>
+          <li class="class-chip">11L3</li>
+        </ul>
+        <p class="card-note">Trong đó lớp 11A6 và 11H có thêm nội dung MOS.</p>
+      </article>
+
+      <article class="assignment-card assignment-card--elective">
+        <div class="card-top">
+          <div>
+            <span class="card-kicker">Môn tự chọn</span>
+            <h3>Tự chọn Tin học</h3>
+          </div>
+          <span class="count" aria-label="3 nhóm">3</span>
+        </div>
+        <ul class="class-list" aria-label="Các nhóm Tự chọn Tin học">
+          <li class="class-chip">TC TIN_13</li>
+          <li class="class-chip">TC TIN_14</li>
+          <li class="class-chip">TC TIN_15</li>
+        </ul>
+        <p class="card-note">Cả ba nhóm tự chọn đều học thêm nội dung MOS.</p>
+      </article>
+
+      <article class="assignment-card assignment-card--local">
+        <div class="card-top">
+          <div>
+            <span class="card-kicker">Khối 10</span>
+            <h3>Giáo dục địa phương</h3>
+          </div>
+          <span class="count" aria-label="2 lớp">2</span>
+        </div>
+        <ul class="class-list" aria-label="Các lớp Giáo dục địa phương">
+          <li class="class-chip">10L2</li>
+          <li class="class-chip">10CD4</li>
+        </ul>
+        <p class="card-note">Nội dung Giáo dục địa phương dành cho học sinh khối 10.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="detail-sheet" aria-labelledby="detail-title">
+    <header class="detail-head">
+      <h2 id="detail-title">Chi tiết từng lớp</h2>
+      <span class="mos-legend"><span class="mos-dot" aria-hidden="true"></span> Có nội dung MOS</span>
+    </header>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Lớp / nhóm</th>
+            <th scope="col">Nội dung giảng dạy</th>
+            <th scope="col">MOS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="class-name">11A4</td><td><span class="subject-label">Tin học 11</span></td><td class="empty-mark">—</td></tr>
+          <tr><td class="class-name">11A6</td><td><span class="subject-label">Tin học 11</span></td><td><span class="mos-badge">Có</span></td></tr>
+          <tr><td class="class-name">11H</td><td><span class="subject-label">Tin học 11</span></td><td><span class="mos-badge">Có</span></td></tr>
+          <tr><td class="class-name">11L2</td><td><span class="subject-label">Tin học 11</span></td><td class="empty-mark">—</td></tr>
+          <tr><td class="class-name">11L3</td><td><span class="subject-label">Tin học 11</span></td><td class="empty-mark">—</td></tr>
+          <tr><td class="class-name">TC TIN_13</td><td><span class="subject-label subject-label--elective">Tự chọn Tin học</span></td><td><span class="mos-badge">Có</span></td></tr>
+          <tr><td class="class-name">TC TIN_14</td><td><span class="subject-label subject-label--elective">Tự chọn Tin học</span></td><td><span class="mos-badge">Có</span></td></tr>
+          <tr><td class="class-name">TC TIN_15</td><td><span class="subject-label subject-label--elective">Tự chọn Tin học</span></td><td><span class="mos-badge">Có</span></td></tr>
+          <tr><td class="class-name">10L2</td><td><span class="subject-label subject-label--local">Giáo dục địa phương</span></td><td class="empty-mark">—</td></tr>
+          <tr><td class="class-name">10CD4</td><td><span class="subject-label subject-label--local">Giáo dục địa phương</span></td><td class="empty-mark">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <p class="source-note">Thông tin được tổng hợp từ bảng phân công giảng dạy hiện có. Trang này thể hiện các lớp phụ trách; thứ và tiết học sẽ được bổ sung khi có thời khóa biểu chi tiết.</p>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <img src="assets/logo-thpt-nguyen-khuyen.png" alt="Logo Trường THPT Nguyễn Khuyến" width="58" height="58">
+    <div>
+      <strong>Trường THPT Nguyễn Khuyến</strong>
+      <span>Giáo viên phụ trách: Tăng Ngọc Phụng · Môn Tin học</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
