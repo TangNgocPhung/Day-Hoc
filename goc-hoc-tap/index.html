@@ -203,6 +203,55 @@
     stroke-linejoin: round;
   }
 
+  .masthead-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: 1rem;
+  }
+
+  .masthead-actions .teacher {
+    margin-top: 0;
+  }
+
+  .student-form-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.62rem 1rem;
+    border: 1px solid var(--accent-5);
+    border-radius: 999px;
+    background: var(--accent-5);
+    color: var(--on-accent);
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 8px 18px -12px var(--accent-5);
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .student-form-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -10px var(--accent-5);
+  }
+
+  .student-form-link:focus-visible {
+    outline: 2px solid var(--accent-5);
+    outline-offset: 3px;
+  }
+
+  .student-form-link svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   .teacher-separator {
     color: var(--ink-faint);
     font-weight: 400;
@@ -640,13 +689,19 @@
     <span class="masthead-eyebrow">TÀI LIỆU GIẢNG DẠY</span>
     <h1 class="masthead-title">Góc Học Tập</h1>
     <p class="masthead-sub">Nơi lưu bài giảng, tài liệu và bài tập cho từng môn học — chọn một tab phía trên để xem nội dung.</p>
-    <a class="teacher" href="thoi-khoa-bieu.html" aria-label="Xem các lớp cô Tăng Ngọc Phụng phụ trách">
-      <svg aria-hidden="true"><use href="#icon-teacher"></use></svg>
-      <span>GV: Tăng Ngọc Phụng</span>
-      <span class="teacher-separator" aria-hidden="true">·</span>
-      <span>Môn Tin học</span>
-      <span class="teacher-action">Xem lớp dạy →</span>
-    </a>
+    <div class="masthead-actions">
+      <a class="teacher" href="thoi-khoa-bieu.html" aria-label="Xem các lớp cô Tăng Ngọc Phụng phụ trách">
+        <svg aria-hidden="true"><use href="#icon-teacher"></use></svg>
+        <span>GV: Tăng Ngọc Phụng</span>
+        <span class="teacher-separator" aria-hidden="true">·</span>
+        <span>Môn Tin học</span>
+        <span class="teacher-action">Xem lớp dạy →</span>
+      </a>
+      <a class="student-form-link" href="https://forms.gle/bQkTLC1U1o4oSJw7A" target="_blank" rel="noopener" aria-label="Mở biểu mẫu Thông tin học sinh">
+        <svg aria-hidden="true"><use href="#icon-pencil"></use></svg>
+        <span>Điền thông tin học sinh →</span>
+      </a>
+    </div>
   </header>
 
   <main class="sheet">
