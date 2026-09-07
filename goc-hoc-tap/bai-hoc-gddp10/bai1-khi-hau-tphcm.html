@@ -1,0 +1,750 @@
+<!doctype html>
+<title>Khí Hậu TP. Hồ Chí Minh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --ink:#1E2A27;
+    --ink-soft:#48584F;
+    --paper:#ECEFE1;
+    --paper-2:#F7F8EF;
+    --line:#D6D9C4;
+    --dusk:#12262C;
+    --dusk-2:#1D4750;
+    --dusk-3:#265861;
+    --rain:#5AA6B4;
+    --rain-soft:#CDE6E3;
+    --rain-ink:#0E3A40;
+    --sun:#E4A23B;
+    --sun-soft:#F5DCA9;
+    --sun-ink:#5A3B0E;
+    --ember:#B5533A;
+    --backdrop:#D6DAC6;
+    --shadow: 0 40px 70px -30px rgba(8,18,16,0.5);
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    padding:clamp(1.5rem,5vw,3.5rem) 1rem;
+    background:var(--backdrop);
+    color:var(--ink);
+    font-family:'Be Vietnam Pro','Segoe UI',system-ui,sans-serif;
+    display:flex;
+    justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .sheet{
+    width:100%;
+    max-width:760px;
+    background:var(--paper);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:
+      radial-gradient(120% 140% at 82% 8%, color-mix(in srgb, var(--sun) 30%, transparent), transparent 55%),
+      linear-gradient(160deg, var(--dusk) 0%, var(--dusk-2) 62%, var(--dusk-3) 100%);
+    color:var(--paper-2);
+    padding:clamp(1.6rem,4vw,2.6rem) clamp(1.6rem,4vw,2.6rem) 1.4rem;
+    position:relative;
+  }
+  .hero-top{
+    display:flex;
+    flex-wrap:wrap;
+    gap:1.5rem 2rem;
+    align-items:flex-start;
+  }
+  .hero-copy{ flex:1 1 300px; min-width:0; }
+  .kicker{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.7rem;
+    font-weight:600;
+    letter-spacing:0.16em;
+    color:var(--rain-soft);
+    margin-bottom:0.65rem;
+  }
+  .eyebrow{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.68rem;
+    font-weight:600;
+    letter-spacing:0.1em;
+    color:color-mix(in srgb, var(--paper-2) 62%, transparent);
+    margin-bottom:0.9rem;
+  }
+  .hero h1{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:clamp(1.7rem,4.6vw,2.5rem);
+    line-height:1.08;
+    margin:0 0 0.7rem;
+    text-wrap:balance;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--sun-soft);
+  }
+  .hero-sub{
+    margin:0;
+    max-width:38ch;
+    font-size:0.92rem;
+    line-height:1.55;
+    color:color-mix(in srgb, var(--paper-2) 78%, transparent);
+  }
+
+  .dial-wrap{
+    flex:0 0 auto;
+    width:min(280px,100%);
+    margin:0 auto;
+  }
+  .dial-wrap svg{ width:100%; height:auto; display:block; }
+  .dial-legend{
+    display:flex;
+    justify-content:center;
+    gap:1.1rem;
+    margin-top:0.4rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    letter-spacing:0.04em;
+  }
+  .dial-legend span{ display:flex; align-items:center; gap:0.35rem; color:color-mix(in srgb, var(--paper-2) 80%, transparent); }
+  .dial-legend i{ width:0.55rem; height:0.55rem; border-radius:50%; display:inline-block; }
+
+  /* ---------- STAT STRIP ---------- */
+  .stat-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    margin:0 clamp(1.2rem,3.5vw,2rem);
+    transform:translateY(-1.1rem);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 14px 30px -18px rgba(10,25,22,0.35);
+  }
+  .stat{
+    background:var(--paper-2);
+    padding:0.85rem 0.6rem;
+    text-align:center;
+  }
+  .stat b{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-variant-numeric:tabular-nums;
+    font-size:clamp(1.05rem,3vw,1.35rem);
+    font-weight:700;
+    color:var(--rain-ink);
+    line-height:1.1;
+  }
+  .stat span{
+    display:block;
+    margin-top:0.3rem;
+    font-size:0.66rem;
+    line-height:1.35;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- SECTIONS ---------- */
+  .sections{
+    padding:0.3rem clamp(1.2rem,3.5vw,2rem) 0.5rem;
+    display:flex;
+    flex-direction:column;
+  }
+  .topic{
+    display:grid;
+    grid-template-columns:2.7rem 1fr;
+    column-gap:1rem;
+    padding:1.15rem 0;
+    border-top:1px solid var(--line);
+  }
+  .topic:first-child{ border-top:none; }
+  .topic-badge{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0.35rem;
+    padding-top:0.15rem;
+  }
+  .topic-badge .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.62rem;
+    font-weight:600;
+    letter-spacing:0.05em;
+    color:var(--ink-soft);
+  }
+  .topic-badge .icon-ring{
+    width:2.7rem; height:2.7rem;
+    border-radius:50%;
+    background:var(--rain-soft);
+    display:flex; align-items:center; justify-content:center;
+    flex:0 0 auto;
+  }
+  .topic-badge .icon-ring svg{ width:1.35rem; height:1.35rem; stroke:var(--rain-ink); fill:none; }
+  .topic h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.12rem;
+    margin:0.05rem 0 0.55rem;
+    color:var(--ink);
+  }
+  .topic ul{
+    margin:0; padding:0; list-style:none;
+    display:flex; flex-direction:column; gap:0.4rem;
+  }
+  .topic li{
+    position:relative;
+    padding-left:0.95rem;
+    font-size:0.87rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+  }
+  .topic li::before{
+    content:"";
+    position:absolute; left:0; top:0.55em;
+    width:0.4rem; height:0.4rem;
+    border-radius:50%;
+    background:var(--rain);
+  }
+  .topic b{ color:var(--ink); font-weight:700; }
+
+  .example{
+    margin-top:0.7rem;
+    padding:0.6rem 0.8rem;
+    background:var(--paper-2);
+    border:1px dashed color-mix(in srgb, var(--rain-ink) 35%, var(--line));
+    border-radius:10px;
+    display:flex;
+    gap:0.55rem;
+    align-items:flex-start;
+  }
+  .example .tag{
+    flex:0 0 auto;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.6rem;
+    font-weight:700;
+    letter-spacing:0.06em;
+    color:var(--sun-ink);
+    background:var(--sun-soft);
+    padding:0.15rem 0.4rem;
+    border-radius:5px;
+    margin-top:0.1rem;
+  }
+  .example p{ margin:0; font-size:0.82rem; line-height:1.55; color:var(--ink-soft); }
+
+  /* ---------- SIMULATION ---------- */
+  .simulate{
+    margin:0.4rem clamp(1.2rem,3.5vw,2rem) 1.6rem;
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:1.2rem clamp(1rem,3vw,1.5rem) 1.4rem;
+  }
+  .sim-head{ margin-bottom:0.9rem; }
+  .sim-head .kicker{ color:var(--rain-ink); margin-bottom:0.4rem; }
+  .sim-head h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.12rem;
+    margin:0 0 0.3rem;
+    color:var(--ink);
+  }
+  .sim-head p{ margin:0; font-size:0.82rem; color:var(--ink-soft); line-height:1.5; max-width:52ch; }
+
+  .sim-legend{
+    display:flex; flex-wrap:wrap; gap:0.9rem;
+    margin:0.7rem 0 0.2rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    color:var(--ink-soft);
+  }
+  .sim-legend span{ display:flex; align-items:center; gap:0.35rem; }
+  .sim-legend i{ width:0.7rem; height:0.7rem; border-radius:3px; display:inline-block; }
+  .sim-legend i.dot{ border-radius:50%; }
+
+  .sim-chart{ width:100%; overflow:visible; margin-top:0.3rem; }
+  .sim-chart .bar{ cursor:pointer; transition:opacity .15s ease; }
+  .sim-chart .bar:hover, .sim-chart .bar.active{ opacity:1; }
+  .sim-chart .bar{ opacity:0.62; }
+  .sim-chart .hit{ fill:transparent; cursor:pointer; }
+  .sim-chart .mlabel{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; fill:var(--ink-soft); }
+  .sim-chart .mlabel.active{ fill:var(--ink); font-weight:700; }
+  .sim-chart .glabel{ font-family:'IBM Plex Mono',monospace; font-size:9px; fill:var(--ink-soft); }
+  .sim-chart .gridline{ stroke:var(--line); stroke-width:1; }
+  .sim-chart .templine{ fill:none; stroke:var(--ember); stroke-width:2; }
+  .sim-chart .tempdot{ fill:var(--ember); stroke:var(--paper-2); stroke-width:1.5; cursor:pointer; }
+  .sim-chart .tempdot.active{ r:5.5; }
+
+  .sim-readout{
+    display:flex; flex-wrap:wrap; gap:1rem 1.4rem; align-items:center;
+    margin-top:1rem;
+    padding-top:0.9rem;
+    border-top:1px dashed var(--line);
+  }
+  .sim-readout .month-big{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.5rem;
+    color:var(--ink);
+    min-width:5.5rem;
+  }
+  .sim-pill{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.66rem;
+    font-weight:700;
+    letter-spacing:0.04em;
+    padding:0.3rem 0.6rem;
+    border-radius:999px;
+    color:#fff;
+  }
+  .sim-metrics{ display:flex; gap:1.4rem; }
+  .sim-metrics div b{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-variant-numeric:tabular-nums;
+    font-size:1.05rem;
+    color:var(--rain-ink);
+  }
+  .sim-metrics div span{ font-size:0.68rem; color:var(--ink-soft); }
+  .sim-note{ flex-basis:100%; font-size:0.85rem; line-height:1.55; color:var(--ink-soft); }
+  .sim-caption{
+    margin-top:0.9rem;
+    font-size:0.68rem;
+    color:var(--ink-soft);
+    opacity:0.8;
+  }
+
+  /* ---------- GHI NHỚ ---------- */
+  .ghinho{
+    position:relative;
+    margin:0 clamp(1.2rem,3.5vw,2rem) 1.7rem;
+    background-color:var(--paper-2);
+    background-image:repeating-linear-gradient(
+      to bottom,
+      transparent 0, transparent 27px,
+      color-mix(in srgb, var(--rain) 32%, transparent) 27px,
+      color-mix(in srgb, var(--rain) 32%, transparent) 28px
+    );
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:1.3rem clamp(1.1rem,3vw,1.6rem) 1.4rem clamp(2.5rem,7vw,3.1rem);
+    overflow:hidden;
+  }
+  .ghinho::before{
+    content:"";
+    position:absolute;
+    left:clamp(1.7rem,5vw,2.2rem);
+    top:0; bottom:0;
+    width:1.5px;
+    background:color-mix(in srgb, var(--ember) 65%, transparent);
+  }
+  .ghinho-head{ display:flex; align-items:baseline; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.2rem; }
+  .ghinho-head h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.2rem;
+    margin:0;
+    color:var(--ink);
+  }
+  .ghinho-head .pencil{ font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--ink-soft); letter-spacing:0.02em; }
+  .ghinho ol{
+    margin:0.7rem 0 0;
+    padding:0;
+    list-style:none;
+    counter-reset:ghinho-counter;
+    display:flex;
+    flex-direction:column;
+    gap:0.35rem;
+  }
+  .ghinho li{
+    counter-increment:ghinho-counter;
+    position:relative;
+    padding-left:1.6rem;
+    font-size:0.9rem;
+    line-height:1.95;
+    color:var(--ink);
+  }
+  .ghinho li::before{
+    content:counter(ghinho-counter) ".";
+    position:absolute; left:0; top:0;
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    color:var(--rain-ink);
+  }
+  .ghinho li b{ color:var(--ink); }
+  .ghinho li .mua{ color:var(--rain-ink); font-weight:700; }
+  .ghinho li .kho{ color:var(--sun-ink); font-weight:700; }
+
+  /* ---------- FOOTER ---------- */
+  .colophon{
+    background:var(--dusk);
+    color:color-mix(in srgb, var(--paper-2) 72%, transparent);
+    padding:1.1rem clamp(1.2rem,3.5vw,2rem) 1.3rem;
+  }
+  .rain-rule{
+    display:flex;
+    gap:0.5rem;
+    margin-bottom:0.75rem;
+    overflow:hidden;
+  }
+  .rain-rule span{
+    flex:1;
+    height:2px;
+    background:linear-gradient(90deg,transparent,var(--rain),transparent);
+    opacity:0.55;
+  }
+  .colophon-row{
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.4rem 1rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    letter-spacing:0.03em;
+  }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <div class="hero-top">
+      <div class="hero-copy">
+        <span class="kicker">BÁO CÁO KHÍ HẬU ĐỊA PHƯƠNG</span>
+        <span class="eyebrow">GIÁO DỤC ĐỊA PHƯƠNG 10 · CHỦ ĐỀ 1 · NỘI DUNG 1</span>
+        <h1>Đặc điểm khí hậu<br>ở <em>Thành phố Hồ Chí Minh</em></h1>
+        <p class="hero-sub">Vì sao Sài Gòn quanh năm nóng, chỉ có hai mùa mưa – khô, và điều đó ảnh hưởng thế nào đến đời sống, sản xuất và thiên tai ở địa phương.</p>
+      </div>
+      <div class="dial-wrap">
+        <svg id="dial" viewBox="0 0 300 300" role="img" aria-label="Vòng lịch mùa mưa và mùa khô trong năm ở Thành phố Hồ Chí Minh">
+          <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(247,248,239,0.18)" stroke-width="1"></circle>
+          <path id="arcMua" fill="none" stroke="var(--rain)" stroke-width="14" stroke-linecap="round"></path>
+          <path id="arcKho" fill="none" stroke="var(--sun)" stroke-width="14" stroke-linecap="round"></path>
+          <g id="dialTicks" stroke="rgba(247,248,239,0.5)" stroke-width="1"></g>
+          <g id="dialLabels" font-family="IBM Plex Mono, monospace" font-size="9" fill="rgba(247,248,239,0.75)" text-anchor="middle"></g>
+          <g id="iconMua"></g>
+          <g id="iconKho"></g>
+          <text x="150" y="140" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="rgba(247,248,239,0.7)" letter-spacing="1">TB NĂM</text>
+          <text x="150" y="168" text-anchor="middle" font-family="Fraunces, serif" font-weight="700" font-size="30" fill="#F7F8EF">27–28°C</text>
+        </svg>
+        <div class="dial-legend">
+          <span><i style="background:var(--rain)"></i>Mùa mưa · T5–T11</span>
+          <span><i style="background:var(--sun)"></i>Mùa khô · T12–T4</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="stat-strip">
+    <div class="stat"><b>27–28°C</b><span>Nhiệt độ TB năm</span></div>
+    <div class="stat"><b>~1.900mm</b><span>Lượng mưa TB năm</span></div>
+    <div class="stat"><b>78–80%</b><span>Độ ẩm không khí TB</span></div>
+    <div class="stat"><b>5–6 giờ</b><span>Nắng trung bình/ngày</span></div>
+  </section>
+
+  <main class="sections">
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-3.5 0-6-2.2-6-5.3C6 12 9 9 12 4c3 5 6 8 6 11.7 0 3.1-2.5 5.3-6 5.3Z"/></svg></span>
+        <span class="num">01</span>
+      </div>
+      <div>
+        <h2>Vị trí &amp; kiểu khí hậu</h2>
+        <ul>
+          <li>Nằm ở vĩ độ thấp (khoảng <b>10°10′–10°38′ Bắc</b>), thuộc vùng Đông Nam Bộ, gần xích đạo.</li>
+          <li>Mang <b>khí hậu nhiệt đới gió mùa cận xích đạo</b> — nóng và ẩm quanh năm, không có mùa đông lạnh.</li>
+          <li>Ít khi bão đổ bộ trực tiếp, nhưng vẫn chịu ảnh hưởng gián tiếp (mưa lớn, gió mạnh, triều cường) khi bão đi qua khu vực lân cận.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14.76V4a2 2 0 1 1 4 0v10.76a4 4 0 1 1-4 0Z"/><path d="M12 9v6"/></svg></span>
+        <span class="num">02</span>
+      </div>
+      <div>
+        <h2>Nhiệt độ quanh năm cao, ít biến động</h2>
+        <ul>
+          <li>Nhiệt độ trung bình năm khoảng <b>27–28°C</b>; chênh lệch giữa tháng nóng nhất và mát nhất chỉ <b>3–4°C</b>.</li>
+          <li>Tháng nóng nhất thường vào <b>tháng 4</b> (cuối mùa khô); tháng mát nhất khoảng <b>tháng 12–1</b>.</li>
+          <li>Không có bốn mùa rõ rệt như miền Bắc — cảm giác "hè quanh năm".</li>
+        </ul>
+        <div class="example">
+          <span class="tag">VÍ DỤ</span>
+          <p>Cuối tháng 4, nhiệt kế ngoài trời ở TP.HCM có thể chỉ tới 37–38°C, cộng với độ ẩm cao khiến cảm giác oi bức càng rõ rệt.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3.2"/><path d="M14.5 17.5a3.7 3.7 0 0 0-.9-7.3 4.7 4.7 0 0 0-8.9 1.4A3.3 3.3 0 0 0 5.5 18h9Z"/></svg></span>
+        <span class="num">03</span>
+      </div>
+      <div>
+        <h2>Hai mùa rõ rệt trong năm</h2>
+        <ul>
+          <li><b>Mùa mưa</b> (khoảng tháng 5–11): mưa nhiều, độ ẩm cao, thường có mưa rào và dông vào buổi chiều.</li>
+          <li><b>Mùa khô</b> (khoảng tháng 12–4): ít mưa, nhiều nắng, độ ẩm thấp hơn hẳn.</li>
+          <li>Ranh giới hai mùa không cố định tuyệt đối — có thể sớm hoặc muộn vài tuần tuỳ từng năm.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">VÍ DỤ</span>
+          <p>Những cơn mưa rào buổi chiều mùa mưa thường chỉ kéo dài 30–60 phút nhưng cường độ lớn, dễ gây ngập cục bộ ở các tuyến đường thấp trũng.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16"/><rect x="6" y="9" width="12" height="11" rx="2"/><path d="M9 12.5v4M12 12.5v4M15 12.5v4"/></svg></span>
+        <span class="num">04</span>
+      </div>
+      <div>
+        <h2>Lượng mưa, độ ẩm &amp; nắng</h2>
+        <ul>
+          <li>Lượng mưa trung bình năm khoảng <b>1.900mm</b>; riêng mùa mưa chiếm tới <b>~90%</b> tổng lượng mưa cả năm.</li>
+          <li>Độ ẩm không khí trung bình khoảng <b>78–80%</b>, luôn ở mức cao quanh năm.</li>
+          <li>Số giờ nắng khá dồi dào, trung bình <b>5–6 giờ/ngày</b>, nhiều nắng hơn vào mùa khô.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m14.5 9.5-2 5-5 2 2-5 5-2Z"/></svg></span>
+        <span class="num">05</span>
+      </div>
+      <div>
+        <h2>Chế độ gió theo mùa</h2>
+        <ul>
+          <li><b>Mùa mưa</b>: chịu ảnh hưởng chính của gió mùa Tây Nam, mang hơi ẩm từ biển vào đất liền.</li>
+          <li><b>Mùa khô</b>: chịu ảnh hưởng gió mùa Đông Bắc và Tín phong (đã suy yếu khi tới Nam Bộ), thời tiết khô ráo.</li>
+          <li>Gió đất – gió biển hoạt động khá rõ ở khu vực gần sông, kênh rạch.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">VÍ DỤ</span>
+          <p>Vào buổi chiều tối, gió từ sông Sài Gòn và các kênh rạch thổi vào khu dân cư giúp hạ bớt phần nào cái nóng tích tụ trong ngày.</p>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <section class="simulate">
+    <div class="sim-head">
+      <span class="kicker">TRẠM QUAN TRẮC ẢO · BẤM CHỌN MỘT THÁNG</span>
+      <h2>Mô phỏng khí hậu theo tháng</h2>
+      <p>Biểu đồ khí hậu (climograph) mô phỏng nhiệt độ và lượng mưa trung bình từng tháng ở TP.HCM — bấm vào một cột để xem chi tiết.</p>
+    </div>
+
+    <div class="sim-legend">
+      <span><i style="background:var(--rain)"></i>Lượng mưa · mùa mưa</span>
+      <span><i style="background:var(--sun)"></i>Lượng mưa · mùa khô</span>
+      <span><i class="dot" style="background:var(--ember)"></i>Nhiệt độ trung bình</span>
+    </div>
+
+    <svg class="sim-chart" id="simChart" viewBox="0 0 680 240" role="img" aria-label="Biểu đồ nhiệt độ và lượng mưa trung bình theo tháng ở Thành phố Hồ Chí Minh">
+      <g id="simGrid"></g>
+      <g id="simBars"></g>
+      <path id="simTempLine" class="templine"></path>
+      <g id="simTempDots"></g>
+      <g id="simMonthLabels"></g>
+      <g id="simHits"></g>
+    </svg>
+
+    <div class="sim-readout" id="simReadout">
+      <span class="month-big" id="simMonth">Tháng 9</span>
+      <span class="sim-pill" id="simSeasonPill">Mùa mưa</span>
+      <div class="sim-metrics">
+        <div><b id="simTemp">27°C</b><span>Nhiệt độ TB</span></div>
+        <div><b id="simRain">335mm</b><span>Lượng mưa TB</span></div>
+      </div>
+      <p class="sim-note" id="simNote">Lượng mưa cao nhất năm, dễ ngập cục bộ khi mưa kết hợp triều cường.</p>
+    </div>
+
+    <p class="sim-caption">*Số liệu minh hoạ dựa trên đặc điểm khí hậu trung bình nhiều năm của TP.HCM, dùng để mô phỏng xu hướng chung theo mùa — không phải số liệu quan trắc chính xác của một năm cụ thể.</p>
+  </section>
+
+  <section class="ghinho">
+    <div class="ghinho-head">
+      <h2>Ghi nhớ</h2>
+      <span class="pencil">✎ Chép nội dung dưới đây vào vở</span>
+    </div>
+    <ol>
+      <li><b>Vị trí – kiểu khí hậu:</b> TP. Hồ Chí Minh nằm ở vĩ độ thấp, gần xích đạo → mang khí hậu <b>nhiệt đới gió mùa cận xích đạo</b>, nóng ẩm quanh năm.</li>
+      <li><b>Nhiệt độ:</b> trung bình năm khoảng <b>27–28°C</b>, ít biến động (chênh lệch 3–4°C); nóng nhất vào <b>tháng 4</b>, mát nhất khoảng <b>tháng 12–1</b>.</li>
+      <li><b>Hai mùa rõ rệt:</b> <span class="mua">mùa mưa</span> (tháng 5–11) và <span class="kho">mùa khô</span> (tháng 12–4).</li>
+      <li><b>Lượng mưa – độ ẩm – nắng:</b> mưa trung bình năm khoảng <b>1.900mm</b> (mùa mưa chiếm ~90%); độ ẩm trung bình <b>78–80%</b>; nắng trung bình <b>5–6 giờ/ngày</b>.</li>
+      <li><b>Gió mùa:</b> mùa mưa có <b>gió mùa Tây Nam</b>; mùa khô có <b>gió mùa Đông Bắc</b> và <b>Tín phong</b> (đã suy yếu khi tới Nam Bộ).</li>
+    </ol>
+  </section>
+
+  <footer class="colophon">
+    <div class="rain-rule"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="colophon-row">
+      <span>GIÁO DỤC ĐỊA PHƯƠNG 10 · CHỦ ĐỀ 1: BIẾN ĐỔI KHÍ HẬU VÀ PHÒNG, CHỐNG THIÊN TAI Ở TP.HCM</span>
+      <span>GV: TĂNG NGỌC PHỤNG · THPT NGUYỄN KHUYẾN</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  const cx = 150, cy = 150;
+  function polar(r, deg){
+    const rad = deg * Math.PI / 180;
+    return { x: cx + r * Math.sin(rad), y: cy - r * Math.cos(rad) };
+  }
+  function arcPath(r, startDeg, endDeg){
+    const s = polar(r, startDeg), e = polar(r, endDeg);
+    const large = (endDeg - startDeg) > 180 ? 1 : 0;
+    return 'M ' + s.x.toFixed(2) + ',' + s.y.toFixed(2) + ' A ' + r + ',' + r + ' 0 ' + large + ',1 ' + e.x.toFixed(2) + ',' + e.y.toFixed(2);
+  }
+
+  document.getElementById('arcMua').setAttribute('d', arcPath(102, 120, 330));
+  document.getElementById('arcKho').setAttribute('d', arcPath(102, 330, 480));
+
+  const ticks = document.getElementById('dialTicks');
+  const labels = document.getElementById('dialLabels');
+  const months = ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'];
+  for (let i = 0; i < 12; i++){
+    const deg = i * 30;
+    const p1 = polar(94, deg), p2 = polar(88, deg);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', p1.x.toFixed(2)); line.setAttribute('y1', p1.y.toFixed(2));
+    line.setAttribute('x2', p2.x.toFixed(2)); line.setAttribute('y2', p2.y.toFixed(2));
+    ticks.appendChild(line);
+
+    const lp = polar(73, deg + 15);
+    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x', lp.x.toFixed(2)); text.setAttribute('y', (lp.y + 3).toFixed(2));
+    text.textContent = months[i];
+    labels.appendChild(text);
+  }
+
+  function seasonIcon(container, r, midDeg, kind){
+    const p = polar(r, midDeg);
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('transform', 'translate(' + p.x.toFixed(2) + ',' + p.y.toFixed(2) + ')');
+    if (kind === 'rain'){
+      g.innerHTML = '<circle r="11" fill="var(--rain)"></circle><path d="M-3 -2c0-2.2 1.8-4 4-4 2 0 3.6 1.4 3.9 3.3 1.7.3 3 1.8 3 3.6 0 2-1.6 3.6-3.6 3.6H-2c-2 0-3.6-1.6-3.6-3.6 0-1.6 1-2.9 2.4-3.3Z" fill="#fff" transform="translate(0,-1.3) scale(0.7)"></path>';
+    } else {
+      g.innerHTML = '<circle r="11" fill="var(--sun)"></circle><circle r="4.2" fill="#fff"></circle><g stroke="#fff" stroke-width="1.4" stroke-linecap="round"><line x1="0" y1="-7.5" x2="0" y2="-6"/><line x1="0" y1="7.5" x2="0" y2="6"/><line x1="-7.5" y1="0" x2="-6" y2="0"/><line x1="7.5" y1="0" x2="6" y2="0"/><line x1="-5.3" y1="-5.3" x2="-4.2" y2="-4.2"/><line x1="5.3" y1="5.3" x2="4.2" y2="4.2"/><line x1="-5.3" y1="5.3" x2="-4.2" y2="4.2"/><line x1="5.3" y1="-5.3" x2="4.2" y2="-4.2"/></g>';
+    }
+    container.appendChild(g);
+  }
+  seasonIcon(document.getElementById('iconMua'), 118 + 12, (120+330)/2, 'rain');
+  seasonIcon(document.getElementById('iconKho'), 118 + 12, (330+480)/2, 'sun');
+})();
+
+(function(){
+  const months = [
+    { name:'Tháng 1',  short:'T1',  temp:26.0, rain:14,  season:'kho', note:'Mát nhất năm, trời khô ráo, thuận lợi cho hoạt động ngoài trời.' },
+    { name:'Tháng 2',  short:'T2',  temp:27.0, rain:4,   season:'kho', note:'Ít mưa nhất năm, độ ẩm thấp, nắng nhiều.' },
+    { name:'Tháng 3',  short:'T3',  temp:28.3, rain:11,  season:'kho', note:'Nắng nóng tăng dần, không khí khô, dễ xảy ra hạn cục bộ.' },
+    { name:'Tháng 4',  short:'T4',  temp:29.3, rain:40,  season:'kho', note:'Nóng nhất năm, oi bức rõ rệt, báo hiệu mùa mưa sắp tới.' },
+    { name:'Tháng 5',  short:'T5',  temp:28.6, rain:220, season:'mua', note:'Mùa mưa bắt đầu, xuất hiện những cơn mưa rào và dông đầu mùa.' },
+    { name:'Tháng 6',  short:'T6',  temp:27.7, rain:330, season:'mua', note:'Mưa nhiều và đều hơn, độ ẩm không khí tăng cao.' },
+    { name:'Tháng 7',  short:'T7',  temp:27.3, rain:310, season:'mua', note:'Giữa mùa mưa, thường có mưa rào buổi chiều kéo dài.' },
+    { name:'Tháng 8',  short:'T8',  temp:27.1, rain:270, season:'mua', note:'Mưa nhiều, đôi khi xen kẽ vài ngày nắng ngắn giữa các đợt mưa dài.' },
+    { name:'Tháng 9',  short:'T9',  temp:26.8, rain:335, season:'mua', note:'Lượng mưa cao nhất năm, dễ ngập cục bộ khi mưa kết hợp triều cường.' },
+    { name:'Tháng 10', short:'T10', temp:26.9, rain:270, season:'mua', note:'Mưa lớn kèm triều cường ở khu vực ven sông, kênh rạch.' },
+    { name:'Tháng 11', short:'T11', temp:26.7, rain:115, season:'mua', note:'Mùa mưa giảm dần, mưa thưa hơn, chuẩn bị chuyển sang mùa khô.' },
+    { name:'Tháng 12', short:'T12', temp:26.0, rain:50,  season:'kho', note:'Mùa khô bắt đầu, trời mát và ít mưa hơn hẳn năm.' }
+  ];
+
+  const svg = document.getElementById('simChart');
+  const NS = 'http://www.w3.org/2000/svg';
+  const left = 44, right = 650, top = 26, base = 196;
+  const plotW = right - left, plotH = base - top;
+  const rainMax = 350, tempMin = 25, tempMax = 30;
+  const n = months.length;
+  const slot = plotW / n;
+
+  function xFor(i){ return left + slot * i + slot / 2; }
+  function yRain(mm){ return base - (mm / rainMax) * plotH; }
+  function yTemp(t){ return base - ((t - tempMin) / (tempMax - tempMin)) * plotH; }
+  function mk(tag, attrs){
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  const grid = document.getElementById('simGrid');
+  [0, 150, 300].forEach(mm => {
+    const y = yRain(mm);
+    grid.appendChild(mk('line', { class:'gridline', x1:left, x2:right, y1:y, y2:y }));
+    const lbl = mk('text', { class:'glabel', x:left - 8, y:y + 3, 'text-anchor':'end' });
+    lbl.textContent = mm;
+    grid.appendChild(lbl);
+  });
+  [25, 27.5, 30].forEach(t => {
+    const y = yTemp(t);
+    const lbl = mk('text', { class:'glabel', x:right + 8, y:y + 3, 'text-anchor':'start' });
+    lbl.textContent = t + '°';
+    grid.appendChild(lbl);
+  });
+
+  const barsG = document.getElementById('simBars');
+  const labelsG = document.getElementById('simMonthLabels');
+  const hitsG = document.getElementById('simHits');
+  const dotsG = document.getElementById('simTempDots');
+  const bars = [], labelEls = [], dots = [];
+
+  months.forEach((m, i) => {
+    const cx = xFor(i);
+    const bw = slot * 0.56;
+    const y = yRain(m.rain);
+    const bar = mk('rect', {
+      class:'bar', x:(cx - bw/2).toFixed(1), y:y.toFixed(1),
+      width:bw.toFixed(1), height:(base - y).toFixed(1), rx:3,
+      fill: m.season === 'mua' ? 'var(--rain)' : 'var(--sun)'
+    });
+    barsG.appendChild(bar); bars.push(bar);
+
+    const lbl = mk('text', { class:'mlabel', x:cx, y:base + 16, 'text-anchor':'middle' });
+    lbl.textContent = m.short;
+    labelsG.appendChild(lbl); labelEls.push(lbl);
+
+    const dot = mk('circle', { class:'tempdot', cx:cx.toFixed(1), cy:yTemp(m.temp).toFixed(1), r:3.5 });
+    dotsG.appendChild(dot); dots.push(dot);
+
+    const hit = mk('rect', { class:'hit', x:(cx - slot/2).toFixed(1), y:top, width:slot.toFixed(1), height:(base - top + 20).toFixed(1) });
+    hit.addEventListener('click', () => select(i));
+    hitsG.appendChild(hit);
+  });
+
+  const lineD = months.map((m, i) => (i === 0 ? 'M' : 'L') + xFor(i).toFixed(1) + ',' + yTemp(m.temp).toFixed(1)).join(' ');
+  document.getElementById('simTempLine').setAttribute('d', lineD);
+
+  const elMonth = document.getElementById('simMonth');
+  const elPill = document.getElementById('simSeasonPill');
+  const elTemp = document.getElementById('simTemp');
+  const elRain = document.getElementById('simRain');
+  const elNote = document.getElementById('simNote');
+
+  function select(i){
+    const m = months[i];
+    bars.forEach((b, j) => b.classList.toggle('active', j === i));
+    labelEls.forEach((l, j) => l.classList.toggle('active', j === i));
+    dots.forEach((d, j) => d.classList.toggle('active', j === i));
+    elMonth.textContent = m.name;
+    elPill.textContent = m.season === 'mua' ? 'Mùa mưa' : 'Mùa khô';
+    elPill.style.background = m.season === 'mua' ? 'var(--rain-ink)' : 'var(--sun-ink)';
+    elTemp.textContent = m.temp.toFixed(1).replace('.0','') + '°C';
+    elRain.textContent = m.rain + 'mm';
+    elNote.textContent = m.note;
+  }
+
+  select(8); // Tháng 9 mặc định — đỉnh mùa mưa
+})();
+</script>
