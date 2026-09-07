@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 12: Hệ QTCSDL & Hệ CSDL – Tin học 11</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #7C3AED;
+            --primary-light: #A78BFA;
+            --primary-dark: #5B21B6;
+            --accent: #FCD34D;
+            --accent-dark: #F59E0B;
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --text: #1E293B;
+            --text-light: #64748B;
+            --border: #E2E8F0;
+            --success: #10B981;
+            --error: #EF4444;
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            scroll-behavior: smooth;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 28px 32px;
+            box-shadow: 0 8px 24px rgba(91, 33, 182, 0.25);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .header-badge {
+            background: var(--accent);
+            color: #1E293B;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 4px 16px;
+            border-radius: 40px;
+            width: fit-content;
+            letter-spacing: 0.3px;
+        }
+        h1 {
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        .subtitle-header {
+            font-size: 16px;
+            opacity: 0.92;
+        }
+
+        /* Tabs */
+        nav.nav-tabs {
+            background: white;
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 92px;
+            z-index: 900;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            gap: 4px;
+            padding: 12px 24px;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .tab-btn:hover {
+            background: rgba(124, 58, 237, 0.08);
+            color: var(--primary);
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+
+        main {
+            max-width: 1280px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+        section.lesson-section {
+            display: none;
+            background: var(--card);
+            border-radius: 20px;
+            padding: 40px 44px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 40px;
+            transition: 0.2s;
+        }
+        .js-enabled section.lesson-section.active {
+            display: block;
+            animation: fadeUp 0.3s ease;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 26px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 3px solid #EDE9FE;
+            padding-bottom: 14px;
+            margin-bottom: 28px;
+        }
+        h3 {
+            font-size: 20px;
+            margin: 24px 0 12px 0;
+            color: var(--text);
+        }
+        h4 {
+            font-size: 17px;
+            margin: 8px 0 4px 0;
+            color: var(--primary-dark);
+        }
+        p, li {
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        ul, ol {
+            padding-left: 26px;
+        }
+
+        .card-highlight {
+            background: #F8FAFC;
+            border-left: 6px solid var(--primary);
+            padding: 20px 24px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .activity-box {
+            background: #FFFBEB;
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+        .activity-title {
+            font-weight: 700;
+            color: #92400E;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 16px 0;
+        }
+        @media (max-width: 800px) {
+            .grid-2col { grid-template-columns: 1fr; }
+            section.lesson-section { padding: 28px 20px; }
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(124,58,237,0.3); }
+        .btn-accent { background: var(--accent); color: #1E293B; }
+        .btn-accent:hover { background: var(--accent-dark); }
+        .btn-secondary { background: #94A3B8; }
+        .btn-secondary:hover { background: #64748B; }
+
+        .code-playground {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 20px;
+        }
+        @media (max-width: 900px) { .code-playground { grid-template-columns: 1fr; } }
+        textarea.code-editor {
+            width: 100%;
+            height: 240px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            padding: 16px;
+            background: #1E293B;
+            color: #E2E8F0;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        pre.code-output {
+            width: 100%;
+            height: 240px;
+            background: #0F172A;
+            color: #A7F3D0;
+            padding: 16px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-y: auto;
+            border: 1px solid #334155;
+            white-space: pre-wrap;
+        }
+        .runner-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .status-badge {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 30px;
+            background: #E2E8F0;
+            color: #475569;
+        }
+        .status-badge.ready { background: #D1FAE5; color: #065F46; }
+        .status-badge.running { background: #FEF3C7; color: #92400E; }
+        .status-badge.error { background: #FEE2E2; color: #991B1B; }
+
+        .sql-result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #E2E8F0;
+            margin-bottom: 16px;
+        }
+        .sql-result-table:last-child { margin-bottom: 0; }
+        .sql-result-table th {
+            background: #334155;
+            color: #C4B5FD;
+            padding: 6px 10px;
+            text-align: left;
+            border-bottom: 2px solid var(--primary-light);
+            white-space: nowrap;
+        }
+        .sql-result-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #334155;
+        }
+        .sql-result-table tbody tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+        .sql-result-label {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .sql-msg-success { color: #A7F3D0; font-weight: 600; }
+        .sql-msg-error { color: #FCA5A5; white-space: pre-wrap; }
+
+        #map-container {
+            width: 100%;
+            height: 380px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin: 20px 0;
+            z-index: 1;
+        }
+
+        /* Quiz */
+        .quiz-container { max-width: 780px; margin: 0 auto; }
+        .progress-bar-container {
+            background: var(--border);
+            height: 10px;
+            border-radius: 20px;
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: var(--primary);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .question-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 32px;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0 12px;
+        }
+        .option-item {
+            background: white;
+            border: 2px solid var(--border);
+            padding: 14px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+        }
+        .option-item:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: #F5F3FF;
+        }
+        .option-item.correct { background: #D1FAE5; border-color: var(--success); color: #065F46; }
+        .option-item.incorrect { background: #FEE2E2; border-color: var(--error); color: #991B1B; }
+        .feedback-box {
+            margin-top: 16px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-weight: 500;
+            display: none;
+        }
+        .feedback-box.show { display: block; }
+        .feedback-box.correct { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+        .feedback-box.incorrect { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
+
+        .sim-box {
+            background: #F8FAFC;
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-top: 20px;
+        }
+        .sim-nodes {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .sim-node {
+            background: white;
+            border: 2px solid var(--primary);
+            padding: 16px 20px;
+            border-radius: 14px;
+            text-align: center;
+            flex: 1;
+            min-width: 140px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .sim-node i { font-size: 30px; color: var(--primary); margin-bottom: 6px; }
+        .sim-arrow { font-size: 28px; color: var(--primary-light); font-weight: bold; }
+        @media (max-width: 700px) { .sim-arrow { transform: rotate(90deg); margin: 0 auto; } }
+
+        .footer-note {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+            padding-top: 24px;
+        }
+    </style>
+</head>
+<body class="js-enabled">
+
+<header>
+    <div class="header-content">
+        <span class="header-badge"><i class="fa-regular fa-file-lines"></i> Tin học 11 • Bài 12</span>
+        <h1>Hệ quản trị CSDL & Hệ CSDL</h1>
+        <p class="subtitle-header">Khám phá kiến trúc, chức năng và phân biệt CSDL tập trung – phân tán</p>
+    </div>
+</header>
+
+<nav class="nav-tabs">
+    <div class="nav-container">
+        <button class="tab-btn active" data-target="section-khoidong"><i class="fa-solid fa-play"></i> Khởi động</button>
+        <button class="tab-btn" data-target="section-mucieu"><i class="fa-solid fa-bullseye"></i> Mục tiêu</button>
+        <button class="tab-btn" data-target="section-qtcsdl"><i class="fa-solid fa-database"></i> Hệ QTCSDL</button>
+        <button class="tab-btn" data-target="section-hecsdl"><i class="fa-solid fa-server"></i> Hệ CSDL</button>
+        <button class="tab-btn" data-target="section-phantan"><i class="fa-solid fa-globe"></i> Tập trung & Phân tán</button>
+        <button class="tab-btn" data-target="section-thuchanh"><i class="fa-solid fa-code"></i> Thực hành MySQL</button>
+        <button class="tab-btn" data-target="section-luyentap"><i class="fa-solid fa-circle-check"></i> Luyện tập</button>
+    </div>
+</nav>
+
+<main>
+    <!-- KHỞI ĐỘNG -->
+    <section id="section-khoidong" class="lesson-section active">
+        <h2><i class="fa-solid fa-compass" style="color:var(--primary);"></i> Khởi động & Tình huống</h2>
+        <div class="activity-box">
+            <div class="activity-title"><i class="fa-regular fa-message"></i> Hoạt động 1 – SGK Tr.58</div>
+            <p><strong>Tình huống:</strong> Để tạo, lưu trữ và sửa văn bản cần phần mềm soạn thảo. Để tạo bảng tính cần phần mềm bảng tính. Vậy một phần mềm hỗ trợ làm việc với CSDL cần đáp ứng những yêu cầu nào?</p>
+            <div class="options-list" id="warmup-options">
+                <button class="option-item" data-correct="false">A. Chỉ cung cấp công cụ tạo lập CSDL một lần.</button>
+                <button class="option-item" data-correct="true">B. Cập nhật dữ liệu, kiểm tra tính đúng đắn, truy xuất, bảo mật và giao diện lập trình.</button>
+                <button class="option-item" data-correct="false">C. Chỉ cho phép xem nội dung dưới dạng văn bản thuần.</button>
+                <button class="option-item" data-correct="false">D. Chỉ cho phép một người dùng duy nhất truy cập.</button>
+            </div>
+            <div class="feedback-box" id="warmup-feedback"></div>
+        </div>
+        <div class="card-highlight">
+            <p><strong>⟳ Định hướng:</strong> Bài học sẽ giúp em hiểu rõ vai trò của <strong>Hệ QTCSDL</strong>, cấu trúc <strong>Hệ CSDL</strong> và sự khác biệt giữa mô hình tập trung – phân tán.</p>
+        </div>
+    </section>
+
+    <!-- MỤC TIÊU -->
+    <section id="section-mucieu" class="lesson-section">
+        <h2><i class="fa-solid fa-bullseye" style="color:var(--primary);"></i> Mục tiêu bài học</h2>
+        <ul style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+            <li><i class="fa-solid fa-check-circle" style="color:var(--success);margin-right:10px;"></i><strong>Hiểu khái niệm Hệ QTCSDL:</strong> Các nhóm chức năng: định nghĩa, cập nhật/truy xuất, bảo mật, giao diện lập trình.</li>
+            <li><i class="fa-solid fa-check-circle" style="color:var(--success);margin-right:10px;"></i><strong>Hiểu khái niệm Hệ CSDL:</strong> 3 thành phần: CSDL, Hệ QTCSDL và phần mềm ứng dụng CSDL. Mô hình client–server.</li>
+            <li><i class="fa-solid fa-check-circle" style="color:var(--success);margin-right:10px;"></i><strong>Phân biệt CSDL tập trung và phân tán:</strong> Ưu, nhược điểm và ứng dụng thực tế.</li>
+        </ul>
+    </section>
+
+    <!-- HỆ QTCSDL -->
+    <section id="section-qtcsdl" class="lesson-section">
+        <h2><i class="fa-solid fa-database" style="color:var(--primary);"></i> 1. Hệ quản trị CSDL (Hệ QTCSDL)</h2>
+        <div class="card-highlight">
+            <p><strong>Định nghĩa:</strong> Hệ QTCSDL là phần mềm cung cấp phương thức lưu trữ, cập nhật, truy xuất dữ liệu, bảo mật, an toàn và giao diện lập trình ứng dụng.</p>
+        </div>
+        <div class="grid-2col">
+            <div class="card-highlight" style="border-left-color:#7C3AED;background:white;">
+                <h4><i class="fa-regular fa-pen-to-square"></i> a) Định nghĩa dữ liệu</h4>
+                <p>Khai báo CSDL, tạo/sửa cấu trúc bảng, ràng buộc toàn vẹn.</p>
+            </div>
+            <div class="card-highlight" style="border-left-color:#F59E0B;background:white;">
+                <h4><i class="fa-regular fa-arrow-right-arrow-left"></i> b) Cập nhật & truy xuất</h4>
+                <p>Thêm, xoá, sửa dữ liệu; truy vấn theo tiêu chí.</p>
+            </div>
+            <div class="card-highlight" style="border-left-color:#10B981;background:white;">
+                <h4><i class="fa-solid fa-shield-halved"></i> c) Bảo mật & an toàn</h4>
+                <p>Quyền truy cập, kiểm soát giao dịch, sao lưu & phục hồi.</p>
+            </div>
+            <div class="card-highlight" style="border-left-color:#EF4444;background:white;">
+                <h4><i class="fa-regular fa-window-maximize"></i> d) Giao diện lập trình ứng dụng</h4>
+                <p>API cho nhà phát triển xây dựng ứng dụng chuyên biệt.</p>
+            </div>
+        </div>
+        <p><strong>Ví dụ hệ QTCSDL phổ biến:</strong> Oracle, MySQL, SQL Server, DB2, PostgreSQL, SQLite, Microsoft Access (hạn chế hiệu năng).</p>
+    </section>
+
+    <!-- HỆ CSDL -->
+    <section id="section-hecsdl" class="lesson-section">
+        <h2><i class="fa-solid fa-server" style="color:var(--primary);"></i> 2. Hệ CSDL và mô hình Client–Server</h2>
+        <div class="sim-box">
+            <h3 style="margin:0;text-align:center;color:var(--primary-dark);">🏛️ Mô hình 3 thành phần của Hệ CSDL</h3>
+            <div class="sim-nodes">
+                <div class="sim-node"><i class="fa-regular fa-desktop"></i><h4>Phần mềm ứng dụng</h4><p style="font-size:13px;">Giao diện tra cứu</p></div>
+                <div class="sim-arrow"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                <div class="sim-node"><i class="fa-solid fa-server"></i><h4>Hệ QTCSDL</h4><p style="font-size:13px;">Xử lý yêu cầu</p></div>
+                <div class="sim-arrow"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                <div class="sim-node"><i class="fa-solid fa-database"></i><h4>CSDL</h4><p style="font-size:13px;">Lưu trữ vật lý</p></div>
+            </div>
+        </div>
+        <div class="card-highlight" style="margin-top:20px;">
+            <p><strong>🧩 Kiến trúc Client–Server:</strong> Phần "chủ" (server) xử lý dữ liệu, phần "khách" (client) giao diện người dùng, kết nối qua mạng hoặc cùng máy. Hệ QTCSDL thường đóng vai trò thành phần chủ.</p>
+        </div>
+        <p><strong>Ví dụ thực tế:</strong> Tra cứu điểm thi trực tuyến – phần mềm ứng dụng CSDL nhận số báo danh, truy vấn hệ QTCSDL và hiển thị kết quả.</p>
+    </section>
+
+    <!-- TẬP TRUNG & PHÂN TÁN + BẢN ĐỒ -->
+    <section id="section-phantan" class="lesson-section">
+        <h2><i class="fa-solid fa-globe" style="color:var(--primary);"></i> 3. CSDL tập trung và phân tán</h2>
+        <div class="grid-2col">
+            <div class="card-highlight" style="margin:0;border-left-color:#7C3AED;">
+                <h3><i class="fa-solid fa-server"></i> Tập trung</h3>
+                <p>CSDL lưu trên một máy tính duy nhất. Phù hợp tổ chức vừa và nhỏ. Ví dụ: CSDL Microsoft Access của cửa hàng.</p>
+            </div>
+            <div class="card-highlight" style="margin:0;border-left-color:#F59E0B;">
+                <h3><i class="fa-solid fa-network-wired"></i> Phân tán</h3>
+                <p>Dữ liệu phân tán trên nhiều máy tính (trạm) qua mạng. Ví dụ: ngân hàng, doanh nghiệp đa chi nhánh.</p>
+            </div>
+        </div>
+        <div style="margin-top:24px;">
+            <h3><i class="fa-solid fa-map-location-dot"></i> Mô phỏng: Hệ CSDL phân tán toàn quốc</h3>
+            <p>Bản đồ các trạm chi nhánh (Hà Nội, Đà Nẵng, TP.HCM, Cần Thơ) kết nối mạng.</p>
+            <div id="map-container"></div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:10px;">
+                <button class="btn btn-accent" id="btn-toggle-node"><i class="fa-solid fa-triangle-exclamation"></i> Giả lập sự cố Đà Nẵng</button>
+                <span class="status-badge ready" id="network-status-badge">🟢 4 trạm hoạt động ổn định</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- THỰC HÀNH MYSQL -->
+    <section id="section-thuchanh" class="lesson-section">
+        <h2><i class="fa-solid fa-code" style="color:var(--primary);"></i> 4. Thực hành MySQL – Truy vấn CSDL nhân viên</h2>
+        <p>Dùng câu lệnh <strong>SQL</strong> (ngôn ngữ chuẩn của các hệ QTCSDL như MySQL) để tạo bảng, nạp dữ liệu và truy xuất thông tin nhân viên – đúng với cách một Hệ QTCSDL thực xử lý yêu cầu.</p>
+        <div class="code-playground">
+            <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <strong>Mã lệnh MySQL</strong>
+                    <span class="status-badge" id="sql-engine-status">⏳ Đang tải...</span>
+                </div>
+                <textarea class="code-editor" id="sql-code-input">-- CSDL nhân viên trong MySQL
+CREATE TABLE nhan_vien (
+    ma_nv VARCHAR(10) PRIMARY KEY,
+    ten VARCHAR(50),
+    phong VARCHAR(30),
+    luong INT
+);
+
+INSERT INTO nhan_vien (ma_nv, ten, phong, luong) VALUES
+    ('NV01', 'Nguyễn Văn An', 'Kế toán', 12500000),
+    ('NV02', 'Trần Thị Bình', 'Kỹ thuật', 15000000),
+    ('NV03', 'Lê Hoàng Nam', 'Kinh doanh', 14000000);
+
+-- Truy xuất thông tin nhân viên có mã NV02
+SELECT ma_nv AS "Mã NV", ten AS "Họ tên", phong AS "Phòng ban", luong AS "Lương (VNĐ)"
+FROM nhan_vien
+WHERE ma_nv = 'NV02';</textarea>
+                <div class="runner-controls">
+                    <button class="btn" id="btn-run-sql"><i class="fa-solid fa-play"></i> Chạy truy vấn</button>
+                    <button class="btn btn-secondary" id="btn-reset-sql"><i class="fa-solid fa-rotate-right"></i> Đặt lại</button>
+                    <span class="status-badge" id="sql-run-status">Sẵn sàng</span>
+                </div>
+            </div>
+            <div>
+                <strong>Kết quả thực thi:</strong>
+                <div class="code-output" id="sql-output-area">▶ Nhấn "Chạy truy vấn" để xem kết quả...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LUYỆN TẬP 10 CÂU -->
+    <section id="section-luyentap" class="lesson-section">
+        <h2><i class="fa-solid fa-circle-check" style="color:var(--primary);"></i> 5. Luyện tập (10 câu SGK)</h2>
+        <div class="quiz-container">
+            <div class="progress-bar-container"><div class="progress-bar-fill" id="quiz-progress"></div></div>
+            <div class="question-card" id="quiz-card">
+                <div id="question-header" style="font-weight:700;color:var(--primary-dark);">Câu 1 / 10</div>
+                <div id="question-text" style="font-size:18px;font-weight:600;margin:12px 0;">Đang tải...</div>
+                <div class="options-list" id="quiz-options"></div>
+                <div class="feedback-box" id="quiz-feedback"></div>
+                <div style="margin-top:20px;display:flex;justify-content:flex-end;">
+                    <button class="btn" id="btn-next-question" style="display:none;">Tiếp theo →</button>
+                </div>
+            </div>
+            <div id="quiz-result-card" style="display:none;text-align:center;padding:40px;">
+                <i class="fa-regular fa-trophy" style="font-size:56px;color:var(--accent-dark);"></i>
+                <h3 id="result-title">Hoàn thành!</h3>
+                <p id="result-score" style="font-size:22px;font-weight:700;margin:16px 0;">Điểm: 10/10</p>
+                <button class="btn" id="btn-retry-quiz"><i class="fa-solid fa-rotate-right"></i> Làm lại</button>
+            </div>
+        </div>
+    </section>
+    <div class="footer-note">📘 Bài 12 – Tin học 11 | Hệ QTCSDL & Hệ CSDL</div>
+</main>
+
+<!-- sql.js (SQLite biên dịch WebAssembly, dùng để chạy trực tiếp câu lệnh SQL/MySQL) + Leaflet -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" defer></script>
+
+<script>
+    (function() {
+        // Tabs
+        const tabs = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.lesson-section');
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabs.forEach(b => b.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                btn.classList.add('active');
+                const target = document.getElementById(btn.dataset.target);
+                if(target) { target.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+            });
+        });
+
+        // Warmup
+        const warmupBtns = document.querySelectorAll('#warmup-options .option-item');
+        const warmupFb = document.getElementById('warmup-feedback');
+        warmupBtns.forEach(b => {
+            b.addEventListener('click', () => {
+                warmupBtns.forEach(x => { x.style.pointerEvents = 'none'; if(x.dataset.correct==='true') x.classList.add('correct'); });
+                const correct = b.dataset.correct === 'true';
+                warmupFb.className = 'feedback-box show ' + (correct ? 'correct' : 'incorrect');
+                warmupFb.innerHTML = correct ? '✅ Chính xác! Hệ QTCSDL cần đầy đủ chức năng cập nhật, kiểm tra, truy xuất, bảo mật và API.' : '❌ Chưa đúng. Đáp án B là đầy đủ nhất.';
+            });
+        });
+
+        // Map
+        function initMap() {
+            if(!document.getElementById('map-container') || typeof L === 'undefined') return;
+            const map = L.map('map-container').setView([16.0, 107.0], 6);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:18, attribution:'© OpenStreetMap' }).addTo(map);
+            const locs = [
+                {name:'Hà Nội (Trụ sở)', coords:[21.0285,105.8542], id:'hn'},
+                {name:'Đà Nẵng', coords:[16.0471,108.2068], id:'dn'},
+                {name:'TP. Hồ Chí Minh', coords:[10.8231,106.6297], id:'hcm'},
+                {name:'Cần Thơ', coords:[10.0452,105.7469], id:'ct'}
+            ];
+            const markers = {};
+            locs.forEach(l => {
+                markers[l.id] = L.marker(l.coords).addTo(map).bindPopup(`<b>${l.name}</b><br>Trạm CSDL cục bộ: 🟢 hoạt động`);
+            });
+            let dnActive = true;
+            document.getElementById('btn-toggle-node').addEventListener('click', () => {
+                dnActive = !dnActive;
+                const badge = document.getElementById('network-status-badge');
+                if(dnActive) {
+                    markers.dn.setPopupContent('<b>Đà Nẵng</b><br>Trạm CSDL cục bộ: 🟢 hoạt động');
+                    document.getElementById('btn-toggle-node').innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Giả lập sự cố Đà Nẵng';
+                    badge.className = 'status-badge ready';
+                    badge.textContent = '🟢 4 trạm hoạt động ổn định';
+                } else {
+                    markers.dn.setPopupContent('<b>Đà Nẵng</b><br><span style="color:red">🔴 Mất kết nối mạng! (CSDL cục bộ vẫn hoạt động)</span>');
+                    document.getElementById('btn-toggle-node').innerHTML = '<i class="fa-solid fa-check"></i> Khôi phục Đà Nẵng';
+                    badge.className = 'status-badge error';
+                    badge.textContent = '🔴 Trạm Đà Nẵng mất kết nối, các trạm khác vẫn độc lập.';
+                }
+            });
+        }
+        setTimeout(initMap, 600);
+
+        // SQL (MySQL) Runner — chạy bằng sql.js (SQLite biên dịch WebAssembly, tương thích cú pháp SQL chuẩn)
+        function initSqlRunner() {
+            const codeInput = document.getElementById('sql-code-input');
+            const output = document.getElementById('sql-output-area');
+            const runBtn = document.getElementById('btn-run-sql');
+            const resetBtn = document.getElementById('btn-reset-sql');
+            const engineStatus = document.getElementById('sql-engine-status');
+            const runStatus = document.getElementById('sql-run-status');
+            const defaultCode = codeInput.value;
+            let SQL = null;
+            let ready = false;
+
+            function escapeHtml(value) {
+                return String(value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
+            }
+
+            function loadEngine() {
+                if (typeof initSqlJs === 'undefined') { setTimeout(loadEngine, 300); return; }
+                initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/${file}` })
+                    .then(sql => {
+                        SQL = sql;
+                        ready = true;
+                        engineStatus.textContent = '✅ Sẵn sàng';
+                        engineStatus.className = 'status-badge ready';
+                    })
+                    .catch(() => {
+                        engineStatus.textContent = '❌ Không tải được công cụ SQL';
+                        engineStatus.className = 'status-badge error';
+                    });
+            }
+            loadEngine();
+            setTimeout(() => { if(!ready) { engineStatus.textContent = '❌ Không tải được công cụ SQL'; engineStatus.className='status-badge error'; } }, 6000);
+
+            function renderResults(results) {
+                if (!results || results.length === 0) {
+                    output.innerHTML = '<span class="sql-msg-success">✅ Đã thực thi thành công. (Không có dữ liệu trả về — câu lệnh chỉ tạo bảng hoặc nạp dữ liệu)</span>';
+                    return;
+                }
+                let html = '';
+                results.forEach((res, idx) => {
+                    if (results.length > 1) html += `<div class="sql-result-label">Kết quả truy vấn ${idx + 1}</div>`;
+                    html += '<table class="sql-result-table"><thead><tr>';
+                    res.columns.forEach(col => { html += `<th>${escapeHtml(col)}</th>`; });
+                    html += '</tr></thead><tbody>';
+                    res.values.forEach(row => {
+                        html += '<tr>';
+                        row.forEach(cell => {
+                            const display = (cell === null || cell === undefined) ? 'NULL' : cell;
+                            html += `<td>${escapeHtml(display)}</td>`;
+                        });
+                        html += '</tr>';
+                    });
+                    html += '</tbody></table>';
+                });
+                output.innerHTML = html;
+            }
+
+            runBtn.addEventListener('click', () => {
+                if(!ready) { output.innerHTML = '<span class="sql-msg-error">⚠️ Công cụ SQL chưa sẵn sàng. Kiểm tra mạng.</span>'; return; }
+                const code = codeInput.value;
+                if(!code.trim()) { output.innerHTML = '<span class="sql-msg-error">⚠️ Vui lòng nhập câu lệnh SQL.</span>'; return; }
+                runBtn.disabled = true;
+                runStatus.textContent = '⏳ Đang chạy...';
+                runStatus.className = 'status-badge running';
+                let database = null;
+                try {
+                    database = new SQL.Database();
+                    const results = database.exec(code);
+                    renderResults(results);
+                    runStatus.textContent = '✅ Thành công';
+                    runStatus.className = 'status-badge ready';
+                } catch(e) {
+                    output.innerHTML = '<span class="sql-msg-error">❌ LỖI: ' + escapeHtml(e.message || e.toString()) + '</span>';
+                    runStatus.textContent = '❌ Lỗi';
+                    runStatus.className = 'status-badge error';
+                } finally {
+                    if (database) database.close();
+                    runBtn.disabled = false;
+                }
+            });
+
+            resetBtn.addEventListener('click', () => {
+                codeInput.value = defaultCode;
+                output.textContent = '▶ Đã đặt lại mã mặc định.';
+                runStatus.textContent = 'Sẵn sàng';
+                runStatus.className = 'status-badge';
+            });
+        }
+        setTimeout(initSqlRunner, 400);
+
+        // Quiz Data (10 câu SGK)
+        const quiz = [
+            {q:"12.1. Chọn câu đúng về hệ QTCSDL:", opts:["A. Phần mềm quản lí thư mục, tệp.","B. Phần mềm cung cấp lưu trữ, cập nhật, truy xuất, bảo mật và API.","C. Phần mềm giúp người dùng trực tiếp cập nhật.","D. Phần mềm truy cập từ xa."], ans:1, exp:"Hệ QTCSDL cung cấp đầy đủ các chức năng lưu trữ, cập nhật, truy xuất, bảo mật và giao diện lập trình."},
+            {q:"12.2. Nhóm chức năng nào không thuộc hệ QTCSDL?", opts:["A. Định nghĩa dữ liệu.","B. Cập nhật và truy xuất.","C. Xác định vị trí lưu trữ vật lý.","D. Bảo mật và an toàn."], ans:2, exp:"Xác định vị trí lưu trữ vật lý không phải là nhóm chức năng của hệ QTCSDL."},
+            {q:"12.3. Chức năng nào không thuộc nhóm định nghĩa CSDL?", opts:["A. Chỉnh sửa dữ liệu.","B. Khai báo tên CSDL.","C. Tạo/sửa cấu trúc bảng.","D. Khai báo ràng buộc toàn vẹn."], ans:0, exp:"Chỉnh sửa dữ liệu thuộc nhóm cập nhật, không thuộc định nghĩa."},
+            {q:"12.4. Phương án ghép sai: Nhóm cập nhật & truy xuất:", opts:["A. Thêm dữ liệu.","B. Thay đổi cấu trúc dữ liệu.","C. Truy xuất theo tiêu chí.","D. Xoá/sửa dữ liệu."], ans:1, exp:"Thay đổi cấu trúc dữ liệu thuộc nhóm định nghĩa."},
+            {q:"12.5. Phương án ghép sai: Nhóm bảo mật, an toàn:", opts:["A. Chỉnh sửa dữ liệu sai.","B. Quản lí quyền truy cập.","C. Sao lưu & phục hồi.","D. Kiểm soát giao dịch."], ans:0, exp:"Chỉnh sửa dữ liệu sai là hành động cập nhật thông thường."},
+            {q:"12.6. Phần mềm ứng dụng CSDL là gì?", opts:["A. Phần mềm quản trị CSDL.","B. Phần mềm tương tác với hệ QTCSDL, hỗ trợ khai thác thông tin.","C. Phần mềm đồ hoạ.","D. Phần mềm thống kê."], ans:1, exp:"Phần mềm ứng dụng CSDL là cầu nối người dùng với hệ QTCSDL."},
+            {q:"12.7. Giao diện lập trình ứng dụng cung cấp cho ai?", opts:["A. Người dùng cập nhật trực tiếp.","B. Nhà phát triển ứng dụng CSDL.","C. Người dùng dễ dàng truy xuất.","D. Người dùng truy cập từ xa."], ans:1, exp:"API dành cho nhà phát triển viết ứng dụng tương tác CSDL."},
+            {q:"12.8. Hệ CSDL là gì?", opts:["A. Hệ gồm 3 thành phần: ứng dụng CSDL, hệ QTCSDL và CSDL.","B. Tập hợp tất cả CSDL.","C. Tập hợp CSDL trong một hệ QTCSDL.","D. Hệ thống các phần mềm ứng dụng."], ans:0, exp:"Hệ CSDL là tổ hợp 3 thành phần: CSDL, hệ QTCSDL và phần mềm ứng dụng."},
+            {q:"12.9. Hệ CSDL tập trung là gì?", opts:["A. Tất cả thành phần tập trung trên một máy tính.","B. CSDL lưu trên một máy tính.","C. Hệ một người dùng.","D. Ứng dụng CSDL tập trung."], ans:1, exp:"Theo SGK: \"Hệ CSDL mà CSDL được lưu trữ tập trung trên một máy tính được gọi là hệ cơ sở dữ liệu tập trung.\" Định nghĩa xác định bởi vị trí lưu trữ của CSDL, không nhất thiết mọi thành phần khác."},
+            {q:"12.10. Khẳng định không đúng về CSDL phân tán:", opts:["A. Dữ liệu phân tán trên nhiều máy tính.","B. Người dùng truy cập dữ liệu ở nhiều máy tính.","C. Nhiều ứng dụng phân tán truy cập một CSDL tập trung.","D. Dễ mở rộng, tính sẵn sàng cao."], ans:2, exp:"CSDL phân tán có dữ liệu phân tán, không phải một CSDL tập trung cho nhiều ứng dụng phân tán."}
+        ];
+
+        let current = 0, score = 0, answered = false;
+        const qCard = document.getElementById('quiz-card');
+        const resultCard = document.getElementById('quiz-result-card');
+        const qHeader = document.getElementById('question-header');
+        const qText = document.getElementById('question-text');
+        const qOpts = document.getElementById('quiz-options');
+        const qFb = document.getElementById('quiz-feedback');
+        const nextBtn = document.getElementById('btn-next-question');
+        const retryBtn = document.getElementById('btn-retry-quiz');
+        const progress = document.getElementById('quiz-progress');
+
+        function renderQuestion() {
+            answered = false;
+            const data = quiz[current];
+            qHeader.textContent = `Câu ${current+1} / ${quiz.length}`;
+            qText.textContent = data.q;
+            qOpts.innerHTML = '';
+            qFb.className = 'feedback-box';
+            qFb.textContent = '';
+            nextBtn.style.display = 'none';
+            data.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'option-item';
+                btn.textContent = opt;
+                btn.addEventListener('click', () => handleAnswer(idx, data.ans, data.exp));
+                qOpts.appendChild(btn);
+            });
+            progress.style.width = `${(current / quiz.length) * 100}%`;
+        }
+
+        function handleAnswer(sel, correct, exp) {
+            if(answered) return;
+            answered = true;
+            const btns = qOpts.querySelectorAll('.option-item');
+            btns.forEach((b, i) => {
+                b.style.pointerEvents = 'none';
+                if(i === correct) b.classList.add('correct');
+                else if(i === sel) b.classList.add('incorrect');
+            });
+            qFb.className = 'feedback-box show ' + (sel === correct ? 'correct' : 'incorrect');
+            qFb.innerHTML = (sel === correct ? '✅ Chính xác! ' : '❌ Chưa đúng. ') + exp;
+            if(sel === correct) score++;
+            nextBtn.style.display = 'inline-flex';
+            progress.style.width = `${((current+1) / quiz.length) * 100}%`;
+        }
+
+        function showResult() {
+            qCard.style.display = 'none';
+            resultCard.style.display = 'block';
+            document.getElementById('result-score').textContent = `Điểm số: ${score} / ${quiz.length}`;
+            progress.style.width = '100%';
+        }
+
+        nextBtn.addEventListener('click', () => {
+            current++;
+            if(current < quiz.length) renderQuestion();
+            else showResult();
+        });
+
+        retryBtn.addEventListener('click', () => {
+            current = 0; score = 0;
+            qCard.style.display = 'block';
+            resultCard.style.display = 'none';
+            renderQuestion();
+        });
+
+        renderQuestion();
+    })();
+</script>
+</body>
+</html>

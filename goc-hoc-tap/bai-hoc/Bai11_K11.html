@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 11: Cơ sở dữ liệu - Tin học 11</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- sql.js (SQLite biên dịch sang WebAssembly) dùng để mô phỏng thực thi câu lệnh MySQL ngay trên trình duyệt -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js" defer></script>
+
+    <style>
+        :root {
+            --primary: #18A999;
+            --primary-dark: #128074;
+            --primary-light: #e0f5f3;
+            --accent: #FF9B85;
+            --accent-dark: #e88671;
+            --bg: #f8fbfa;
+            --surface: #ffffff;
+            --text: #2c3e50;
+            --text-light: #596a7b;
+            --border: #dce4e3;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --radius: 12px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--bg);
+        }
+
+        /* Typography */
+        h1, h2, h3 { color: var(--primary-dark); margin-bottom: 1rem; }
+        h1 { font-size: 2rem; text-align: center; margin: 2rem 0; color: #fff; }
+        h2 { font-size: 1.5rem; border-bottom: 2px solid var(--primary-light); padding-bottom: 0.5rem; }
+        p { margin-bottom: 1rem; }
+        strong { color: var(--primary-dark); }
+        code { background: var(--primary-light); color: var(--primary-dark); padding: 0.1rem 0.4rem; border-radius: 4px; font-family: 'Courier New', Courier, monospace; }
+
+        /* Layout */
+        .header-bg { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 1rem 0; box-shadow: var(--shadow); }
+        .header-eyebrow { display: block; text-align: center; color: rgba(255,255,255,0.85); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.03em; margin-top: 1rem; text-transform: uppercase; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 1rem; }
+
+        /* Navigation (Tabs) */
+        .nav-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; background: var(--surface); padding: 0.5rem; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .nav-btn {
+            flex: 0 0 auto; white-space: nowrap; padding: 0.8rem 1.1rem; border: none; background: transparent;
+            font-family: inherit; font-size: 0.95rem; font-weight: 600; color: var(--text-light);
+            cursor: pointer; border-radius: 8px; transition: all 0.3s ease; text-align: center; text-decoration: none;
+        }
+        .nav-btn:hover { background: var(--primary-light); color: var(--primary); }
+        .nav-btn.active { background: var(--primary); color: #fff; }
+
+        /* Sections & Progressive Enhancement */
+        section { background: var(--surface); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 2rem; }
+        .js-enabled section:not(.active) { display: none; }
+
+        /* Buttons */
+        .btn {
+            display: inline-block; padding: 0.8rem 1.5rem; border: none; border-radius: 8px;
+            background: var(--primary); color: #fff; font-family: inherit; font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: background 0.2s; text-align: center;
+        }
+        .btn:hover { background: var(--primary-dark); }
+        .btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+        .btn-accent { background: var(--accent); color: #fff; }
+        .btn-accent:hover { background: var(--accent-dark); }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+
+        /* Mục tiêu list */
+        .goal-list { display: flex; flex-direction: column; gap: 0.9rem; margin-top: 1.5rem; }
+        .goal-item { display: flex; align-items: flex-start; gap: 0.9rem; background: var(--primary-light); padding: 1rem 1.2rem; border-radius: var(--radius); }
+        .goal-item i { color: var(--primary); font-size: 1.2rem; margin-top: 0.15rem; flex-shrink: 0; }
+        .goal-item p { margin-bottom: 0; }
+
+        /* Hộp Hoạt động (SGK) & Hộp Ghi nhớ */
+        .activity-box { background: #fff3e0; border: 2px solid var(--accent); border-radius: var(--radius); padding: 1.3rem 1.5rem; margin: 1.2rem 0; }
+        .activity-box .box-title { font-weight: 700; color: var(--accent-dark); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; font-size: 1.02rem; }
+        .activity-box p:last-child { margin-bottom: 0; }
+        .note-box { background: #fff9e6; border: 2px dashed #f0c14b; border-radius: var(--radius); padding: 1.3rem 1.5rem; margin: 1.2rem 0; }
+        .note-box ul { padding-left: 1.3rem; margin-bottom: 0; }
+        .note-box li { margin-bottom: 0.4rem; }
+        .note-box li:last-child { margin-bottom: 0; }
+        .subhead { color: var(--primary-dark); font-size: 1.15rem; font-weight: 700; margin: 1.6rem 0 0.6rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        /* Câu hỏi thảo luận có nút xem gợi ý */
+        .discuss-q { background: var(--primary-light); border-radius: 10px; padding: 1rem 1.2rem; margin: 0.9rem 0; }
+        .discuss-q .q-text { font-weight: 600; color: var(--primary-dark); margin-bottom: 0.6rem; display: flex; gap: 0.5rem; }
+        .reveal-btn { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); padding: 0.4rem 0.9rem; border-radius: 30px; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 0.4rem; }
+        .reveal-btn:hover { background: var(--primary); color: #fff; }
+        .reveal-panel { display: none; margin-top: 0.8rem; padding: 0.9rem 1rem; background: #fff; border-left: 3px solid var(--primary); border-radius: 6px; font-size: 0.95rem; }
+        .reveal-panel.show { display: block; }
+
+        /* Bảng dữ liệu SGK (Hình 11.1 / 11.2) + trò chơi phát hiện lỗi */
+        .sgk-figure { margin: 1.2rem 0; }
+        .sgk-figure-caption { text-align: center; font-size: 0.85rem; font-style: italic; color: var(--text-light); margin-top: 0.5rem; }
+        .sgk-tables { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+        .sgk-table-wrap { flex: 1; min-width: 280px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .sgk-table-wrap h4 { background: var(--primary-light); padding: 0.7rem; margin: 0; color: var(--primary-dark); font-size: 0.95rem; border-bottom: 1px solid var(--border); }
+        .sgk-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        .sgk-table th, .sgk-table td { padding: 0.55rem 0.5rem; border-bottom: 1px solid var(--border); text-align: center; }
+        .sgk-table th { background: #f8fbfa; font-size: 0.8rem; color: var(--text-light); }
+        .sgk-table td.name-cell { text-align: left; font-weight: 600; }
+        .cell-clickable { cursor: pointer; border-radius: 4px; transition: background 0.15s; }
+        .cell-clickable:hover { background: var(--primary-light); }
+        .cell-found { background: #eafaf1 !important; color: var(--success); font-weight: 700; outline: 2px solid var(--success); }
+        .cell-miss { background: #fdedec !important; animation: shake 0.3s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+        .game-feedback { margin-top: 1rem; padding: 0.9rem 1.1rem; border-radius: 8px; font-weight: 600; display: none; text-align: center; }
+        .game-feedback.show { display: block; }
+        .game-feedback.win { background: #eafaf1; color: #1e8449; border: 1px solid #a6e9c4; }
+        .game-feedback.hint { background: #eef6ff; color: #1e5aa8; border: 1px solid #bcd9f7; }
+
+        /* Sơ đồ mô đun phần mềm (Hình 11.3) */
+        .module-diagram { margin: 1.2rem 0; text-align: center; }
+        .module-diagram svg { max-width: 100%; height: auto; }
+
+        /* DB Attributes Grid — thẻ lật (flip card) để phần Kiến thức sinh động hơn */
+        .attr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; perspective: 1200px; }
+        .attr-card { height: 230px; cursor: pointer; outline: none; }
+        .attr-card-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .attr-card.flipped .attr-card-inner { transform: rotateY(180deg); }
+        .attr-card:focus-visible .attr-card-inner { outline: 3px solid var(--accent); outline-offset: 3px; }
+        .attr-card-front, .attr-card-back {
+            position: absolute; inset: 0; backface-visibility: hidden;
+            border-radius: var(--radius); padding: 1.4rem; display: flex; flex-direction: column;
+        }
+        .attr-card-front { background: var(--primary-light); border-left: 4px solid var(--primary); }
+        .attr-card-front .attr-icon { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .attr-card-front h3 { color: var(--primary-dark); font-size: 1.05rem; margin-bottom: 0.5rem; border: none; }
+        .attr-card-front p { margin-bottom: 0; font-size: 0.92rem; flex: 1; }
+        .flip-hint { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.8rem; font-size: 0.78rem; color: var(--primary-dark); opacity: 0.75; font-weight: 600; }
+        .attr-card-back {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff; transform: rotateY(180deg); justify-content: center; text-align: center;
+        }
+        .attr-card-back .example-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.85; margin-bottom: 0.5rem; font-weight: 700; }
+        .attr-card-back p { margin-bottom: 0; font-size: 0.92rem; }
+
+        /* MySQL Code Runner */
+        .ide-container { border: 2px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 1.5rem; }
+        .ide-header { background: #f1f5f9; padding: 0.8rem 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .ide-status { font-size: 0.9rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 20px; }
+        .status-loading { background: #f39c12; color: #fff; }
+        .status-ready { background: var(--success); color: #fff; }
+        .status-running { background: #3498db; color: #fff; }
+        .status-error { background: var(--error); color: #fff; }
+        .ide-body { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
+        @media (max-width: 768px) { .ide-body { grid-template-columns: 1fr; } }
+        .code-area, .output-area { background: var(--surface); display: flex; flex-direction: column; }
+        .code-area textarea {
+            flex: 1; width: 100%; min-height: 260px; padding: 1rem; border: none; resize: vertical;
+            font-family: 'Courier New', Courier, monospace; font-size: 15px; background: #282a36; color: #f8f8f2; outline: none;
+        }
+        .ide-controls { padding: 1rem; background: #fff; display: flex; gap: 1rem; border-top: 1px solid var(--border); }
+
+        /* SQL Output */
+        .sql-output { flex: 1; width: 100%; min-height: 260px; padding: 1rem; margin: 0; overflow-y: auto; background: #f8f9fa; color: #333; font-size: 14px; }
+        .sql-output p { margin-bottom: 0; }
+        .sql-table-wrap { margin-bottom: 1.2rem; overflow-x: auto; }
+        .sql-table-wrap:last-child { margin-bottom: 0; }
+        .sql-result-label { font-weight: 600; color: var(--primary-dark); margin-bottom: 0.4rem; font-size: 0.9rem; }
+        .sql-table { width: 100%; border-collapse: collapse; font-family: 'Courier New', Courier, monospace; font-size: 13px; background: #fff; }
+        .sql-table th { background: var(--primary-light); color: var(--primary-dark); padding: 0.5rem 0.8rem; text-align: left; border-bottom: 2px solid var(--primary); white-space: nowrap; }
+        .sql-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); }
+        .sql-table tbody tr:nth-child(even) td { background: #fafbfc; }
+        .sql-msg-success { color: var(--success); font-weight: 600; }
+        .sql-msg-error { color: var(--error); font-family: 'Courier New', Courier, monospace; white-space: pre-wrap; font-size: 14px; }
+
+        /* Simulation Area */
+        .sim-container { background: #fff; border: 2px solid var(--border); border-radius: var(--radius); padding: 1.5rem; text-align: center; }
+        .sim-tables { display: flex; gap: 2rem; justify-content: center; margin: 1.5rem 0; flex-wrap: wrap; }
+        .sim-table-wrap { flex: 1; min-width: 250px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .sim-table-wrap h4 { background: var(--primary-light); padding: 0.8rem; margin: 0; color: var(--primary-dark); border-bottom: 1px solid var(--border); }
+        .sim-table { width: 100%; border-collapse: collapse; }
+        .sim-table th, .sim-table td { padding: 0.8rem; border-bottom: 1px solid var(--border); text-align: left; }
+        .sim-input { width: 60px; padding: 0.3rem; text-align: center; border: 2px solid #ccc; border-radius: 4px; font-weight: bold; }
+        .sim-input:focus { border-color: var(--primary); outline: none; }
+        .sim-feedback { margin-top: 1rem; padding: 1rem; border-radius: 8px; font-weight: 600; display: none; }
+        .sim-feedback.inconsistent { background: #fdedec; color: var(--error); display: block; border-left: 4px solid var(--error); }
+        .sim-feedback.consistent { background: #eafaf1; color: var(--success); display: block; border-left: 4px solid var(--success); }
+
+        /* Quiz */
+        .quiz-container { min-height: 300px; }
+        .quiz-progress { height: 8px; background: var(--border); border-radius: 4px; margin-bottom: 1.5rem; overflow: hidden; }
+        .quiz-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+        .quiz-question { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--primary-dark); }
+        .quiz-options { display: flex; flex-direction: column; gap: 0.8rem; }
+        .quiz-opt-btn {
+            text-align: left; padding: 1rem; border: 2px solid var(--border); border-radius: 8px;
+            background: #fff; cursor: pointer; transition: all 0.2s; font-size: 1rem; font-family: inherit;
+        }
+        .quiz-opt-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-light); }
+        .quiz-opt-btn.correct { background: #eafaf1; border-color: var(--success); color: #1e8449; }
+        .quiz-opt-btn.wrong { background: #fdedec; border-color: var(--error); color: #c0392b; }
+        .quiz-feedback { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-feedback.show { display: block; }
+        .quiz-controls { margin-top: 1.5rem; display: flex; justify-content: flex-end; }
+        .quiz-result { text-align: center; padding: 2rem; display: none; }
+        .quiz-result h3 { font-size: 2rem; color: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="header-bg">
+        <div class="container">
+            <span class="header-eyebrow">Chủ đề 4: Giới thiệu các hệ cơ sở dữ liệu</span>
+            <h1>Bài 11: Cơ sở dữ liệu</h1>
+        </div>
+    </div>
+
+    <div class="container" style="margin-top: 2rem;">
+        <!-- Navigation. Works with anchors without JS, upgraded to tabs with JS -->
+        <nav id="main-nav" class="nav-tabs">
+            <a href="#sec-khoidong" class="nav-btn active" data-target="sec-khoidong">Khởi động</a>
+            <a href="#sec-mucteu" class="nav-btn" data-target="sec-mucteu">Mục tiêu</a>
+            <a href="#sec-yeucau" class="nav-btn" data-target="sec-yeucau">Yêu cầu dữ liệu</a>
+            <a href="#sec-kienthuc" class="nav-btn" data-target="sec-kienthuc">Kiến thức</a>
+            <a href="#sec-thuchanh" class="nav-btn" data-target="sec-thuchanh">Thực hành (MySQL)</a>
+            <a href="#sec-mophong" class="nav-btn" data-target="sec-mophong">Mô phỏng</a>
+            <a href="#sec-luyentap" class="nav-btn" data-target="sec-luyentap">Luyện tập</a>
+        </nav>
+
+        <main>
+            <!-- Phần 1: Khởi động -->
+            <section id="sec-khoidong" class="active">
+                <h2>1. Khởi động</h2>
+                <p style="font-style: italic; color: var(--text-light);">"Theo em, việc lưu trữ dữ liệu phục vụ các bài toán quản lí có phải chỉ là việc chuyển các ghi chép trên giấy thành văn bản trên máy tính không?" <span style="font-style:normal;">— Câu hỏi mở đầu, SGK Tin học 11.</span></p>
+
+                <div class="activity-box">
+                    <div class="box-title"><i class="fa-regular fa-comments"></i> Hoạt động 1 – Có cần lưu trữ bảng điểm lớp học không?</div>
+                    <p>Giáo viên dạy mỗi môn học bắt buộc phải có một sổ điểm – bảng điểm môn học. Một bản sao của bảng điểm môn học được gửi cho giáo viên chủ nhiệm lớp. Hãy cùng thảo luận: <strong>có cần lưu trữ bảng điểm lớp học không?</strong></p>
+                </div>
+
+                <p>Hãy tưởng tượng trường học lưu trữ điểm bằng sổ giấy: giáo viên môn Toán có một cuốn sổ điểm riêng, giáo viên chủ nhiệm lại có thêm một cuốn sổ tổng hợp điểm của cả lớp. Cùng một thông tin — điểm của một học sinh — bị ghi chép và lưu trữ ở <strong>hai nơi khác nhau</strong>.</p>
+                <p>Nếu kì thi vừa rồi một học sinh được phúc khảo từ 8 lên 9 điểm môn Toán, giáo viên Toán sửa lại trong sổ của mình nhưng quên báo cho giáo viên chủ nhiệm — sổ điểm lớp vẫn ghi 8. Điều gì sẽ xảy ra khi nhà trường tính điểm tổng kết?</p>
+                <p style="color: var(--text-light); font-size: 0.9rem;"><em>Gợi ý: Dữ liệu đang bị lưu trữ lặp lại ở nhiều nơi khác nhau — đây chính là mầm mống của sự <strong>không nhất quán dữ liệu</strong> mà bài học sẽ giải thích ở Mục "Yêu cầu dữ liệu".</em></p>
+                <p style="margin-top: 1.5rem;">Việc lưu trữ dữ liệu bằng máy tính không chỉ đơn thuần là gõ lại văn bản trên giấy. Cần phải tổ chức một cách khoa học để giải quyết vấn đề trên, đó chính là vai trò của <strong>Cơ sở dữ liệu (CSDL)</strong>.</p>
+            </section>
+
+            <!-- Phần 2: Mục tiêu -->
+            <section id="sec-mucteu">
+                <h2><i class="fa-solid fa-bullseye" style="color:var(--primary);"></i> 2. Mục tiêu bài học</h2>
+                <div class="goal-list">
+                    <div class="goal-item">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <p><strong>Hiểu khái niệm Cơ sở dữ liệu (CSDL):</strong> Vì sao cần tổ chức dữ liệu một cách khoa học thay vì chỉ chuyển ghi chép trên giấy thành tệp trên máy tính.</p>
+                    </div>
+                    <div class="goal-item">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <p><strong>Nắm vững 6 thuộc tính cơ bản của CSDL:</strong> tính cấu trúc, không dư thừa, độc lập, toàn vẹn, nhất quán, bảo mật và an toàn.</p>
+                    </div>
+                    <div class="goal-item">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <p><strong>Vận dụng vào tình huống thực tế:</strong> nhận diện từng thuộc tính qua mô phỏng, truy vấn SQL và bài luyện tập.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phần 3: Yêu cầu tổ chức lưu trữ dữ liệu một cách khoa học -->
+            <section id="sec-yeucau">
+                <h2><i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> 3. Yêu cầu tổ chức lưu trữ dữ liệu một cách khoa học</h2>
+
+                <div class="subhead"><i class="fa-solid fa-a" style="font-size:0.9rem;"></i> a) Hạn chế dư thừa trong lưu trữ dữ liệu</div>
+                <p>Khi ghi chép, lưu trữ trên giấy, giáo viên chủ nhiệm lớp thường lưu trữ cả bảng điểm môn học <em>và</em> bảng điểm lớp học. Tuy nhiên, có thể thấy nhiều dữ liệu lặp lại trong các bảng điểm này và có thể dẫn đến sự <strong>không nhất quán dữ liệu</strong>. Ví dụ dưới đây trích từ SGK:</p>
+
+                <div class="sgk-figure">
+                    <div class="sgk-tables">
+                        <div class="sgk-table-wrap">
+                            <h4>Hình 11.1 — Trích bảng điểm môn Toán</h4>
+                            <table class="sgk-table">
+                                <thead><tr><th>STT</th><th>Họ và tên</th><th>ĐĐG TX</th><th>ĐĐG GK</th><th>ĐĐG CK</th></tr></thead>
+                                <tbody>
+                                    <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+                                    <tr>
+                                        <td>3</td><td class="name-cell">Nguyễn Kì Duyên</td><td>7</td><td>8</td>
+                                        <td id="cell-toan-truth" style="color:#c0392b; font-weight:700;">9</td>
+                                    </tr>
+                                    <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="sgk-table-wrap">
+                            <h4>Hình 11.2 — Trích bảng điểm lớp học</h4>
+                            <table class="sgk-table">
+                                <thead><tr><th>STT</th><th>Họ và tên</th><th>Toán</th><th>Tin học</th><th>Vật lí</th><th>Hoá học</th></tr></thead>
+                                <tbody>
+                                    <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+                                    <tr>
+                                        <td>3</td><td class="name-cell">Nguyễn Kì Duyên</td>
+                                        <td id="cell-lop-target" class="cell-clickable" tabindex="0" role="button" style="font-weight:700;">8</td>
+                                        <td>10</td><td>10</td><td>10</td>
+                                    </tr>
+                                    <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <p class="sgk-figure-caption">Cùng một học sinh, cùng một điểm Toán cuối kì — nhưng hai bảng lại ghi hai giá trị khác nhau.</p>
+                </div>
+
+                <div class="activity-box">
+                    <div class="box-title"><i class="fa-solid fa-gamepad"></i> Trò chơi nhỏ: Bắt lỗi không nhất quán!</div>
+                    <p>Ở Hình 11.1, điểm cuối kì môn Toán của Nguyễn Kì Duyên là <strong>9</strong>. Hãy nhấn vào ô trong <strong>Hình 11.2</strong> đang ghi sai giá trị này.</p>
+                    <div id="game-feedback" class="game-feedback"></div>
+                </div>
+
+                <p>Thói quen cá nhân của người lưu trữ cũng có thể dẫn đến sự không nhất quán khi lưu trữ thủ công (ví dụ điểm được ghi bằng chữ hoặc kí hiệu riêng thay vì số). Khi dữ liệu được lưu trên máy tính, bảng điểm lớp học có thể được <strong>tự động lập ra</strong> từ các bảng điểm môn học — vì vậy không cần lưu trữ nó như một bản sao riêng, nó chỉ là một "khung nhìn" tổng hợp.</p>
+                <p>Việc lưu trữ dữ liệu trên máy tính vì thế <strong>không đơn thuần</strong> là chuyển văn bản trên giấy thành tệp văn bản trên máy tính — cần tổ chức sao cho hạn chế trùng lặp, khắc phục lỗi không nhất quán. Đây là yêu cầu chung cho mọi bài toán quản lí.</p>
+
+                <div class="subhead"><i class="fa-solid fa-b" style="font-size:0.9rem;"></i> b) Sự phụ thuộc phần mềm và dữ liệu</div>
+                <p>Việc lưu trữ dữ liệu điểm các môn học trên máy tính cần những phần mềm hỗ trợ cập nhật và khai thác thông tin. Ba <strong>mô đun phần mềm</strong> cần có là: <em>Danh sách lớp</em> (quản lí danh sách lớp học), <em>Điểm môn học</em> (cập nhật điểm) và <em>Lập bảng điểm</em> (tổng hợp bảng điểm lớp học từ dữ liệu điểm môn học).</p>
+                <p>Nếu viết các mô đun này bằng một ngôn ngữ lập trình — ví dụ <strong>Python</strong> — giải pháp đơn giản nhất thường là dùng trực tiếp hệ thống tệp văn bản (text), với mỗi dòng ngăn cách bởi dấu phẩy:</p>
+                <pre style="background:#282a36; color:#f8f8f2; padding:1rem 1.2rem; border-radius:10px; font-family:'Courier New',monospace; font-size:0.85rem; overflow-x:auto; margin-bottom:1rem;">Tệp "Danh sách lớp học":
+11A, 1, Dương Hồng Anh
+11A, 2, Lương Việt Anh
+11A, 3, Nguyễn Kì Duyên
+
+Tệp "Bảng điểm môn học" (4 ĐĐG TX, 1 ĐĐG GK, 1 ĐĐG CK):
+11A, 1, Dương Hồng Anh, 8, 7, , 7, 9, 8
+11A, 2, Lương Việt Anh, , 5, 6, 5, 5, 5
+11A, 3, Nguyễn Kì Duyên, 7, , 8, 0, 10, 9</pre>
+
+                <div class="module-diagram">
+                    <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sơ đồ các mô đun phần mềm và quan hệ với tệp dữ liệu">
+                        <defs>
+                            <marker id="arrowHead" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                                <path d="M0,0 L8,4 L0,8 Z" fill="var(--primary)"></path>
+                            </marker>
+                        </defs>
+                        <line x1="90" y1="55" x2="90" y2="140" stroke="var(--primary)" stroke-width="2" marker-end="url(#arrowHead)" marker-start="url(#arrowHead)"></line>
+                        <line x1="300" y1="55" x2="130" y2="140" stroke="var(--primary)" stroke-width="2" marker-end="url(#arrowHead)" marker-start="url(#arrowHead)"></line>
+                        <line x1="330" y1="55" x2="440" y2="140" stroke="var(--primary)" stroke-width="2" marker-end="url(#arrowHead)" marker-start="url(#arrowHead)"></line>
+                        <line x1="560" y1="55" x2="470" y2="140" stroke="var(--primary)" stroke-width="2" marker-end="url(#arrowHead)" marker-start="url(#arrowHead)"></line>
+                        <rect x="10" y="15" width="160" height="42" rx="8" fill="var(--primary-light)" stroke="var(--primary)" stroke-width="1.5"></rect>
+                        <text x="90" y="41" text-anchor="middle" font-size="13" font-weight="700" fill="var(--primary-dark)" font-family="'Be Vietnam Pro', sans-serif">Danh sách lớp</text>
+                        <rect x="240" y="15" width="160" height="42" rx="8" fill="var(--primary-light)" stroke="var(--primary)" stroke-width="1.5"></rect>
+                        <text x="320" y="41" text-anchor="middle" font-size="13" font-weight="700" fill="var(--primary-dark)" font-family="'Be Vietnam Pro', sans-serif">Điểm môn học</text>
+                        <rect x="470" y="15" width="160" height="42" rx="8" fill="var(--primary-light)" stroke="var(--primary)" stroke-width="1.5"></rect>
+                        <text x="550" y="41" text-anchor="middle" font-size="13" font-weight="700" fill="var(--primary-dark)" font-family="'Be Vietnam Pro', sans-serif">Lập bảng điểm</text>
+                        <rect x="15" y="140" width="220" height="52" rx="8" fill="#fff7e6" stroke="var(--accent)" stroke-width="1.5"></rect>
+                        <text x="125" y="162" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e" font-family="'Be Vietnam Pro', sans-serif">Tệp</text>
+                        <text x="125" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e" font-family="'Be Vietnam Pro', sans-serif">Danh sách lớp học</text>
+                        <rect x="365" y="140" width="240" height="52" rx="8" fill="#fff7e6" stroke="var(--accent)" stroke-width="1.5"></rect>
+                        <text x="485" y="162" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e" font-family="'Be Vietnam Pro', sans-serif">Tệp</text>
+                        <text x="485" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e" font-family="'Be Vietnam Pro', sans-serif">Bảng điểm môn học</text>
+                    </svg>
+                    <p class="sgk-figure-caption">Hình 11.3 (mô phỏng lại) — Các mô đun phần mềm và quan hệ với các tệp dữ liệu.</p>
+                </div>
+
+                <p>Khi viết mỗi mô đun, người lập trình phải biết <strong>cấu trúc</strong> của tệp dữ liệu để tách đúng các thành phần theo dấu phẩy. Nếu sau này quy định điểm có phần thập phân và cần đổi dấu phẩy thành dấu chấm để tránh nhầm lẫn, <strong>cả hai mô đun</strong> "Điểm môn học" và "Lập bảng điểm" đều phải sửa lại — dù bản chất công việc của chúng không hề thay đổi.</p>
+                <p>Đây chính là <strong>sự phụ thuộc giữa chương trình và dữ liệu</strong>: thay đổi cách lưu trữ dữ liệu kéo theo phải sửa đổi phần mềm, khiến việc thiết kế, bảo trì, phát triển tốn nhiều thời gian, công sức. Ý tưởng tổ chức dữ liệu <strong>độc lập</strong> với phần mềm — để phần mềm không cần "nhìn thấy" chi tiết cách lưu trữ mà vẫn dùng được dữ liệu — chính là nền tảng hình thành nên khoa học về <strong>Cơ sở dữ liệu (CSDL)</strong>.</p>
+
+                <div class="note-box">
+                    <div class="box-title" style="color:#92400e;"><i class="fa-solid fa-thumbtack"></i> Ghi nhớ</div>
+                    <p style="margin-bottom:0;">Dữ liệu cần được tổ chức lưu trữ một cách <strong>độc lập</strong> với việc xây dựng, phát triển phần mềm, đảm bảo dễ dàng chia sẻ, dễ dàng bảo trì phát triển, đồng thời đảm bảo hạn chế tối đa việc dữ liệu lặp lại, gây dư thừa dữ liệu và hỗ trợ đảm bảo tính nhất quán dữ liệu.</p>
+                </div>
+
+                <div class="discuss-q">
+                    <div class="q-text"><i class="fa-regular fa-circle-question"></i> Câu hỏi 1. Hãy giải thích yêu cầu về tính nhất quán dữ liệu trong lưu trữ dữ liệu.</div>
+                    <button type="button" class="reveal-btn" data-reveal="ans-yc1"><i class="fa-solid fa-eye"></i> Xem gợi ý trả lời</button>
+                    <div class="reveal-panel" id="ans-yc1">Tính nhất quán yêu cầu dữ liệu phản ánh cùng một sự thật ở mọi nơi nó xuất hiện: nếu điểm Toán của một học sinh được sửa ở một chỗ (bảng điểm môn học), mọi nơi khác có chứa dữ liệu đó (bảng điểm lớp học) cũng phải được cập nhật theo — tránh tình trạng hai bản ghi mâu thuẫn nhau như ở Hình 11.1/11.2.</div>
+                </div>
+                <div class="discuss-q">
+                    <div class="q-text"><i class="fa-regular fa-circle-question"></i> Câu hỏi 2. Tại sao cần tổ chức lưu trữ dữ liệu độc lập với phần mềm?</div>
+                    <button type="button" class="reveal-btn" data-reveal="ans-yc2"><i class="fa-solid fa-eye"></i> Xem gợi ý trả lời</button>
+                    <div class="reveal-panel" id="ans-yc2">Vì nếu dữ liệu và phần mềm phụ thuộc chặt vào nhau, mỗi lần thay đổi cách lưu trữ dữ liệu đều buộc phải sửa lại phần mềm — tốn thời gian, công sức, dễ phát sinh lỗi. Tổ chức dữ liệu độc lập giúp nhiều phần mềm khác nhau cùng khai thác một nguồn dữ liệu mà không cần biết chi tiết kĩ thuật lưu trữ bên dưới, dễ bảo trì và mở rộng hơn.</div>
+                </div>
+            </section>
+
+            <!-- Phần 4: Kiến thức -->
+            <section id="sec-kienthuc">
+                <h2><i class="fa-solid fa-database" style="color:var(--primary);"></i> 4. Cơ sở dữ liệu và thuộc tính cơ bản</h2>
+                <p><strong>Cơ sở dữ liệu (CSDL)</strong> là một tập hợp dữ liệu có liên quan với nhau, được lưu trữ một cách có tổ chức trên hệ thống máy tính nhằm mục đích khai thác.</p>
+                <p>Một CSDL được thiết kế tốt cần đảm bảo các thuộc tính cơ bản sau. <strong>Nhấn vào từng thẻ</strong> để xem ví dụ minh hoạ:</p>
+
+                <div class="attr-grid">
+                    <div class="attr-card" tabindex="0" role="button" aria-pressed="false">
+                        <div class="attr-card-inner">
+                            <div class="attr-card-front">
+                                <div class="attr-icon"><i class="fa-solid fa-table-cells"></i></div>
+                                <h3>1. Tính cấu trúc</h3>
+                                <p>Dữ liệu được tổ chức theo những quy tắc nhất định (VD: lưu dưới dạng bảng gồm các hàng và cột).</p>
+                                <span class="flip-hint"><i class="fa-solid fa-arrow-rotate-right"></i> Nhấn để xem ví dụ</span>
+                            </div>
+                            <div class="attr-card-back">
+                                <div class="example-label">Ví dụ minh hoạ</div>
+                                <p>Bảng điểm gồm các cột "Họ tên", "Điểm TX", "Điểm GK", "Điểm CK" và mỗi hàng ứng với một học sinh.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="attr-card" tabindex="0" role="button" aria-pressed="false">
+                        <div class="attr-card-inner">
+                            <div class="attr-card-front">
+                                <div class="attr-icon"><i class="fa-solid fa-compress"></i></div>
+                                <h3>2. Tính không dư thừa</h3>
+                                <p>Hạn chế tối đa việc lưu trữ lặp lại một thông tin, giúp tiết kiệm bộ nhớ và dễ dàng cập nhật.</p>
+                                <span class="flip-hint"><i class="fa-solid fa-arrow-rotate-right"></i> Nhấn để xem ví dụ</span>
+                            </div>
+                            <div class="attr-card-back">
+                                <div class="example-label">Ví dụ minh hoạ</div>
+                                <p>Không cần lưu riêng "Bảng điểm lớp" vì có thể tổng hợp trực tiếp từ các "Bảng điểm môn học" đã có.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="attr-card" tabindex="0" role="button" aria-pressed="false">
+                        <div class="attr-card-inner">
+                            <div class="attr-card-front">
+                                <div class="attr-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+                                <h3>3. Tính độc lập dữ liệu</h3>
+                                <p>Dữ liệu độc lập với phần mềm khai thác. Thay đổi cấu trúc dữ liệu không bắt buộc phải viết lại toàn bộ phần mềm.</p>
+                                <span class="flip-hint"><i class="fa-solid fa-arrow-rotate-right"></i> Nhấn để xem ví dụ</span>
+                            </div>
+                            <div class="attr-card-back">
+                                <div class="example-label">Ví dụ minh hoạ</div>
+                                <p>Khi CSDL đổi cách lưu điểm từ số nguyên sang số thập phân, phần mềm tra cứu điểm vẫn hoạt động bình thường mà không cần viết lại.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="attr-card" tabindex="0" role="button" aria-pressed="false">
+                        <div class="attr-card-inner">
+                            <div class="attr-card-front">
+                                <div class="attr-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                                <h3>4. Tính toàn vẹn</h3>
+                                <p>Dữ liệu phải thoả mãn các ràng buộc thực tế (VD: Điểm học tập phải từ 0 đến 10, không được là số âm).</p>
+                                <span class="flip-hint"><i class="fa-solid fa-arrow-rotate-right"></i> Nhấn để xem ví dụ</span>
+                            </div>
+                            <div class="attr-card-back">
+                                <div class="example-label">Ví dụ minh hoạ</div>
+                                <p>Hệ thống sẽ từ chối nếu ai đó nhập điểm là −5 hoặc 15, vì điểm chỉ được phép trong khoảng 0–10.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="attr-card" tabindex="0" role="button" aria-pressed="false">
+                        <div class="attr-card-inner">
+                            <div class="attr-card-front">
+                                <div class="attr-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                                <h3>5. Tính nhất quán</h3>
+                                <p>Đảm bảo dữ liệu không bị mâu thuẫn sau các thao tác cập nhật (VD: Điểm ở bảng môn và bảng lớp phải giống nhau).</p>
+                                <span class="flip-hint"><i class="fa-solid fa-arrow-rotate-right"></i> Nhấn để xem ví dụ</span>
+                            </div>
+                            <div class="attr-card-back">
+                                <div class="example-label">Ví dụ minh hoạ</div>
+                                <p>Khi chuyển khoản ngân hàng, số dư ở tài khoản gửi và tài khoản nhận phải luôn khớp nhau, kể cả khi xảy ra sự cố giữa chừng.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="attr-card" tabindex="0" role="button" aria-pressed="false">
+                        <div class="attr-card-inner">
+                            <div class="attr-card-front">
+                                <div class="attr-icon"><i class="fa-solid fa-lock"></i></div>
+                                <h3>6. Tính bảo mật và an toàn</h3>
+                                <p>Ngăn chặn truy cập trái phép, bảo vệ dữ liệu khỏi mất mát do sự cố phần cứng/phần mềm.</p>
+                                <span class="flip-hint"><i class="fa-solid fa-arrow-rotate-right"></i> Nhấn để xem ví dụ</span>
+                            </div>
+                            <div class="attr-card-back">
+                                <div class="example-label">Ví dụ minh hoạ</div>
+                                <p>Chỉ giáo viên bộ môn mới có quyền sửa điểm; dữ liệu được sao lưu định kì để phục hồi khi máy tính gặp sự cố.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phần 3: Thực hành (Phòng mã MySQL) -->
+            <section id="sec-thuchanh">
+                <h2>4. Khám phá: Câu lệnh SQL và Cấu trúc bảng dữ liệu</h2>
+                <p>Một Hệ quản trị CSDL như <strong>MySQL</strong> giúp tổ chức dữ liệu bài bản dưới dạng các bảng có cấu trúc rõ ràng (tên cột, kiểu dữ liệu). Tuy nhiên, phần mềm khai thác — cụ thể là các câu lệnh SQL — vẫn luôn phải tuân thủ đúng cấu trúc đó. Đây chính là lí do vì sao việc thiết kế CSDL cẩn thận lại quan trọng đến vậy.</p>
+                <p><strong>Nhiệm vụ:</strong>
+                    <br>1. Nhấn <strong>Chạy truy vấn</strong> để xem MySQL tạo bảng <code>diem_so</code>, nạp dữ liệu và truy xuất kết quả.
+                    <br>2. Ở dòng <code>SELECT</code> cuối cùng, đổi tên cột <code>ho_ten</code> thành <code>ten</code> rồi nhấn chạy lại.
+                    <br>3. Quan sát thông báo lỗi <code>no such column</code> để hiểu vì sao câu lệnh SQL luôn phải khớp chính xác với cấu trúc bảng đã định nghĩa trong CSDL.
+                </p>
+
+                <div class="ide-container">
+                    <div class="ide-header">
+                        <span>Phòng thực hành MySQL</span>
+                        <span id="sql-status" class="ide-status status-loading">Đang tải công cụ SQL...</span>
+                    </div>
+                    <div class="ide-body">
+                        <div class="code-area">
+<textarea id="sql-code" spellcheck="false"></textarea>
+                        </div>
+                        <div class="output-area">
+                            <div id="sql-output" class="sql-output"><p>Kết quả hiển thị ở đây...</p></div>
+                        </div>
+                    </div>
+                    <div class="ide-controls">
+                        <button type="button" id="btn-run-sql" class="btn" disabled>▶ Chạy truy vấn</button>
+                        <button type="button" id="btn-reset-sql" class="btn btn-outline">Khôi phục mã mẫu</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phần 4: Tương tác trọng tâm -->
+            <section id="sec-mophong">
+                <h2>5. Mô phỏng: Hạn chế dư thừa & Đảm bảo nhất quán</h2>
+                <p>Khi sử dụng CSDL, thay vì lưu hai bảng điểm rời rạc (Bảng môn Toán và Bảng tổng hợp Lớp), ta chỉ lưu dữ liệu gốc một lần. Bảng tổng hợp chỉ là một "khung nhìn" (view) lấy từ dữ liệu gốc.</p>
+
+                <div class="sim-container">
+                    <div style="margin-bottom: 1.5rem;">
+                        <button type="button" id="btn-mode-file" class="btn btn-accent" style="margin-right: 10px;">Chế độ: Lưu trữ thủ công (File)</button>
+                        <button type="button" id="btn-mode-db" class="btn btn-outline">Chế độ: Cơ sở dữ liệu (DB)</button>
+                    </div>
+
+                    <p id="sim-desc"><strong>Lưu trữ thủ công:</strong> Dữ liệu bị sao chép. Hãy thử đổi điểm của <em>Kì Duyên</em> ở Bảng môn Toán thành <strong>10</strong> rồi nhấn phím Enter (hoặc click ra ngoài) xem Bảng Lớp có tự cập nhật không?</p>
+
+                    <div class="sim-tables">
+                        <!-- Table 1 -->
+                        <div class="sim-table-wrap">
+                            <h4>Bảng điểm môn Toán</h4>
+                            <table class="sim-table">
+                                <tr><th>Họ tên</th><th>Điểm CK</th></tr>
+                                <tr><td>Việt Anh</td><td>8</td></tr>
+                                <tr><td>Kì Duyên</td><td><input type="number" id="input-toan" class="sim-input" value="9" min="0" max="10"></td></tr>
+                            </table>
+                        </div>
+
+                        <!-- Icon -->
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2rem; color: var(--border);">⇌</span>
+                        </div>
+
+                        <!-- Table 2 -->
+                        <div class="sim-table-wrap">
+                            <h4>Bảng điểm Lớp học (Tổng hợp)</h4>
+                            <table class="sim-table">
+                                <tr><th>Họ tên</th><th>Toán</th><th>Tin</th></tr>
+                                <tr><td>Việt Anh</td><td>8</td><td>10</td></tr>
+                                <tr><td>Kì Duyên</td><td id="cell-lop-toan" style="font-weight:bold;">9</td><td>10</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="sim-feedback" class="sim-feedback">
+                        Phản hồi sẽ hiện ở đây.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phần 5: Luyện tập -->
+            <section id="sec-luyentap">
+                <h2>6. Luyện tập củng cố</h2>
+                <p>Hãy vận dụng kiến thức vừa học để trả lời các câu hỏi sau. Chọn đáp án đúng nhất.</p>
+
+                <div id="quiz-loading">Đang tải câu hỏi...</div>
+
+                <div id="quiz-wrapper" class="quiz-container" style="display: none;">
+                    <div class="quiz-progress">
+                        <div id="quiz-bar" class="quiz-bar"></div>
+                    </div>
+                    <div id="quiz-question-text" class="quiz-question">Nội dung câu hỏi</div>
+                    <div id="quiz-options" class="quiz-options">
+                        <!-- Các nút đáp án sẽ được JS tạo vào đây -->
+                    </div>
+                    <div id="quiz-feedback" class="quiz-feedback"></div>
+                    <div class="quiz-controls">
+                        <button type="button" id="btn-next-quiz" class="btn" disabled>Câu tiếp theo ❯</button>
+                    </div>
+                </div>
+
+                <div id="quiz-result" class="quiz-result">
+                    <h3>Hoàn thành!</h3>
+                    <p>Điểm của em: <strong id="quiz-score-text" style="font-size: 1.5rem; color: var(--primary);">0/5</strong></p>
+                    <button type="button" id="btn-retry-quiz" class="btn btn-accent" style="margin-top: 1rem;">Làm lại bài tập</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Script 1: Điều hướng & Khởi tạo giao diện -->
+    <script>
+        const initUI = () => {
+            document.body.classList.add('js-enabled');
+            const navLinks = document.querySelectorAll('.nav-btn');
+            const sections = document.querySelectorAll('main > section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('data-target');
+
+                    // Update Active Link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+
+                    // Update Active Section
+                    sections.forEach(sec => {
+                        if (sec.id === targetId) sec.classList.add('active');
+                        else sec.classList.remove('active');
+                    });
+                });
+            });
+        };
+        window.addEventListener('DOMContentLoaded', initUI);
+    </script>
+
+    <!-- Script 1b: Thẻ lật (flip card) ở phần Kiến thức -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.attr-card');
+            cards.forEach(card => {
+                const toggle = () => {
+                    const flipped = card.classList.toggle('flipped');
+                    card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+                };
+                card.addEventListener('click', toggle);
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggle();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Script 1c: Nút "Xem gợi ý trả lời" cho các câu hỏi thảo luận -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.reveal-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const panel = document.getElementById(btn.dataset.reveal);
+                    if (!panel) return;
+                    const shown = panel.classList.toggle('show');
+                    btn.innerHTML = shown
+                        ? '<i class="fa-solid fa-eye-slash"></i> Ẩn gợi ý'
+                        : '<i class="fa-solid fa-eye"></i> Xem gợi ý trả lời';
+                });
+            });
+        });
+    </script>
+
+    <!-- Script 1d: Trò chơi "Bắt lỗi không nhất quán" (Hình 11.1 / 11.2) -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const target = document.getElementById('cell-lop-target');
+            const feedback = document.getElementById('game-feedback');
+            if (!target || !feedback) return;
+
+            const onFound = () => {
+                target.classList.remove('cell-clickable');
+                target.classList.add('cell-found');
+                target.setAttribute('aria-disabled', 'true');
+                feedback.className = 'game-feedback show win';
+                feedback.innerHTML = '✅ <strong>Chính xác!</strong> Bảng điểm lớp học ghi nhầm điểm Toán của Nguyễn Kì Duyên là 8, trong khi bảng điểm môn Toán (nguồn gốc) ghi đúng là 9 — đây chính là hậu quả của việc lưu trữ dữ liệu dư thừa, lặp lại ở hai nơi.';
+            };
+
+            target.addEventListener('click', onFound);
+            target.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onFound();
+                }
+            });
+        });
+    </script>
+
+    <!-- Script 2: Phòng thực hành MySQL (chạy bằng sql.js - công cụ SQLite biên dịch sang WebAssembly, tương thích cú pháp SQL chuẩn dùng trong bài học) -->
+    <script>
+        const NEWLINE = String.fromCharCode(10);
+        const defaultSqlCode = `-- Mô phỏng bảng điểm học sinh trong MySQL
+CREATE TABLE diem_so (
+    ho_ten VARCHAR(50),
+    diem INT
+);
+
+INSERT INTO diem_so (ho_ten, diem) VALUES
+    ('Lương Việt Anh', 8),
+    ('Nguyễn Kì Duyên', 9);
+
+SELECT ho_ten AS "Họ tên", diem AS "Điểm" FROM diem_so;`;
+
+        const sqlCodeTextarea = document.getElementById('sql-code');
+        const sqlOutputBox = document.getElementById('sql-output');
+        const btnRunSql = document.getElementById('btn-run-sql');
+        const btnResetSql = document.getElementById('btn-reset-sql');
+        const sqlStatus = document.getElementById('sql-status');
+
+        sqlCodeTextarea.value = defaultSqlCode;
+
+        let SQL = null;
+        let sqlReady = false;
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function initSqlEngine() {
+            if (typeof initSqlJs === 'undefined') {
+                setTimeout(initSqlEngine, 300);
+                return;
+            }
+            initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/${file}` })
+                .then(sql => {
+                    SQL = sql;
+                    sqlReady = true;
+                    sqlStatus.textContent = 'Sẵn sàng';
+                    sqlStatus.className = 'ide-status status-ready';
+                    btnRunSql.disabled = false;
+                })
+                .catch(() => {
+                    sqlStatus.textContent = 'Không tải được công cụ SQL';
+                    sqlStatus.className = 'ide-status status-error';
+                });
+        }
+        initSqlEngine();
+        setTimeout(() => {
+            if (!sqlReady) {
+                sqlStatus.textContent = 'Không tải được công cụ SQL. Kiểm tra mạng.';
+                sqlStatus.className = 'ide-status status-error';
+            }
+        }, 10000);
+
+        function renderSqlResults(results) {
+            if (!results || results.length === 0) {
+                sqlOutputBox.innerHTML = '<p class="sql-msg-success">✅ Đã thực thi thành công. (Không có dữ liệu trả về — câu lệnh chỉ tạo bảng hoặc nạp dữ liệu)</p>';
+                return;
+            }
+            let html = '';
+            results.forEach((res, idx) => {
+                html += '<div class="sql-table-wrap">';
+                if (results.length > 1) html += `<div class="sql-result-label">Kết quả truy vấn ${idx + 1}</div>`;
+                html += '<table class="sql-table"><thead><tr>';
+                res.columns.forEach(col => { html += `<th>${escapeHtml(col)}</th>`; });
+                html += '</tr></thead><tbody>';
+                res.values.forEach(row => {
+                    html += '<tr>';
+                    row.forEach(cell => {
+                        const display = (cell === null || cell === undefined) ? 'NULL' : cell;
+                        html += `<td>${escapeHtml(display)}</td>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</tbody></table></div>';
+            });
+            sqlOutputBox.innerHTML = html;
+        }
+
+        function runSqlCode() {
+            if (!sqlReady) return;
+            const code = sqlCodeTextarea.value;
+            if (!code.trim()) {
+                sqlOutputBox.innerHTML = '<p class="sql-msg-error">Mã lệnh trống!</p>';
+                return;
+            }
+
+            btnRunSql.disabled = true;
+            btnResetSql.disabled = true;
+            sqlStatus.textContent = 'Đang chạy...';
+            sqlStatus.className = 'ide-status status-running';
+
+            let database = null;
+            try {
+                database = new SQL.Database();
+                const results = database.exec(code);
+                renderSqlResults(results);
+                sqlStatus.textContent = 'Thành công';
+                sqlStatus.className = 'ide-status status-ready';
+            } catch (err) {
+                let errorMsg = err.message || err.toString();
+                if (errorMsg.includes('no such column')) {
+                    errorMsg += NEWLINE + NEWLINE + '💡 Gợi ý: Câu lệnh SQL đang tham chiếu một cột không tồn tại trong cấu trúc bảng. Đây chính là ví dụ cho thấy phần mềm khai thác phải luôn khớp đúng với cấu trúc mà CSDL định nghĩa!';
+                }
+                sqlOutputBox.innerHTML = `<p class="sql-msg-error">${escapeHtml(errorMsg)}</p>`;
+                sqlStatus.textContent = 'Có lỗi';
+                sqlStatus.className = 'ide-status status-error';
+            } finally {
+                if (database) database.close();
+                btnRunSql.disabled = false;
+                btnResetSql.disabled = false;
+            }
+        }
+
+        btnRunSql.addEventListener('click', runSqlCode);
+
+        btnResetSql.addEventListener('click', () => {
+            sqlCodeTextarea.value = defaultSqlCode;
+            sqlOutputBox.innerHTML = '<p>Kết quả hiển thị ở đây...</p>';
+            if (sqlReady) {
+                sqlStatus.textContent = 'Sẵn sàng';
+                sqlStatus.className = 'ide-status status-ready';
+            }
+        });
+    </script>
+
+    <!-- Script 3: Xử lý Mô phỏng (Simulation) -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const btnModeFile = document.getElementById('btn-mode-file');
+            const btnModeDB = document.getElementById('btn-mode-db');
+            const inputToan = document.getElementById('input-toan');
+            const cellLopToan = document.getElementById('cell-lop-toan');
+            const simFeedback = document.getElementById('sim-feedback');
+            const simDesc = document.getElementById('sim-desc');
+
+            let isDBMode = false;
+
+            const updateSimulation = () => {
+                const val = inputToan.value;
+                if (val === '') return;
+
+                if (isDBMode) {
+                    cellLopToan.textContent = val;
+                    simFeedback.className = 'sim-feedback consistent';
+                    simFeedback.innerHTML = '✅ <strong>Dữ liệu Nhất quán!</strong> Vì tổ chức theo Cơ sở dữ liệu, Bảng Lớp tự động cập nhật theo Bảng Toán. Tính "Nhất quán" được đảm bảo.';
+                } else {
+                    if (val !== '9') {
+                        simFeedback.className = 'sim-feedback inconsistent';
+                        simFeedback.innerHTML = '❌ <strong>Dữ liệu Không nhất quán!</strong> Bạn đã đổi điểm Toán thành ' + val + ', nhưng ở Bảng Lớp học điểm vẫn là 9. Đây là hệ quả của việc dữ liệu bị lưu trữ dư thừa độc lập.';
+                    } else {
+                        simFeedback.className = 'sim-feedback';
+                        simFeedback.textContent = '';
+                    }
+                }
+            };
+
+            inputToan.addEventListener('input', updateSimulation);
+
+            btnModeFile.addEventListener('click', () => {
+                isDBMode = false;
+                btnModeFile.className = 'btn btn-accent';
+                btnModeDB.className = 'btn btn-outline';
+                inputToan.value = '9';
+                cellLopToan.textContent = '9';
+                simFeedback.className = 'sim-feedback';
+                simDesc.innerHTML = '<strong>Lưu trữ thủ công (File rời rạc):</strong> Dữ liệu bị sao chép. Hãy thử đổi điểm của <em>Kì Duyên</em> thành một số khác xem Bảng Lớp có tự cập nhật không?';
+            });
+
+            btnModeDB.addEventListener('click', () => {
+                isDBMode = true;
+                btnModeDB.className = 'btn btn-accent';
+                btnModeFile.className = 'btn btn-outline';
+                inputToan.value = '9';
+                cellLopToan.textContent = '9';
+                simFeedback.className = 'sim-feedback';
+                simDesc.innerHTML = '<strong>Lưu trữ Cơ sở dữ liệu:</strong> Bảng lớp học được tự động tổng hợp từ dữ liệu gốc. Hãy thử đổi điểm của <em>Kì Duyên</em> và quan sát cả 2 bảng!';
+            });
+        });
+    </script>
+
+    <!-- Script 4: Xử lý Luyện tập (Quiz) -->
+    <script>
+        const quizData = [
+            {
+                q: "Định nghĩa nào sau đây mô tả chính xác nhất về Cơ sở dữ liệu (CSDL)?",
+                options: [
+                    "Là một nhóm các tệp tin bất kì được lưu chung trong một thư mục.",
+                    "Là danh sách các tệp văn bản có chứa số liệu trên máy tính.",
+                    "Là tập hợp các dữ liệu có mối liên hệ với nhau, được tổ chức và lưu trữ một cách khoa học trên máy tính.",
+                    "Là một thư mục chuyên dùng để chứa các tệp tin của hệ điều hành."
+                ],
+                correct: 2,
+                explanation: "CSDL là giải pháp lưu trữ có tổ chức. Nó tập hợp các dữ liệu có liên quan, lưu trữ một cách có cấu trúc trên hệ thống máy tính để thuận tiện cho việc truy xuất và cập nhật."
+            },
+            {
+                q: "Mục đích chính của việc tổ chức lưu trữ dữ liệu một cách khoa học là gì?",
+                options: [
+                    "Chỉ để chuyển văn bản trên giấy thành tệp trên máy tính.",
+                    "Để trang trí cho phần mềm đẹp hơn.",
+                    "Hạn chế trùng lặp, khắc phục lỗi không nhất quán dữ liệu và thuận tiện khai thác.",
+                    "Để tăng dung lượng bộ nhớ máy tính."
+                ],
+                correct: 2,
+                explanation: "Tổ chức dữ liệu khoa học giúp hạn chế dư thừa, đảm bảo nhất quán và giúp quá trình khai thác, quản lí dễ dàng hơn."
+            },
+            {
+                q: "Đặc điểm nào dưới đây thể hiện rõ nhất tính độc lập của dữ liệu đối với phần mềm?",
+                options: [
+                    "Dữ liệu được gắn chặt vào bên trong mã nguồn của chương trình.",
+                    "Cấu trúc dữ liệu được thiết kế hoàn toàn phụ thuộc vào thuật toán của phần mềm.",
+                    "Lập trình viên bắt buộc phải nắm rõ vị trí lưu và cấu trúc vật lí của tệp dữ liệu.",
+                    "Phần mềm có thể khai thác, cập nhật dữ liệu mà không cần biết chi tiết về cấu trúc tệp hay vị trí lưu trữ vật lí."
+                ],
+                correct: 3,
+                explanation: "Tính độc lập dữ liệu cho phép người dùng hoặc phần mềm tương tác với dữ liệu (thông qua hệ quản trị) mà không cần quan tâm đến cách thức dữ liệu được lưu trữ thực tế bên dưới phần cứng ra sao."
+            },
+            {
+                q: "Để đảm bảo tính toàn vẹn dữ liệu, trường thông tin lưu trữ 'số lượng học sinh' tham gia một câu lạc bộ cần thoả mãn ràng buộc gì?",
+                options: [
+                    "Giá trị phải là một số tự nhiên (nguyên dương hoặc bằng 0).",
+                    "Giá trị có thể là bất kì số nguyên nào (bao gồm cả số âm).",
+                    "Giá trị phải là số thập phân để mang tính chính xác.",
+                    "Chỉ cần là dữ liệu dạng văn bản (text) là đủ."
+                ],
+                correct: 0,
+                explanation: "Số lượng học sinh là đối tượng con người, do đó giá trị phải là số nguyên không âm (số tự nhiên). Đây chính là một ví dụ về tính toàn vẹn của CSDL."
+            },
+            {
+                q: "Sự cố: Khách hàng rút 500k, máy ATM đã trừ tiền trong tài khoản nhưng chưa kịp nhả tiền thì mất điện. Việc phục hồi lại số dư như cũ thể hiện tính chất gì của CSDL?",
+                options: [
+                    "Tính cấu trúc",
+                    "Tính không dư thừa",
+                    "Tính nhất quán",
+                    "Tính bảo mật"
+                ],
+                correct: 2,
+                explanation: "Tính nhất quán đảm bảo dữ liệu luôn ở trạng thái đúng đắn và hợp lí sau các thao tác cập nhật (hoặc khi gặp sự cố, giao dịch sẽ được hoàn tác để tránh sai lệch)."
+            }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const loading = document.getElementById('quiz-loading');
+            const wrapper = document.getElementById('quiz-wrapper');
+            const resultArea = document.getElementById('quiz-result');
+            const qText = document.getElementById('quiz-question-text');
+            const optionsContainer = document.getElementById('quiz-options');
+            const feedback = document.getElementById('quiz-feedback');
+            const btnNext = document.getElementById('btn-next-quiz');
+            const btnRetry = document.getElementById('btn-retry-quiz');
+            const progressBar = document.getElementById('quiz-bar');
+            const scoreText = document.getElementById('quiz-score-text');
+
+            let currentQ = 0;
+            let score = 0;
+            let answered = false;
+
+            const renderQuestion = () => {
+                if (currentQ >= quizData.length) {
+                    wrapper.style.display = 'none';
+                    resultArea.style.display = 'block';
+                    scoreText.textContent = score + '/' + quizData.length;
+                    return;
+                }
+
+                answered = false;
+                btnNext.disabled = true;
+                feedback.className = 'quiz-feedback';
+                feedback.style.display = 'none';
+
+                const q = quizData[currentQ];
+                qText.textContent = 'Câu ' + (currentQ + 1) + ': ' + q.q;
+                progressBar.style.width = ((currentQ) / quizData.length * 100) + '%';
+
+                optionsContainer.innerHTML = '';
+                q.options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'quiz-opt-btn';
+                    btn.textContent = opt;
+
+                    btn.addEventListener('click', () => {
+                        if (answered) return;
+                        answered = true;
+
+                        const buttons = optionsContainer.querySelectorAll('.quiz-opt-btn');
+                        buttons.forEach(b => b.disabled = true);
+
+                        if (index === q.correct) {
+                            btn.classList.add('correct');
+                            score++;
+                            feedback.innerHTML = '<strong>✅ Chính xác!</strong> ' + q.explanation;
+                            feedback.className = 'quiz-feedback show';
+                            feedback.style.backgroundColor = '#eafaf1';
+                            feedback.style.color = '#1e8449';
+                        } else {
+                            btn.classList.add('wrong');
+                            buttons[q.correct].classList.add('correct');
+                            feedback.innerHTML = '<strong>❌ Chưa chính xác.</strong> ' + q.explanation;
+                            feedback.className = 'quiz-feedback show';
+                            feedback.style.backgroundColor = '#fdedec';
+                            feedback.style.color = '#c0392b';
+                        }
+                        btnNext.disabled = false;
+                    });
+
+                    optionsContainer.appendChild(btn);
+                });
+            };
+
+            btnNext.addEventListener('click', () => {
+                currentQ++;
+                renderQuestion();
+            });
+
+            btnRetry.addEventListener('click', () => {
+                currentQ = 0;
+                score = 0;
+                resultArea.style.display = 'none';
+                wrapper.style.display = 'block';
+                renderQuestion();
+            });
+
+            // Init quiz view
+            loading.style.display = 'none';
+            wrapper.style.display = 'block';
+            renderQuestion();
+        });
+    </script>
+</body>
+</html>

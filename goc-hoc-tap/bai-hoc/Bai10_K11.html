@@ -10,10 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Skulpt cho phòng thực hành Python -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js" defer></script>
+    <!-- sql.js (SQLite biên dịch WebAssembly) cho phòng thực hành MySQL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js" defer></script>
 
     <style>
         :root {
@@ -385,6 +383,16 @@
             white-space: pre-wrap;
         }
 
+        /* Bảng kết quả truy vấn SQL */
+        .sql-result-label { font-weight: 700; color: var(--accent); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+        .sql-result-table { width: 100%; border-collapse: collapse; font-family: 'Courier New', Courier, monospace; font-size: 13px; color: #E2DBEC; margin-bottom: 16px; }
+        .sql-result-table:last-child { margin-bottom: 0; }
+        .sql-result-table th { background: #2A2440; color: var(--accent); padding: 6px 10px; text-align: left; border-bottom: 2px solid var(--primary); white-space: nowrap; }
+        .sql-result-table td { padding: 6px 10px; border-bottom: 1px solid #3C3550; }
+        .sql-result-table tbody tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+        .sql-msg-success { color: #A3FFD6; font-weight: 600; }
+        .sql-msg-error { color: #FF9B9B; white-space: pre-wrap; }
+
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -516,7 +524,7 @@
                 <div class="header-subtitle">Lưu trữ dữ liệu và khai thác thông tin phục vụ quản lí - Tin học 11 (Kết nối tri thức)</div>
             </div>
             <div id="engine-status-badge" class="status-badge status-loading">
-                <i class="fa-solid fa-spinner fa-spin"></i> Đang tải môi trường Python...
+                <i class="fa-solid fa-spinner fa-spin"></i> Đang tải công cụ SQL...
             </div>
         </div>
     </header>
@@ -584,7 +592,7 @@
                 </li>
                 <li style="background: var(--primary-light); padding: 16px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px;">
                     <i class="fa-solid fa-check-circle" style="color: var(--primary); font-size: 24px;"></i>
-                    <span>Biết vận dụng lập trình Python hoặc tư duy cơ sở dữ liệu để giải quyết các bài toán quản lí và thống kê thông tin.</span>
+                    <span>Biết vận dụng câu lệnh MySQL hoặc tư duy cơ sở dữ liệu để giải quyết các bài toán quản lí và thống kê thông tin.</span>
                 </li>
             </ul>
         </section>
@@ -639,41 +647,46 @@
             </div>
         </section>
 
-        <!-- PHẦN 5: PHÒNG THỰC HÀNH MÃ LỆNH PYTHON -->
+        <!-- PHẦN 5: PHÒNG THỰC HÀNH MÃ LỆNH MYSQL -->
         <section id="section-lab" class="lesson-section">
-            <h2 class="section-heading"><i class="fa-solid fa-terminal"></i> Phòng thực hành mã lệnh Python</h2>
-            <p>Thực hành viết mã Python để quản lí, tìm kiếm và thống kê dữ liệu điểm học sinh.</p>
-            
+            <h2 class="section-heading"><i class="fa-solid fa-terminal"></i> Phòng thực hành mã lệnh MySQL</h2>
+            <p>Thực hành viết câu lệnh <strong>SQL</strong> (ngôn ngữ chuẩn của các hệ QTCSDL như MySQL) để tạo bảng, nạp dữ liệu, tìm kiếm và thống kê điểm học sinh.</p>
+
             <div class="code-workspace">
                 <div class="code-editor-box">
                     <div class="code-header">
-                        <span><i class="fa-solid fa-code"></i> Trình soạn thảo Python (Skulpt)</span>
+                        <span><i class="fa-solid fa-code"></i> Trình soạn thảo MySQL</span>
                         <span id="run-status" class="status-badge status-loading">Đang tải...</span>
                     </div>
-                    <textarea id="python-code" class="code-input"># Chương trình quản lí và thống kê điểm học sinh
-danh_sach = [
-    {"ten": "Dương Hoàng Anh", "toan": 8.5, "van": 7.0},
-    {"ten": "Lương Việt Anh", "toan": 5.0, "van": 6.5},
-    {"ten": "Nguyễn Kì Duyên", "toan": 7.5, "van": 8.0},
-    {"ten": "Bùi Quý Dương", "toan": 6.0, "van": 7.0},
-    {"ten": "Đỗ Hồng Dương", "toan": 7.0, "van": 8.5}
-]
+                    <textarea id="sql-code" class="code-input">-- Quản lí và thống kê điểm học sinh trong MySQL
+CREATE TABLE danh_sach (
+    ten VARCHAR(50),
+    toan DECIMAL(3,1),
+    van DECIMAL(3,1)
+);
 
-print("--- DANH SÁCH HỌC SINH VÀ ĐIỂM TRUNG BÌNH ---")
-for hs in danh_sach:
-    dtb = (hs["toan"] + hs["van"]) / 2
-    print(f"Học sinh: {hs['ten']} - Điểm TB: {dtb:.1f}")
+INSERT INTO danh_sach (ten, toan, van) VALUES
+    ('Dương Hoàng Anh', 8.5, 7.0),
+    ('Lương Việt Anh', 5.0, 6.5),
+    ('Nguyễn Kì Duyên', 7.5, 8.0),
+    ('Bùi Quý Dương', 6.0, 7.0),
+    ('Đỗ Hồng Dương', 7.0, 8.5);
 
-print("\n--- HỌC SINH CÓ ĐIỂM TOÁN >= 7.0 ---")
-for hs in danh_sach:
-    if hs["toan"] >= 7.0:
-        print(f"- {hs['ten']} (Toán: {hs['toan']})")
+-- Danh sách học sinh và điểm trung bình
+SELECT ten AS "Họ tên", toan AS "Toán", van AS "Văn",
+       ROUND((toan + van) / 2, 1) AS "Điểm TB"
+FROM danh_sach;
+
+-- Học sinh có điểm Toán >= 7.0
+SELECT ten AS "Họ tên", toan AS "Điểm Toán"
+FROM danh_sach
+WHERE toan >= 7.0;
 </textarea>
                     <div style="margin-top: 12px; display: flex; gap: 12px;">
-                        <button type="button" class="btn btn-accent" id="btn-run-python" disabled>
+                        <button type="button" class="btn btn-accent" id="btn-run-sql" disabled>
                             <i class="fa-solid fa-play"></i> Chạy mã lệnh
                         </button>
-                        <button type="button" class="btn btn-secondary" id="btn-reset-python">
+                        <button type="button" class="btn btn-secondary" id="btn-reset-sql">
                             <i class="fa-solid fa-rotate-left"></i> Đặt lại mã gốc
                         </button>
                     </div>
@@ -683,7 +696,7 @@ for hs in danh_sach:
                     <div class="code-header">
                         <span><i class="fa-solid fa-desktop"></i> Kết quả thực thi</span>
                     </div>
-                    <div id="python-output" class="output-screen">Nhấn "Chạy mã lệnh" để xem kết quả chương trình Python...</div>
+                    <div id="sql-output" class="output-screen">Nhấn "Chạy mã lệnh" để xem kết quả truy vấn MySQL...</div>
                 </div>
             </div>
         </section>
@@ -732,8 +745,6 @@ for hs in danh_sach:
 
     <!-- JavaScript Xử lí tương tác bài học -->
     <script>
-        const NEWLINE = String.fromCharCode(10);
-
         document.addEventListener('DOMContentLoaded', () => {
             // 1. Điều hướng Tab
             const tabs = document.querySelectorAll('.nav-tab');
@@ -834,57 +845,93 @@ for hs in danh_sach:
                 });
             }
 
-            // 3. Khởi tạo Skulpt Python Engine
-            let pythonReady = false;
+            // 3. Khởi tạo công cụ SQL (sql.js — SQLite biên dịch WebAssembly, tương thích cú pháp SQL chuẩn)
+            let sqlReady = false;
+            let SQL = null;
             const statusBadge = document.getElementById('run-status');
-            const runBtn = document.getElementById('btn-run-python');
-            const outputScreen = document.getElementById('python-output');
+            const headerBadge = document.getElementById('engine-status-badge');
+            const runBtn = document.getElementById('btn-run-sql');
+            const outputScreen = document.getElementById('sql-output');
+            const sqlCodeTextarea = document.getElementById('sql-code');
+            const defaultSqlCode = sqlCodeTextarea.value;
 
-            function outf(text) {
-                outputScreen.textContent += text;
+            function escapeHtml(value) {
+                return String(value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
             }
 
-            function builtinRead(x) {
-                if (window.Sk.builtinFiles === undefined || window.Sk.builtinFiles["files"][x] === undefined) {
-                    throw new Error("Không tìm thấy tệp thư viện: " + x);
+            function setEngineReady() {
+                sqlReady = true;
+                if (statusBadge) {
+                    statusBadge.className = "status-badge status-ready";
+                    statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> Sẵn sàng';
                 }
-                return window.Sk.builtinFiles["files"][x];
+                if (headerBadge) {
+                    headerBadge.className = "status-badge status-ready";
+                    headerBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> Công cụ SQL đã sẵn sàng';
+                }
+                if (runBtn) runBtn.removeAttribute('disabled');
+                if (outputScreen) outputScreen.textContent = "Công cụ SQL đã sẵn sàng. Nhấn 'Chạy mã lệnh' để thực thi!";
             }
 
-            const checkSkulptInterval = setInterval(() => {
-                if (typeof window.Sk !== 'undefined' && window.Sk.misceval && window.Sk.importMainWithBody && window.Sk.builtinFiles) {
-                    clearInterval(checkSkulptInterval);
-                    pythonReady = true;
-                    if (statusBadge) {
-                        statusBadge.className = "status-badge status-ready";
-                        statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> Sẵn sàng';
-                    }
-                    if (runBtn) runBtn.removeAttribute('disabled');
-                    if (outputScreen) outputScreen.textContent = "Môi trường Python (Skulpt) đã sẵn sàng. Nhấn 'Chạy mã lệnh' để thực thi!";
+            function setEngineError() {
+                if (statusBadge) {
+                    statusBadge.className = "status-badge status-error";
+                    statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Không tải được (Mất mạng/CDN lỗi)';
                 }
-            }, 500);
+                if (headerBadge) {
+                    headerBadge.className = "status-badge status-error";
+                    headerBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Không tải được công cụ SQL';
+                }
+                if (outputScreen) outputScreen.textContent = "Lỗi: Không thể tải thư viện sql.js từ CDN. Vui lòng kiểm tra lại kết nối Internet hoặc tường lửa. Các tính năng cốt lõi khác vẫn hoạt động bình thường.";
+            }
 
-            setTimeout(() => {
-                if (!pythonReady) {
-                    clearInterval(checkSkulptInterval);
-                    if (statusBadge) {
-                        statusBadge.className = "status-badge status-error";
-                        statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Không tải được Python (Mất mạng/CDN lỗi)';
-                    }
-                    if (outputScreen) outputScreen.textContent = "Lỗi: Không thể tải thư viện Skulpt từ CDN. Vui lòng kiểm tra lại kết nối Internet hoặc tường lửa. Các tính năng cốt lõi khác vẫn hoạt động bình thường.";
+            function loadSqlEngine() {
+                if (typeof initSqlJs === 'undefined') { setTimeout(loadSqlEngine, 300); return; }
+                initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/${file}` })
+                    .then(sql => { SQL = sql; setEngineReady(); })
+                    .catch(setEngineError);
+            }
+            loadSqlEngine();
+            setTimeout(() => { if (!sqlReady) setEngineError(); }, 6000);
+
+            function renderSqlResults(results) {
+                if (!results || results.length === 0) {
+                    outputScreen.innerHTML = '<span class="sql-msg-success">Đã thực thi thành công. (Không có dữ liệu trả về — câu lệnh chỉ tạo bảng hoặc nạp dữ liệu)</span>';
+                    return;
                 }
-            }, 6000);
+                let html = '';
+                results.forEach((res, idx) => {
+                    if (results.length > 1) html += `<div class="sql-result-label">Kết quả truy vấn ${idx + 1}</div>`;
+                    html += '<table class="sql-result-table"><thead><tr>';
+                    res.columns.forEach(col => { html += `<th>${escapeHtml(col)}</th>`; });
+                    html += '</tr></thead><tbody>';
+                    res.values.forEach(row => {
+                        html += '<tr>';
+                        row.forEach(cell => {
+                            const display = (cell === null || cell === undefined) ? 'NULL' : cell;
+                            html += `<td>${escapeHtml(display)}</td>`;
+                        });
+                        html += '</tr>';
+                    });
+                    html += '</tbody></table>';
+                });
+                outputScreen.innerHTML = html;
+            }
 
             if (runBtn) {
-                runBtn.addEventListener('click', async () => {
-                    const code = document.getElementById('python-code').value;
+                runBtn.addEventListener('click', () => {
+                    const code = sqlCodeTextarea.value;
                     if (!code.trim()) {
-                        alert('Vui lòng nhập mã lệnh Python!');
+                        alert('Vui lòng nhập câu lệnh SQL!');
                         return;
                     }
 
-                    if (!pythonReady) {
-                        alert('Môi trường Python chưa sẵn sàng hoặc không tải được!');
+                    if (!sqlReady) {
+                        alert('Công cụ SQL chưa sẵn sàng hoặc không tải được!');
                         return;
                     }
 
@@ -896,59 +943,33 @@ for hs in danh_sach:
                     }
                     outputScreen.textContent = '';
 
+                    let database = null;
                     try {
-                        window.Sk.canvas = "";
-                        window.Sk.prephostile = function(orig) { return orig; };
-                        window.Sk.configure({
-                            output: outf,
-                            read: builtinRead,
-                            __future__: window.Sk.python3
-                        });
-
-                        await Promise.race([
-                            window.Sk.misceval.asyncToPromise(() => 
-                                window.Sk.importMainWithBody("<stdin>", false, code, true)
-                            ),
-                            new Promise((_, reject) => setTimeout(() => reject(new Error("Quá thời gian thực thi (Timeout 7s)! Có thể có vòng lặp vô hạn.")), 7000))
-                        ]);
-
-                        if (outputScreen.textContent.trim() === '') {
-                            outputScreen.textContent = "Chương trình chạy thành công, không có đầu ra.";
-                        }
+                        database = new SQL.Database();
+                        const results = database.exec(code);
+                        renderSqlResults(results);
                         if (statusBadge) {
                             statusBadge.className = "status-badge status-ready";
                             statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> Thành công';
                         }
                     } catch (err) {
-                        outputScreen.textContent += NEWLINE + "LỖI THỰC THI: " + err.toString();
+                        outputScreen.innerHTML = `<span class="sql-msg-error">LỖI THỰC THI: ${escapeHtml(err.message || err.toString())}</span>`;
                         if (statusBadge) {
                             statusBadge.className = "status-badge status-error";
                             statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Lỗi mã';
                         }
                     } finally {
+                        if (database) database.close();
                         runBtn.removeAttribute('disabled');
                         runBtn.innerHTML = '<i class="fa-solid fa-play"></i> Chạy mã lệnh';
                     }
                 });
             }
 
-            const btnResetPython = document.getElementById('btn-reset-python');
-            if (btnResetPython) {
-                btnResetPython.addEventListener('click', () => {
-                    document.getElementById('python-code').value = `# Chương trình quản lí và thống kê điểm học sinh
-danh_sach = [
-    {"ten": "Dương Hoàng Anh", "toan": 8.5, "van": 7.0},
-    {"ten": "Lương Việt Anh", "toan": 5.0, "van": 6.5},
-    {"ten": "Nguyễn Kì Duyên", "toan": 7.5, "van": 8.0},
-    {"ten": "Bùi Quý Dương", "toan": 6.0, "van": 7.0},
-    {"ten": "Đỗ Hồng Dương", "toan": 7.0, "van": 8.5}
-]
-
-print("--- DANH SÁCH HỌC SINH VÀ ĐIỂM TRUNG BÌNH ---")
-for hs in danh_sach:
-    dtb = (hs["toan"] + hs["van"]) / 2
-    print(f"Học sinh: {hs['ten']} - Điểm TB: {dtb:.1f}")
-`;
+            const btnResetSql = document.getElementById('btn-reset-sql');
+            if (btnResetSql) {
+                btnResetSql.addEventListener('click', () => {
+                    sqlCodeTextarea.value = defaultSqlCode;
                     outputScreen.textContent = "Đã đặt lại mã nguồn ban đầu.";
                 });
             }
@@ -1207,5 +1228,3 @@ for hs in danh_sach:
     </script>
 </body>
 </html>
-
-```
