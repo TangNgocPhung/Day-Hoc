@@ -23,6 +23,8 @@
     --accent-3: #256F69; /* Mos 10 - Word */
     --accent-4: #3D7A34; /* Mos 11 - Excel */
     --accent-5: #9C5426; /* Giáo dục địa phương */
+    --accent-6: #A53F2B; /* Điểm danh */
+    --accent-7: #A26A12; /* Vòng quay may mắn */
 
     --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
     --font-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -48,6 +50,8 @@
       --accent-3: #6FD1C6;
       --accent-4: #8ED67D;
       --accent-5: #E39C61;
+      --accent-6: #F08A72;
+      --accent-7: #E8B85C;
 
       --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
     }
@@ -69,6 +73,8 @@
     --accent-3: #6FD1C6;
     --accent-4: #8ED67D;
     --accent-5: #E39C61;
+    --accent-6: #F08A72;
+    --accent-7: #E8B85C;
 
     --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
   }
@@ -95,7 +101,7 @@
   }
 
   .topbar-inner {
-    width: min(1280px, 100%);
+    width: min(1760px, 100%);
     margin: 0 auto;
     padding: 1rem clamp(1.25rem, 4vw, 2rem);
     display: grid;
@@ -294,7 +300,8 @@
 
   .tabbar {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    align-items: center;
     gap: 0.65rem;
     overflow-x: auto;
     padding: 0.25rem;
@@ -302,10 +309,25 @@
     -webkit-overflow-scrolling: touch;
   }
 
+  .tabbar::before {
+    content: '';
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
   .tabbar::-webkit-scrollbar { height: 6px; }
   .tabbar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-  .tab {
+  .tab-list,
+  .topbar-shortcuts {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex: 0 0 auto;
+  }
+
+  .tab,
+  .topbar-link {
     --accent: var(--accent-1);
     flex: 0 0 auto;
     appearance: none;
@@ -322,7 +344,14 @@
     white-space: nowrap;
   }
 
-  .tab:hover {
+  .topbar-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .tab:hover,
+  .topbar-link:hover {
     transform: translateY(-2px);
     background: color-mix(in srgb, var(--accent) 20%, var(--surface));
   }
@@ -337,7 +366,8 @@
     z-index: 2;
   }
 
-  .tab:focus-visible {
+  .tab:focus-visible,
+  .topbar-link:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
@@ -657,6 +687,21 @@
     * { transition: none !important; }
   }
 
+  @media (min-width: 761px) and (max-width: 1380px) {
+    .topbar-inner {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 0.55rem;
+    }
+
+    .brand-kicker { margin-bottom: 0; }
+  }
+
   @media (max-width: 760px) {
     .topbar-inner {
       grid-template-columns: 1fr;
@@ -677,7 +722,8 @@
       margin-inline: -0.25rem;
     }
 
-    .tab {
+    .tab,
+    .topbar-link {
       font-size: 0.84rem;
       padding: 0.65rem 0.9rem;
     }
@@ -754,13 +800,19 @@
       <span class="brand-name">Góc Học Tập</span>
     </a>
 
-    <nav class="tabbar" role="tablist" aria-label="Danh sách môn học">
-      <button class="tab" style="--accent:var(--accent-1)" role="tab" id="tab-tin10" aria-controls="panel-tin10" aria-selected="true" data-panel="panel-tin10">Tin học 10</button>
-      <button class="tab" style="--accent:var(--accent-2)" role="tab" id="tab-tin11" aria-controls="panel-tin11" aria-selected="false" tabindex="-1" data-panel="panel-tin11">Tin học 11</button>
-      <button class="tab" style="--accent:var(--accent-3)" role="tab" id="tab-mosword" aria-controls="panel-mosword" aria-selected="false" tabindex="-1" data-panel="panel-mosword">Mos 10 - MS Word</button>
-      <button class="tab" style="--accent:var(--accent-4)" role="tab" id="tab-mosexcel" aria-controls="panel-mosexcel" aria-selected="false" tabindex="-1" data-panel="panel-mosexcel">Mos 11 - MS Excel</button>
-      <button class="tab" style="--accent:var(--accent-5)" role="tab" id="tab-diaphuong10" aria-controls="panel-diaphuong10" aria-selected="false" tabindex="-1" data-panel="panel-diaphuong10">Giáo dục địa phương 10</button>
-    </nav>
+    <div class="tabbar">
+      <div class="tab-list" role="tablist" aria-label="Danh sách môn học">
+        <button class="tab" style="--accent:var(--accent-1)" role="tab" id="tab-tin10" aria-controls="panel-tin10" aria-selected="true" data-panel="panel-tin10">Tin học 10</button>
+        <button class="tab" style="--accent:var(--accent-2)" role="tab" id="tab-tin11" aria-controls="panel-tin11" aria-selected="false" tabindex="-1" data-panel="panel-tin11">Tin học 11</button>
+        <button class="tab" style="--accent:var(--accent-3)" role="tab" id="tab-mosword" aria-controls="panel-mosword" aria-selected="false" tabindex="-1" data-panel="panel-mosword">Mos 10 - MS Word</button>
+        <button class="tab" style="--accent:var(--accent-4)" role="tab" id="tab-mosexcel" aria-controls="panel-mosexcel" aria-selected="false" tabindex="-1" data-panel="panel-mosexcel">Mos 11 - MS Excel</button>
+        <button class="tab" style="--accent:var(--accent-5)" role="tab" id="tab-diaphuong10" aria-controls="panel-diaphuong10" aria-selected="false" tabindex="-1" data-panel="panel-diaphuong10">Giáo dục địa phương 10</button>
+      </div>
+      <nav class="topbar-shortcuts" aria-label="Tiện ích lớp học">
+        <a class="topbar-link" style="--accent:var(--accent-6)" href="https://docs.google.com/spreadsheets/d/1dimlAkG8Mjq93pfzgUcHZeGPNdQnc0kM_uWBHXFEieQ/edit?usp=sharing" target="_blank" rel="noopener" aria-label="Mở bảng điểm danh học sinh">Điểm danh</a>
+        <a class="topbar-link" style="--accent:var(--accent-7)" href="vong-quay-may-man.html" aria-label="Mở vòng quay may mắn chọn học sinh">Vòng quay may mắn</a>
+      </nav>
+    </div>
   </div>
 </header>
 
