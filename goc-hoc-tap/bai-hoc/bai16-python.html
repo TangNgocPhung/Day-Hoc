@@ -286,6 +286,70 @@
     stroke-linejoin: round;
   }
 
+  .setup-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+
+  .setup-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-2);
+  }
+
+  .setup-card-kicker {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--accent-1);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .setup-card h3 {
+    margin: 0 0 0.6rem;
+    font-size: 1rem;
+  }
+
+  .setup-card > p {
+    margin-bottom: 0.8rem;
+    color: var(--ink-muted);
+    font-size: 0.88rem;
+  }
+
+  .setup-steps {
+    flex: 1 1 auto;
+    margin: 0 0 1rem;
+    padding-left: 1.25rem;
+    color: var(--ink-muted);
+    font-size: 0.84rem;
+  }
+
+  .setup-steps li { margin-bottom: 0.45rem; }
+  .setup-steps li:last-child { margin-bottom: 0; }
+  .setup-card .btn-row { margin: auto 0 0; }
+  .setup-card .btn { width: 100%; text-decoration: none; line-height: 1.25; text-align: center; }
+
+  .setup-note {
+    margin: 1rem 0 0 !important;
+    padding: 0.85rem 1rem;
+    border-left: 3px solid var(--accent-1);
+    background: color-mix(in srgb, var(--accent-1) 8%, var(--surface));
+    color: var(--ink-muted) !important;
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 820px) {
+    .setup-grid { grid-template-columns: 1fr; }
+  }
+
   .compare-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -684,6 +748,49 @@
   }
   .answer-reveal-body p:last-child, .answer-reveal-body ul:last-child, .answer-reveal-body pre:last-child { margin-bottom: 0; }
 
+  .predict-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 1.1rem 0;
+  }
+  .predict-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 0.9rem;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-2);
+  }
+  .predict-code { font-family: var(--font-mono); font-size: 0.86rem; flex: 1 1 160px; }
+  .predict-input {
+    width: 100px;
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    text-align: center;
+  }
+  .predict-input:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 1px; }
+  .predict-mark { flex: 0 0 auto; min-width: 1.2rem; font-weight: 700; font-size: 0.82rem; }
+  .predict-row.is-correct { border-color: var(--ok); }
+  .predict-row.is-correct .predict-mark { color: var(--ok); }
+  .predict-row.is-incorrect { border-color: var(--bad); }
+  .predict-row.is-incorrect .predict-mark { color: var(--bad); }
+  .predict-score { font-weight: 700; margin: 0.9rem 0 0; min-height: 1.3em; }
+
+  .bug-code { border-left: 3px solid var(--bad); }
+
+  .bug-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0 0; font-size: 0.88rem; }
+  .bug-table th, .bug-table td { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); }
+  .bug-table th { color: var(--ink-muted); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.03em; }
+
   .site-footer {
     border-top: 1px solid var(--border);
     background: var(--surface-2);
@@ -813,9 +920,11 @@
   <nav class="lesson-nav" role="tablist" aria-label="Các phần của bài học">
     <a class="lesson-nav-link active" href="#khoidong" role="tab" aria-current="true">Khởi động</a>
     <a class="lesson-nav-link" href="#muctieu" role="tab" aria-current="false">Mục tiêu</a>
+    <a class="lesson-nav-link" href="#congcu" role="tab" aria-current="false">Cài đặt Python</a>
     <a class="lesson-nav-link" href="#kienthuc" role="tab" aria-current="false">Kiến thức mới</a>
     <a class="lesson-nav-link" href="#thuchanh" role="tab" aria-current="false">Thực hành</a>
     <a class="lesson-nav-link" href="#phongma" role="tab" aria-current="false">Phòng chạy mã</a>
+    <a class="lesson-nav-link" href="#hoatdong" role="tab" aria-current="false">Hoạt động</a>
     <a class="lesson-nav-link" href="#luyentap" role="tab" aria-current="false">Luyện tập</a>
     <a class="lesson-nav-link" href="#baitap" role="tab" aria-current="false">Bài tập</a>
     <a class="lesson-nav-link" href="#tongket" role="tab" aria-current="false">Tổng kết</a>
@@ -890,6 +999,64 @@ print(a + b)</pre>
             <span>Biết cách thực hiện một chương trình Python.</span>
           </li>
         </ul>
+      </div>
+    </section>
+
+    <section id="congcu" class="lesson-section" aria-labelledby="congcu-heading">
+      <div class="section-card">
+        <span class="section-eyebrow">CHUẨN BỊ CÔNG CỤ</span>
+        <h2 id="congcu-heading">Chọn một cách để chạy Python</h2>
+        <p class="muted">Em chỉ cần chọn <strong>một</strong> trong ba cách dưới đây. Khi học ở phòng máy, nên dùng Python và IDLE; nếu không thể cài phần mềm, hãy dùng trình chạy trực tuyến.</p>
+
+        <div class="setup-grid">
+          <article class="setup-card">
+            <span class="setup-card-kicker">MÁY TÍNH · KHUYẾN NGHỊ</span>
+            <h3>Cài Python và dùng IDLE</h3>
+            <p>IDLE là môi trường viết và chạy mã thường đi kèm bộ cài Python chính thức.</p>
+            <ol class="setup-steps">
+              <li>Mở trang tải Python dành cho Windows.</li>
+              <li>Tải bản Python ổn định phù hợp với máy.</li>
+              <li>Khi cài đặt, giữ thành phần <strong>Tcl/Tk and IDLE</strong>.</li>
+              <li>Mở <strong>IDLE</strong> từ Start, chọn <strong>File → New File</strong>; lưu tệp rồi nhấn <strong>F5</strong> để chạy.</li>
+            </ol>
+            <div class="btn-row">
+              <a class="btn btn--primary" href="https://www.python.org/downloads/windows/" target="_blank" rel="noopener noreferrer">Tải Python cho Windows</a>
+              <a class="btn" href="https://docs.python.org/3/library/idle.html" target="_blank" rel="noopener noreferrer">Xem hướng dẫn IDLE</a>
+            </div>
+          </article>
+
+          <article class="setup-card">
+            <span class="setup-card-kicker">TRÌNH DUYỆT · KHÔNG CẦN CÀI</span>
+            <h3>Dùng Online Python</h3>
+            <p>Phù hợp khi em đang dùng máy lạ hoặc không có quyền cài phần mềm. Cách này cần kết nối Internet.</p>
+            <ol class="setup-steps">
+              <li>Mở Online Python bằng nút bên dưới.</li>
+              <li>Xóa mã mẫu và nhập chương trình của em.</li>
+              <li>Bấm <strong>Run</strong> để chạy và xem kết quả.</li>
+              <li>Sao lưu mã vào tệp riêng trước khi đóng trình duyệt.</li>
+            </ol>
+            <div class="btn-row">
+              <a class="btn btn--primary" href="https://www.online-python.com/" target="_blank" rel="noopener noreferrer">Mở Online Python</a>
+            </div>
+          </article>
+
+          <article class="setup-card">
+            <span class="setup-card-kicker">ĐIỆN THOẠI · LUYỆN TẬP NHANH</span>
+            <h3>Cài ứng dụng Python</h3>
+            <p>Điện thoại phù hợp để thử chương trình ngắn. Với bài dài, em vẫn nên dùng máy tính để dễ nhập và quản lý tệp.</p>
+            <ul class="setup-steps">
+              <li><strong>Android:</strong> Pydroid 3 có trình thông dịch Python và có thể chạy mã ngoại tuyến.</li>
+              <li><strong>iPhone/iPad:</strong> Pyto IDE hỗ trợ viết và chạy Python ngay trên thiết bị.</li>
+              <li>Sau khi cài, tạo tệp mới, nhập mã rồi bấm nút chạy của ứng dụng.</li>
+            </ul>
+            <div class="btn-row">
+              <a class="btn btn--primary" href="https://play.google.com/store/apps/details?id=ru.iiec.pydroid3" target="_blank" rel="noopener noreferrer">Pydroid 3 cho Android</a>
+              <a class="btn" href="https://apps.apple.com/app/pyto-ide/id1436650069" target="_blank" rel="noopener noreferrer">Pyto cho iPhone/iPad</a>
+            </div>
+          </article>
+        </div>
+
+        <p class="setup-note"><strong>Lưu ý:</strong> Chỉ cài ứng dụng từ cửa hàng chính thức và không cấp những quyền không cần thiết. Nếu chưa biết chọn cách nào, em hãy dùng Online Python để bắt đầu ngay.</p>
       </div>
     </section>
 
@@ -1100,6 +1267,120 @@ print("Dãy ba số chẵn:", 2, 4, 6)
 print("3 + 7 =", 3 + 7)</pre>
         <pre class="hidden-source" id="exampleCode4">ten = input("Bạn tên là gì? ")
 print("Xin chào,", ten)</pre>
+      </div>
+    </section>
+
+    <section id="hoatdong" class="lesson-section" aria-labelledby="hoatdong-heading">
+      <div class="section-card">
+        <span class="section-eyebrow">HOẠT ĐỘNG LỚP HỌC</span>
+        <h2 id="hoatdong-heading">Hai trò chơi nhỏ với Python</h2>
+
+        <h3>1. Dự đoán trước khi chạy</h3>
+        <p>Em hãy dự đoán kết quả của từng lệnh dưới đây, gõ dự đoán vào ô bên cạnh, rồi bấm <strong>Kiểm tra dự đoán</strong> để xem mình đúng bao nhiêu câu. Sau đó có thể bấm <strong>Chạy Python để kiểm chứng</strong> để chạy thật và đối chiếu.</p>
+
+        <div class="predict-grid" id="predictGrid">
+          <div class="predict-row" data-answer="15">
+            <code class="predict-code">print(10 + 5)</code>
+            <input type="text" class="predict-input" aria-label="Dự đoán kết quả của print(10 + 5)" inputmode="text" autocomplete="off">
+            <span class="predict-mark" aria-live="polite"></span>
+          </div>
+          <div class="predict-row" data-answer="5">
+            <code class="predict-code">print(10 - 5)</code>
+            <input type="text" class="predict-input" aria-label="Dự đoán kết quả của print(10 - 5)" inputmode="text" autocomplete="off">
+            <span class="predict-mark" aria-live="polite"></span>
+          </div>
+          <div class="predict-row" data-answer="50">
+            <code class="predict-code">print(10 * 5)</code>
+            <input type="text" class="predict-input" aria-label="Dự đoán kết quả của print(10 * 5)" inputmode="text" autocomplete="off">
+            <span class="predict-mark" aria-live="polite"></span>
+          </div>
+          <div class="predict-row" data-answer="2.0">
+            <code class="predict-code">print(10 / 5)</code>
+            <input type="text" class="predict-input" aria-label="Dự đoán kết quả của print(10 / 5)" inputmode="text" autocomplete="off">
+            <span class="predict-mark" aria-live="polite"></span>
+          </div>
+          <div class="predict-row" data-answer="8">
+            <code class="predict-code">print(2 ** 3)</code>
+            <input type="text" class="predict-input" aria-label="Dự đoán kết quả của print(2 ** 3)" inputmode="text" autocomplete="off">
+            <span class="predict-mark" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn--primary" id="checkPredictBtn">Kiểm tra dự đoán</button>
+          <button type="button" class="btn" data-target="exercisePredictCode">Chạy Python để kiểm chứng</button>
+        </div>
+        <p class="predict-score" id="predictScore" aria-live="polite"></p>
+        <p class="muted">Mẹo cho giáo viên: có thể tổ chức thi đua theo nhóm — mỗi kết quả dự đoán đúng được 1 điểm.</p>
+
+        <pre class="hidden-source" id="exercisePredictCode">print(10 + 5)
+print(10 - 5)
+print(10 * 5)
+print(10 / 5)
+print(2 ** 3)</pre>
+
+        <h3>2. Trò chơi "Bác sĩ Python" — bắt lỗi cho Python</h3>
+        <p>Mỗi dòng lệnh dưới đây đều có một lỗi. Em hãy đọc kĩ, đoán xem lỗi nằm ở đâu và vì sao sai, rồi bấm vào từng dòng để xem chẩn đoán.</p>
+
+        <div class="exercise-item">
+          <pre class="target-code bug-code">print("Xin chào"</pre>
+          <details class="answer-reveal">
+            <summary>Xem chẩn đoán của Bác sĩ Python</summary>
+            <div class="answer-reveal-body">
+              <p><strong>Lỗi:</strong> Thiếu dấu ngoặc đóng <code>)</code>.</p>
+              <p><strong>Nguyên nhân:</strong> Sai cú pháp — mỗi dấu <code>(</code> mở ra đều cần một dấu <code>)</code> đóng lại tương ứng.</p>
+              <p><strong>Sửa lại:</strong> <code>print("Xin chào")</code></p>
+            </div>
+          </details>
+        </div>
+
+        <div class="exercise-item">
+          <pre class="target-code bug-code">Print("Xin chào")</pre>
+          <details class="answer-reveal">
+            <summary>Xem chẩn đoán của Bác sĩ Python</summary>
+            <div class="answer-reveal-body">
+              <p><strong>Lỗi:</strong> Viết hoa chữ cái đầu — <code>Print</code>.</p>
+              <p><strong>Nguyên nhân:</strong> Python phân biệt chữ hoa và chữ thường; chỉ có <code>print</code> (viết thường) là lệnh có sẵn, còn <code>Print</code> thì không tồn tại.</p>
+              <p><strong>Sửa lại:</strong> <code>print("Xin chào")</code></p>
+            </div>
+          </details>
+        </div>
+
+        <div class="exercise-item">
+          <pre class="target-code bug-code">print(Xin chào)</pre>
+          <details class="answer-reveal">
+            <summary>Xem chẩn đoán của Bác sĩ Python</summary>
+            <div class="answer-reveal-body">
+              <p><strong>Lỗi:</strong> Thiếu dấu nháy quanh xâu kí tự.</p>
+              <p><strong>Nguyên nhân:</strong> <code>Xin chào</code> là một xâu kí tự (không phải tên một biến đã được gán giá trị) nên phải đặt trong dấu nháy kép.</p>
+              <p><strong>Sửa lại:</strong> <code>print("Xin chào")</code></p>
+            </div>
+          </details>
+        </div>
+
+        <div class="exercise-item">
+          <pre class="target-code bug-code">print(10 / 0)</pre>
+          <details class="answer-reveal">
+            <summary>Xem chẩn đoán của Bác sĩ Python</summary>
+            <div class="answer-reveal-body">
+              <p><strong>Lỗi:</strong> Chia cho 0.</p>
+              <p><strong>Nguyên nhân:</strong> Đây là lỗi xảy ra khi thực hiện chương trình (không phải lỗi cú pháp) — phép chia cho 0 không có kết quả nên Python báo lỗi.</p>
+              <p><strong>Sửa lại:</strong> đổi số chia khác 0, ví dụ <code>print(10 / 2)</code>.</p>
+            </div>
+          </details>
+        </div>
+
+        <table class="bug-table">
+          <thead>
+            <tr><th>Lỗi</th><th>Nguyên nhân</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Thiếu <code>)</code></td><td>Sai cú pháp</td></tr>
+            <tr><td>Viết <code>Print</code></td><td>Python phân biệt chữ hoa, chữ thường</td></tr>
+            <tr><td>Thiếu dấu nháy</td><td>Chuỗi phải được đặt trong dấu nháy</td></tr>
+            <tr><td>Chia cho 0</td><td>Lỗi khi thực hiện chương trình</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -1705,6 +1986,65 @@ print("Bạn Hoa năm nay 16 tuổi.")</pre>
     initChecklist();
     initOpenSandboxLink();
   });
+})();
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  function initPredictGame() {
+    try {
+      var rows = Array.prototype.slice.call(document.querySelectorAll('.predict-row'));
+      var checkBtn = document.getElementById('checkPredictBtn');
+      var scoreEl = document.getElementById('predictScore');
+      if (!rows.length || !checkBtn) return;
+
+      function checkAll() {
+        var correct = 0;
+        var answered = 0;
+        rows.forEach(function (row) {
+          var input = row.querySelector('.predict-input');
+          var mark = row.querySelector('.predict-mark');
+          var answer = row.getAttribute('data-answer');
+          var guess = (input && input.value ? input.value : '').trim();
+          row.classList.remove('is-correct', 'is-incorrect');
+          if (!guess.length) {
+            if (mark) mark.textContent = '';
+            return;
+          }
+          answered += 1;
+          var isCorrect = guess === answer;
+          if (isCorrect) {
+            correct += 1;
+            row.classList.add('is-correct');
+            if (mark) mark.textContent = '✓';
+          } else {
+            row.classList.add('is-incorrect');
+            if (mark) mark.textContent = '✗ đáp án: ' + answer;
+          }
+        });
+        if (scoreEl) {
+          scoreEl.textContent = answered === 0
+            ? 'Em chưa nhập dự đoán nào.'
+            : 'Kết quả: ' + correct + ' / ' + rows.length + ' dự đoán đúng.';
+        }
+      }
+
+      checkBtn.addEventListener('click', checkAll);
+      rows.forEach(function (row) {
+        var input = row.querySelector('.predict-input');
+        if (!input) return;
+        input.addEventListener('keydown', function (evt) {
+          if (evt.key === 'Enter') { evt.preventDefault(); checkAll(); }
+        });
+      });
+    } catch (err) {
+      console.error('Loi khoi tao tro choi du doan:', err);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initPredictGame);
 })();
 </script>
 
