@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vòng quay may mắn · Góc Học Tập</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #eff1ec;
+    --surface: #ffffff;
+    --surface-2: #f6f7f1;
+    --ink: #232823;
+    --muted: #626a60;
+    --faint: #8b9186;
+    --border: #d6dacc;
+    --rule: #e2e5da;
+    --teal: #256f69;
+    --blue: #34618f;
+    --orange: #b7642e;
+    --gold: #d89a2b;
+    --danger: #a83f3f;
+    --shadow: 0 18px 45px -28px rgba(35, 40, 35, 0.45);
+    --display: 'Fraunces', Georgia, serif;
+    --body: 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+    --mono: 'IBM Plex Mono', Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1b1d18;
+      --surface: #232620;
+      --surface-2: #292c24;
+      --ink: #eceee5;
+      --muted: #abb2a0;
+      --faint: #7f8675;
+      --border: #3b4034;
+      --rule: #34382f;
+      --teal: #6fd1c6;
+      --blue: #82b2e1;
+      --orange: #e39c61;
+      --gold: #efbd55;
+      --danger: #ed8585;
+      --shadow: 0 18px 45px -28px rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button, select, textarea, input { font: inherit; }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-top: 5px solid var(--teal);
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    backdrop-filter: blur(14px);
+  }
+
+  .topbar-inner {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding: 0.9rem clamp(1rem, 4vw, 2rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .brand, .back-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .brand-kicker {
+    display: block;
+    color: var(--orange);
+    font: 600 0.62rem/1 var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .brand-name {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--orange);
+    font: 700 clamp(1.35rem, 3vw, 1.9rem)/1 var(--display);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.5rem;
+    padding: 0.55rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: var(--surface-2);
+  }
+
+  .back-link:hover { color: var(--teal); border-color: var(--teal); }
+
+  .page {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding: clamp(1.7rem, 4vw, 3.3rem) clamp(1rem, 4vw, 2rem) 4rem;
+  }
+
+  .hero { max-width: 780px; margin-bottom: 1.5rem; }
+
+  .eyebrow {
+    display: block;
+    margin-bottom: 0.65rem;
+    color: var(--faint);
+    font: 600 0.68rem/1.4 var(--mono);
+    letter-spacing: 0.14em;
+  }
+
+  h1 {
+    margin: 0 0 0.55rem;
+    font: 600 clamp(2.15rem, 6vw, 3.7rem)/1.02 var(--display);
+    text-wrap: balance;
+  }
+
+  .hero p {
+    margin: 0;
+    color: var(--muted);
+    font-size: clamp(0.94rem, 2vw, 1.05rem);
+    line-height: 1.65;
+  }
+
+  .workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    gap: 1.2rem;
+    align-items: start;
+  }
+
+  .card {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .wheel-card { padding: clamp(1rem, 3vw, 1.6rem); }
+
+  .wheel-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .wheel-meta h2, .controls h2, .history h2 {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .count-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--teal) 12%, var(--surface-2));
+    color: color-mix(in srgb, var(--teal) 78%, var(--ink));
+    font: 600 0.72rem/1 var(--mono);
+  }
+
+  .wheel-stage {
+    position: relative;
+    width: min(100%, 620px);
+    aspect-ratio: 1;
+    margin: 0 auto;
+    display: grid;
+    place-items: center;
+  }
+
+  #wheelCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 14px 22px rgba(24, 34, 29, 0.22));
+  }
+
+  .pointer {
+    position: absolute;
+    top: -0.25rem;
+    left: 50%;
+    z-index: 3;
+    width: 0;
+    height: 0;
+    transform: translateX(-50%);
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-top: 42px solid var(--orange);
+    filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.18));
+  }
+
+  .spin-button {
+    position: absolute;
+    z-index: 4;
+    width: clamp(88px, 19%, 112px);
+    aspect-ratio: 1;
+    border: 7px solid color-mix(in srgb, var(--surface) 80%, transparent);
+    border-radius: 50%;
+    background: var(--orange);
+    color: #fff;
+    font-weight: 800;
+    font-size: clamp(0.82rem, 2vw, 1rem);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    box-shadow: 0 8px 20px -8px rgba(83, 43, 15, 0.6);
+    transition: transform 0.18s ease, filter 0.18s ease;
+  }
+
+  .spin-button:hover:not(:disabled) { transform: scale(1.06); filter: saturate(1.1); }
+  .spin-button:disabled { cursor: not-allowed; opacity: 0.55; }
+  .spin-button:focus-visible, button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid color-mix(in srgb, var(--blue) 70%, transparent); outline-offset: 3px; }
+
+  .winner {
+    min-height: 4.5rem;
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--gold) 58%, var(--border));
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--gold) 10%, var(--surface-2));
+    display: grid;
+    align-content: center;
+    text-align: center;
+  }
+
+  .winner-label { color: var(--faint); font: 600 0.64rem/1.4 var(--mono); letter-spacing: 0.12em; }
+  .winner-name { margin-top: 0.15rem; color: color-mix(in srgb, var(--orange) 84%, var(--ink)); font: 700 clamp(1.25rem, 3vw, 1.75rem)/1.25 var(--display); }
+  .winner-class { color: var(--muted); font-size: 0.78rem; font-weight: 600; }
+
+  .side { display: grid; gap: 1rem; }
+  .controls, .history { padding: 1.2rem; }
+  .controls h2, .history h2 { margin-bottom: 0.9rem; }
+
+  .field { display: grid; gap: 0.45rem; margin-top: 0.8rem; }
+  .field:first-of-type { margin-top: 0; }
+  .field label, .field-label { color: var(--muted); font-size: 0.75rem; font-weight: 700; }
+
+  select, textarea, input[type="file"] {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  select { min-height: 2.8rem; padding: 0.6rem 0.75rem; }
+  input[type="file"] { padding: 0.55rem; font-size: 0.75rem; }
+  input[type="file"]::file-selector-button { margin-right: 0.65rem; border: 0; border-radius: 7px; padding: 0.45rem 0.65rem; background: var(--blue); color: #fff; font-weight: 700; cursor: pointer; }
+  textarea { min-height: 150px; resize: vertical; padding: 0.75rem; line-height: 1.55; font-size: 0.78rem; }
+
+  .button-row { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.7rem; }
+
+  .button {
+    appearance: none;
+    min-height: 2.65rem;
+    border: 1px solid var(--teal);
+    border-radius: 10px;
+    padding: 0.62rem 0.8rem;
+    background: var(--teal);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+
+  .button:hover { transform: translateY(-1px); }
+  .button--secondary { background: transparent; color: var(--teal); }
+  .button--danger { border-color: var(--danger); background: transparent; color: var(--danger); }
+
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    margin-top: 0.9rem;
+    color: var(--muted);
+    font-size: 0.76rem;
+    line-height: 1.45;
+  }
+
+  .check-row input { margin-top: 0.14rem; accent-color: var(--teal); }
+
+  .status {
+    min-height: 1.2rem;
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 1.5;
+  }
+
+  .history-list { margin: 0; padding-left: 1.35rem; color: var(--muted); font-size: 0.78rem; line-height: 1.8; }
+  .history-empty { margin: 0; color: var(--faint); font-size: 0.78rem; font-style: italic; }
+
+  .hint {
+    margin: 0.8rem 0 0;
+    color: var(--faint);
+    font-size: 0.68rem;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 880px) {
+    .workspace { grid-template-columns: 1fr; }
+    .side { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 620px) {
+    .topbar-inner { align-items: flex-start; }
+    .back-link { font-size: 0.72rem; }
+    .side { grid-template-columns: 1fr; }
+    .wheel-card { padding-inline: 0.65rem; }
+    .pointer { border-left-width: 13px; border-right-width: 13px; border-top-width: 33px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html" aria-label="Về trang Góc Học Tập">
+      <span class="brand-kicker">Tài liệu</span>
+      <span class="brand-name">Góc Học Tập</span>
+    </a>
+    <a class="back-link" href="index.html">← Quay lại trang chính</a>
+  </div>
+</header>
+
+<main class="page">
+  <header class="hero">
+    <span class="eyebrow">CÔNG CỤ TRÊN LỚP</span>
+    <h1>Vòng quay may mắn</h1>
+    <p>Chọn một danh sách có sẵn rồi bấm “Thêm danh sách”. Bạn cũng có thể nhập file Excel mới hoặc chỉnh sửa danh sách trực tiếp trước khi quay.</p>
+  </header>
+
+  <div class="workspace">
+    <section class="card wheel-card" aria-labelledby="wheel-title">
+      <div class="wheel-meta">
+        <h2 id="wheel-title">Danh sách đang quay</h2>
+        <span class="count-pill" id="studentCount">0 học sinh</span>
+      </div>
+      <div class="wheel-stage">
+        <canvas id="wheelCanvas" width="620" height="620" role="img" aria-label="Vòng quay chọn ngẫu nhiên học sinh"></canvas>
+        <span class="pointer" aria-hidden="true"></span>
+        <button class="spin-button" id="spinButton" type="button" disabled>QUAY</button>
+      </div>
+      <div class="winner" id="winner" aria-live="polite">
+        <span class="winner-label">KẾT QUẢ</span>
+        <span class="winner-name" id="winnerName">Chưa có học sinh được chọn</span>
+        <span class="winner-class" id="winnerClass"></span>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="card controls" aria-labelledby="controls-title">
+        <h2 id="controls-title">Thêm danh sách học sinh</h2>
+
+        <div class="field">
+          <label for="rosterSelect">Danh sách có sẵn</label>
+          <select id="rosterSelect" aria-describedby="rosterStatus"></select>
+        </div>
+        <div class="button-row">
+          <button class="button" id="loadRosterButton" type="button">Thêm danh sách</button>
+          <button class="button button--secondary" id="restoreButton" type="button">Thêm lại tất cả</button>
+        </div>
+
+        <div class="field">
+          <label for="fileInput">Hoặc chọn file Excel khác</label>
+          <input id="fileInput" type="file" accept=".xlsx,.xls,.csv,.txt">
+        </div>
+
+        <div class="field">
+          <label for="studentEditor">Chỉnh sửa danh sách</label>
+          <textarea id="studentEditor" spellcheck="false" placeholder="Mỗi dòng một học sinh, ví dụ:\nNGUYỄN VĂN A | 10A1"></textarea>
+        </div>
+        <div class="button-row">
+          <button class="button button--secondary" id="applyEditorButton" type="button">Cập nhật vòng quay</button>
+          <button class="button button--danger" id="clearButton" type="button">Xóa danh sách</button>
+        </div>
+
+        <label class="check-row">
+          <input id="noRepeat" type="checkbox" checked>
+          <span>Không lặp lại học sinh vừa trúng ở lượt quay tiếp theo.</span>
+        </label>
+
+        <div class="status" id="rosterStatus" aria-live="polite">Chọn lớp hoặc nhóm TC_TIN để bắt đầu.</div>
+        <p class="hint">File Excel nên có cột “HỌ VÀ TÊN” và “LỚP GỐC”. Dữ liệu chỉ được xử lý trong trình duyệt.</p>
+      </section>
+
+      <section class="card history" aria-labelledby="history-title">
+        <h2 id="history-title">Lịch sử kết quả</h2>
+        <p class="history-empty" id="historyEmpty">Chưa có lượt quay.</p>
+        <ol class="history-list" id="historyList"></ol>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<script src="data/student-rosters.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var rosters = window.STUDENT_ROSTERS || {};
+  var select = document.getElementById('rosterSelect');
+  var loadButton = document.getElementById('loadRosterButton');
+  var restoreButton = document.getElementById('restoreButton');
+  var fileInput = document.getElementById('fileInput');
+  var editor = document.getElementById('studentEditor');
+  var applyEditorButton = document.getElementById('applyEditorButton');
+  var clearButton = document.getElementById('clearButton');
+  var noRepeat = document.getElementById('noRepeat');
+  var status = document.getElementById('rosterStatus');
+  var count = document.getElementById('studentCount');
+  var canvas = document.getElementById('wheelCanvas');
+  var ctx = canvas.getContext('2d');
+  var spinButton = document.getElementById('spinButton');
+  var winnerName = document.getElementById('winnerName');
+  var winnerClass = document.getElementById('winnerClass');
+  var historyList = document.getElementById('historyList');
+  var historyEmpty = document.getElementById('historyEmpty');
+
+  var students = [];
+  var originalStudents = [];
+  var history = [];
+  var pendingRemoval = null;
+  var rotation = 0;
+  var spinning = false;
+  var resizeTimer = null;
+  var palette = ['#2C6E67', '#376FA1', '#7B5AA6', '#B55F34', '#5C8A3D', '#A94E67', '#327E8B', '#8A6A2F'];
+
+  Object.keys(rosters).forEach(function (key) {
+    var option = document.createElement('option');
+    var size = rosters[key].students.length;
+    option.value = key;
+    option.textContent = rosters[key].label + ' · ' + size + ' học sinh';
+    select.appendChild(option);
+  });
+
+  function normalize(value) {
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/gi, 'd')
+      .trim()
+      .toUpperCase();
+  }
+
+  function cloneStudents(list) {
+    return list.map(function (student) {
+      return { name: String(student.name || '').trim(), className: String(student.className || '').trim() };
+    }).filter(function (student) { return student.name; });
+  }
+
+  function updateEditor() {
+    editor.value = students.map(function (student) {
+      return student.name + (student.className ? ' | ' + student.className : '');
+    }).join('\n');
+  }
+
+  function updateUi(message) {
+    count.textContent = students.length + ' học sinh';
+    spinButton.disabled = spinning || students.length < 2;
+    if (message) status.textContent = message;
+    drawWheel();
+  }
+
+  function loadRoster(key) {
+    var roster = rosters[key];
+    if (!roster) return;
+    students = cloneStudents(roster.students);
+    originalStudents = cloneStudents(students);
+    pendingRemoval = null;
+    rotation = 0;
+    winnerName.textContent = 'Chưa có học sinh được chọn';
+    winnerClass.textContent = '';
+    updateEditor();
+    updateUi('Đã thêm ' + students.length + ' học sinh từ ' + roster.sourceFile + '.');
+  }
+
+  function parseEditor() {
+    var parsed = editor.value.split(/\r?\n/).map(function (line) {
+      var parts = line.split(/\s*[|;\t]\s*/);
+      return { name: (parts[0] || '').trim(), className: (parts[1] || '').trim() };
+    }).filter(function (student) { return student.name; });
+    students = parsed;
+    originalStudents = cloneStudents(parsed);
+    pendingRemoval = null;
+    rotation = 0;
+    updateUi(parsed.length ? 'Đã cập nhật ' + parsed.length + ' học sinh từ ô chỉnh sửa.' : 'Danh sách đang trống.');
+  }
+
+  function shorten(name, maxLength) {
+    if (name.length <= maxLength) return name;
+    return name.slice(0, Math.max(4, maxLength - 1)).trim() + '…';
+  }
+
+  function resizeCanvas() {
+    var cssSize = Math.max(260, Math.floor(canvas.getBoundingClientRect().width || 620));
+    var ratio = Math.min(window.devicePixelRatio || 1, 2);
+    var pixelSize = Math.floor(cssSize * ratio);
+    if (canvas.width !== pixelSize || canvas.height !== pixelSize) {
+      canvas.width = pixelSize;
+      canvas.height = pixelSize;
+    }
+    drawWheel();
+  }
+
+  function drawEmpty(size, radius) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, radius, 0, Math.PI * 2);
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--surface-2').trim() || '#f6f7f1';
+    ctx.fill();
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--border').trim() || '#d6dacc';
+    ctx.lineWidth = Math.max(2, size * 0.008);
+    ctx.stroke();
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#626a60';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '600 ' + Math.max(13, size * 0.032) + 'px "Be Vietnam Pro", sans-serif';
+    ctx.fillText('Chọn và thêm danh sách', size / 2, size / 2);
+    ctx.restore();
+  }
+
+  function drawWheel() {
+    var size = canvas.width;
+    var radius = size / 2 - Math.max(10, size * 0.025);
+    ctx.clearRect(0, 0, size, size);
+    if (!students.length) {
+      drawEmpty(size, radius);
+      return;
+    }
+
+    var arc = Math.PI * 2 / students.length;
+    var fontSize = Math.max(9, Math.min(18, size / (students.length * 1.08)));
+    var maxLength = students.length > 42 ? 18 : students.length > 30 ? 21 : 25;
+    var center = size / 2;
+
+    students.forEach(function (student, index) {
+      var start = rotation - Math.PI / 2 + index * arc;
+      var end = start + arc;
+      ctx.beginPath();
+      ctx.moveTo(center, center);
+      ctx.arc(center, center, radius, start, end);
+      ctx.closePath();
+      ctx.fillStyle = palette[index % palette.length];
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.74)';
+      ctx.lineWidth = Math.max(1, size * 0.0023);
+      ctx.stroke();
+
+      var angle = start + arc / 2;
+      ctx.save();
+      ctx.translate(center, center);
+      ctx.rotate(angle);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 ' + fontSize + 'px "Be Vietnam Pro", sans-serif';
+      ctx.textBaseline = 'middle';
+      if (Math.cos(angle) < 0) {
+        ctx.rotate(Math.PI);
+        ctx.textAlign = 'left';
+        ctx.fillText(shorten(student.name, maxLength), -radius + size * 0.045, 0);
+      } else {
+        ctx.textAlign = 'right';
+        ctx.fillText(shorten(student.name, maxLength), radius - size * 0.045, 0);
+      }
+      ctx.restore();
+    });
+
+    ctx.beginPath();
+    ctx.arc(center, center, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = Math.max(4, size * 0.012);
+    ctx.stroke();
+  }
+
+  function randomIndex(length) {
+    if (window.crypto && window.crypto.getRandomValues) {
+      var max = Math.floor(0x100000000 / length) * length;
+      var data = new Uint32Array(1);
+      do { window.crypto.getRandomValues(data); } while (data[0] >= max);
+      return data[0] % length;
+    }
+    return Math.floor(Math.random() * length);
+  }
+
+  function prepareNextSpin() {
+    if (pendingRemoval && noRepeat.checked && students.length > 2) {
+      students = students.filter(function (student) { return student !== pendingRemoval; });
+      updateEditor();
+      pendingRemoval = null;
+      rotation = 0;
+      count.textContent = students.length + ' học sinh';
+    } else if (!noRepeat.checked) {
+      pendingRemoval = null;
+    }
+  }
+
+  function spin() {
+    if (spinning) return;
+    prepareNextSpin();
+    if (students.length < 2) {
+      updateUi('Cần ít nhất 2 học sinh để quay.');
+      return;
+    }
+
+    var selectedIndex = randomIndex(students.length);
+    var arc = Math.PI * 2 / students.length;
+    var normalized = ((rotation % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+    var desired = (-(selectedIndex + 0.5) * arc) % (Math.PI * 2);
+    var delta = ((desired - normalized) + Math.PI * 2) % (Math.PI * 2);
+    var endRotation = rotation + Math.PI * 2 * (5 + randomIndex(3)) + delta;
+    var startRotation = rotation;
+    var startTime = performance.now();
+    var duration = 4300;
+
+    spinning = true;
+    spinButton.disabled = true;
+    winnerName.textContent = 'Đang quay…';
+    winnerClass.textContent = '';
+
+    function frame(now) {
+      var progress = Math.min(1, (now - startTime) / duration);
+      var eased = 1 - Math.pow(1 - progress, 4);
+      rotation = startRotation + (endRotation - startRotation) * eased;
+      drawWheel();
+      if (progress < 1) {
+        requestAnimationFrame(frame);
+        return;
+      }
+
+      rotation = ((endRotation % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+      spinning = false;
+      var winner = students[selectedIndex];
+      pendingRemoval = winner;
+      winnerName.textContent = winner.name;
+      winnerClass.textContent = winner.className ? 'Lớp gốc: ' + winner.className : '';
+      history.unshift(winner);
+      history = history.slice(0, 12);
+      renderHistory();
+      spinButton.disabled = students.length < 2;
+      status.textContent = noRepeat.checked ? 'Học sinh vừa trúng sẽ được bỏ qua ở lượt quay tiếp theo.' : 'Danh sách vẫn giữ nguyên cho lượt quay tiếp theo.';
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  function renderHistory() {
+    historyList.innerHTML = '';
+    historyEmpty.hidden = history.length > 0;
+    history.forEach(function (student) {
+      var item = document.createElement('li');
+      item.textContent = student.name + (student.className ? ' · ' + student.className : '');
+      historyList.appendChild(item);
+    });
+  }
+
+  function findHeader(rows) {
+    for (var r = 0; r < Math.min(rows.length, 20); r += 1) {
+      for (var c = 0; c < rows[r].length; c += 1) {
+        var value = normalize(rows[r][c]);
+        if (value.indexOf('HO VA TEN') !== -1 || value === 'HO TEN') return { row: r, nameCol: c };
+      }
+    }
+    return null;
+  }
+
+  function studentsFromRows(rows) {
+    var header = findHeader(rows);
+    var parsed = [];
+    if (header) {
+      var headerCells = rows[header.row].map(normalize);
+      var classCol = headerCells.findIndex(function (value) { return value.indexOf('LOP') !== -1; });
+      rows.slice(header.row + 1).forEach(function (row) {
+        var name = String(row[header.nameCol] || '').trim();
+        var className = classCol >= 0 ? String(row[classCol] || '').trim() : '';
+        if (name && normalize(name) !== 'HO VA TEN') parsed.push({ name: name, className: className });
+      });
+      return parsed;
+    }
+
+    rows.forEach(function (row) {
+      var cells = row.map(function (cell) { return String(cell || '').trim(); }).filter(Boolean);
+      var name = cells.find(function (cell) {
+        var value = normalize(cell);
+        return cell.indexOf(' ') > 0 && value.indexOf('DANH SACH') === -1 && value.indexOf('TONG SO') === -1;
+      });
+      if (name) parsed.push({ name: name, className: '' });
+    });
+    return parsed;
+  }
+
+  function importFile(file) {
+    var extension = file.name.split('.').pop().toLowerCase();
+    var reader = new FileReader();
+    reader.onerror = function () { status.textContent = 'Không thể đọc file đã chọn.'; };
+    reader.onload = function (event) {
+      try {
+        var rows;
+        if (extension === 'csv' || extension === 'txt') {
+          var text = String(event.target.result || '');
+          rows = text.split(/\r?\n/).map(function (line) { return line.split(/[,;\t]/); });
+        } else {
+          if (!window.XLSX) throw new Error('Thư viện đọc Excel chưa tải xong. Hãy thử lại khi có kết nối mạng.');
+          var workbook = XLSX.read(event.target.result, { type: 'array' });
+          var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          rows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+        }
+        var parsed = studentsFromRows(rows);
+        if (!parsed.length) throw new Error('Không tìm thấy tên học sinh trong file.');
+        students = cloneStudents(parsed);
+        originalStudents = cloneStudents(parsed);
+        pendingRemoval = null;
+        rotation = 0;
+        updateEditor();
+        updateUi('Đã thêm ' + students.length + ' học sinh từ file ' + file.name + '.');
+      } catch (error) {
+        status.textContent = error.message || 'File chưa đúng định dạng.';
+      }
+    };
+    if (extension === 'csv' || extension === 'txt') reader.readAsText(file, 'utf-8');
+    else reader.readAsArrayBuffer(file);
+  }
+
+  loadButton.addEventListener('click', function () { loadRoster(select.value); });
+  restoreButton.addEventListener('click', function () {
+    if (!originalStudents.length) {
+      status.textContent = 'Chưa có danh sách để khôi phục.';
+      return;
+    }
+    students = cloneStudents(originalStudents);
+    pendingRemoval = null;
+    rotation = 0;
+    updateEditor();
+    updateUi('Đã thêm lại đủ ' + students.length + ' học sinh.');
+  });
+  applyEditorButton.addEventListener('click', parseEditor);
+  clearButton.addEventListener('click', function () {
+    students = [];
+    originalStudents = [];
+    pendingRemoval = null;
+    editor.value = '';
+    rotation = 0;
+    winnerName.textContent = 'Chưa có học sinh được chọn';
+    winnerClass.textContent = '';
+    updateUi('Đã xóa danh sách khỏi vòng quay.');
+  });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files[0]) importFile(fileInput.files[0]);
+  });
+  spinButton.addEventListener('click', spin);
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resizeCanvas, 120);
+  });
+
+  resizeCanvas();
+})();
+</script>
+</body>
+</html>

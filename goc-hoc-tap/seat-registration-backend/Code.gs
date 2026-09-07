@@ -13,7 +13,7 @@ function setup() {
   PropertiesService.getScriptProperties().setProperty("SPREADSHEET_ID", spreadsheet.getId());
   var sheet = spreadsheet.getSheetByName(SETTINGS.sheetName) || spreadsheet.insertSheet(SETTINGS.sheetName);
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["Thời gian", "Lớp", "STT", "Họ và tên", "Máy", "Dãy", "Vị trí trong dãy", "Suất"]);
+    sheet.appendRow(["Thời gian", "Buổi đăng ký", "Lớp học", "Họ và tên", "Máy", "Dãy", "Vị trí trong dãy", "Suất"]);
     sheet.setFrozenRows(1);
     sheet.getRange(1, 1, 1, 8).setFontWeight("bold").setBackground("#256f69").setFontColor("#ffffff");
     sheet.autoResizeColumns(1, 8);
@@ -46,17 +46,15 @@ function doPost(e) {
 function register_(payload) {
   var className = cleanText_(payload.className, 30);
   var roomName = cleanText_(payload.roomName, 50);
-  var studentNumber = cleanText_(payload.studentNumber, 3);
   var studentName = cleanText_(payload.studentName, 80);
+  var studentClass = cleanText_(payload.studentClass, 20);
   var seatId = Number(payload.seatId);
 
   if (className !== SETTINGS.className || roomName !== SETTINGS.roomName) {
     return { ok: false, message: "Thông tin lớp hoặc phòng máy không đúng." };
   }
-  if (!/^\d{1,2}$/.test(studentNumber) || Number(studentNumber) < 1 || Number(studentNumber) > 99) {
-    return { ok: false, message: "Số thứ tự phải từ 1 đến 99." };
-  }
   if (studentName.length < 2) return { ok: false, message: "Vui lòng nhập đầy đủ họ tên." };
+  if (studentClass.length < 1) return { ok: false, message: "Vui lòng nhập lớp học." };
   if (!Number.isInteger(seatId) || seatId < 1 || seatId > SETTINGS.totalSeats) {
     return { ok: false, message: "Số máy không hợp lệ." };
   }
@@ -64,9 +62,11 @@ function register_(payload) {
   var sheet = getSheet_();
   var records = readRecords_(sheet);
   var duplicateStudent = records.some(function (record) {
-    return record.className === className && record.studentNumber === studentNumber;
+    return record.className === className
+      && record.studentClass.toLowerCase() === studentClass.toLowerCase()
+      && record.studentName.toLowerCase() === studentName.toLowerCase();
   });
-  if (duplicateStudent) return { ok: false, message: "Số thứ tự này đã đăng ký chỗ ngồi." };
+  if (duplicateStudent) return { ok: false, message: "Bạn đã đăng ký chỗ ngồi rồi." };
 
   var seatRecords = records.filter(function (record) {
     return record.className === className && record.seatId === seatId;
@@ -98,7 +98,7 @@ function register_(payload) {
   sheet.appendRow([
     new Date(),
     className,
-    safeCellText_(studentNumber),
+    safeCellText_(studentClass),
     safeCellText_(studentName),
     seatId,
     row,
@@ -148,7 +148,8 @@ function readRecords_(sheet) {
   return sheet.getRange(2, 1, sheet.getLastRow() - 1, 8).getValues().map(function (row) {
     return {
       className: String(row[1] || "").trim(),
-      studentNumber: String(row[2] || "").replace(/^'/, "").trim(),
+      studentClass: String(row[2] || "").replace(/^'/, "").trim(),
+      studentName: String(row[3] || "").trim(),
       seatId: Number(row[4]),
       slot: Number(row[7])
     };

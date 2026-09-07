@@ -295,12 +295,12 @@
       <p>Lớp <strong>TC_TIN_15</strong>. Mỗi học sinh chỉ đăng ký một vị trí.</p>
       <form id="registration-form">
         <div class="field">
-          <label for="student-number">Số thứ tự trong lớp</label>
-          <input id="student-number" name="studentNumber" type="number" min="1" max="99" inputmode="numeric" required autocomplete="off">
-        </div>
-        <div class="field">
           <label for="student-name">Họ và tên học sinh</label>
           <input id="student-name" name="studentName" type="text" minlength="2" maxlength="80" required autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="student-class">Lớp học</label>
+          <input id="student-class" name="studentClass" type="text" placeholder="VD: 10A3" minlength="1" maxlength="20" required autocomplete="off">
         </div>
         <div id="selection" class="selection">Chưa chọn máy.</div>
         <button id="submit" class="submit" type="submit" disabled>Đăng ký chỗ ngồi</button>
@@ -501,9 +501,9 @@
       await loadSeats({ keepNotice: true });
       return;
     }
-    var studentNumber = document.getElementById("student-number").value.trim();
     var studentName = document.getElementById("student-name").value.trim();
-    if (!studentNumber || !studentName) return;
+    var studentClass = document.getElementById("student-class").value.trim();
+    if (!studentName || !studentClass) return;
 
     submitButton.disabled = true;
     submitButton.textContent = "Đang kiểm tra chỗ...";
@@ -515,8 +515,8 @@
           action: "register",
           roomName: ROOM_NAME,
           className: CLASS_NAME,
-          studentNumber: studentNumber,
           studentName: studentName,
+          studentClass: studentClass,
           seatId: seat.seatId
         })
       });
