@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng ký chỗ ngồi · TC_TIN_15</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #eef2ed;
+    --surface: #fff;
+    --surface-2: #f7f8f4;
+    --ink: #232823;
+    --muted: #687067;
+    --border: #d7ddd1;
+    --blue: #34618f;
+    --blue-soft: #e7eef6;
+    --green: #256f69;
+    --green-soft: #e5f2ef;
+    --orange: #a95b28;
+    --orange-soft: #f8e9de;
+    --red: #a33e3e;
+    --red-soft: #f8e5e5;
+    --shadow: 0 18px 50px -30px rgba(30, 45, 38, .45);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
+  }
+  a { color: inherit; }
+  .topbar {
+    border-top: 5px solid var(--green);
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,.94);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(12px);
+  }
+  .topbar-inner {
+    width: min(1240px, 100%);
+    margin: auto;
+    padding: .9rem clamp(1rem, 4vw, 2rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .brand {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--orange);
+  }
+  .back-link {
+    text-decoration: none;
+    color: var(--green);
+    font-size: .82rem;
+    font-weight: 700;
+    padding: .55rem .8rem;
+    border: 1px solid var(--green);
+    border-radius: 999px;
+  }
+  .page {
+    width: min(1240px, 100%);
+    margin: auto;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem) 4rem;
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1.5rem;
+    align-items: end;
+    margin-bottom: 1.4rem;
+  }
+  .eyebrow, .seat-code {
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-weight: 600;
+    letter-spacing: .1em;
+  }
+  .eyebrow {
+    display: block;
+    color: var(--green);
+    font-size: .72rem;
+    margin-bottom: .65rem;
+  }
+  h1 {
+    margin: 0 0 .55rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.05;
+  }
+  .hero p { margin: 0; max-width: 70ch; color: var(--muted); line-height: 1.6; }
+  .counter {
+    min-width: 190px;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .counter strong { display: block; color: var(--blue); font-size: 1.6rem; }
+  .counter span { color: var(--muted); font-size: .75rem; }
+  .notice {
+    display: none;
+    margin: 0 0 1rem;
+    padding: .9rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    font-size: .86rem;
+    line-height: 1.5;
+  }
+  .notice.show { display: block; }
+  .notice.info { border-color: #b8cbe0; background: var(--blue-soft); color: #274d73; }
+  .notice.success { border-color: #abd0c9; background: var(--green-soft); color: #195c55; }
+  .notice.error { border-color: #ddb5b5; background: var(--red-soft); color: #852e2e; }
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.8fr) minmax(280px, .75fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .room, .registration-card {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .room { padding: clamp(1rem, 3vw, 1.6rem); overflow-x: auto; }
+  .board {
+    width: min(620px, 90%);
+    margin: 0 auto 1.5rem;
+    padding: .6rem 1rem;
+    border: 2px solid #889087;
+    border-radius: 8px;
+    color: #4f574f;
+    text-align: center;
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    background: #f8faf6;
+  }
+  .rows {
+    min-width: 720px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(120px, 1fr));
+    gap: .75rem;
+    direction: rtl;
+  }
+  .row {
+    direction: ltr;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-2);
+    padding: .75rem;
+  }
+  .row h2 {
+    margin: 0 0 .7rem;
+    color: var(--blue);
+    text-align: center;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.05rem;
+  }
+  .seat-list { display: grid; gap: .45rem; }
+  .seat {
+    width: 100%;
+    min-height: 52px;
+    border: 1px solid #b9c6b8;
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    padding: .5rem .55rem;
+    text-align: left;
+    transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+  }
+  .seat:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 7px 15px -12px #1f3828; }
+  .seat:focus-visible { outline: 3px solid rgba(52,97,143,.3); outline-offset: 2px; }
+  .seat.selected { border: 2px solid var(--blue); background: var(--blue-soft); }
+  .seat.occupied { border-color: #d7ad8f; background: var(--orange-soft); }
+  .seat.pair-open { border-color: #7ebbb2; background: var(--green-soft); }
+  .seat:disabled { cursor: not-allowed; opacity: .7; }
+  .seat-top { display: flex; justify-content: space-between; gap: .3rem; align-items: center; }
+  .seat-code { font-size: .7rem; }
+  .seat-status { color: var(--muted); font-size: .62rem; margin-top: .22rem; }
+  .front-badge {
+    color: var(--green);
+    font-size: .55rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+  }
+  .registration-card { padding: 1.2rem; position: sticky; top: 92px; }
+  .registration-card h2 { margin: 0 0 .35rem; font-family: "Fraunces", Georgia, serif; font-size: 1.45rem; }
+  .registration-card > p { color: var(--muted); font-size: .82rem; line-height: 1.5; margin: 0 0 1rem; }
+  .field { display: grid; gap: .38rem; margin-bottom: .85rem; }
+  .field label { font-size: .76rem; font-weight: 700; }
+  .field input {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: .65rem .75rem;
+    font: inherit;
+    color: var(--ink);
+    background: #fff;
+  }
+  .field input:focus { outline: 3px solid rgba(52,97,143,.18); border-color: var(--blue); }
+  .selection {
+    margin: .9rem 0;
+    padding: .8rem;
+    border-radius: 10px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: .8rem;
+  }
+  .selection strong { color: var(--blue); }
+  .submit {
+    width: 100%;
+    min-height: 44px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--blue);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .submit:disabled { opacity: .55; cursor: not-allowed; }
+  .legend { display: grid; grid-template-columns: repeat(2, 1fr); gap: .55rem; margin-top: 1rem; font-size: .68rem; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: .35rem; }
+  .dot { width: .75rem; height: .75rem; border: 1px solid var(--border); border-radius: 3px; background: #fff; }
+  .dot.occupied { background: var(--orange-soft); border-color: #d7ad8f; }
+  .dot.pair { background: var(--green-soft); border-color: #7ebbb2; }
+  .rules {
+    margin-top: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    padding: 1rem 1.15rem;
+    color: var(--muted);
+    font-size: .78rem;
+    line-height: 1.6;
+  }
+  .rules strong { color: var(--ink); }
+  @media (max-width: 850px) {
+    .hero, .layout { grid-template-columns: 1fr; }
+    .counter { min-width: 0; }
+    .registration-card { position: static; }
+  }
+  @media (max-width: 560px) {
+    .topbar-inner { align-items: flex-start; }
+    .brand { font-size: 1.15rem; }
+    .back-link { font-size: .7rem; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">Góc Học Tập</a>
+    <a class="back-link" href="index.html">← Quay lại trang tài liệu</a>
+  </div>
+</header>
+
+<main class="page">
+  <section class="hero">
+    <div>
+      <span class="eyebrow">PHÒNG MÁY 3 · LỚP TC_TIN_15</span>
+      <h1>Đăng ký chỗ ngồi</h1>
+      <p>Chọn một máy còn trống. Nếu chỗ vừa chọn đã có bạn đăng ký trước, hệ thống sẽ yêu cầu chọn lại. Ghép đôi chỉ mở ở hai bàn đầu mỗi dãy sau khi đủ 50 chỗ đơn.</p>
+    </div>
+    <div class="counter" aria-live="polite">
+      <strong id="occupancy">— / 50</strong>
+      <span id="occupancy-note">Đang tải sơ đồ chỗ ngồi</span>
+    </div>
+  </section>
+
+  <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+  <div class="layout">
+    <section class="room" aria-label="Sơ đồ phòng máy 3">
+      <div class="board">BẢNG · BÀN GIÁO VIÊN</div>
+      <div id="rows" class="rows"></div>
+    </section>
+
+    <aside class="registration-card">
+      <h2>Thông tin đăng ký</h2>
+      <p>Lớp <strong>TC_TIN_15</strong>. Mỗi học sinh chỉ đăng ký một vị trí.</p>
+      <form id="registration-form">
+        <div class="field">
+          <label for="student-number">Số thứ tự trong lớp</label>
+          <input id="student-number" name="studentNumber" type="number" min="1" max="99" inputmode="numeric" required autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="student-name">Họ và tên học sinh</label>
+          <input id="student-name" name="studentName" type="text" minlength="2" maxlength="80" required autocomplete="name">
+        </div>
+        <div id="selection" class="selection">Chưa chọn máy.</div>
+        <button id="submit" class="submit" type="submit" disabled>Đăng ký chỗ ngồi</button>
+      </form>
+      <div class="legend" aria-label="Chú thích">
+        <span><i class="dot"></i>Còn trống</span>
+        <span><i class="dot occupied"></i>Đã có người</span>
+        <span><i class="dot pair"></i>Có thể ghép</span>
+      </div>
+    </aside>
+  </div>
+
+  <section class="rules">
+    <strong>Quy tắc:</strong> 5 dãy, mỗi dãy 10 máy. Mỗi máy ưu tiên một học sinh. Khi toàn bộ 50 máy đã có người, hệ thống mở thêm một chỗ ghép tại máy 01–02 của từng dãy. Dữ liệu được kiểm tra lại ngay lúc gửi để ngăn đăng ký trùng.
+  </section>
+</main>
+
+<script src="seat-registration-config.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var config = window.SEAT_REGISTRATION_CONFIG || {};
+  var API_URL = config.apiUrl || "";
+  var ROOM_NAME = config.roomName || "Phòng máy 3";
+  var CLASS_NAME = config.className || "TC_TIN_15";
+  var ROW_COUNT = 5;
+  var SEATS_PER_ROW = 10;
+  var TOTAL_SEATS = ROW_COUNT * SEATS_PER_ROW;
+  var PAIR_POSITIONS = [1, 2];
+  var selectedSeatId = null;
+  var state = emptyState();
+  var rowsElement = document.getElementById("rows");
+  var form = document.getElementById("registration-form");
+  var submitButton = document.getElementById("submit");
+  var selectionElement = document.getElementById("selection");
+  var occupancyElement = document.getElementById("occupancy");
+  var occupancyNote = document.getElementById("occupancy-note");
+  var notice = document.getElementById("notice");
+
+  function emptyState() {
+    var seats = [];
+    for (var row = 1; row <= ROW_COUNT; row += 1) {
+      for (var position = 1; position <= SEATS_PER_ROW; position += 1) {
+        seats.push({
+          seatId: ((row - 1) * SEATS_PER_ROW) + position,
+          row: row,
+          position: position,
+          occupantCount: 0
+        });
+      }
+    }
+    return { seats: seats, primaryOccupied: 0, totalRegistrations: 0, pairEnabled: false };
+  }
+
+  function isConfigured() {
+    return /^https:\/\/script\.google\.com\/macros\/s\//.test(API_URL);
+  }
+
+  function showNotice(message, type) {
+    notice.textContent = message;
+    notice.className = "notice show " + (type || "info");
+  }
+
+  function clearNotice() {
+    notice.textContent = "";
+    notice.className = "notice";
+  }
+
+  function padded(value) {
+    return String(value).padStart(2, "0");
+  }
+
+  function seatLabel(seat) {
+    return "Máy " + padded(seat.seatId) + " · Dãy " + seat.row;
+  }
+
+  function canPair(seat) {
+    return state.pairEnabled && PAIR_POSITIONS.indexOf(seat.position) !== -1 && seat.occupantCount === 1;
+  }
+
+  function canSelect(seat) {
+    return seat.occupantCount === 0 || canPair(seat);
+  }
+
+  function render() {
+    rowsElement.innerHTML = "";
+    for (var rowNumber = 1; rowNumber <= ROW_COUNT; rowNumber += 1) {
+      var row = document.createElement("section");
+      row.className = "row";
+      var title = document.createElement("h2");
+      title.textContent = "Dãy " + rowNumber;
+      row.appendChild(title);
+      var list = document.createElement("div");
+      list.className = "seat-list";
+
+      state.seats.filter(function (seat) { return seat.row === rowNumber; }).forEach(function (seat) {
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "seat";
+        if (seat.occupantCount > 0) button.classList.add("occupied");
+        if (canPair(seat)) button.classList.add("pair-open");
+        if (selectedSeatId === seat.seatId) button.classList.add("selected");
+        button.disabled = !canSelect(seat);
+        button.setAttribute("aria-pressed", selectedSeatId === seat.seatId ? "true" : "false");
+        button.setAttribute("aria-label", seatLabel(seat) + ". " + statusText(seat));
+
+        var top = document.createElement("span");
+        top.className = "seat-top";
+        var code = document.createElement("strong");
+        code.className = "seat-code";
+        code.textContent = "MÁY " + padded(seat.seatId);
+        top.appendChild(code);
+        if (PAIR_POSITIONS.indexOf(seat.position) !== -1) {
+          var badge = document.createElement("span");
+          badge.className = "front-badge";
+          badge.textContent = "BÀN ĐẦU";
+          top.appendChild(badge);
+        }
+        button.appendChild(top);
+        var status = document.createElement("div");
+        status.className = "seat-status";
+        status.textContent = statusText(seat);
+        button.appendChild(status);
+        button.addEventListener("click", function () { chooseSeat(seat.seatId); });
+        list.appendChild(button);
+      });
+      row.appendChild(list);
+      rowsElement.appendChild(row);
+    }
+
+    occupancyElement.textContent = state.primaryOccupied + " / " + TOTAL_SEATS;
+    occupancyNote.textContent = state.pairEnabled
+      ? "Đã mở chỗ ngồi ghép ở bàn đầu"
+      : (TOTAL_SEATS - state.primaryOccupied) + " máy đơn còn trống";
+    updateSelection();
+  }
+
+  function statusText(seat) {
+    if (seat.occupantCount === 0) return "Còn trống";
+    if (canPair(seat)) return "Đã có 1 bạn · còn 1 chỗ ghép";
+    if (seat.occupantCount > 1) return "Đã đủ 2 bạn";
+    return "Đã có người đăng ký";
+  }
+
+  function chooseSeat(seatId) {
+    selectedSeatId = seatId;
+    clearNotice();
+    render();
+  }
+
+  function updateSelection() {
+    var seat = state.seats.find(function (item) { return item.seatId === selectedSeatId; });
+    if (!seat || !canSelect(seat)) {
+      selectedSeatId = null;
+      selectionElement.textContent = "Chưa chọn máy.";
+      submitButton.disabled = true;
+      return;
+    }
+    selectionElement.innerHTML = "Đã chọn: <strong>" + seatLabel(seat) + (seat.occupantCount === 1 ? " · chỗ ghép" : "") + "</strong>";
+    submitButton.disabled = !isConfigured();
+  }
+
+  function normalizeServerState(payload) {
+    if (!payload || !payload.ok || !Array.isArray(payload.seats)) throw new Error("Dữ liệu sơ đồ không hợp lệ.");
+    var seatMap = new Map(payload.seats.map(function (seat) { return [Number(seat.seatId), Number(seat.occupantCount || 0)]; }));
+    var next = emptyState();
+    next.seats.forEach(function (seat) { seat.occupantCount = seatMap.get(seat.seatId) || 0; });
+    next.primaryOccupied = Number(payload.primaryOccupied || 0);
+    next.totalRegistrations = Number(payload.totalRegistrations || 0);
+    next.pairEnabled = Boolean(payload.pairEnabled);
+    return next;
+  }
+
+  async function loadSeats(options) {
+    options = options || {};
+    if (!isConfigured()) {
+      showNotice("Trang đã sẵn sàng nhưng chưa kết nối Google Sheet. Giáo viên cần hoàn tất bước triển khai dữ liệu trước khi học sinh đăng ký.", "info");
+      render();
+      return;
+    }
+    try {
+      var response = await fetch(API_URL + "?action=status&className=" + encodeURIComponent(CLASS_NAME) + "&t=" + Date.now(), { cache: "no-store" });
+      if (!response.ok) throw new Error("Không thể tải sơ đồ.");
+      state = normalizeServerState(await response.json());
+      if (!options.keepNotice) clearNotice();
+      render();
+    } catch (error) {
+      showNotice("Chưa thể kết nối hệ thống đăng ký. Vui lòng thử lại sau.", "error");
+    }
+  }
+
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    var seat = state.seats.find(function (item) { return item.seatId === selectedSeatId; });
+    if (!seat || !canSelect(seat)) {
+      showNotice("Chỗ này không còn khả dụng. Hãy chọn một máy khác.", "error");
+      await loadSeats({ keepNotice: true });
+      return;
+    }
+    var studentNumber = document.getElementById("student-number").value.trim();
+    var studentName = document.getElementById("student-name").value.trim();
+    if (!studentNumber || !studentName) return;
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Đang kiểm tra chỗ...";
+    try {
+      var response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "register",
+          roomName: ROOM_NAME,
+          className: CLASS_NAME,
+          studentNumber: studentNumber,
+          studentName: studentName,
+          seatId: seat.seatId
+        })
+      });
+      var result = await response.json();
+      if (!result.ok) {
+        showNotice(result.message || "Không thể đăng ký chỗ này. Hãy chọn chỗ khác.", "error");
+        selectedSeatId = null;
+        await loadSeats({ keepNotice: true });
+        return;
+      }
+      showNotice("Đăng ký thành công: " + seatLabel(seat) + (result.slot === 2 ? " (chỗ ghép)." : "."), "success");
+      form.reset();
+      selectedSeatId = null;
+      await loadSeats({ keepNotice: true });
+    } catch (error) {
+      showNotice("Kết nối bị gián đoạn. Hãy kiểm tra lại sơ đồ trước khi gửi lại để tránh đăng ký hai lần.", "error");
+      await loadSeats({ keepNotice: true });
+    } finally {
+      submitButton.textContent = "Đăng ký chỗ ngồi";
+      updateSelection();
+    }
+  });
+
+  render();
+  loadSeats();
+  window.setInterval(function () { loadSeats({ keepNotice: notice.classList.contains("success") }); }, 15000);
+})();
+</script>
+</body>
+</html>

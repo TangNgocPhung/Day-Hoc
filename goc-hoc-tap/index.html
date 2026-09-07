@@ -252,6 +252,20 @@
     stroke-linejoin: round;
   }
 
+  .seat-registration-link {
+    border-color: var(--accent-1);
+    background: var(--accent-1);
+    box-shadow: 0 8px 18px -12px var(--accent-1);
+  }
+
+  .seat-registration-link:hover {
+    box-shadow: 0 10px 20px -10px var(--accent-1);
+  }
+
+  .seat-registration-link:focus-visible {
+    outline-color: var(--accent-1);
+  }
+
   .teacher-separator {
     color: var(--ink-faint);
     font-weight: 400;
@@ -700,6 +714,10 @@
       <a class="student-form-link" href="https://forms.gle/bQkTLC1U1o4oSJw7A" target="_blank" rel="noopener" aria-label="Mở biểu mẫu Thông tin học sinh">
         <svg aria-hidden="true"><use href="#icon-pencil"></use></svg>
         <span>Điền thông tin học sinh →</span>
+      </a>
+      <a class="student-form-link seat-registration-link" href="dang-ky-cho-ngoi-tc-tin-15.html" aria-label="Đăng ký chỗ ngồi phòng máy 3 cho lớp TC_TIN_15">
+        <svg aria-hidden="true"><use href="#icon-check"></use></svg>
+        <span>Đăng ký chỗ ngồi · TC_TIN_15 →</span>
       </a>
     </div>
   </header>
