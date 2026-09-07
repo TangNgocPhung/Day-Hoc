@@ -472,6 +472,48 @@
     outline-offset: 2px;
   }
 
+  .resource-list {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0.15rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .resource-item {
+    display: grid;
+    gap: 0.45rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .resource-item:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .resource-item-title {
+    display: block;
+    color: var(--ink);
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .resource-item-meta {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.05em;
+  }
+
+  .resource-item .card-actions {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
   .site-footer {
     border-top: 5px solid var(--accent-5);
     background: #173F3A;
@@ -868,15 +910,58 @@
         <p>Rèn luyện kỹ năng bảng tính, công thức và phân tích dữ liệu theo chuẩn MOS Excel.</p>
       </div>
       <div class="shelf">
+        <article class="card card--resource">
+          <span class="card-icon"><svg><use href="#icon-map"></use></svg></span>
+          <span class="card-meta">SƠ ĐỒ PPCT · 76 TIẾT</span>
+          <h3>Lộ trình MOS Excel 11</h3>
+          <p>Phân phối chương trình năm học 2026–2027 theo GHK1, CHK1, GHK2 và CHK2, kèm nội dung chi tiết từng tiết.</p>
+          <div class="card-actions">
+            <a class="resource-link" href="../lo-trinh-mos-excel.html" target="_blank" rel="noopener">Xem sơ đồ</a>
+            <a class="resource-link resource-link--secondary" href="documents/mos-excel/phan-phoi-chuong-trinh-tin-hoc-2026-2027.xlsx" download>Tải XLSX</a>
+          </div>
+        </article>
         <article class="card">
           <span class="card-icon"><svg><use href="#icon-play"></use></svg></span>
           <h3>Bài giảng &amp; Slide</h3>
           <p>Nội dung sẽ được cập nhật.</p>
         </article>
-        <article class="card">
+        <article class="card card--resource">
           <span class="card-icon"><svg><use href="#icon-doc"></use></svg></span>
+          <span class="card-meta">3 TÀI LIỆU · PDF</span>
           <h3>Tài liệu tham khảo</h3>
-          <p>Nội dung sẽ được cập nhật.</p>
+          <p>Bộ tài liệu ôn tập và nội dung kỹ năng cho kỳ thi MOS Excel MO-200.</p>
+          <ul class="resource-list" aria-label="Tài liệu tham khảo MOS Excel">
+            <li class="resource-item">
+              <div>
+                <span class="resource-item-title">MOS Study Guide – Microsoft Excel Exam MO-200</span>
+                <span class="resource-item-meta">PDF · 94 TRANG</span>
+              </div>
+              <div class="card-actions">
+                <a class="resource-link" href="documents/mos-excel/mos-excel.pdf" target="_blank" rel="noopener">Mở tài liệu</a>
+                <a class="resource-link resource-link--secondary" href="documents/mos-excel/mos-excel.pdf" download>Tải PDF</a>
+              </div>
+            </li>
+            <li class="resource-item">
+              <div>
+                <span class="resource-item-title">MO-200: Microsoft Excel – Skills Measured</span>
+                <span class="resource-item-meta">PDF · 4 TRANG</span>
+              </div>
+              <div class="card-actions">
+                <a class="resource-link" href="documents/mos-excel/mo-200-skills-required.pdf" target="_blank" rel="noopener">Mở tài liệu</a>
+                <a class="resource-link resource-link--secondary" href="documents/mos-excel/mo-200-skills-required.pdf" download>Tải PDF</a>
+              </div>
+            </li>
+            <li class="resource-item">
+              <div>
+                <span class="resource-item-title">MOS Excel Associate – Exam Objectives</span>
+                <span class="resource-item-meta">PDF · 2 TRANG</span>
+              </div>
+              <div class="card-actions">
+                <a class="resource-link" href="documents/mos-excel/certiport-mos-excel-associate-objectives.pdf" target="_blank" rel="noopener">Mở tài liệu</a>
+                <a class="resource-link resource-link--secondary" href="documents/mos-excel/certiport-mos-excel-associate-objectives.pdf" download>Tải PDF</a>
+              </div>
+            </li>
+          </ul>
         </article>
         <article class="card">
           <span class="card-icon"><svg><use href="#icon-pencil"></use></svg></span>
