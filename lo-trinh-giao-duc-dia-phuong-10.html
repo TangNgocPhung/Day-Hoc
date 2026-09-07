@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lộ Trình Giáo Dục Địa Phương 10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #EFF1EC;
+    --surface: #FFFFFF;
+    --surface-2: #F6F7F1;
+    --ink: #232823;
+    --ink-muted: #5B6259;
+    --ink-faint: #8B9186;
+    --rule: #DEE2D5;
+    --border: #D6DACC;
+    --on-accent: #FFFFFF;
+
+    --accent-1: #9C5426;
+    --accent-2: #3A7D5C;
+    --accent-exam: #A33B3B;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+    --shadow: 0 10px 30px -14px rgba(35, 40, 35, 0.28);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1B1D18;
+      --surface: #232620;
+      --surface-2: #292C24;
+      --ink: #ECEEE5;
+      --ink-muted: #ABB2A0;
+      --ink-faint: #767C6B;
+      --rule: #363A30;
+      --border: #383C31;
+      --on-accent: #15160F;
+
+      --accent-1: #E3A87E;
+      --accent-2: #8FCBAA;
+      --accent-exam: #E38080;
+
+      --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1B1D18;
+    --surface: #232620;
+    --surface-2: #292C24;
+    --ink: #ECEEE5;
+    --ink-muted: #ABB2A0;
+    --ink-faint: #767C6B;
+    --rule: #363A30;
+    --border: #383C31;
+    --on-accent: #15160F;
+
+    --accent-1: #E3A87E;
+    --accent-2: #8FCBAA;
+    --accent-exam: #E38080;
+
+    --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 2rem) 4rem;
+  }
+
+  .masthead { max-width: 720px; margin-bottom: 1.75rem; }
+
+  .masthead-eyebrow {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    margin-bottom: 0.85rem;
+  }
+
+  .masthead-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2rem, 4.6vw, 2.85rem);
+    line-height: 1.05;
+    margin: 0 0 0.6rem;
+    text-wrap: balance;
+  }
+
+  .masthead-sub {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    margin: 0;
+    max-width: 62ch;
+  }
+
+  .exam-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .exam-pill {
+    appearance: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--accent-exam) 45%, var(--border));
+    background: color-mix(in srgb, var(--accent-exam) 9%, var(--surface));
+    color: var(--ink);
+    font-family: var(--font-body);
+    transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .exam-pill:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--accent-exam) 16%, var(--surface)); }
+  .exam-pill:focus-visible { outline: 2px solid var(--accent-exam); outline-offset: 2px; }
+
+  .exam-pill-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent-exam);
+  }
+
+  .exam-pill-date {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 1.1rem; align-items: center; }
+
+  .legend-item { display: flex; align-items: center; gap: 0.45rem; font-size: 0.82rem; color: var(--ink-muted); }
+
+  .legend-swatch { width: 0.65rem; height: 0.65rem; border-radius: 3px; flex: 0 0 auto; }
+
+  .controls { display: flex; gap: 0.5rem; }
+
+  .ctrl-btn {
+    appearance: none;
+    cursor: pointer;
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--ink-muted);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+  }
+
+  .ctrl-btn:hover { color: var(--ink); border-color: color-mix(in srgb, var(--ink) 30%, var(--border)); }
+  .ctrl-btn:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+
+  .canvas-wrap {
+    position: relative;
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .connectors { position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible; }
+
+  .tree { position: relative; z-index: 1; width: max-content; min-width: 100%; }
+
+  .node { display: flex; align-items: flex-start; gap: 1.85rem; position: relative; }
+
+  .node-card {
+    --accent: var(--ink-faint);
+    flex: 0 0 auto;
+    width: 300px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+  }
+
+  .node-card.clickable { cursor: pointer; }
+  .node-card.clickable:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+  .node-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .node-card.flash {
+    animation: flashPulse 1.1s ease;
+  }
+  @keyframes flashPulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-exam) 55%, transparent); }
+    100% { box-shadow: 0 0 0 14px color-mix(in srgb, var(--accent-exam) 0%, transparent); }
+  }
+
+  .node-card-root {
+    width: 260px;
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .node-card-root .node-title { color: var(--surface); }
+  .node-card-root .node-sub { color: color-mix(in srgb, var(--surface) 70%, var(--ink)); }
+  .node-card-root .node-count { color: color-mix(in srgb, var(--surface) 55%, var(--ink)); }
+
+  .node-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+
+  .node-kicker {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .node-title {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.98rem;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .node-card-root .node-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; }
+
+  .node-sub {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--ink-muted);
+    margin-top: 0.35rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .node-count {
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    margin-top: 0.3rem;
+  }
+
+  .chevron {
+    flex: 0 0 auto;
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--accent);
+    transition: transform 0.25s ease;
+  }
+  .node-card.open .chevron { transform: rotate(90deg); }
+
+  .exam-badge {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--accent-exam) 13%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent-exam) 38%, var(--border));
+  }
+  .exam-badge-label { font-size: 0.72rem; font-weight: 700; color: var(--accent-exam); }
+  .exam-badge-date { font-family: var(--font-mono); font-size: 0.74rem; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+
+  .topic-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+  .topic-dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--accent); }
+
+  .node-marker .node-card {
+    background: transparent;
+    border-style: dashed;
+    padding: 0.6rem 0.9rem;
+    width: 300px;
+  }
+  .node-marker .node-title { font-weight: 500; font-style: italic; color: var(--ink-faint); font-size: 0.86rem; }
+  .node-marker .node-sub { margin-top: 0.2rem; }
+
+  .children-grid {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.38s cubic-bezier(.4,0,.2,1);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .children-grid.open { grid-template-rows: 1fr; }
+  .children-inner { overflow: hidden; min-height: 0; }
+  .children-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.15rem 0.15rem 0.15rem 0;
+  }
+
+  .lesson-detail {
+    width: 360px;
+    margin-top: 0.65rem;
+    padding-top: 0.65rem;
+    border-top: 1px dashed var(--border);
+  }
+
+  .detail-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    margin-bottom: 0.2rem;
+  }
+  .detail-block { margin-bottom: 0.55rem; }
+  .detail-block p { margin: 0; font-size: 0.82rem; line-height: 1.55; color: var(--ink-muted); }
+  .detail-block:last-child { margin-bottom: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .children-grid, .chevron, .node-card, .exam-pill { transition: none !important; animation: none !important; }
+  }
+
+  @media (max-width: 640px) {
+    .node-card, .node-marker .node-card { width: 250px; }
+  }
+</style>
+</head>
+<body>
+
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="icon-chevron" viewBox="0 0 24 24">
+    <polyline points="9,5 16,12 9,19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+  </symbol>
+</svg>
+
+<div class="page">
+  <header class="masthead">
+    <span class="masthead-eyebrow">SƠ ĐỒ TƯ DUY · TỰ ĐỘNG DỰNG TỪ PHÂN PHỐI CHƯƠNG TRÌNH</span>
+    <h1 class="masthead-title">Lộ Trình Giáo Dục Địa Phương 10</h1>
+    <p class="masthead-sub" id="mastheadSub"></p>
+  </header>
+
+  <section class="exam-strip" id="examStrip" aria-label="Lịch kiểm tra định kỳ dự kiến"></section>
+
+  <div class="toolbar">
+    <div class="legend">
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--accent-1)"></span>Học kỳ 1 (GHK1 · CHK1)</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--accent-2)"></span>Học kỳ 2 (GHK2 · CHK2)</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--accent-exam)"></span>Kiểm tra định kỳ</span>
+    </div>
+    <div class="controls">
+      <button class="ctrl-btn" id="expandAllBtn" type="button">Mở rộng tất cả</button>
+      <button class="ctrl-btn" id="collapseAllBtn" type="button">Thu gọn tất cả</button>
+    </div>
+  </div>
+
+  <div class="canvas-wrap" id="canvasWrap">
+    <svg class="connectors" id="connectors"></svg>
+    <div class="tree" id="tree"></div>
+  </div>
+</div>
+
+<script>
+const DATA = {"meta":{"title":"Giáo dục địa phương 10","subtitle":"Kế hoạch bài dạy 2026–2027","span":"36 tuần · 1 tiết/tuần","lessonCount":31},"topics":{"1":"Biến đổi khí hậu và phòng, chống thiên tai ở Thành phố Hồ Chí Minh","2":"Đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh","3":"Văn học dân gian Thành phố Hồ Chí Minh","4":"Chân dung nhân vật nghệ thuật ở Thành phố Hồ Chí Minh","5":"Ô nhiễm môi trường ở Thành phố Hồ Chí Minh","6":"Định hướng nghề nghiệp"},"periods":[{"id":"p-ghk1","code":"GHK1","title":"Trước kiểm tra giữa học kỳ 1","exam":{"label":"ÔN TẬP KIỂM TRA GIỮA KỲ I","date":"Tuần 8/Hk1","tiet":"8","tuan":8},"items":[{"type":"lesson","id":"l-1","date":"Tuần 1/Hk1","tiet":"1","tuan":1,"title":"Giới thiệu giáo dục địa phương 10. Phương pháp dạy học bộ môn.","content":null},{"type":"lesson","id":"l-2","date":"Tuần 2/Hk1","tiet":"2","tuan":2,"topic":"1","topicName":"Biến đổi khí hậu và phòng, chống thiên tai ở Thành phố Hồ Chí Minh","title":"Nội dung 1: Đặc điểm khí hậu ở Thành phố Hồ Chí Minh.","content":"Đặc điểm khí hậu ở Thành phố Hồ Chí Minh."},{"type":"lesson","id":"l-3","date":"Tuần 3/Hk1","tiet":"3","tuan":3,"topic":"1","topicName":"Biến đổi khí hậu và phòng, chống thiên tai ở Thành phố Hồ Chí Minh","title":"Nội dung 2: Biểu hiện và nguyên nhân của biến đổi khí hậu ở Thành phố Hồ Chí Minh.","content":"Biểu hiện và nguyên nhân của biến đổi khí hậu ở Thành phố Hồ Chí Minh."},{"type":"lesson","id":"l-4","date":"Tuần 4/Hk1","tiet":"4","tuan":4,"topic":"1","topicName":"Biến đổi khí hậu và phòng, chống thiên tai ở Thành phố Hồ Chí Minh","title":"Nội dung 3: Biểu hiện và nguyên nhân của biến đổi khí hậu ở Thành phố Hồ Chí Minh (TT).","content":"Biểu hiện và nguyên nhân của biến đổi khí hậu ở Thành phố Hồ Chí Minh (TT)."},{"type":"lesson","id":"l-5","date":"Tuần 5/Hk1","tiet":"5","tuan":5,"topic":"1","topicName":"Biến đổi khí hậu và phòng, chống thiên tai ở Thành phố Hồ Chí Minh","title":"Nội dung 4: Tác động của thiên tai và biến đổi khí hậu ở Thành phố Hồ Chí Minh.","content":"Tác động của thiên tai và biến đổi khí hậu ở Thành phố Hồ Chí Minh."},{"type":"lesson","id":"l-6","date":"Tuần 6/Hk1","tiet":"6","tuan":6,"topic":"1","topicName":"Biến đổi khí hậu và phòng, chống thiên tai ở Thành phố Hồ Chí Minh","title":"Nội dung 5: Truyền thông giảm thiểu hiệu ứng nhà kính và ứng phó với biến đổi khí hậu ở Thành phố Hồ Chí Minh.","content":"Truyền thông giảm thiểu hiệu ứng nhà kính và ứng phó với biến đổi khí hậu ở Thành phố Hồ Chí Minh."},{"type":"lesson","id":"l-7","date":"Tuần 7/Hk1","tiet":"7","tuan":7,"topic":"2","topicName":"Đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh","title":"Nội dung 1: Tìm hiểu một số nghi lễ dân gian thể hiện đạo lí “Uống nước nhớ nguồn” ở Thành phố Hồ Chí Minh.","content":"Tìm hiểu một số nghi lễ dân gian thể hiện đạo lí “Uống nước nhớ nguồn” ở Thành phố Hồ Chí Minh."}]},{"id":"p-chk1","code":"CHK1","title":"Trước kiểm tra học kỳ 1","exam":{"label":"ÔN TẬP VÀ KIỂM TRA HK1","date":"Tuần 16/Hk1","tiet":"16","tuan":16},"items":[{"type":"lesson","id":"l-9","date":"Tuần 9/Hk1","tiet":"9","tuan":9,"topic":"2","topicName":"Đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh","title":"Nội dung 2: Tìm hiểu một số nghi lễ dân gian thể hiện đạo lí “Uống nước nhớ nguồn” ở Thành phố Hồ Chí Minh (TT).","content":"Tìm hiểu một số nghi lễ dân gian thể hiện đạo lí “Uống nước nhớ nguồn” ở Thành phố Hồ Chí Minh (TT)."},{"type":"lesson","id":"l-10","date":"Tuần 10/Hk1","tiet":"10","tuan":10,"topic":"2","topicName":"Đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh","title":"Nội dung 3: Tìm hiểu một số nghi lễ dân gian thể hiện đạo lí “Uống nước nhớ nguồn” ở Thành phố Hồ Chí Minh (TT).","content":"Tìm hiểu một số nghi lễ dân gian thể hiện đạo lí “Uống nước nhớ nguồn” ở Thành phố Hồ Chí Minh (TT)."},{"type":"lesson","id":"l-11","date":"Tuần 11/Hk1","tiet":"11","tuan":11,"topic":"2","topicName":"Đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh","title":"Nội dung 4: Bảo tồn và phát huy đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh.","content":"Bảo tồn và phát huy đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh."},{"type":"lesson","id":"l-12","date":"Tuần 12/Hk1","tiet":"12","tuan":12,"topic":"2","topicName":"Đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh","title":"Nội dung 5: Bảo tồn và phát huy đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh (TT).","content":"Bảo tồn và phát huy đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh (TT)."},{"type":"lesson","id":"l-13","date":"Tuần 13/Hk1","tiet":"13","tuan":13,"topic":"2","topicName":"Đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh","title":"Nội dung 6: Bảo tồn và phát huy đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh (TT).","content":"Bảo tồn và phát huy đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh (TT)."},{"type":"lesson","id":"l-14","date":"Tuần 14/Hk1","tiet":"14","tuan":14,"topic":"2","topicName":"Đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh","title":"Nội dung 7: Bảo tồn và phát huy đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh (TT).","content":"Bảo tồn và phát huy đạo lí “Uống nước nhớ nguồn” qua các nghi lễ dân gian ở Thành phố Hồ Chí Minh (TT)."},{"type":"lesson","id":"l-15","date":"Tuần 15/Hk1","tiet":"15","tuan":15,"topic":"3","topicName":"Văn học dân gian Thành phố Hồ Chí Minh","title":"Nội dung 1: Đặc trưng của văn học dân gian Thành phố Hồ Chí Minh - KTTT HK1","content":"Đặc trưng của văn học dân gian Thành phố Hồ Chí Minh - KTTT HK1"}]},{"id":"p-ghk2","code":"GHK2","title":"Trước kiểm tra giữa học kỳ 2","exam":{"label":"ÔN TẬP KIỂM TRA GIỮA KỲ II","date":"Tuần 07/Hk2","tiet":"25","tuan":25},"items":[{"type":"lesson","id":"l-17","date":"Tuần 17/Hk1","tiet":"17","tuan":17,"topic":"3","topicName":"Văn học dân gian Thành phố Hồ Chí Minh","title":"Nội dung 2: Một số thể loại văn học dân gian Thành phố Hồ Chí Minh","content":"Một số thể loại văn học dân gian Thành phố Hồ Chí Minh"},{"type":"lesson","id":"l-18","date":"Tuần 18/Hk1","tiet":"18","tuan":18,"topic":"3","topicName":"Văn học dân gian Thành phố Hồ Chí Minh","title":"Nội dung 3: Ảnh hưởng của văn học dân gian đến sự phát triển của văn học viết ở Thành phố Hồ Chí Minh","content":"Ảnh hưởng của văn học dân gian đến sự phát triển của văn học viết ở Thành phố Hồ Chí Minh"},{"type":"lesson","id":"l-19","date":"Tuần 01/Hk2","tiet":"19","tuan":19,"topic":"4","topicName":"Chân dung nhân vật nghệ thuật ở Thành phố Hồ Chí Minh","title":"Nội dung 1: Một số nhân vật nghệ thuật ở Thành phố Hồ Chí Minh.","content":"Một số nhân vật nghệ thuật ở Thành phố Hồ Chí Minh."},{"type":"lesson","id":"l-20","date":"Tuần 02/Hk2","tiet":"20","tuan":20,"topic":"4","topicName":"Chân dung nhân vật nghệ thuật ở Thành phố Hồ Chí Minh","title":"Nội dung 2: Một số nhân vật nghệ thuật ở Thành phố Hồ Chí Minh (TT)","content":"Một số nhân vật nghệ thuật ở Thành phố Hồ Chí Minh (TT)"},{"type":"lesson","id":"l-21","date":"Tuần 03/Hk2","tiet":"21","tuan":21,"topic":"4","topicName":"Chân dung nhân vật nghệ thuật ở Thành phố Hồ Chí Minh","title":"Nội dung 3: Một số nhân vật nghệ thuật ở Thành phố Hồ Chí Minh (TT).","content":"Một số nhân vật nghệ thuật ở Thành phố Hồ Chí Minh (TT)."},{"type":"lesson","id":"l-22","date":"Tuần 04/Hk2","tiet":"22","tuan":22,"topic":"4","topicName":"Chân dung nhân vật nghệ thuật ở Thành phố Hồ Chí Minh","title":"Nội dung 4: Một số tác phẩm nghệ thuật.","content":"Một số tác phẩm nghệ thuật."},{"type":"lesson","id":"l-23","date":"Tuần 05/Hk2","tiet":"23","tuan":23,"topic":"4","topicName":"Chân dung nhân vật nghệ thuật ở Thành phố Hồ Chí Minh","title":"Nội dung 5: Một số tác phẩm nghệ thuật (TT)","content":"Một số tác phẩm nghệ thuật (TT)"},{"type":"lesson","id":"l-24","date":"Tuần 06/Hk2","tiet":"24","tuan":24,"topic":"4","topicName":"Chân dung nhân vật nghệ thuật ở Thành phố Hồ Chí Minh","title":"Nội dung 6: Một số tác phẩm nghệ thuật (TT)","content":"Một số tác phẩm nghệ thuật (TT)"}]},{"id":"p-chk2","code":"CHK2","title":"Trước kiểm tra học kỳ 2","exam":{"label":"ÔN TẬP VÀ KIỂM TRA HKII","date":"Tuần 15/Hk2","tiet":"33","tuan":33},"items":[{"type":"lesson","id":"l-26","date":"Tuần 08/Hk2","tiet":"26","tuan":26,"topic":"5","topicName":"Ô nhiễm môi trường ở Thành phố Hồ Chí Minh","title":"Nội dung 1: Thực trạng ô nhiễm môi trường ở Thành phố Hồ Chí Minh.","content":"Thực trạng ô nhiễm môi trường ở Thành phố Hồ Chí Minh."},{"type":"lesson","id":"l-27","date":"Tuần 09/Hk2","tiet":"27","tuan":27,"topic":"5","topicName":"Ô nhiễm môi trường ở Thành phố Hồ Chí Minh","title":"Nội dung 2: Tác động của ô nhiễm môi trường đối với sự phát triển kinh tế – xã hội ở địa phương","content":"Tác động của ô nhiễm môi trường đối với sự phát triển kinh tế – xã hội ở địa phương"},{"type":"lesson","id":"l-28","date":"Tuần 10/Hk2","tiet":"28","tuan":28,"topic":"5","topicName":"Ô nhiễm môi trường ở Thành phố Hồ Chí Minh","title":"Nội dung 3: Tác động của ô nhiễm môi trường đối với sự phát triển kinh tế – xã hội ở địa phương (TT)","content":"Tác động của ô nhiễm môi trường đối với sự phát triển kinh tế – xã hội ở địa phương (TT)"},{"type":"lesson","id":"l-29","date":"Tuần 11/Hk2","tiet":"29","tuan":29,"topic":"5","topicName":"Ô nhiễm môi trường ở Thành phố Hồ Chí Minh","title":"Nội dung 4: Các giải pháp bảo vệ môi trường","content":"Các giải pháp bảo vệ môi trường"},{"type":"lesson","id":"l-30","date":"Tuần 12/Hk2","tiet":"30","tuan":30,"topic":"5","topicName":"Ô nhiễm môi trường ở Thành phố Hồ Chí Minh","title":"Nội dung 5: Các giải pháp bảo vệ môi trường (TT)","content":"Các giải pháp bảo vệ môi trường (TT)"},{"type":"lesson","id":"l-31","date":"Tuần 13/Hk2","tiet":"31","tuan":31,"topic":"6","topicName":"Định hướng nghề nghiệp","title":"Nội dung 1: Yêu cầu chung của thị trường lao động Thành phố Hồ Chí Minh","content":"Yêu cầu chung của thị trường lao động Thành phố Hồ Chí Minh"},{"type":"marker","title":"KTTT HK2","date":"Tuần 14/Hk2","tuan":32}]},{"id":"p-sauchk2","code":"SAU CHK2","title":"Sau kiểm tra học kỳ 2","exam":null,"items":[{"type":"lesson","id":"l-34","date":"Tuần 16/Hk2","tiet":"34","tuan":34,"topic":"6","topicName":"Định hướng nghề nghiệp","title":"Nội dung 2: Yêu cầu chung của thị trường lao động Thành phố Hồ Chí Minh (TT)","content":"Yêu cầu chung của thị trường lao động Thành phố Hồ Chí Minh (TT)"},{"type":"lesson","id":"l-35","date":"Tuần 17/Hk2","tiet":"35","tuan":35,"topic":"6","topicName":"Định hướng nghề nghiệp","title":"Nội dung 3: Tự khám phá bản thân và tìm hiểu nghề nghiệp","content":"Tự khám phá bản thân và tìm hiểu nghề nghiệp"},{"type":"lesson","id":"l-36","date":"Dự trữ (24/05 - 29/05)","tiet":"36","tuan":36,"topic":"6","topicName":"Định hướng nghề nghiệp","title":"Nội dung 4: Tự khám phá bản thân và tìm hiểu nghề nghiệp (TT)","content":"Tự khám phá bản thân và tìm hiểu nghề nghiệp (TT)"}]}]};
+
+const state = {};
+const connections = [];
+const wrap = document.getElementById('canvasWrap');
+const svg = document.getElementById('connectors');
+const treeEl = document.getElementById('tree');
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+function renderLessonDetail(lesson) {
+  const wrapEl = el('div', 'lesson-detail');
+
+  if (lesson.topicName) {
+    const block = el('div', 'detail-block');
+    block.appendChild(el('span', 'detail-label', 'Chủ đề'));
+    block.appendChild(el('p', null, lesson.topicName));
+    wrapEl.appendChild(block);
+  }
+
+  if (lesson.content) {
+    const block = el('div', 'detail-block');
+    block.appendChild(el('span', 'detail-label', 'Nội dung'));
+    block.appendChild(el('p', null, lesson.content));
+    wrapEl.appendChild(block);
+  }
+
+  return wrapEl;
+}
+
+function makeToggleCard(id, accentVar, headContent, detailBuilder) {
+  const card = el('div', 'node-card clickable');
+  card.dataset.id = id;
+  card.style.setProperty('--accent', accentVar);
+  card.tabIndex = 0;
+  card.setAttribute('role', 'button');
+  card.appendChild(headContent);
+
+  const grid = el('div', 'children-grid');
+  const inner = el('div', 'children-inner');
+  const detail = detailBuilder(card);
+  inner.appendChild(detail);
+  grid.appendChild(inner);
+
+  state[id] = false;
+
+  function apply() {
+    card.classList.toggle('open', state[id]);
+    grid.classList.toggle('open', state[id]);
+  }
+  function toggle() {
+    state[id] = !state[id];
+    apply();
+    scheduleRedraw();
+  }
+  card.addEventListener('click', toggle);
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+  });
+  apply();
+
+  return { card, grid };
+}
+
+function buildLessonNode(lesson, accentVar) {
+  const head = el('div');
+
+  if (lesson.topic) {
+    const kicker = el('span', 'topic-tag');
+    kicker.appendChild(el('span', 'topic-dot'));
+    kicker.appendChild(document.createTextNode('Chủ đề ' + lesson.topic));
+    if (DATA.topics[lesson.topic]) kicker.title = DATA.topics[lesson.topic];
+    head.appendChild(kicker);
+  }
+
+  const headRow = el('div', 'node-head');
+  const titleWrap = el('div');
+  titleWrap.appendChild(el('p', 'node-title', lesson.title));
+  const sub = el('div', 'node-sub');
+  sub.textContent = (lesson.date || '') + (lesson.tiet ? '  ·  Tiết ' + lesson.tiet : '');
+  titleWrap.appendChild(sub);
+  headRow.appendChild(titleWrap);
+  const chev = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  chev.setAttribute('class', 'chevron');
+  chev.innerHTML = '<use href="#icon-chevron"></use>';
+  headRow.appendChild(chev);
+  head.appendChild(headRow);
+
+  const { card, grid } = makeToggleCard(lesson.id, accentVar, head, () => renderLessonDetail(lesson));
+
+  const row = el('div', 'node');
+  row.appendChild(card);
+  row.appendChild(grid);
+  return row;
+}
+
+function buildMarkerNode(marker) {
+  const row = el('div', 'node node-marker');
+  const card = el('div', 'node-card');
+  card.appendChild(el('p', 'node-title', marker.title));
+  const sub = el('div', 'node-sub', marker.date || '');
+  card.appendChild(sub);
+  row.appendChild(card);
+  return row;
+}
+
+function buildPeriodNode(period, accentVar) {
+  const head = el('div');
+  const kicker = el('span', 'node-kicker', period.code);
+  head.appendChild(kicker);
+
+  const headRow = el('div', 'node-head');
+  const titleWrap = el('div');
+  titleWrap.appendChild(el('p', 'node-title', period.title));
+  const lessonCount = period.items.filter(it => it.type === 'lesson').length;
+  titleWrap.appendChild(el('div', 'node-count', lessonCount + ' bài học'));
+  headRow.appendChild(titleWrap);
+  const chev = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  chev.setAttribute('class', 'chevron');
+  chev.innerHTML = '<use href="#icon-chevron"></use>';
+  headRow.appendChild(chev);
+  head.appendChild(headRow);
+
+  if (period.exam) {
+    const badge = el('div', 'exam-badge');
+    badge.appendChild(el('span', 'exam-badge-label', period.exam.label));
+    badge.appendChild(el('span', 'exam-badge-date', period.exam.date + (period.exam.tiet ? ' · Tiết ' + period.exam.tiet : '')));
+    head.appendChild(badge);
+  }
+
+  const { card, grid } = makeToggleCard(period.id, accentVar, head, (selfCard) => {
+    const list = el('div', 'children-list');
+    period.items.forEach(it => {
+      const node = it.type === 'lesson' ? buildLessonNode(it, accentVar) : buildMarkerNode(it);
+      list.appendChild(node);
+      if (it.type === 'lesson') {
+        connections.push({ parent: selfCard, child: node.querySelector('.node-card') });
+      }
+    });
+    const holder = el('div');
+    holder.appendChild(list);
+    return holder;
+  });
+
+  const row = el('div', 'node');
+  row.appendChild(card);
+  row.appendChild(grid);
+  return { row, card };
+}
+
+function buildTree() {
+  const rootRow = el('div', 'node node-root');
+  const rootCard = el('div', 'node-card node-card-root open');
+  rootCard.style.setProperty('--accent', 'var(--ink-faint)');
+  rootCard.appendChild(el('p', 'node-title', DATA.meta.title));
+  rootCard.appendChild(el('div', 'node-sub', DATA.meta.subtitle));
+  rootCard.appendChild(el('div', 'node-count', DATA.meta.span + '  ·  ' + DATA.meta.lessonCount + ' bài học'));
+  rootRow.appendChild(rootCard);
+
+  const rootGrid = el('div', 'children-grid open');
+  const rootInner = el('div', 'children-inner');
+  const rootList = el('div', 'children-list');
+
+  DATA.periods.forEach((period, i) => {
+    const accentVar = (period.code === 'GHK1' || period.code === 'CHK1') ? 'var(--accent-1)' : 'var(--accent-2)';
+    const { row, card } = buildPeriodNode(period, accentVar);
+    rootList.appendChild(row);
+    connections.push({ parent: rootCard, child: card });
+    if (i === 0) {
+      state[period.id] = true;
+      card.classList.add('open');
+      row.querySelector('.children-grid').classList.add('open');
+    }
+  });
+
+  rootInner.appendChild(rootList);
+  rootGrid.appendChild(rootInner);
+  rootRow.appendChild(rootGrid);
+  treeEl.appendChild(rootRow);
+}
+
+function buildExamStrip() {
+  const stripEl = document.getElementById('examStrip');
+  DATA.periods.forEach(period => {
+    if (!period.exam) return;
+    const btn = el('button', 'exam-pill');
+    btn.type = 'button';
+    btn.appendChild(el('span', 'exam-pill-kicker', period.code));
+    btn.appendChild(el('span', 'exam-pill-date', period.exam.date));
+    btn.addEventListener('click', () => jumpTo(period.id));
+    stripEl.appendChild(btn);
+  });
+}
+
+function jumpTo(nodeId) {
+  const card = document.querySelector('[data-id="' + nodeId + '"]');
+  if (!card) return;
+  if (!state[nodeId]) {
+    state[nodeId] = true;
+    card.classList.add('open');
+    card.parentElement.querySelector('.children-grid').classList.add('open');
+    scheduleRedraw(500);
+  }
+  card.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+  card.classList.remove('flash');
+  void card.offsetWidth;
+  card.classList.add('flash');
+  setTimeout(() => card.classList.remove('flash'), 1200);
+}
+
+function pathFor(sx, sy, ex, ey) {
+  const mx = (sx + ex) / 2;
+  return 'M ' + sx + ',' + sy + ' C ' + mx + ',' + sy + ' ' + mx + ',' + ey + ' ' + ex + ',' + ey;
+}
+
+function drawConnectors() {
+  const wrapRect = wrap.getBoundingClientRect();
+  const scrollW = treeEl.scrollWidth;
+  const scrollH = treeEl.scrollHeight;
+  svg.setAttribute('width', scrollW);
+  svg.setAttribute('height', scrollH);
+  svg.setAttribute('viewBox', '0 0 ' + scrollW + ' ' + scrollH);
+
+  let markup = '';
+  connections.forEach(({ parent, child }) => {
+    const pr = parent.getBoundingClientRect();
+    const cr = child.getBoundingClientRect();
+    if (cr.height < 2 || cr.width < 2) return;
+    const sx = pr.right - wrapRect.left + wrap.scrollLeft;
+    const sy = pr.top + pr.height / 2 - wrapRect.top + wrap.scrollTop;
+    const ex = cr.left - wrapRect.left + wrap.scrollLeft;
+    const ey = cr.top + cr.height / 2 - wrapRect.top + wrap.scrollTop;
+    const color = (getComputedStyle(parent).getPropertyValue('--accent') || '').trim() || 'var(--ink-faint)';
+    markup += '<path d="' + pathFor(sx, sy, ex, ey) + '" fill="none" stroke="' + color + '" stroke-width="1.75" stroke-linecap="round" opacity="0.85"></path>';
+  });
+  svg.innerHTML = markup;
+}
+
+let redrawRAF = null;
+function scheduleRedraw(duration) {
+  duration = duration || 420;
+  const start = performance.now();
+  if (redrawRAF) cancelAnimationFrame(redrawRAF);
+  function step(t) {
+    drawConnectors();
+    if (t - start < duration) {
+      redrawRAF = requestAnimationFrame(step);
+    } else {
+      redrawRAF = null;
+      drawConnectors();
+    }
+  }
+  redrawRAF = requestAnimationFrame(step);
+}
+
+document.getElementById('expandAllBtn').addEventListener('click', () => {
+  Object.keys(state).forEach(id => state[id] = true);
+  document.querySelectorAll('.node-card.clickable').forEach(c => c.classList.add('open'));
+  document.querySelectorAll('.children-grid').forEach(g => g.classList.add('open'));
+  scheduleRedraw(600);
+});
+
+document.getElementById('collapseAllBtn').addEventListener('click', () => {
+  Object.keys(state).forEach(id => state[id] = false);
+  document.querySelectorAll('.node-card.clickable').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.children-grid').forEach(g => g.classList.remove('open'));
+  scheduleRedraw(600);
+});
+
+buildTree();
+buildExamStrip();
+document.getElementById('mastheadSub').textContent =
+  'Sơ đồ tư duy tương tác dựng từ PPCT_GDDP KHỐI 10 NH 26-27.xlsx — ' + DATA.meta.lessonCount + ' bài học, ' + DATA.meta.span + '. Bấm vào từng nhánh để mở rộng hoặc thu gọn; bấm mốc kiểm tra phía trên để nhảy tới nhánh tương ứng.';
+
+window.addEventListener('resize', () => scheduleRedraw(200));
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => scheduleRedraw(300));
+}
+scheduleRedraw(700);
+</script>
+</body>
+</html>
