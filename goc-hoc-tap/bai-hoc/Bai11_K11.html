@@ -297,6 +297,26 @@
                 <p>Hãy tưởng tượng trường học lưu trữ điểm bằng sổ giấy: giáo viên môn Toán có một cuốn sổ điểm riêng, giáo viên chủ nhiệm lại có thêm một cuốn sổ tổng hợp điểm của cả lớp. Cùng một thông tin — điểm của một học sinh — bị ghi chép và lưu trữ ở <strong>hai nơi khác nhau</strong>.</p>
                 <p>Nếu kì thi vừa rồi một học sinh được phúc khảo từ 8 lên 9 điểm môn Toán, giáo viên Toán sửa lại trong sổ của mình nhưng quên báo cho giáo viên chủ nhiệm — sổ điểm lớp vẫn ghi 8. Điều gì sẽ xảy ra khi nhà trường tính điểm tổng kết?</p>
                 <p style="color: var(--text-light); font-size: 0.9rem;"><em>Gợi ý: Dữ liệu đang bị lưu trữ lặp lại ở nhiều nơi khác nhau — đây chính là mầm mống của sự <strong>không nhất quán dữ liệu</strong> mà bài học sẽ giải thích ở Mục "Yêu cầu dữ liệu".</em></p>
+
+                <div class="sim-container" style="max-width:560px; margin: 1.5rem auto;">
+                    <h4 style="color:var(--primary-dark); margin-bottom:0.8rem; text-align:center;"><i class="fa-solid fa-flask"></i> Mô phỏng nhanh: Thử tự tay phúc khảo điểm</h4>
+                    <div style="display:flex; gap:1.2rem; flex-wrap:wrap; justify-content:center; margin: 1rem 0;">
+                        <div style="flex:1; min-width:160px; background:var(--surface); border:2px solid var(--primary); border-radius:10px; padding:1rem; text-align:center;">
+                            <div style="font-weight:700; color:var(--primary-dark); margin-bottom:0.5rem;">Sổ điểm Toán</div>
+                            <div id="quick-sim-toan" style="font-size:2rem; font-weight:700; color:var(--primary);">8</div>
+                        </div>
+                        <div style="flex:1; min-width:160px; background:var(--surface); border:2px solid var(--border); border-radius:10px; padding:1rem; text-align:center;">
+                            <div style="font-weight:700; color:var(--text); margin-bottom:0.5rem;">Sổ điểm Lớp</div>
+                            <div id="quick-sim-lop" style="font-size:2rem; font-weight:700; color:var(--text);">8</div>
+                        </div>
+                    </div>
+                    <div style="text-align:center;">
+                        <button type="button" class="btn btn-accent" id="btn-quick-sim-fix">Giáo viên Toán phúc khảo: Sửa thành 9</button>
+                        <button type="button" class="btn btn-outline" id="btn-quick-sim-reset" style="margin-left:0.5rem;">Đặt lại</button>
+                    </div>
+                    <div id="quick-sim-feedback" style="margin-top:1rem; text-align:center; font-weight:600; min-height:1.5rem;"></div>
+                </div>
+
                 <p style="margin-top: 1.5rem;">Việc lưu trữ dữ liệu bằng máy tính không chỉ đơn thuần là gõ lại văn bản trên giấy. Cần phải tổ chức một cách khoa học để giải quyết vấn đề trên, đó chính là vai trò của <strong>Cơ sở dữ liệu (CSDL)</strong>.</p>
             </section>
 
@@ -753,6 +773,38 @@ Tệp "Bảng điểm môn học" (4 ĐĐG TX, 1 ĐĐG GK, 1 ĐĐG CK):
                     onFound();
                 }
             });
+        });
+    </script>
+
+    <!-- Script 1e: Mô phỏng nhanh Khởi động — Thử tự tay phúc khảo điểm -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const quickSimToan = document.getElementById('quick-sim-toan');
+            const quickSimFeedback = document.getElementById('quick-sim-feedback');
+            const btnQuickSimFix = document.getElementById('btn-quick-sim-fix');
+            const btnQuickSimReset = document.getElementById('btn-quick-sim-reset');
+            if (!quickSimToan || !btnQuickSimFix) return;
+
+            btnQuickSimFix.addEventListener('click', () => {
+                quickSimToan.textContent = '9';
+                quickSimToan.style.color = 'var(--success)';
+                if (quickSimFeedback) {
+                    quickSimFeedback.style.color = 'var(--error)';
+                    quickSimFeedback.innerHTML = '⚠️ Không khớp! Sổ điểm Toán đã sửa thành 9, nhưng Sổ điểm Lớp vẫn ghi 8 vì không ai cập nhật nó theo.';
+                }
+                btnQuickSimFix.disabled = true;
+            });
+
+            if (btnQuickSimReset) {
+                btnQuickSimReset.addEventListener('click', () => {
+                    quickSimToan.textContent = '8';
+                    quickSimToan.style.color = 'var(--primary)';
+                    if (quickSimFeedback) {
+                        quickSimFeedback.textContent = '';
+                    }
+                    btnQuickSimFix.disabled = false;
+                });
+            }
         });
     </script>
 

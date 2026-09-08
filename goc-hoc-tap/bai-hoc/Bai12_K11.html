@@ -402,6 +402,16 @@
         .sim-arrow { font-size: 28px; color: var(--primary-light); font-weight: bold; }
         @media (max-width: 700px) { .sim-arrow { transform: rotate(90deg); margin: 0 auto; } }
 
+        /* Mô phỏng: Ghép phần mềm cho từng loại dữ liệu (Khởi động) */
+        .match-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; min-width: 190px; flex: 1; text-align: left; }
+        .match-card-title { font-weight: 700; margin-bottom: 10px; color: var(--text); }
+        .match-card-options { display: flex; flex-direction: column; gap: 8px; }
+        .match-choice { width: 100%; justify-content: center; font-size: 13px; padding: 8px 12px; }
+        .match-choice.correct { background: var(--success) !important; color: #fff !important; }
+        .match-choice.wrong { background: var(--error) !important; color: #fff !important; animation: matchShake 0.3s; }
+        @keyframes matchShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+        .match-card.solved { opacity: 0.85; }
+
         /* Minh hoạ SVG chèn trong bài học */
         .illustration-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin: 20px 0; }
         .illustration-card svg { width: 100%; max-width: 420px; height: auto; display: block; margin: 0 auto; }
@@ -482,6 +492,37 @@
                 <text x="345" y="157" text-anchor="middle" font-size="10" fill="var(--text-light)" font-family="'Be Vietnam Pro', sans-serif">→ Hệ QTCSDL cần gì?</text>
             </svg>
             <p class="illustration-caption">Văn bản có phần mềm soạn thảo, bảng tính có phần mềm bảng tính riêng — vậy để làm việc với dữ liệu trong CSDL, cần một phần mềm đáp ứng những yêu cầu nào?</p>
+        </div>
+
+        <div class="illustration-card" style="text-align:center;">
+            <h4 style="color:var(--primary-dark); margin-bottom:14px;"><i class="fa-solid fa-puzzle-piece"></i> Mô phỏng: Ghép đúng phần mềm cho từng loại dữ liệu</h4>
+            <div id="match-game" style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">
+                <div class="match-card" data-answer="word">
+                    <div class="match-card-title">📄 Văn bản</div>
+                    <div class="match-card-options">
+                        <button type="button" class="btn btn-secondary match-choice" data-choice="sheet">Phần mềm bảng tính</button>
+                        <button type="button" class="btn btn-secondary match-choice" data-choice="word">Phần mềm soạn thảo</button>
+                        <button type="button" class="btn btn-secondary match-choice" data-choice="dbms">Hệ QTCSDL</button>
+                    </div>
+                </div>
+                <div class="match-card" data-answer="sheet">
+                    <div class="match-card-title">📊 Bảng tính</div>
+                    <div class="match-card-options">
+                        <button type="button" class="btn btn-secondary match-choice" data-choice="dbms">Hệ QTCSDL</button>
+                        <button type="button" class="btn btn-secondary match-choice" data-choice="sheet">Phần mềm bảng tính</button>
+                        <button type="button" class="btn btn-secondary match-choice" data-choice="word">Phần mềm soạn thảo</button>
+                    </div>
+                </div>
+                <div class="match-card" data-answer="dbms">
+                    <div class="match-card-title">🗄️ Dữ liệu CSDL</div>
+                    <div class="match-card-options">
+                        <button type="button" class="btn btn-secondary match-choice" data-choice="word">Phần mềm soạn thảo</button>
+                        <button type="button" class="btn btn-secondary match-choice" data-choice="dbms">Hệ QTCSDL</button>
+                        <button type="button" class="btn btn-secondary match-choice" data-choice="sheet">Phần mềm bảng tính</button>
+                    </div>
+                </div>
+            </div>
+            <div id="match-game-feedback" style="margin-top:16px; font-weight:600; color:var(--primary-dark);"></div>
         </div>
 
         <div class="card-highlight">
@@ -909,6 +950,37 @@ WHERE ma_nv = 'NV02';</textarea>
         });
 
         renderQuestion();
+    })();
+</script>
+
+<!-- Mô phỏng Khởi động: Ghép phần mềm cho từng loại dữ liệu -->
+<script>
+    (function initMatchGame() {
+        const cards = document.querySelectorAll('.match-card');
+        const feedback = document.getElementById('match-game-feedback');
+        if (!cards.length) return;
+        let solvedCount = 0;
+        cards.forEach(card => {
+            const answer = card.dataset.answer;
+            const buttons = card.querySelectorAll('.match-choice');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (card.classList.contains('solved')) return;
+                    if (btn.dataset.choice === answer) {
+                        btn.classList.add('correct');
+                        buttons.forEach(b => b.disabled = true);
+                        card.classList.add('solved');
+                        solvedCount++;
+                        if (solvedCount === cards.length && feedback) {
+                            feedback.innerHTML = '🎉 Chính xác cả 3! Mỗi loại dữ liệu cần một phần mềm chuyên dụng — vậy để làm việc với CSDL, ta cần một <strong>Hệ quản trị CSDL (Hệ QTCSDL)</strong>. Hãy khám phá tiếp bài học!';
+                        }
+                    } else {
+                        btn.classList.add('wrong');
+                        setTimeout(() => btn.classList.remove('wrong'), 400);
+                    }
+                });
+            });
+        });
     })();
 </script>
 </body>

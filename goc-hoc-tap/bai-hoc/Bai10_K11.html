@@ -719,7 +719,28 @@
                 <p>Các công việc quản lí trong thực tế rất đa dạng: quản lí nhân viên, tài chính, thiết bị tại các cơ quan, tổ chức; quản lí chỗ ngồi trên chuyến bay tại các phòng bán vé; quản lí hồ sơ bệnh án tại bệnh viện; quản lí học sinh và kết quả học tập trong các trường học.</p>
                 <p>Để quản lí kết quả học tập, như em biết, phải quản lí điểm của từng môn học bao gồm điểm đánh giá (ĐĐG) thường xuyên, ĐĐG giữa kì, ĐĐG cuối kì,...</p>
             </div>
-            
+
+            <div class="sim-container">
+                <h4 style="color: var(--primary-dark); margin-bottom: 12px;"><i class="fa-solid fa-magnifying-glass"></i> Mô phỏng: Tìm điểm học sinh — sổ giấy hay máy tính?</h4>
+                <p style="margin-bottom: 16px;">Giả sử em cần tìm điểm trung bình của bạn <strong>Nguyễn Kì Duyên</strong> trong danh sách lớp dưới đây. Hãy thử cả hai cách tìm kiếm rồi so sánh xem cách nào nhanh hơn!</p>
+
+                <div class="sim-controls">
+                    <button type="button" class="btn" id="btn-manual-search"><i class="fa-solid fa-book-open"></i> Tìm thủ công (giở từng dòng sổ)</button>
+                    <button type="button" class="btn btn-accent" id="btn-auto-search"><i class="fa-solid fa-bolt"></i> Tìm bằng máy tính (CSDL)</button>
+                    <button type="button" class="btn btn-secondary" id="btn-search-reset"><i class="fa-solid fa-rotate-left"></i> Đặt lại</button>
+                </div>
+
+                <div class="sim-display">
+                    <table class="data-table" id="search-sim-table">
+                        <thead>
+                            <tr><th>STT</th><th>Họ và tên</th><th>Lớp</th><th>Điểm TB</th></tr>
+                        </thead>
+                        <tbody id="search-sim-tbody"></tbody>
+                    </table>
+                    <div id="search-sim-message" style="font-weight: 500; color: var(--primary-dark); margin-top: 12px;">Nhấn một trong hai nút phía trên để bắt đầu tìm kiếm.</div>
+                </div>
+            </div>
+
             <div class="highlight-box">
                 <h3 class="sub-heading" style="margin-top:0;"><i class="fa-solid fa-lightbulb"></i> Câu hỏi dự đoán trước bài học</h3>
                 <p>Theo em, hoạt động ghi chép và quản lí điểm số của học sinh có cần lưu trữ dữ liệu không? Nếu có, đó là những dữ liệu gì và làm sao để khai thác thông tin từ dữ liệu đó phục vụ giáo viên chủ nhiệm và nhà trường?</p>
@@ -1108,6 +1129,94 @@ WHERE toan >= 7.0;
                     }
                 });
             });
+
+            // 0. Mô phỏng Khởi động: Tìm kiếm thủ công vs tự động
+            const searchStudents = [
+                { name: "Bùi Quý Dương", lop: "11A", tb: 6.3 },
+                { name: "Dương Hoàng Anh", lop: "11A", tb: 7.8 },
+                { name: "Đỗ Hồng Dương", lop: "11A", tb: 7.5 },
+                { name: "Hoàng Gia Bảo", lop: "11A", tb: 8.1 },
+                { name: "Lê Minh Khôi", lop: "11A", tb: 6.9 },
+                { name: "Lương Việt Anh", lop: "11A", tb: 5.5 },
+                { name: "Ngô Thanh Trúc", lop: "11A", tb: 7.2 },
+                { name: "Nguyễn Hải Yến", lop: "11A", tb: 8.4 },
+                { name: "Nguyễn Kì Duyên", lop: "11A", tb: 8.8 },
+                { name: "Phạm Thu Hà", lop: "11A", tb: 6.6 },
+                { name: "Trần Anh Tuấn", lop: "11A", tb: 7.0 },
+                { name: "Vũ Ngọc Mai", lop: "11A", tb: 7.9 }
+            ];
+            const searchTargetIndex = searchStudents.findIndex(s => s.name === "Nguyễn Kì Duyên");
+
+            const searchTbody = document.getElementById('search-sim-tbody');
+            const searchMessage = document.getElementById('search-sim-message');
+            const btnManualSearch = document.getElementById('btn-manual-search');
+            const btnAutoSearch = document.getElementById('btn-auto-search');
+            const btnSearchReset = document.getElementById('btn-search-reset');
+
+            function renderSearchTable(highlightIndex, foundIndex) {
+                if (!searchTbody) return;
+                searchTbody.innerHTML = searchStudents.map((s, idx) => {
+                    let style = '';
+                    if (idx === foundIndex) style = 'background:#E8F5E9; font-weight:700; color:#1B5E20;';
+                    else if (idx === highlightIndex) style = 'background:#FFFDF0;';
+                    return `<tr style="${style}"><td>${idx + 1}</td><td>${s.name}</td><td>${s.lop}</td><td>${s.tb}</td></tr>`;
+                }).join('');
+            }
+
+            renderSearchTable(-1, -1);
+
+            let searchTimer = null;
+            let searchRunning = false;
+
+            function setSearchButtonsDisabled(disabled) {
+                if (btnManualSearch) btnManualSearch.disabled = disabled;
+                if (btnAutoSearch) btnAutoSearch.disabled = disabled;
+            }
+
+            function resetSearchSim() {
+                if (searchTimer) clearTimeout(searchTimer);
+                searchRunning = false;
+                setSearchButtonsDisabled(false);
+                renderSearchTable(-1, -1);
+                if (searchMessage) searchMessage.textContent = 'Nhấn một trong hai nút phía trên để bắt đầu tìm kiếm.';
+            }
+
+            if (btnManualSearch) {
+                btnManualSearch.addEventListener('click', () => {
+                    if (searchRunning) return;
+                    searchRunning = true;
+                    setSearchButtonsDisabled(true);
+                    const startTime = performance.now();
+                    let i = 0;
+                    function step() {
+                        const isFound = i === searchTargetIndex;
+                        renderSearchTable(i, isFound ? i : -1);
+                        if (searchMessage) searchMessage.textContent = `Đang giở từng dòng sổ... đã xem qua ${i + 1} học sinh.`;
+                        if (isFound) {
+                            const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+                            if (searchMessage) searchMessage.innerHTML = `✅ Tìm thấy sau khi xem qua <strong>${i + 1}</strong> dòng sổ (mất khoảng ${elapsed} giây mô phỏng). Nếu sổ có hàng trăm học sinh, việc này sẽ càng mất nhiều thời gian!`;
+                            searchRunning = false;
+                            setSearchButtonsDisabled(false);
+                            return;
+                        }
+                        i++;
+                        searchTimer = setTimeout(step, 220);
+                    }
+                    step();
+                });
+            }
+
+            if (btnAutoSearch) {
+                btnAutoSearch.addEventListener('click', () => {
+                    if (searchRunning) return;
+                    renderSearchTable(-1, searchTargetIndex);
+                    if (searchMessage) searchMessage.innerHTML = `⚡ Máy tính tra cứu ngay lập tức trong cơ sở dữ liệu — chưa đến <strong>1 mili-giây</strong>, dù danh sách có bao nhiêu học sinh đi nữa!`;
+                });
+            }
+
+            if (btnSearchReset) {
+                btnSearchReset.addEventListener('click', resetSearchSim);
+            }
 
             // Dự đoán khởi động
             const btnSavePred = document.getElementById('btn-save-prediction');
