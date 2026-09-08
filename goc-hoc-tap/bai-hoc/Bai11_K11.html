@@ -134,6 +134,11 @@
         .module-diagram { margin: 1.2rem 0; text-align: center; }
         .module-diagram svg { max-width: 100%; height: auto; }
 
+        /* Minh hoạ SVG chèn trong bài học */
+        .illustration-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin: 1.2rem 0; }
+        .illustration-card svg { width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto; }
+        .illustration-caption { text-align: center; font-size: 0.85rem; font-style: italic; color: var(--text-light); margin-top: 0.7rem; }
+
         /* DB Attributes Grid — thẻ lật (flip card) để phần Kiến thức sinh động hơn */
         .attr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; perspective: 1200px; }
         .attr-card { height: 230px; cursor: pointer; outline: none; }
@@ -252,6 +257,41 @@
                 <div class="activity-box">
                     <div class="box-title"><i class="fa-regular fa-comments"></i> Hoạt động 1 – Có cần lưu trữ bảng điểm lớp học không?</div>
                     <p>Giáo viên dạy mỗi môn học bắt buộc phải có một sổ điểm – bảng điểm môn học. Một bản sao của bảng điểm môn học được gửi cho giáo viên chủ nhiệm lớp. Hãy cùng thảo luận: <strong>có cần lưu trữ bảng điểm lớp học không?</strong></p>
+                </div>
+
+                <div class="illustration-card">
+                    <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hai cuốn sổ điểm giấy ghi hai giá trị khác nhau cho cùng một học sinh">
+                        <rect x="30" y="30" width="130" height="150" rx="8" fill="var(--surface)" stroke="var(--primary)" stroke-width="3"></rect>
+                        <g fill="var(--primary)">
+                            <circle cx="38" cy="50" r="3"></circle><circle cx="38" cy="70" r="3"></circle><circle cx="38" cy="90" r="3"></circle>
+                            <circle cx="38" cy="110" r="3"></circle><circle cx="38" cy="130" r="3"></circle><circle cx="38" cy="150" r="3"></circle>
+                        </g>
+                        <rect x="50" y="44" width="98" height="14" rx="3" fill="var(--primary-light)"></rect>
+                        <text x="99" y="54" text-anchor="middle" font-size="8.5" fill="var(--primary-dark)" font-weight="700" font-family="'Be Vietnam Pro', sans-serif">SỔ ĐIỂM TOÁN</text>
+                        <rect x="50" y="70" width="98" height="6" rx="2" fill="var(--primary-light)"></rect>
+                        <rect x="50" y="82" width="98" height="6" rx="2" fill="var(--primary-light)"></rect>
+                        <rect x="50" y="94" width="65" height="6" rx="2" fill="var(--primary-light)"></rect>
+                        <rect x="50" y="115" width="98" height="26" rx="4" fill="#eafaf1" stroke="var(--success)" stroke-width="1.5"></rect>
+                        <text x="99" y="132" text-anchor="middle" font-size="15" font-weight="700" fill="#1e8449" font-family="'Be Vietnam Pro', sans-serif">Điểm: 9</text>
+
+                        <text x="200" y="112" text-anchor="middle" font-size="34" fill="var(--error)" font-weight="700">≠</text>
+                        <path d="M185 68 l15 -24 l15 24 z" fill="var(--accent)"></path>
+                        <text x="200" y="63" text-anchor="middle" font-size="13" font-weight="700" fill="#7a3b1e" font-family="'Be Vietnam Pro', sans-serif">!</text>
+
+                        <rect x="240" y="30" width="130" height="150" rx="8" fill="var(--surface)" stroke="var(--primary)" stroke-width="3"></rect>
+                        <g fill="var(--primary)">
+                            <circle cx="248" cy="50" r="3"></circle><circle cx="248" cy="70" r="3"></circle><circle cx="248" cy="90" r="3"></circle>
+                            <circle cx="248" cy="110" r="3"></circle><circle cx="248" cy="130" r="3"></circle><circle cx="248" cy="150" r="3"></circle>
+                        </g>
+                        <rect x="260" y="44" width="98" height="14" rx="3" fill="var(--primary-light)"></rect>
+                        <text x="309" y="54" text-anchor="middle" font-size="8.5" fill="var(--primary-dark)" font-weight="700" font-family="'Be Vietnam Pro', sans-serif">SỔ ĐIỂM LỚP</text>
+                        <rect x="260" y="70" width="98" height="6" rx="2" fill="var(--primary-light)"></rect>
+                        <rect x="260" y="82" width="98" height="6" rx="2" fill="var(--primary-light)"></rect>
+                        <rect x="260" y="94" width="65" height="6" rx="2" fill="var(--primary-light)"></rect>
+                        <rect x="260" y="115" width="98" height="26" rx="4" fill="#fdedec" stroke="var(--error)" stroke-width="1.5"></rect>
+                        <text x="309" y="132" text-anchor="middle" font-size="15" font-weight="700" fill="#c0392b" font-family="'Be Vietnam Pro', sans-serif">Điểm: 8</text>
+                    </svg>
+                    <p class="illustration-caption">Cùng một học sinh, cùng một môn Toán — nhưng sổ giấy ở hai nơi lại ghi hai điểm khác nhau vì không ai đồng bộ dữ liệu.</p>
                 </div>
 
                 <p>Hãy tưởng tượng trường học lưu trữ điểm bằng sổ giấy: giáo viên môn Toán có một cuốn sổ điểm riêng, giáo viên chủ nhiệm lại có thêm một cuốn sổ tổng hợp điểm của cả lớp. Cùng một thông tin — điểm của một học sinh — bị ghi chép và lưu trữ ở <strong>hai nơi khác nhau</strong>.</p>
@@ -394,6 +434,43 @@ Tệp "Bảng điểm môn học" (4 ĐĐG TX, 1 ĐĐG GK, 1 ĐĐG CK):
             <section id="sec-kienthuc">
                 <h2><i class="fa-solid fa-database" style="color:var(--primary);"></i> 4. Cơ sở dữ liệu và thuộc tính cơ bản</h2>
                 <p><strong>Cơ sở dữ liệu (CSDL)</strong> là một tập hợp dữ liệu có liên quan với nhau, được lưu trữ một cách có tổ chức trên hệ thống máy tính nhằm mục đích khai thác.</p>
+
+                <div class="illustration-card">
+                    <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dữ liệu rời rạc được tổ chức thành cơ sở dữ liệu có cấu trúc, phục vụ nhiều phần mềm khai thác">
+                        <rect x="20" y="60" width="58" height="76" rx="4" fill="var(--surface)" stroke="var(--border)" stroke-width="2" transform="rotate(-9 49 98)"></rect>
+                        <rect x="38" y="50" width="58" height="76" rx="4" fill="var(--surface)" stroke="var(--border)" stroke-width="2" transform="rotate(7 67 88)"></rect>
+                        <rect x="10" y="40" width="58" height="76" rx="4" fill="var(--surface)" stroke="var(--border)" stroke-width="2" transform="rotate(-16 39 78)"></rect>
+                        <text x="55" y="165" text-anchor="middle" font-size="11" fill="var(--text-light)" font-weight="700" font-family="'Be Vietnam Pro', sans-serif">Dữ liệu rời rạc</text>
+
+                        <path d="M108 100 C 130 100, 145 100, 165 100" stroke="var(--primary)" stroke-width="2.5" fill="none" marker-end="url(#arrowIll1)"></path>
+
+                        <ellipse cx="222" cy="70" rx="38" ry="14" fill="var(--primary)"></ellipse>
+                        <rect x="184" y="70" width="76" height="55" fill="var(--primary)"></rect>
+                        <ellipse cx="222" cy="125" rx="38" ry="14" fill="var(--primary-dark)"></ellipse>
+                        <ellipse cx="222" cy="98" rx="38" ry="14" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.5"></ellipse>
+                        <text x="222" y="165" text-anchor="middle" font-size="11" fill="var(--primary-dark)" font-weight="700" font-family="'Be Vietnam Pro', sans-serif">CSDL có cấu trúc</text>
+
+                        <path d="M272 88 C 300 68, 320 68, 340 55" stroke="var(--primary)" stroke-width="2" stroke-dasharray="4 3" fill="none" marker-end="url(#arrowIll2)"></path>
+                        <path d="M272 100 C 300 100, 320 100, 343 100" stroke="var(--primary)" stroke-width="2" stroke-dasharray="4 3" fill="none" marker-end="url(#arrowIll3)"></path>
+                        <path d="M272 112 C 300 132, 320 132, 340 147" stroke="var(--primary)" stroke-width="2" stroke-dasharray="4 3" fill="none" marker-end="url(#arrowIll4)"></path>
+
+                        <rect x="345" y="35" width="46" height="30" rx="4" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"></rect>
+                        <rect x="360" y="65" width="16" height="6" fill="var(--accent)"></rect>
+                        <rect x="352" y="71" width="32" height="4" rx="2" fill="var(--accent)"></rect>
+                        <rect x="352" y="83" width="26" height="42" rx="5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"></rect>
+                        <circle cx="365" cy="118" r="2.5" fill="var(--accent)"></circle>
+                        <path d="M345 135 h18 l6 6 h22 v20 h-46 z" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"></path>
+
+                        <defs>
+                            <marker id="arrowIll1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--primary)"></path></marker>
+                            <marker id="arrowIll2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--primary)"></path></marker>
+                            <marker id="arrowIll3" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--primary)"></path></marker>
+                            <marker id="arrowIll4" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--primary)"></path></marker>
+                        </defs>
+                    </svg>
+                    <p class="illustration-caption">CSDL tổ chức dữ liệu rời rạc thành một khối có cấu trúc, để nhiều phần mềm khác nhau cùng khai thác mà không cần biết chi tiết cách lưu trữ bên dưới.</p>
+                </div>
+
                 <p>Một CSDL được thiết kế tốt cần đảm bảo các thuộc tính cơ bản sau. <strong>Nhấn vào từng thẻ</strong> để xem ví dụ minh hoạ:</p>
 
                 <div class="attr-grid">
