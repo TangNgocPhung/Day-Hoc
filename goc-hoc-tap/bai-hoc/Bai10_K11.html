@@ -291,6 +291,100 @@
             margin-top: 16px;
         }
 
+        /* Minh hoạ mã vạch (Hình 10.2) */
+        .barcode-illustration {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 300px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .barcode-bars {
+            height: 70px;
+            background-image: repeating-linear-gradient(90deg,
+                #1E1B2E 0px, #1E1B2E 2px, transparent 2px, transparent 3px,
+                #1E1B2E 3px, #1E1B2E 4px, transparent 4px, transparent 7px,
+                #1E1B2E 7px, #1E1B2E 9px, transparent 9px, transparent 11px,
+                #1E1B2E 11px, #1E1B2E 13px, transparent 13px, transparent 16px);
+            margin-bottom: 10px;
+        }
+
+        .barcode-number {
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 3px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .barcode-caption {
+            font-size: 13px;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        /* Mô phỏng quét mã vạch siêu thị */
+        .barcode-scan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .product-scan-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .product-scan-card .product-icon {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .product-scan-card .product-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .product-scan-card .product-meta {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .product-scan-card .product-meta.low-stock {
+            color: var(--error);
+            font-weight: 600;
+        }
+
+        .product-scan-card button {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .product-scan-card button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .live-pulse {
+            animation: pulseDot 1s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
         /* Tables */
         .data-table {
             width: 100%;
@@ -611,6 +705,45 @@
                     <li><strong>Khai thác thông tin:</strong> Là việc phân tích kết quả thống kê, tổng hợp dữ liệu để có được những thông tin đánh giá về những nội dung được quan tâm.</li>
                 </ul>
             </div>
+
+            <h3 class="sub-heading" style="margin-top: 32px;"><i class="fa-solid fa-barcode"></i> Thu thập dữ liệu tự động</h3>
+            <p>Hầu hết các hoạt động quản lí truyền thống đều phải nhập dữ liệu thủ công. Trong bối cảnh tự động hoá trên cơ sở máy tính, đặc biệt là sự xuất hiện của các hệ thống kết nối vạn vật (IoT) nói riêng và Cách mạng công nghiệp 4.0 nói chung, rất nhiều hoạt động quản lí đã thực hiện việc thu thập dữ liệu tự động.</p>
+
+            <div class="barcode-illustration">
+                <div class="barcode-bars"></div>
+                <div class="barcode-number">8 934674 012415</div>
+                <div class="barcode-caption">Hình 10.2. Mã vạch — mỗi mặt hàng được gán một mã vạch riêng để đầu đọc và máy tính nhận dạng, xử lí tự động.</div>
+            </div>
+
+            <div class="info-box">
+                <h4><i class="fa-solid fa-cart-shopping"></i> Ví dụ 1: Mã vạch tại siêu thị</h4>
+                <p>Ở các siêu thị lớn, mỗi ngày có hàng nghìn khách mua hàng, nhiều người mua hàng chục mặt hàng trong số hàng trăm mặt hàng có trong siêu thị. Nếu nhập dữ liệu thủ công, phải mất nhiều thời gian cho mỗi đơn hàng, làm giảm năng suất bán hàng. Để khắc phục tình trạng này, người ta tạo ra các <strong>mã vạch</strong> mang thông tin về mặt hàng dán trên bao bì.</p>
+                <p>Tại các quầy thanh toán, người thu tiền không cần nhập dữ liệu, chỉ cần đưa hàng qua đầu đọc mã vạch. Đầu đọc sẽ đọc mã và gửi cho máy tính để lập đơn hàng. Toàn bộ dữ liệu về hàng hoá cùng doanh thu được lưu trữ tự động. Dựa trên các dữ liệu đó, máy tính sẽ giúp lập các báo cáo doanh thu, thống kê, tổng hợp, phân tích để cải thiện hoạt động kinh doanh, báo tồn kho (để đặt thêm hàng khi cần), lượng hàng tồn trên quầy (để bổ sung từ kho) và nhiều thông tin có ích khác để quản lí siêu thị.</p>
+            </div>
+
+            <div class="info-box">
+                <h4><i class="fa-solid fa-bolt"></i> Ví dụ 2: Công tơ điện tử</h4>
+                <p>Người ta thay các đồng hồ đo điện với hộp số cơ khí trước đây bằng <strong>công tơ điện tử</strong>. Các công tơ điện tử có thể đều đặn gửi về công ti điện lực không chỉ lượng điện tiêu thụ mà còn cả các giá trị tức thời của điện áp, dòng, tần số và độ lệch pha,... Với công tơ điện tử, nhân viên điện lực không cần phải ghi số thủ công hằng tháng rồi nhập vào máy tính, giảm bớt nhiều công sức làm hoá đơn tiền điện.</p>
+                <p>Tuy nhiên lợi ích lớn nhất mà ngành điện có được từ giải pháp này là có thể quản lí kĩ thuật qua phân tích dữ liệu từ các công tơ điện tử liên tục gửi về. Chẳng hạn có thể biết khu vực nào đang mất điện, khu vực nào đang quá tải,... để đưa ra những quyết định phù hợp.</p>
+            </div>
+
+            <div class="highlight-box">
+                <ul style="margin-bottom: 0;">
+                    <li>Quản lí là hoạt động rất phổ biến. Mục đích chính của quản lí là xử lí thông tin để đưa ra các quyết định. Vì vậy việc thu thập, lưu trữ dữ liệu có ý nghĩa quan trọng hàng đầu.</li>
+                    <li>Việc thu thập dữ liệu tự động mang lại nhiều lợi ích, không chỉ giảm bớt công sức thu thập mà còn cung cấp một khối lượng dữ liệu lớn giúp nâng cao hiệu quả của các quyết định cần thiết.</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3 class="sub-heading" style="margin-top:0;"><i class="fa-solid fa-comments"></i> Câu hỏi củng cố</h3>
+                <p>Hãy nêu tầm quan trọng của việc thu thập và lưu trữ dữ liệu đối với các bài toán quản lí.</p>
+                <div style="margin-top: 16px;">
+                    <textarea id="knowledge-reflection" class="code-input" style="height: 90px; background: #fff; color: var(--text-dark); border-color: var(--border-color);" placeholder="Nhập câu trả lời của em vào đây..."></textarea>
+                    <button type="button" class="btn btn-accent" style="margin-top: 12px;" id="btn-save-reflection">
+                        <i class="fa-solid fa-paper-plane"></i> Gửi câu trả lời
+                    </button>
+                </div>
+            </div>
         </section>
 
         <!-- PHẦN 4: MÔ PHỎNG VÀ TRUY XUẤT DỮ LIỆU -->
@@ -643,6 +776,57 @@
                         </tbody>
                     </table>
                     <div id="sim-message" style="font-weight: 500; color: var(--primary-dark); margin-top: 12px;">Trạng thái: Đang hiển thị toàn bộ danh sách lớp.</div>
+                </div>
+            </div>
+
+            <h2 class="section-heading" style="margin-top: 40px;"><i class="fa-solid fa-barcode"></i> Mô phỏng: Thu thập dữ liệu tự động</h2>
+
+            <div class="sim-container">
+                <h4 style="color: var(--primary-dark); margin-bottom: 12px;"><i class="fa-solid fa-cash-register"></i> Quét mã vạch tại quầy thanh toán siêu thị</h4>
+                <p style="margin-bottom: 16px;">Nhấn nút <strong>"Quét mã"</strong> dưới mỗi mặt hàng để mô phỏng đầu đọc mã vạch quét sản phẩm qua quầy thanh toán. Dữ liệu bán hàng (tên hàng, đơn giá, doanh thu, tồn kho) sẽ được cập nhật hoàn toàn tự động — không cần gõ tay!</p>
+
+                <div class="barcode-scan-grid" id="barcode-scan-grid"></div>
+
+                <div class="sim-controls">
+                    <button type="button" class="btn btn-accent" id="btn-checkout"><i class="fa-solid fa-receipt"></i> Tạo hoá đơn mới (khách tiếp theo)</button>
+                    <button type="button" class="btn btn-secondary" id="btn-barcode-reset"><i class="fa-solid fa-rotate-left"></i> Đặt lại mô phỏng</button>
+                </div>
+
+                <div class="sim-display">
+                    <div style="display:flex; gap: 24px; flex-wrap: wrap; margin-bottom: 16px;">
+                        <div><strong>Hoá đơn hiện tại:</strong> <span id="current-receipt-total">0₫</span></div>
+                        <div><strong>Tổng doanh thu (tự động cộng dồn):</strong> <span id="grand-total-revenue">0₫</span></div>
+                        <div><strong>Tổng lượt quét:</strong> <span id="total-scans">0</span></div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Thời gian quét</th><th>Mặt hàng</th><th>Mã vạch</th><th>Đơn giá</th></tr>
+                        </thead>
+                        <tbody id="receipt-tbody">
+                            <tr><td colspan="4" style="text-align:center; color: var(--text-light);">Chưa có mặt hàng nào được quét...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="sim-container">
+                <h4 style="color: var(--primary-dark); margin-bottom: 12px;"><i class="fa-solid fa-bolt"></i> Công tơ điện tử gửi dữ liệu tự động về trung tâm</h4>
+                <p style="margin-bottom: 16px;">Nhấn <strong>"Bắt đầu truyền dữ liệu"</strong> để mô phỏng công tơ điện tử tự động gửi các chỉ số (điện áp, dòng điện, công suất) về trung tâm điều khiển sau mỗi 2 giây — hoàn toàn không cần nhân viên đến tận nơi ghi số.</p>
+                <div class="sim-controls">
+                    <button type="button" class="btn btn-accent" id="btn-meter-start"><i class="fa-solid fa-play"></i> Bắt đầu truyền dữ liệu</button>
+                    <button type="button" class="btn btn-secondary" id="btn-meter-stop"><i class="fa-solid fa-stop"></i> Dừng</button>
+                    <button type="button" class="btn" id="btn-meter-reset"><i class="fa-solid fa-rotate-left"></i> Xoá nhật kí</button>
+                    <span id="meter-live-badge" class="status-badge" style="background:#eee; color: var(--text-light);"><i class="fa-solid fa-circle"></i> Đang dừng</span>
+                </div>
+                <div class="sim-display">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Thời gian</th><th>Điện áp (V)</th><th>Dòng điện (A)</th><th>Công suất (kW)</th><th>Trạng thái</th></tr>
+                        </thead>
+                        <tbody id="meter-tbody">
+                            <tr><td colspan="5" style="text-align:center; color: var(--text-light);">Chưa có dữ liệu truyền về...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
@@ -763,6 +947,10 @@ WHERE toan >= 7.0;
                         targetSection.classList.add('active');
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }
+
+                    if (targetId !== 'section-simulation' && typeof stopMeterSimulation === 'function') {
+                        stopMeterSimulation();
+                    }
                 });
             });
 
@@ -776,6 +964,19 @@ WHERE toan >= 7.0;
                     } else {
                         alert('Cảm ơn câu trả lời tuyệt vời của em! Hãy chuyển sang các mục tiếp theo để khám phá chi tiết.');
                         document.querySelector('[data-target="section-objectives"]').click();
+                    }
+                });
+            }
+
+            // Câu hỏi củng cố phần Thu thập dữ liệu tự động
+            const btnSaveReflection = document.getElementById('btn-save-reflection');
+            if (btnSaveReflection) {
+                btnSaveReflection.addEventListener('click', () => {
+                    const text = document.getElementById('knowledge-reflection').value.trim();
+                    if (text === '') {
+                        alert('Em hãy nhập câu trả lời của mình trước khi gửi nhé!');
+                    } else {
+                        alert('Cảm ơn câu trả lời của em! Hãy sang mục "Mô phỏng & Truy xuất" để trải nghiệm mô phỏng thu thập dữ liệu tự động.');
                     }
                 });
             }
@@ -842,6 +1043,178 @@ WHERE toan >= 7.0;
                 btnUpdate.addEventListener('click', () => {
                     currentSimData[0].name = "Dương Hoàng Anh (Đã sửa tên)";
                     renderSimTable(currentSimData, "Trạng thái: Cập nhật dữ liệu thành công (Sửa tên học sinh STT 1 từ Hồng Anh thành Hoàng Anh).");
+                });
+            }
+
+            // 2b. Mô phỏng thu thập dữ liệu tự động — Quét mã vạch tại siêu thị
+            const initialScanProducts = [
+                { id: 'p1', icon: 'fa-solid fa-bottle-water', name: 'Nước suối 500ml', barcode: '8934674012415', price: 8000, stock: 12 },
+                { id: 'p2', icon: 'fa-solid fa-bread-slice', name: 'Bánh mì sandwich', barcode: '8934674099281', price: 25000, stock: 8 },
+                { id: 'p3', icon: 'fa-solid fa-mug-hot', name: 'Sữa tươi hộp', barcode: '8934674055632', price: 12000, stock: 15 },
+                { id: 'p4', icon: 'fa-solid fa-apple-whole', name: 'Táo (1kg)', barcode: '8934674077701', price: 45000, stock: 6 },
+                { id: 'p5', icon: 'fa-solid fa-cookie', name: 'Bánh quy hộp', barcode: '8934674033390', price: 32000, stock: 10 },
+                { id: 'p6', icon: 'fa-solid fa-pen', name: 'Bút bi', barcode: '8934674021150', price: 5000, stock: 20 }
+            ];
+            let scanProducts = JSON.parse(JSON.stringify(initialScanProducts));
+            let currentReceipt = [];
+            let grandTotal = 0;
+            let totalScans = 0;
+
+            function formatCurrency(n) {
+                return n.toLocaleString('vi-VN') + '₫';
+            }
+
+            function renderScanGrid() {
+                const grid = document.getElementById('barcode-scan-grid');
+                if (!grid) return;
+                grid.innerHTML = scanProducts.map(p => `
+                    <div class="product-scan-card">
+                        <div class="product-icon"><i class="${p.icon}"></i></div>
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-meta ${p.stock <= 3 ? 'low-stock' : ''}">${formatCurrency(p.price)} · Tồn: ${p.stock}</div>
+                        <button type="button" class="btn btn-accent" data-scan="${p.id}" ${p.stock <= 0 ? 'disabled' : ''}>
+                            <i class="fa-solid fa-barcode"></i> ${p.stock <= 0 ? 'Hết hàng' : 'Quét mã'}
+                        </button>
+                    </div>
+                `).join('');
+
+                grid.querySelectorAll('button[data-scan]').forEach(btn => {
+                    btn.addEventListener('click', () => scanProduct(btn.getAttribute('data-scan')));
+                });
+            }
+
+            function renderReceipt() {
+                const tbody = document.getElementById('receipt-tbody');
+                if (!tbody) return;
+                if (currentReceipt.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-light);">Chưa có mặt hàng nào được quét...</td></tr>';
+                } else {
+                    tbody.innerHTML = currentReceipt.map(item => `
+                        <tr>
+                            <td>${item.time}</td>
+                            <td><strong>${item.name}</strong></td>
+                            <td>${item.barcode}</td>
+                            <td>${formatCurrency(item.price)}</td>
+                        </tr>
+                    `).join('');
+                }
+                const currentTotal = currentReceipt.reduce((sum, i) => sum + i.price, 0);
+                const currentTotalEl = document.getElementById('current-receipt-total');
+                const grandTotalEl = document.getElementById('grand-total-revenue');
+                const totalScansEl = document.getElementById('total-scans');
+                if (currentTotalEl) currentTotalEl.textContent = formatCurrency(currentTotal);
+                if (grandTotalEl) grandTotalEl.textContent = formatCurrency(grandTotal);
+                if (totalScansEl) totalScansEl.textContent = totalScans;
+            }
+
+            function scanProduct(id) {
+                const product = scanProducts.find(p => p.id === id);
+                if (!product || product.stock <= 0) return;
+                product.stock -= 1;
+                totalScans += 1;
+                grandTotal += product.price;
+                const time = new Date().toLocaleTimeString('vi-VN');
+                currentReceipt.push({ name: product.name, barcode: product.barcode, price: product.price, time });
+                renderScanGrid();
+                renderReceipt();
+            }
+
+            renderScanGrid();
+            renderReceipt();
+
+            const btnCheckout = document.getElementById('btn-checkout');
+            if (btnCheckout) {
+                btnCheckout.addEventListener('click', () => {
+                    currentReceipt = [];
+                    renderReceipt();
+                });
+            }
+
+            const btnBarcodeReset = document.getElementById('btn-barcode-reset');
+            if (btnBarcodeReset) {
+                btnBarcodeReset.addEventListener('click', () => {
+                    scanProducts = JSON.parse(JSON.stringify(initialScanProducts));
+                    currentReceipt = [];
+                    grandTotal = 0;
+                    totalScans = 0;
+                    renderScanGrid();
+                    renderReceipt();
+                });
+            }
+
+            // 2c. Mô phỏng thu thập dữ liệu tự động — Công tơ điện tử
+            let meterInterval = null;
+            let meterRunning = false;
+
+            function randomBetween(min, max, decimals) {
+                return (Math.random() * (max - min) + min).toFixed(decimals);
+            }
+
+            function setMeterBadge(running) {
+                const meterLiveBadge = document.getElementById('meter-live-badge');
+                if (!meterLiveBadge) return;
+                if (running) {
+                    meterLiveBadge.style.background = '#d4edda';
+                    meterLiveBadge.style.color = '#155724';
+                    meterLiveBadge.innerHTML = '<i class="fa-solid fa-circle live-pulse"></i> Đang truyền dữ liệu tự động...';
+                } else {
+                    meterLiveBadge.style.background = '#eee';
+                    meterLiveBadge.style.color = 'var(--text-light)';
+                    meterLiveBadge.innerHTML = '<i class="fa-solid fa-circle"></i> Đang dừng';
+                }
+            }
+
+            function addMeterReading() {
+                const tbody = document.getElementById('meter-tbody');
+                if (!tbody) return;
+                if (tbody.children.length === 1 && tbody.children[0].children.length === 1) {
+                    tbody.innerHTML = '';
+                }
+                const time = new Date().toLocaleTimeString('vi-VN');
+                const voltage = randomBetween(215, 230, 1);
+                const current = randomBetween(2, 8, 1);
+                const power = (voltage * current / 1000).toFixed(2);
+                const status = power > 1.5
+                    ? '<span style="color: var(--error); font-weight:600;">Tải cao</span>'
+                    : '<span style="color: var(--success); font-weight:600;">Bình thường</span>';
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${time}</td><td>${voltage}</td><td>${current}</td><td>${power}</td><td>${status}</td>`;
+                tbody.prepend(row);
+                while (tbody.children.length > 8) tbody.removeChild(tbody.lastChild);
+            }
+
+            function stopMeterSimulation() {
+                meterRunning = false;
+                setMeterBadge(false);
+                if (meterInterval) {
+                    clearInterval(meterInterval);
+                    meterInterval = null;
+                }
+            }
+
+            const btnMeterStart = document.getElementById('btn-meter-start');
+            const btnMeterStop = document.getElementById('btn-meter-stop');
+            const btnMeterReset = document.getElementById('btn-meter-reset');
+
+            if (btnMeterStart) {
+                btnMeterStart.addEventListener('click', () => {
+                    if (meterRunning) return;
+                    meterRunning = true;
+                    setMeterBadge(true);
+                    addMeterReading();
+                    meterInterval = setInterval(addMeterReading, 2000);
+                });
+            }
+
+            if (btnMeterStop) {
+                btnMeterStop.addEventListener('click', stopMeterSimulation);
+            }
+
+            if (btnMeterReset) {
+                btnMeterReset.addEventListener('click', () => {
+                    stopMeterSimulation();
+                    const tbody = document.getElementById('meter-tbody');
+                    if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--text-light);">Chưa có dữ liệu truyền về...</td></tr>';
                 });
             }
 
