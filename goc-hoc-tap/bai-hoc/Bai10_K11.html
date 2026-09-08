@@ -345,9 +345,32 @@
         }
 
         .product-scan-card .product-icon {
-            font-size: 28px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 20px;
             color: var(--primary);
-            margin-bottom: 8px;
+        }
+
+        /* Minh hoạ SVG chèn trong info-box */
+        .illustration-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .illustration-card svg {
+            width: 100%;
+            max-width: 380px;
+            display: block;
+            margin: 0 auto;
         }
 
         .product-scan-card .product-name {
@@ -655,6 +678,44 @@
             <h2 class="section-heading"><i class="fa-solid fa-compass"></i> Tình huống khởi động</h2>
             <div class="info-box">
                 <h4><i class="fa-solid fa-school"></i> Quản lí kết quả học tập trong trường học</h4>
+
+                <div class="illustration-card">
+                    <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sổ điểm học sinh được lưu trữ vào cơ sở dữ liệu và phân tích bằng biểu đồ">
+                        <rect x="40" y="20" width="150" height="140" rx="10" fill="#FFFFFF" stroke="#8B5FBF" stroke-width="3"/>
+                        <rect x="60" y="8" width="110" height="22" rx="6" fill="#8B5FBF"/>
+                        <text x="115" y="24" text-anchor="middle" font-family="'Be Vietnam Pro', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">SỔ ĐIỂM</text>
+                        <rect x="55" y="45" width="120" height="8" rx="4" fill="#E2DBEC"/>
+                        <rect x="55" y="60" width="90" height="8" rx="4" fill="#E2DBEC"/>
+                        <rect x="55" y="75" width="100" height="8" rx="4" fill="#E2DBEC"/>
+                        <rect x="55" y="95" width="55" height="22" rx="4" fill="#F3EEFC"/>
+                        <text x="82" y="110" text-anchor="middle" font-family="'Be Vietnam Pro', sans-serif" font-size="12" font-weight="700" fill="#8B5FBF">8.5</text>
+                        <rect x="118" y="95" width="55" height="22" rx="4" fill="#F3EEFC"/>
+                        <text x="145" y="110" text-anchor="middle" font-family="'Be Vietnam Pro', sans-serif" font-size="12" font-weight="700" fill="#8B5FBF">9.0</text>
+                        <rect x="55" y="126" width="118" height="22" rx="4" fill="#FFFDF0" stroke="#E8D84A" stroke-width="1.5"/>
+                        <text x="114" y="141" text-anchor="middle" font-family="'Be Vietnam Pro', sans-serif" font-size="11" font-weight="700" fill="#6D439E">Điểm TB: 8.8</text>
+
+                        <path d="M195 90 C 220 90, 235 90, 253 78" fill="none" stroke="#8B5FBF" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#arrow-intro)"/>
+
+                        <ellipse cx="292" cy="55" rx="32" ry="12" fill="#E8D84A"/>
+                        <rect x="260" y="55" width="64" height="42" fill="#E8D84A"/>
+                        <ellipse cx="292" cy="97" rx="32" ry="12" fill="#D4C436"/>
+                        <ellipse cx="292" cy="76" rx="32" ry="12" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.6"/>
+
+                        <g>
+                            <rect x="268" y="128" width="14" height="32" rx="2" fill="#B9A6D9"/>
+                            <rect x="288" y="112" width="14" height="48" rx="2" fill="#8B5FBF"/>
+                            <rect x="308" y="98" width="14" height="62" rx="2" fill="#6D439E"/>
+                        </g>
+
+                        <defs>
+                            <marker id="arrow-intro" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                                <path d="M0,0 L6,3 L0,6 Z" fill="#8B5FBF"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                    <p class="barcode-caption" style="text-align:center; margin-top: 10px;">Điểm số của học sinh cần được <strong>lưu trữ</strong> có hệ thống để nhà trường có thể <strong>truy xuất và khai thác</strong> thành các thống kê, biểu đồ hữu ích.</p>
+                </div>
+
                 <p>Các công việc quản lí trong thực tế rất đa dạng: quản lí nhân viên, tài chính, thiết bị tại các cơ quan, tổ chức; quản lí chỗ ngồi trên chuyến bay tại các phòng bán vé; quản lí hồ sơ bệnh án tại bệnh viện; quản lí học sinh và kết quả học tập trong các trường học.</p>
                 <p>Để quản lí kết quả học tập, như em biết, phải quản lí điểm của từng môn học bao gồm điểm đánh giá (ĐĐG) thường xuyên, ĐĐG giữa kì, ĐĐG cuối kì,...</p>
             </div>
@@ -717,12 +778,106 @@
 
             <div class="info-box">
                 <h4><i class="fa-solid fa-cart-shopping"></i> Ví dụ 1: Mã vạch tại siêu thị</h4>
+
+                <div class="illustration-card">
+                    <svg viewBox="0 0 420 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nhân viên thu ngân quét mã vạch sản phẩm, dữ liệu được gửi tự động vào cơ sở dữ liệu">
+                        <rect x="10" y="160" width="400" height="40" rx="8" fill="#F3EEFC"/>
+                        <rect x="10" y="160" width="400" height="9" rx="4" fill="#E2DBEC"/>
+
+                        <rect x="30" y="55" width="120" height="85" rx="8" fill="#FFFFFF" stroke="#8B5FBF" stroke-width="3"/>
+                        <rect x="42" y="67" width="96" height="61" rx="4" fill="#F3EEFC"/>
+                        <rect x="50" y="76" width="70" height="6" rx="3" fill="#8B5FBF"/>
+                        <rect x="50" y="88" width="55" height="6" rx="3" fill="#B9A6D9"/>
+                        <rect x="50" y="100" width="60" height="6" rx="3" fill="#B9A6D9"/>
+                        <rect x="50" y="112" width="40" height="6" rx="3" fill="#B9A6D9"/>
+                        <rect x="75" y="140" width="30" height="14" fill="#D0C6DE"/>
+                        <rect x="60" y="152" width="60" height="8" rx="4" fill="#B9A6D9"/>
+
+                        <rect x="195" y="118" width="18" height="46" rx="6" fill="#2D2538"/>
+                        <circle cx="204" cy="120" r="6" fill="#E8D84A"/>
+
+                        <line x1="204" y1="120" x2="258" y2="148" stroke="#dc3545" stroke-width="2" stroke-dasharray="4 3"/>
+                        <path d="M256 138 q7 -9 14 0" fill="none" stroke="#E8D84A" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M251 145 q12 -16 24 0" fill="none" stroke="#E8D84A" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+
+                        <rect x="240" y="148" width="70" height="46" rx="6" fill="#FFFFFF" stroke="#E2DBEC" stroke-width="2"/>
+                        <g fill="#2D2538">
+                            <rect x="250" y="158" width="2" height="22"/>
+                            <rect x="254" y="158" width="1" height="22"/>
+                            <rect x="257" y="158" width="3" height="22"/>
+                            <rect x="262" y="158" width="1" height="22"/>
+                            <rect x="265" y="158" width="2" height="22"/>
+                            <rect x="269" y="158" width="1" height="22"/>
+                            <rect x="272" y="158" width="3" height="22"/>
+                            <rect x="277" y="158" width="2" height="22"/>
+                            <rect x="281" y="158" width="1" height="22"/>
+                            <rect x="284" y="158" width="2" height="22"/>
+                            <rect x="288" y="158" width="1" height="22"/>
+                            <rect x="291" y="158" width="3" height="22"/>
+                            <rect x="296" y="158" width="1" height="22"/>
+                        </g>
+
+                        <path d="M155 92 C 220 38, 300 38, 344 74" fill="none" stroke="#8B5FBF" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#arrow-checkout)"/>
+
+                        <ellipse cx="374" cy="66" rx="28" ry="11" fill="#8B5FBF"/>
+                        <rect x="346" y="66" width="56" height="36" fill="#8B5FBF"/>
+                        <ellipse cx="374" cy="102" rx="28" ry="11" fill="#6D439E"/>
+                        <ellipse cx="374" cy="84" rx="28" ry="11" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.5"/>
+
+                        <defs>
+                            <marker id="arrow-checkout" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                                <path d="M0,0 L6,3 L0,6 Z" fill="#8B5FBF"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                    <p class="barcode-caption" style="text-align:center; margin-top: 10px;">Đầu đọc quét mã vạch trên sản phẩm và gửi dữ liệu thẳng vào cơ sở dữ liệu — không cần thu ngân gõ tay.</p>
+                </div>
+
                 <p>Ở các siêu thị lớn, mỗi ngày có hàng nghìn khách mua hàng, nhiều người mua hàng chục mặt hàng trong số hàng trăm mặt hàng có trong siêu thị. Nếu nhập dữ liệu thủ công, phải mất nhiều thời gian cho mỗi đơn hàng, làm giảm năng suất bán hàng. Để khắc phục tình trạng này, người ta tạo ra các <strong>mã vạch</strong> mang thông tin về mặt hàng dán trên bao bì.</p>
                 <p>Tại các quầy thanh toán, người thu tiền không cần nhập dữ liệu, chỉ cần đưa hàng qua đầu đọc mã vạch. Đầu đọc sẽ đọc mã và gửi cho máy tính để lập đơn hàng. Toàn bộ dữ liệu về hàng hoá cùng doanh thu được lưu trữ tự động. Dựa trên các dữ liệu đó, máy tính sẽ giúp lập các báo cáo doanh thu, thống kê, tổng hợp, phân tích để cải thiện hoạt động kinh doanh, báo tồn kho (để đặt thêm hàng khi cần), lượng hàng tồn trên quầy (để bổ sung từ kho) và nhiều thông tin có ích khác để quản lí siêu thị.</p>
             </div>
 
             <div class="info-box">
                 <h4><i class="fa-solid fa-bolt"></i> Ví dụ 2: Công tơ điện tử</h4>
+
+                <div class="illustration-card">
+                    <svg viewBox="0 0 420 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Công tơ điện tử gửi chỉ số điện áp, dòng điện qua Wi-Fi lên đám mây để phân tích">
+                        <rect x="30" y="55" width="140" height="110" rx="14" fill="#2D2538"/>
+                        <rect x="45" y="70" width="110" height="45" rx="6" fill="#141221"/>
+                        <text x="100" y="99" text-anchor="middle" font-family="'Courier New', monospace" font-size="20" font-weight="700" fill="#A3FFD6">220V</text>
+                        <rect x="45" y="123" width="50" height="18" rx="4" fill="#3C3550"/>
+                        <text x="70" y="136" text-anchor="middle" font-family="'Courier New', monospace" font-size="11" fill="#E8D84A">5.2 A</text>
+                        <rect x="103" y="123" width="52" height="18" rx="4" fill="#3C3550"/>
+                        <text x="129" y="136" text-anchor="middle" font-family="'Courier New', monospace" font-size="11" fill="#E8D84A">1.14kW</text>
+                        <circle cx="100" cy="153" r="5" fill="#28a745"/>
+
+                        <g stroke="#8B5FBF" stroke-width="3" fill="none" stroke-linecap="round">
+                            <path d="M150 50 a10 10 0 0 1 14 0"/>
+                            <path d="M146 42 a20 20 0 0 1 22 0"/>
+                            <path d="M142 34 a30 30 0 0 1 30 0"/>
+                        </g>
+                        <circle cx="157" cy="56" r="3.5" fill="#8B5FBF" class="live-pulse"/>
+
+                        <path d="M178 50 C 230 12, 300 12, 332 50" fill="none" stroke="#8B5FBF" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#arrow-meter)"/>
+
+                        <path d="M328 82 a19 19 0 0 1 4 -37 a25 25 0 0 1 48 -6 a17 17 0 0 1 3 43 z" fill="#F3EEFC" stroke="#8B5FBF" stroke-width="2"/>
+                        <path d="M354 55 l-9 15 h6 l-8 13 l16 -17 h-6 z" fill="#E8D84A"/>
+
+                        <g>
+                            <rect x="328" y="150" width="14" height="30" rx="2" fill="#B9A6D9"/>
+                            <rect x="348" y="135" width="14" height="45" rx="2" fill="#8B5FBF"/>
+                            <rect x="368" y="118" width="14" height="62" rx="2" fill="#6D439E"/>
+                        </g>
+
+                        <defs>
+                            <marker id="arrow-meter" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                                <path d="M0,0 L6,3 L0,6 Z" fill="#8B5FBF"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                    <p class="barcode-caption" style="text-align:center; margin-top: 10px;">Công tơ điện tử tự động gửi chỉ số qua Wi-Fi lên hệ thống, giúp công ti điện lực phân tích dữ liệu mà không cần đến tận nơi ghi số.</p>
+                </div>
+
                 <p>Người ta thay các đồng hồ đo điện với hộp số cơ khí trước đây bằng <strong>công tơ điện tử</strong>. Các công tơ điện tử có thể đều đặn gửi về công ti điện lực không chỉ lượng điện tiêu thụ mà còn cả các giá trị tức thời của điện áp, dòng, tần số và độ lệch pha,... Với công tơ điện tử, nhân viên điện lực không cần phải ghi số thủ công hằng tháng rồi nhập vào máy tính, giảm bớt nhiều công sức làm hoá đơn tiền điện.</p>
                 <p>Tuy nhiên lợi ích lớn nhất mà ngành điện có được từ giải pháp này là có thể quản lí kĩ thuật qua phân tích dữ liệu từ các công tơ điện tử liên tục gửi về. Chẳng hạn có thể biết khu vực nào đang mất điện, khu vực nào đang quá tải,... để đưa ra những quyết định phù hợp.</p>
             </div>
