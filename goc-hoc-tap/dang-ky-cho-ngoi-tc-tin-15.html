@@ -303,6 +303,50 @@
     cursor: pointer;
   }
   .submit:disabled { opacity: .55; cursor: not-allowed; }
+  .success-box {
+    border: 2px solid var(--green);
+    border-radius: 14px;
+    background: var(--green-soft);
+    padding: 1rem;
+  }
+  .success-box h3 {
+    margin: 0 0 .6rem;
+    color: var(--green);
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.15rem;
+  }
+  .success-box dl {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: .32rem .7rem;
+    margin: 0 0 .9rem;
+    font-size: .82rem;
+  }
+  .success-box dt { color: var(--muted); }
+  .success-box dd { margin: 0; font-weight: 600; }
+  .success-box .seat-big {
+    display: block;
+    margin: .2rem 0 .9rem;
+    padding: .6rem;
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--green);
+    text-align: center;
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+  .success-box button {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--green);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--green);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
   .legend { display: grid; grid-template-columns: repeat(2, 1fr); gap: .55rem; margin-top: 1rem; font-size: .68rem; color: var(--muted); }
   .legend span { display: inline-flex; align-items: center; gap: .35rem; }
   .dot { width: .75rem; height: .75rem; border: 1px solid var(--border); border-radius: 3px; background: #fff; }
@@ -386,6 +430,19 @@
         <div id="selection" class="selection">Chưa chọn máy.</div>
         <button id="submit" class="submit" type="submit" disabled>Đăng ký chỗ ngồi</button>
       </form>
+
+      <div id="success-box" class="success-box" role="status" aria-live="polite" hidden>
+        <h3>✅ Đăng ký thành công</h3>
+        <strong class="seat-big" id="success-seat"></strong>
+        <dl>
+          <dt>Họ và tên</dt><dd id="success-name"></dd>
+          <dt>Lớp</dt><dd id="success-class"></dd>
+          <dt>Phòng máy</dt><dd id="success-room"></dd>
+          <dt>Nhóm tự chọn</dt><dd id="success-course"></dd>
+        </dl>
+        <button type="button" id="register-another">Đăng ký cho bạn khác</button>
+      </div>
+
       <div class="legend" aria-label="Chú thích">
         <span><i class="dot"></i>Còn trống</span>
         <span><i class="dot occupied"></i>Đã có người</span>
@@ -399,7 +456,7 @@
   </section>
 </main>
 
-<script src="data/phong-may.js?v=1"></script>
+<script src="data/phong-may.js?v=2"></script>
 <script src="seat-registration-config.js?v=4"></script>
 <script>
 (function () {
@@ -426,6 +483,7 @@
   var form = document.getElementById("registration-form");
   var submitButton = document.getElementById("submit");
   var selectionElement = document.getElementById("selection");
+  var successBox = document.getElementById("success-box");
   var counter = document.getElementById("counter");
   var occupancyElement = document.getElementById("occupancy");
   var occupancyNote = document.getElementById("occupancy-note");
@@ -548,6 +606,7 @@
   function chooseRoom(room) {
     selectedRoom = room;
     selectedSeatId = null;
+    hideSuccess();
     markPressed(roomPicker, DATA.rooms.indexOf(room));
     stepCourse.hidden = false;
     clearNotice();
@@ -563,6 +622,7 @@
   function chooseCourse(course) {
     selectedCourse = course;
     selectedSeatId = null;
+    hideSuccess();
     markPressed(coursePicker, DATA.courses.indexOf(course));
     clearNotice();
     openSeatMap();
@@ -748,6 +808,32 @@
     render();
   }
 
+  function showSuccess(seat, slot) {
+    document.getElementById("success-seat").textContent =
+      "MÁY " + padded(seat.seatId) + " · DÃY " + seat.row + (slot === 2 ? " · CHỖ GHÉP" : "");
+    document.getElementById("success-name").textContent = document.getElementById("student-name").value.trim();
+    document.getElementById("success-class").textContent = document.getElementById("student-class").value.trim();
+    document.getElementById("success-room").textContent = roomLabel(selectedRoom);
+    document.getElementById("success-course").textContent = selectedCourse.replace(/_/g, " ");
+    form.hidden = true;
+    successBox.hidden = false;
+    successBox.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function hideSuccess() {
+    successBox.hidden = true;
+    form.hidden = false;
+  }
+
+  document.getElementById("register-another").addEventListener("click", function () {
+    hideSuccess();
+    form.reset();
+    selectedSeatId = null;
+    clearNotice();
+    render();
+    document.getElementById("student-name").focus();
+  });
+
   function updateSelection() {
     var seat = selectedSeatId ? seatById(selectedSeatId) : null;
     if (!seat || !canSelect(seat)) {
@@ -833,7 +919,7 @@
         return;
       }
       showNotice("Đăng ký thành công: " + seatLabel(seat) + (result.slot === 2 ? " (chỗ ghép)." : "."), "success");
-      form.reset();
+      showSuccess(seat, result.slot);
       selectedSeatId = null;
       await loadSeats({ keepNotice: true });
     } catch (error) {
