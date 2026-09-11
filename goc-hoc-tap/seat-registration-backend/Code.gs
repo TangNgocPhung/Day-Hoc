@@ -15,7 +15,7 @@ var SETTINGS = {
     PM2: { name: "Phòng máy 2", rowCount: 4, seatsPerRow: 10, sharedSeats: true },
     PM3: { name: "Phòng máy 3", rowCount: 4, seatsPerRow: 10, sharedSeats: true },
     PM4: { name: "Phòng máy 4", rowCount: 4, seatsPerRow: 10, sharedSeats: true },
-    PM5: { name: "Phòng máy 5 - Phòng LAB", rowCount: 5, seatsPerRow: 8, sharedSeats: false }
+    PM5: { name: "Phòng máy 5 - Phòng LAB", rowCount: 6, seatsPerRow: 8, sharedSeats: false }
   }
 };
 

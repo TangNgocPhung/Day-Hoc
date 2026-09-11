@@ -82,10 +82,10 @@ window.PHONG_MAY = {
       alias: "Phòng LAB",
       location: "Tầng 1 khu B",
       layout: "horizontal",
-      rows: [1, 2, 3, 4, 5],
+      rows: [1, 2, 3, 4, 5, 6],
       seatsPerRow: 8,
       sharedSeats: false,
-      note: "Năm dãy máy xếp ngang, mỗi dãy chia thành hai cụm 4 máy với lối đi ở giữa. Bàn giáo viên ở góc trên bên trái, bảng ở góc trên bên phải. Phòng này máy còn tốt nên mỗi học sinh ngồi một máy, không ghép chung."
+      note: "Sáu dãy máy xếp ngang, mỗi dãy chia thành hai cụm 4 máy với lối đi ở giữa. Bàn giáo viên ở góc trên bên trái, bảng ở góc trên bên phải. Phòng này máy còn tốt nên mỗi học sinh ngồi một máy, không ghép chung."
     }
   ]
 };
