@@ -164,16 +164,23 @@ function buildPublicState_(roomId, room, course) {
   });
 
   var counts = {};
+  var occupants = {};
   var primarySeatIds = {};
   records.forEach(function (record) {
     counts[record.seatId] = (counts[record.seatId] || 0) + 1;
+    if (!occupants[record.seatId]) occupants[record.seatId] = [];
+    occupants[record.seatId].push(record.studentName);
     if (record.slot === 1) primarySeatIds[record.seatId] = true;
   });
   var primaryOccupied = Object.keys(primarySeatIds).length;
 
   var seats = [];
   for (var seatId = 1; seatId <= totalSeats; seatId += 1) {
-    seats.push({ seatId: seatId, occupantCount: counts[seatId] || 0 });
+    seats.push({
+      seatId: seatId,
+      occupantCount: counts[seatId] || 0,
+      occupants: occupants[seatId] || []
+    });
   }
 
   return {

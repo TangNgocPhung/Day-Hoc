@@ -231,7 +231,8 @@
   .seat:disabled { cursor: not-allowed; opacity: .7; }
   .seat-top { display: flex; justify-content: space-between; gap: .3rem; align-items: center; }
   .seat-code { font-size: .68rem; }
-  .seat-status { color: var(--muted); font-size: .6rem; margin-top: .2rem; }
+  .seat-status { color: var(--muted); font-size: .6rem; margin-top: .2rem; line-height: 1.3; }
+  .seat.occupied .seat-status { color: #8a4f22; font-weight: 600; }
   .front-badge { color: var(--green); font-size: .53rem; font-weight: 700; }
 
   .deskrow { display: grid; gap: .55rem; margin-top: .6rem; }
@@ -524,7 +525,8 @@
           seatId: (rowNumber - 1) * perRow + position,
           row: rowNumber,
           position: position,
-          occupantCount: 0
+          occupantCount: 0,
+          occupants: []
         });
       }
     });
@@ -555,9 +557,9 @@
 
   function statusText(seat) {
     if (seat.occupantCount === 0) return "Còn trống";
-    if (canPair(seat)) return "Đã có 1 bạn · còn 1 chỗ ghép";
-    if (seat.occupantCount > 1) return "Đã đủ 2 bạn";
-    return "Đã có người đăng ký";
+    var who = (seat.occupants || []).join(" · ");
+    if (canPair(seat)) return (who || "Đã có 1 bạn") + " · còn 1 chỗ ghép";
+    return who || (seat.occupantCount > 1 ? "Đã đủ 2 bạn" : "Đã có người đăng ký");
   }
 
   /* ---------- Bước 1 và 2: chọn phòng, chọn nhóm ---------- */
@@ -852,9 +854,16 @@
   function normalizeServerState(payload) {
     if (!payload || !payload.ok || !Array.isArray(payload.seats)) throw new Error("Dữ liệu sơ đồ không hợp lệ.");
     var counts = {};
-    payload.seats.forEach(function (seat) { counts[Number(seat.seatId)] = Number(seat.occupantCount || 0); });
+    var occupants = {};
+    payload.seats.forEach(function (seat) {
+      counts[Number(seat.seatId)] = Number(seat.occupantCount || 0);
+      occupants[Number(seat.seatId)] = Array.isArray(seat.occupants) ? seat.occupants : [];
+    });
     var next = emptyState(selectedRoom);
-    next.seats.forEach(function (seat) { seat.occupantCount = counts[seat.seatId] || 0; });
+    next.seats.forEach(function (seat) {
+      seat.occupantCount = counts[seat.seatId] || 0;
+      seat.occupants = occupants[seat.seatId] || [];
+    });
     next.primaryOccupied = Number(payload.primaryOccupied || 0);
     next.totalRegistrations = Number(payload.totalRegistrations || 0);
     next.pairEnabled = Boolean(payload.pairEnabled);
