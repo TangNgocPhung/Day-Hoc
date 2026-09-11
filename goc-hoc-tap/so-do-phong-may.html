@@ -273,15 +273,15 @@
 <main class="page">
   <span class="eyebrow">PHÒNG THỰC HÀNH TIN HỌC</span>
   <h1>Sơ đồ phòng máy tính</h1>
-  <p class="lede">Vị trí các dãy máy, bảng và bàn giáo viên của năm phòng thực hành. Máy được đánh số theo dãy: dãy 1 gồm máy 01–10, dãy 2 gồm máy 11–20, và tiếp tục như vậy. Chiều đánh số trong mỗi dãy ghi rõ ở phần mô tả của từng phòng.</p>
+  <p class="lede">Vị trí các dãy máy, bảng và bàn giáo viên của năm phòng thực hành. Máy được đánh số liên tục theo dãy: dãy 1 bắt đầu từ máy 01, hết dãy 1 mới sang dãy 2. Số máy mỗi dãy và chiều đánh số ghi rõ ở phần mô tả từng phòng. Phòng máy 1 đến 4 có một số máy hỏng nên hai máy đầu mỗi dãy (tô xanh) là chỗ ngồi chung cho hai học sinh; riêng phòng LAB mỗi bạn một máy.</p>
 
   <div class="legend">
     <span><span class="swatch swatch--seat"></span>Máy học sinh</span>
-    <span><span class="swatch swatch--first"></span>Máy đầu dãy (số 1 và 2)</span>
+    <span><span class="swatch swatch--first"></span>Máy ngồi chung (hai máy đầu mỗi dãy)</span>
     <span><span class="swatch swatch--board"></span>Bảng</span>
     <span><span class="swatch swatch--desk"></span>Bàn giáo viên</span>
     <span><span class="swatch swatch--door"></span>Cửa ra vào</span>
-    <span><b>Mỗi dãy 10 máy</b></span>
+    <span><b>Số máy mỗi dãy ghi ở từng phòng</b></span>
   </div>
 
   <div id="rooms"></div>
@@ -291,7 +291,11 @@
 (function () {
   "use strict";
 
-  var SEATS_PER_ROW = 10;
+  var DEFAULT_SEATS_PER_ROW = 10;
+
+  function seatsPerRow(room) {
+    return room.seatsPerRow || DEFAULT_SEATS_PER_ROW;
+  }
 
   var ROOMS = [
     {
@@ -319,6 +323,7 @@
     {
       id: "PM3",
       name: "Phòng máy 3",
+      location: "Tầng 2 khu B",
       layout: "vertical",
       columns: [4, 3, 2, 1],
       numberFrom: "bottom",
@@ -342,9 +347,13 @@
     {
       id: "PM5",
       name: "Phòng máy 5",
+      alias: "Phòng LAB",
+      location: "Tầng 1 khu B",
       layout: "horizontal",
       rows: [1, 2, 3, 4, 5],
-      note: "Năm dãy máy xếp ngang, mỗi dãy chia thành hai cụm 5 máy với lối đi ở giữa. Bàn giáo viên ở góc trên bên trái, bảng ở góc trên bên phải."
+      seatsPerRow: 8,
+      sharedSeats: false,
+      note: "Năm dãy máy xếp ngang, mỗi dãy chia thành hai cụm 4 máy với lối đi ở giữa. Bàn giáo viên ở góc trên bên trái, bảng ở góc trên bên phải. Phòng này máy còn tốt nên mỗi học sinh ngồi một máy, không ghép chung."
     }
   ];
 
@@ -352,10 +361,13 @@
     return number < 10 ? "0" + number : String(number);
   }
 
-  function seatElement(seatId, position) {
+  function seatElement(room, seatId, position) {
     var seat = document.createElement("div");
-    seat.className = position <= 2 ? "seat is-first" : "seat";
+    // Bốn phòng có máy hỏng nên hai máy đầu mỗi dãy là chỗ ngồi chung; phòng LAB thì không.
+    var shared = room.sharedSeats !== false && position <= 2;
+    seat.className = shared ? "seat is-first" : "seat";
     seat.textContent = pad(seatId);
+    if (shared) seat.title = "Máy ngồi chung";
     return seat;
   }
 
@@ -401,10 +413,11 @@
 
       var seats = document.createElement("div");
       seats.className = "seats";
-      for (var index = 1; index <= SEATS_PER_ROW; index += 1) {
-        // numberFrom "bottom": máy số 1 nằm ở cuối phòng nên vẽ từ máy 10 xuống máy 1.
-        var position = room.numberFrom === "bottom" ? SEATS_PER_ROW + 1 - index : index;
-        seats.appendChild(seatElement((rowNumber - 1) * SEATS_PER_ROW + position, position));
+      var perRow = seatsPerRow(room);
+      for (var index = 1; index <= perRow; index += 1) {
+        // numberFrom "bottom": máy số 1 nằm ở cuối phòng nên vẽ từ máy cuối xuống máy 1.
+        var position = room.numberFrom === "bottom" ? perRow + 1 - index : index;
+        seats.appendChild(seatElement(room, (rowNumber - 1) * perRow + position, position));
       }
       col.appendChild(seats);
       cols.appendChild(col);
@@ -461,9 +474,10 @@
       var right = document.createElement("div");
       right.className = "seats-h";
 
-      for (var position = 1; position <= SEATS_PER_ROW; position += 1) {
-        var seat = seatElement((rowNumber - 1) * SEATS_PER_ROW + position, position);
-        (position <= SEATS_PER_ROW / 2 ? left : right).appendChild(seat);
+      var perRow = seatsPerRow(room);
+      for (var position = 1; position <= perRow; position += 1) {
+        var seat = seatElement(room, (rowNumber - 1) * perRow + position, position);
+        (position <= perRow / 2 ? left : right).appendChild(seat);
       }
 
       var aisle = document.createElement("span");
@@ -494,11 +508,11 @@
     head.className = "room-head";
 
     var title = document.createElement("h2");
-    title.textContent = room.name;
+    title.textContent = room.alias ? room.name + " — " + room.alias : room.name;
 
     var meta = document.createElement("span");
     meta.className = "room-meta";
-    meta.textContent = rowCount * SEATS_PER_ROW + " MÁY · " + rowCount + " DÃY";
+    meta.textContent = rowCount * seatsPerRow(room) + " MÁY · " + rowCount + " DÃY";
 
     head.appendChild(title);
     head.appendChild(meta);
