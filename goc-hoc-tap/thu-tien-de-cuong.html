@@ -465,10 +465,16 @@
     }
   }
 
-  document.getElementById("qr-image").addEventListener("error", function () {
-    this.hidden = true;
+  var qrImage = document.getElementById("qr-image");
+
+  function showQrFallback() {
+    qrImage.hidden = true;
     document.getElementById("qr-missing").hidden = false;
-  });
+  }
+
+  qrImage.addEventListener("error", showQrFallback);
+  // Ảnh có thể lỗi xong trước khi script chạy nên phải kiểm tra lại trạng thái đã tải.
+  if (qrImage.complete && qrImage.naturalWidth === 0) showQrFallback();
 
   document.getElementById("copy-account").addEventListener("click", async function () {
     var button = this;
