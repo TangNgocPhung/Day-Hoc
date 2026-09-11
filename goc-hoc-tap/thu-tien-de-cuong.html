@@ -282,12 +282,14 @@
   }
   .teacher-form {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-    gap: .8rem;
-    margin-top: 1.1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem 1.3rem;
+    margin-top: 1.3rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--border);
   }
-  .teacher-form .field { display: grid; gap: .35rem; }
-  .teacher-form label { font-size: .74rem; font-weight: 700; }
+  .teacher-form .field { display: grid; gap: .45rem; }
+  .teacher-form label { font-size: .78rem; font-weight: 700; }
   .teacher-form input, .teacher-form select {
     min-height: 42px;
     padding: .55rem .7rem;
@@ -304,7 +306,8 @@
   }
   .teacher-form .full { grid-column: 1 / -1; }
   .teacher-submit {
-    min-height: 44px;
+    min-height: 48px;
+    margin-top: .3rem;
     border: 0;
     border-radius: 10px;
     background: var(--green);
@@ -328,6 +331,9 @@
 
   @media (max-width: 900px) {
     .grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 620px) {
+    .teacher-form { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
     .topbar-inner { align-items: flex-start; }
@@ -430,7 +436,7 @@
         <label for="teacher-password">Mật khẩu giáo viên</label>
         <input id="teacher-password" type="password" autocomplete="current-password" required>
       </div>
-      <div class="field">
+      <div class="field full">
         <label for="cash-name">Họ và tên học sinh</label>
         <input id="cash-name" type="text" minlength="2" maxlength="80" required>
       </div>
@@ -446,7 +452,7 @@
         <label for="cash-amount">Số tiền (đ)</label>
         <input id="cash-amount" type="number" min="1000" step="1000" value="25000" required>
       </div>
-      <div class="field full">
+      <div class="field">
         <label for="cash-note">Ghi chú (không bắt buộc)</label>
         <input id="cash-note" type="text" maxlength="120" placeholder="VD: nộp 2 cuốn">
       </div>
