@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Đăng ký chỗ ngồi · TC_TIN_15</title>
+<title>Đăng ký chỗ ngồi phòng máy · Góc Học Tập</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
@@ -50,6 +50,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    flex-wrap: wrap;
   }
   .brand {
     font-family: "Fraunces", Georgia, serif;
@@ -121,64 +122,105 @@
   .notice.info { border-color: #b8cbe0; background: var(--blue-soft); color: #274d73; }
   .notice.success { border-color: #abd0c9; background: var(--green-soft); color: #195c55; }
   .notice.error { border-color: #ddb5b5; background: var(--red-soft); color: #852e2e; }
+
+  .step {
+    margin-bottom: 1.25rem;
+    padding: 1.1rem clamp(1rem, 3vw, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .step h2 {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0 0 .9rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.25rem;
+  }
+  .step-no {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 999px;
+    background: var(--green);
+    color: #fff;
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-size: .82rem;
+  }
+  .chip-row { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .chip {
+    flex: 1 1 12rem;
+    min-height: 56px;
+    padding: .6rem .85rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-2);
+    color: var(--ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: transform .14s ease, border-color .14s ease, background .14s ease;
+  }
+  .chip:hover { transform: translateY(-1px); border-color: var(--green); }
+  .chip:focus-visible { outline: 3px solid rgba(37,111,105,.3); outline-offset: 2px; }
+  .chip[aria-pressed="true"] { border: 2px solid var(--green); background: var(--green-soft); }
+  .chip b { display: block; font-size: .95rem; }
+  .chip small { color: var(--muted); font-size: .7rem; }
+
   .layout {
     display: grid;
     grid-template-columns: minmax(0, 1.8fr) minmax(280px, .75fr);
     gap: 1.25rem;
     align-items: start;
   }
-  .room, .registration-card {
+  .room-panel, .registration-card {
     border: 1px solid var(--border);
     border-radius: 18px;
     background: var(--surface);
     box-shadow: var(--shadow);
   }
-  .room { padding: clamp(1rem, 3vw, 1.6rem); overflow-x: auto; }
-  .board {
-    width: min(620px, 90%);
-    margin: 0 auto 1.5rem;
-    padding: .6rem 1rem;
-    border: 2px solid #889087;
-    border-radius: 8px;
-    color: #4f574f;
-    text-align: center;
-    font-family: "IBM Plex Mono", Consolas, monospace;
-    font-size: .72rem;
-    letter-spacing: .12em;
-    background: #f8faf6;
+  .room-panel { padding: clamp(1rem, 3vw, 1.6rem); overflow-x: auto; }
+  .room-panel h2 {
+    margin: 0 0 .3rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.3rem;
   }
-  .rows {
-    min-width: 720px;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(120px, 1fr));
-    gap: .75rem;
-    direction: rtl;
-  }
-  .row {
-    direction: ltr;
-    border: 1px solid var(--border);
+  .room-panel .room-note { margin: 0 0 1rem; color: var(--muted); font-size: .8rem; line-height: 1.55; }
+
+  .room { display: flex; gap: .7rem; align-items: stretch; min-width: 620px; }
+  .floor {
+    flex: 1;
+    min-width: 0;
+    padding: .9rem;
+    border: 2px dashed var(--border);
     border-radius: 14px;
     background: var(--surface-2);
-    padding: .75rem;
   }
-  .row h2 {
-    margin: 0 0 .7rem;
-    color: var(--blue);
+  .cols { display: grid; gap: .55rem; }
+  .col { min-width: 0; }
+  .col-label {
+    margin: 0 0 .45rem;
     text-align: center;
     font-family: "Fraunces", Georgia, serif;
-    font-size: 1.05rem;
+    font-size: .95rem;
+    color: var(--blue);
   }
-  .seat-list { display: grid; gap: .45rem; }
+  .seats { display: grid; gap: .35rem; }
   .seat {
     width: 100%;
-    min-height: 52px;
+    min-height: 46px;
     border: 1px solid #b9c6b8;
-    border-radius: 10px;
+    border-radius: 9px;
     background: #fff;
     color: var(--ink);
     cursor: pointer;
-    padding: .5rem .55rem;
+    padding: .38rem .45rem;
     text-align: left;
+    font: inherit;
     transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
   }
   .seat:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 7px 15px -12px #1f3828; }
@@ -188,14 +230,42 @@
   .seat.pair-open { border-color: #7ebbb2; background: var(--green-soft); }
   .seat:disabled { cursor: not-allowed; opacity: .7; }
   .seat-top { display: flex; justify-content: space-between; gap: .3rem; align-items: center; }
-  .seat-code { font-size: .7rem; }
-  .seat-status { color: var(--muted); font-size: .62rem; margin-top: .22rem; }
-  .front-badge {
-    color: var(--green);
-    font-size: .55rem;
-    font-weight: 700;
-    letter-spacing: .03em;
+  .seat-code { font-size: .68rem; }
+  .seat-status { color: var(--muted); font-size: .6rem; margin-top: .2rem; }
+  .front-badge { color: var(--green); font-size: .53rem; font-weight: 700; }
+
+  .deskrow { display: grid; gap: .55rem; margin-top: .6rem; }
+  .desk, .board, .door {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: .5rem .6rem;
+    border-radius: 9px;
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    line-height: 1.3;
   }
+  .desk { border: 1px solid var(--orange); background: var(--orange-soft); color: var(--orange); }
+  .board { border: 1px solid var(--blue); background: var(--blue-soft); color: var(--blue); }
+  .door { border: 1px dashed var(--green); background: var(--green-soft); color: var(--green); }
+  .wall { min-width: 2.6rem; writing-mode: vertical-rl; }
+  .wall.wall--left { transform: rotate(180deg); }
+  .frontrow { display: flex; gap: .55rem; margin-bottom: .8rem; }
+  .frontrow > * { flex: 1; }
+  .rows-h { display: grid; gap: .45rem; }
+  .rowline { display: flex; align-items: center; gap: .5rem; }
+  .row-label {
+    flex: 0 0 4.2rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: .92rem;
+    color: var(--blue);
+  }
+  .seats-h { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: .35rem; flex: 1; min-width: 0; }
+  .aisle { flex: 0 0 2rem; text-align: center; font-size: .6rem; color: var(--muted); }
+
   .registration-card { padding: 1.2rem; position: sticky; top: 92px; }
   .registration-card h2 { margin: 0 0 .35rem; font-family: "Fraunces", Georgia, serif; font-size: 1.45rem; }
   .registration-card > p { color: var(--muted); font-size: .82rem; line-height: 1.5; margin: 0 0 1rem; }
@@ -272,27 +342,38 @@
 <main class="page">
   <section class="hero">
     <div>
-      <span class="eyebrow">PHÒNG MÁY 3 · LỚP TC_TIN_15</span>
+      <span class="eyebrow">PHÒNG THỰC HÀNH TIN HỌC</span>
       <h1>Đăng ký chỗ ngồi</h1>
-      <p>Chọn một máy còn trống. Nếu chỗ vừa chọn đã có bạn đăng ký trước, hệ thống sẽ yêu cầu chọn lại. Ghép đôi chỉ mở ở hai bàn đầu mỗi dãy sau khi đủ 50 chỗ đơn.</p>
+      <p>Chọn phòng máy và nhóm tự chọn của em, sơ đồ chỗ ngồi sẽ hiện ra. Sau đó chọn một máy còn trống rồi điền họ tên và lớp. Mỗi học sinh chỉ đăng ký một vị trí cho mỗi nhóm.</p>
     </div>
-    <div class="counter" aria-live="polite">
-      <strong id="occupancy">— / 50</strong>
+    <div class="counter" id="counter" hidden aria-live="polite">
+      <strong id="occupancy">— / —</strong>
       <span id="occupancy-note">Đang tải sơ đồ chỗ ngồi</span>
     </div>
   </section>
 
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
 
-  <div class="layout">
-    <section class="room" aria-label="Sơ đồ phòng máy 3">
-      <div class="board">BẢNG · BÀN GIÁO VIÊN</div>
-      <div id="rows" class="rows"></div>
+  <section class="step">
+    <h2><span class="step-no">1</span> Chọn phòng máy</h2>
+    <div id="room-picker" class="chip-row"></div>
+  </section>
+
+  <section class="step" id="step-course" hidden>
+    <h2><span class="step-no">2</span> Chọn nhóm tự chọn</h2>
+    <div id="course-picker" class="chip-row"></div>
+  </section>
+
+  <div class="layout" id="step-seats" hidden>
+    <section class="room-panel" aria-label="Sơ đồ chỗ ngồi">
+      <h2 id="room-title">Sơ đồ phòng máy</h2>
+      <p class="room-note" id="room-note"></p>
+      <div id="room-diagram"></div>
     </section>
 
     <aside class="registration-card">
-      <h2>Thông tin đăng ký</h2>
-      <p>Lớp <strong>TC_TIN_15</strong>. Mỗi học sinh chỉ đăng ký một vị trí.</p>
+      <h2><span class="step-no">3</span> Thông tin đăng ký</h2>
+      <p id="registration-context"></p>
       <form id="registration-form">
         <div class="field">
           <label for="student-name">Họ và tên học sinh</label>
@@ -314,47 +395,41 @@
   </div>
 
   <section class="rules">
-    <strong>Quy tắc:</strong> 5 dãy, mỗi dãy 10 máy. Mỗi máy ưu tiên một học sinh. Khi toàn bộ 50 máy đã có người, hệ thống mở thêm một chỗ ghép tại máy 01–02 của từng dãy. Dữ liệu được kiểm tra lại ngay lúc gửi để ngăn đăng ký trùng.
+    <strong>Quy tắc:</strong> mỗi máy ưu tiên một học sinh. Phòng máy 1 đến 4 có một số máy hỏng nên khi mọi máy trong phòng đều đã có người, hệ thống mở thêm một chỗ ghép tại hai máy đầu của từng dãy. Phòng LAB không ghép chung. Dữ liệu được kiểm tra lại ngay lúc gửi để ngăn hai bạn cùng chọn một máy. Xem vị trí và bố trí từng phòng tại <a href="so-do-phong-may.html">trang sơ đồ phòng máy</a>.
   </section>
 </main>
 
-<script src="seat-registration-config.js?v=2"></script>
+<script src="data/phong-may.js?v=1"></script>
+<script src="seat-registration-config.js?v=3"></script>
 <script>
 (function () {
   "use strict";
 
   var config = window.SEAT_REGISTRATION_CONFIG || {};
   var API_URL = config.apiUrl || "";
-  var ROOM_NAME = config.roomName || "Phòng máy 3";
-  var CLASS_NAME = config.className || "TC_TIN_15";
-  var ROW_COUNT = 5;
-  var SEATS_PER_ROW = 10;
-  var TOTAL_SEATS = ROW_COUNT * SEATS_PER_ROW;
-  var PAIR_POSITIONS = [1, 2];
+  var DATA = window.PHONG_MAY;
+  var PAIR_POSITIONS = DATA.pairPositions;
+
+  var selectedRoom = null;
+  var selectedCourse = null;
   var selectedSeatId = null;
-  var state = emptyState();
-  var rowsElement = document.getElementById("rows");
+  var state = null;
+
+  var roomPicker = document.getElementById("room-picker");
+  var coursePicker = document.getElementById("course-picker");
+  var stepCourse = document.getElementById("step-course");
+  var stepSeats = document.getElementById("step-seats");
+  var roomTitle = document.getElementById("room-title");
+  var roomNote = document.getElementById("room-note");
+  var diagram = document.getElementById("room-diagram");
+  var contextText = document.getElementById("registration-context");
   var form = document.getElementById("registration-form");
   var submitButton = document.getElementById("submit");
   var selectionElement = document.getElementById("selection");
+  var counter = document.getElementById("counter");
   var occupancyElement = document.getElementById("occupancy");
   var occupancyNote = document.getElementById("occupancy-note");
   var notice = document.getElementById("notice");
-
-  function emptyState() {
-    var seats = [];
-    for (var row = 1; row <= ROW_COUNT; row += 1) {
-      for (var position = 1; position <= SEATS_PER_ROW; position += 1) {
-        seats.push({
-          seatId: ((row - 1) * SEATS_PER_ROW) + position,
-          row: row,
-          position: position,
-          occupantCount: 0
-        });
-      }
-    }
-    return { seats: seats, primaryOccupied: 0, totalRegistrations: 0, pairEnabled: false };
-  }
 
   function isConfigured() {
     return /^https:\/\/script\.google\.com\/macros\/s\//.test(API_URL);
@@ -374,69 +449,50 @@
     return String(value).padStart(2, "0");
   }
 
+  function roomLabel(room) {
+    return room.alias ? room.name + " (" + room.alias + ")" : room.name;
+  }
+
+  function allowsPairing(room) {
+    return room.sharedSeats !== false;
+  }
+
+  function emptyState(room) {
+    var perRow = DATA.seatsPerRow(room);
+    var seats = [];
+    (room.layout === "vertical" ? room.columns : room.rows).forEach(function (rowNumber) {
+      for (var position = 1; position <= perRow; position += 1) {
+        seats.push({
+          seatId: (rowNumber - 1) * perRow + position,
+          row: rowNumber,
+          position: position,
+          occupantCount: 0
+        });
+      }
+    });
+    return { seats: seats, primaryOccupied: 0, totalRegistrations: 0, pairEnabled: false };
+  }
+
+  function seatById(seatId) {
+    var found = null;
+    state.seats.forEach(function (seat) { if (seat.seatId === seatId) found = seat; });
+    return found;
+  }
+
   function seatLabel(seat) {
     return "Máy " + padded(seat.seatId) + " · Dãy " + seat.row;
   }
 
+  function isPairSeat(seat) {
+    return allowsPairing(selectedRoom) && PAIR_POSITIONS.indexOf(seat.position) !== -1;
+  }
+
   function canPair(seat) {
-    return state.pairEnabled && PAIR_POSITIONS.indexOf(seat.position) !== -1 && seat.occupantCount === 1;
+    return state.pairEnabled && isPairSeat(seat) && seat.occupantCount === 1;
   }
 
   function canSelect(seat) {
     return seat.occupantCount === 0 || canPair(seat);
-  }
-
-  function render() {
-    rowsElement.innerHTML = "";
-    for (var rowNumber = 1; rowNumber <= ROW_COUNT; rowNumber += 1) {
-      var row = document.createElement("section");
-      row.className = "row";
-      var title = document.createElement("h2");
-      title.textContent = "Dãy " + rowNumber;
-      row.appendChild(title);
-      var list = document.createElement("div");
-      list.className = "seat-list";
-
-      state.seats.filter(function (seat) { return seat.row === rowNumber; }).forEach(function (seat) {
-        var button = document.createElement("button");
-        button.type = "button";
-        button.className = "seat";
-        if (seat.occupantCount > 0) button.classList.add("occupied");
-        if (canPair(seat)) button.classList.add("pair-open");
-        if (selectedSeatId === seat.seatId) button.classList.add("selected");
-        button.disabled = !canSelect(seat);
-        button.setAttribute("aria-pressed", selectedSeatId === seat.seatId ? "true" : "false");
-        button.setAttribute("aria-label", seatLabel(seat) + ". " + statusText(seat));
-
-        var top = document.createElement("span");
-        top.className = "seat-top";
-        var code = document.createElement("strong");
-        code.className = "seat-code";
-        code.textContent = "MÁY " + padded(seat.seatId);
-        top.appendChild(code);
-        if (PAIR_POSITIONS.indexOf(seat.position) !== -1) {
-          var badge = document.createElement("span");
-          badge.className = "front-badge";
-          badge.textContent = "BÀN ĐẦU";
-          top.appendChild(badge);
-        }
-        button.appendChild(top);
-        var status = document.createElement("div");
-        status.className = "seat-status";
-        status.textContent = statusText(seat);
-        button.appendChild(status);
-        button.addEventListener("click", function () { chooseSeat(seat.seatId); });
-        list.appendChild(button);
-      });
-      row.appendChild(list);
-      rowsElement.appendChild(row);
-    }
-
-    occupancyElement.textContent = state.primaryOccupied + " / " + TOTAL_SEATS;
-    occupancyNote.textContent = state.pairEnabled
-      ? "Đã mở chỗ ngồi ghép ở bàn đầu"
-      : (TOTAL_SEATS - state.primaryOccupied) + " máy đơn còn trống";
-    updateSelection();
   }
 
   function statusText(seat) {
@@ -446,6 +502,246 @@
     return "Đã có người đăng ký";
   }
 
+  /* ---------- Bước 1 và 2: chọn phòng, chọn nhóm ---------- */
+
+  function buildRoomPicker() {
+    DATA.rooms.forEach(function (room) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "chip";
+      button.setAttribute("aria-pressed", "false");
+      var name = document.createElement("b");
+      name.textContent = roomLabel(room);
+      var detail = document.createElement("small");
+      detail.textContent = DATA.totalSeats(room) + " máy · " + DATA.rowCount(room) + " dãy"
+        + (room.location ? " · " + room.location : "");
+      button.appendChild(name);
+      button.appendChild(detail);
+      button.addEventListener("click", function () { chooseRoom(room); });
+      roomPicker.appendChild(button);
+    });
+  }
+
+  function buildCoursePicker() {
+    DATA.courses.forEach(function (course) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "chip";
+      button.setAttribute("aria-pressed", "false");
+      var name = document.createElement("b");
+      name.textContent = course.replace(/_/g, " ");
+      var detail = document.createElement("small");
+      detail.textContent = course.indexOf("TIN") !== -1 ? "Tự chọn Tin học" : "Tự chọn MOS";
+      button.appendChild(name);
+      button.appendChild(detail);
+      button.addEventListener("click", function () { chooseCourse(course); });
+      coursePicker.appendChild(button);
+    });
+  }
+
+  function markPressed(container, index) {
+    [].forEach.call(container.children, function (child, position) {
+      child.setAttribute("aria-pressed", position === index ? "true" : "false");
+    });
+  }
+
+  function chooseRoom(room) {
+    selectedRoom = room;
+    selectedSeatId = null;
+    markPressed(roomPicker, DATA.rooms.indexOf(room));
+    stepCourse.hidden = false;
+    clearNotice();
+    if (selectedCourse) {
+      openSeatMap();
+    } else {
+      stepSeats.hidden = true;
+      counter.hidden = true;
+      stepCourse.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }
+
+  function chooseCourse(course) {
+    selectedCourse = course;
+    selectedSeatId = null;
+    markPressed(coursePicker, DATA.courses.indexOf(course));
+    clearNotice();
+    openSeatMap();
+  }
+
+  function openSeatMap() {
+    state = emptyState(selectedRoom);
+    roomTitle.textContent = "Sơ đồ " + roomLabel(selectedRoom);
+    roomNote.textContent = selectedRoom.note;
+    contextText.innerHTML = "Phòng <strong>" + roomLabel(selectedRoom) + "</strong> · nhóm <strong>"
+      + selectedCourse.replace(/_/g, " ") + "</strong>. Mỗi học sinh chỉ đăng ký một vị trí.";
+    stepSeats.hidden = false;
+    counter.hidden = false;
+    render();
+    loadSeats();
+  }
+
+  /* ---------- Vẽ sơ đồ chỗ ngồi ---------- */
+
+  function blockElement(kind, label) {
+    var block = document.createElement("div");
+    block.className = kind === "board" ? "board" : (kind === "door" ? "door" : "desk");
+    block.textContent = label;
+    return block;
+  }
+
+  function wallElement(wall, side) {
+    var element = document.createElement("div");
+    element.className = (wall.kind === "door" ? "door" : "board") + " wall wall--" + side;
+    element.textContent = wall.label;
+    return element;
+  }
+
+  function seatButton(seat) {
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = "seat";
+    if (seat.occupantCount > 0) button.classList.add("occupied");
+    if (canPair(seat)) button.classList.add("pair-open");
+    if (selectedSeatId === seat.seatId) button.classList.add("selected");
+    button.disabled = !canSelect(seat);
+    button.setAttribute("aria-pressed", selectedSeatId === seat.seatId ? "true" : "false");
+    button.setAttribute("aria-label", seatLabel(seat) + ". " + statusText(seat));
+
+    var top = document.createElement("span");
+    top.className = "seat-top";
+    var code = document.createElement("strong");
+    code.className = "seat-code";
+    code.textContent = "MÁY " + padded(seat.seatId);
+    top.appendChild(code);
+    if (isPairSeat(seat)) {
+      var badge = document.createElement("span");
+      badge.className = "front-badge";
+      badge.textContent = "GHÉP";
+      top.appendChild(badge);
+    }
+    button.appendChild(top);
+
+    var status = document.createElement("div");
+    status.className = "seat-status";
+    status.textContent = statusText(seat);
+    button.appendChild(status);
+
+    button.addEventListener("click", function () { chooseSeat(seat.seatId); });
+    return button;
+  }
+
+  function renderVertical(room) {
+    var wrapper = document.createElement("div");
+    wrapper.className = "room";
+    if (room.wall && room.wall.side === "left") wrapper.appendChild(wallElement(room.wall, "left"));
+
+    var floor = document.createElement("div");
+    floor.className = "floor";
+
+    var cols = document.createElement("div");
+    cols.className = "cols";
+    cols.style.gridTemplateColumns = "repeat(" + room.columns.length + ", minmax(0, 1fr))";
+
+    var perRow = DATA.seatsPerRow(room);
+    room.columns.forEach(function (rowNumber) {
+      var col = document.createElement("div");
+      col.className = "col";
+      var label = document.createElement("p");
+      label.className = "col-label";
+      label.textContent = "Dãy " + rowNumber;
+      col.appendChild(label);
+
+      var seats = document.createElement("div");
+      seats.className = "seats";
+      for (var index = 1; index <= perRow; index += 1) {
+        var position = room.numberFrom === "bottom" ? perRow + 1 - index : index;
+        seats.appendChild(seatButton(seatById((rowNumber - 1) * perRow + position)));
+      }
+      col.appendChild(seats);
+      cols.appendChild(col);
+    });
+    floor.appendChild(cols);
+
+    if (room.deskRow) {
+      var deskRow = document.createElement("div");
+      deskRow.className = "deskrow";
+      deskRow.style.gridTemplateColumns = "repeat(" + room.columns.length + ", minmax(0, 1fr))";
+      room.deskRow.forEach(function (item) {
+        var block = blockElement(item.kind, item.label);
+        block.style.gridColumn = item.column + " / span " + item.span;
+        deskRow.appendChild(block);
+      });
+      floor.appendChild(deskRow);
+    }
+
+    wrapper.appendChild(floor);
+    if (room.wall && room.wall.side === "right") wrapper.appendChild(wallElement(room.wall, "right"));
+    return wrapper;
+  }
+
+  function renderHorizontal(room) {
+    var wrapper = document.createElement("div");
+    wrapper.className = "room";
+
+    var floor = document.createElement("div");
+    floor.className = "floor";
+
+    var front = document.createElement("div");
+    front.className = "frontrow";
+    front.appendChild(blockElement("desk", "BÀN GV"));
+    front.appendChild(blockElement("board", "BẢNG"));
+    floor.appendChild(front);
+
+    var rows = document.createElement("div");
+    rows.className = "rows-h";
+    var perRow = DATA.seatsPerRow(room);
+
+    room.rows.forEach(function (rowNumber) {
+      var line = document.createElement("div");
+      line.className = "rowline";
+      var label = document.createElement("span");
+      label.className = "row-label";
+      label.textContent = "Dãy " + rowNumber;
+      line.appendChild(label);
+
+      var left = document.createElement("div");
+      left.className = "seats-h";
+      var right = document.createElement("div");
+      right.className = "seats-h";
+      for (var position = 1; position <= perRow; position += 1) {
+        var button = seatButton(seatById((rowNumber - 1) * perRow + position));
+        (position <= perRow / 2 ? left : right).appendChild(button);
+      }
+
+      var aisle = document.createElement("span");
+      aisle.className = "aisle";
+      aisle.textContent = "lối đi";
+
+      line.appendChild(left);
+      line.appendChild(aisle);
+      line.appendChild(right);
+      rows.appendChild(line);
+    });
+
+    floor.appendChild(rows);
+    wrapper.appendChild(floor);
+    return wrapper;
+  }
+
+  function render() {
+    diagram.innerHTML = "";
+    diagram.appendChild(selectedRoom.layout === "vertical"
+      ? renderVertical(selectedRoom)
+      : renderHorizontal(selectedRoom));
+
+    var total = DATA.totalSeats(selectedRoom);
+    occupancyElement.textContent = state.primaryOccupied + " / " + total;
+    occupancyNote.textContent = state.pairEnabled
+      ? "Đã mở chỗ ngồi ghép ở hai máy đầu mỗi dãy"
+      : (total - state.primaryOccupied) + " máy còn trống";
+    updateSelection();
+  }
+
   function chooseSeat(seatId) {
     selectedSeatId = seatId;
     clearNotice();
@@ -453,22 +749,26 @@
   }
 
   function updateSelection() {
-    var seat = state.seats.find(function (item) { return item.seatId === selectedSeatId; });
+    var seat = selectedSeatId ? seatById(selectedSeatId) : null;
     if (!seat || !canSelect(seat)) {
       selectedSeatId = null;
       selectionElement.textContent = "Chưa chọn máy.";
       submitButton.disabled = true;
       return;
     }
-    selectionElement.innerHTML = "Đã chọn: <strong>" + seatLabel(seat) + (seat.occupantCount === 1 ? " · chỗ ghép" : "") + "</strong>";
+    selectionElement.innerHTML = "Đã chọn: <strong>" + seatLabel(seat)
+      + (seat.occupantCount === 1 ? " · chỗ ghép" : "") + "</strong>";
     submitButton.disabled = !isConfigured();
   }
 
+  /* ---------- Đọc và ghi dữ liệu ---------- */
+
   function normalizeServerState(payload) {
     if (!payload || !payload.ok || !Array.isArray(payload.seats)) throw new Error("Dữ liệu sơ đồ không hợp lệ.");
-    var seatMap = new Map(payload.seats.map(function (seat) { return [Number(seat.seatId), Number(seat.occupantCount || 0)]; }));
-    var next = emptyState();
-    next.seats.forEach(function (seat) { seat.occupantCount = seatMap.get(seat.seatId) || 0; });
+    var counts = {};
+    payload.seats.forEach(function (seat) { counts[Number(seat.seatId)] = Number(seat.occupantCount || 0); });
+    var next = emptyState(selectedRoom);
+    next.seats.forEach(function (seat) { seat.occupantCount = counts[seat.seatId] || 0; });
     next.primaryOccupied = Number(payload.primaryOccupied || 0);
     next.totalRegistrations = Number(payload.totalRegistrations || 0);
     next.pairEnabled = Boolean(payload.pairEnabled);
@@ -482,8 +782,11 @@
       render();
       return;
     }
+    var query = "?action=status&room=" + encodeURIComponent(selectedRoom.id)
+      + "&course=" + encodeURIComponent(selectedCourse)
+      + "&t=" + Date.now();
     try {
-      var response = await fetch(API_URL + "?action=status&className=" + encodeURIComponent(CLASS_NAME) + "&t=" + Date.now(), { cache: "no-store" });
+      var response = await fetch(API_URL + query, { cache: "no-store" });
       if (!response.ok) throw new Error("Không thể tải sơ đồ.");
       state = normalizeServerState(await response.json());
       if (!options.keepNotice) clearNotice();
@@ -495,7 +798,9 @@
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
-    var seat = state.seats.find(function (item) { return item.seatId === selectedSeatId; });
+    if (!selectedRoom || !selectedCourse) return;
+
+    var seat = selectedSeatId ? seatById(selectedSeatId) : null;
     if (!seat || !canSelect(seat)) {
       showNotice("Chỗ này không còn khả dụng. Hãy chọn một máy khác.", "error");
       await loadSeats({ keepNotice: true });
@@ -513,8 +818,8 @@
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({
           action: "register",
-          roomName: ROOM_NAME,
-          className: CLASS_NAME,
+          roomId: selectedRoom.id,
+          course: selectedCourse,
           studentName: studentName,
           studentClass: studentClass,
           seatId: seat.seatId
@@ -532,17 +837,18 @@
       selectedSeatId = null;
       await loadSeats({ keepNotice: true });
     } catch (error) {
-      showNotice("Kết nối bị gián đoạn. Hãy kiểm tra lại sơ đồ trước khi gửi lại để tránh đăng ký hai lần.", "error");
-      await loadSeats({ keepNotice: true });
+      showNotice("Không gửi được đăng ký. Kiểm tra kết nối mạng rồi thử lại.", "error");
     } finally {
       submitButton.textContent = "Đăng ký chỗ ngồi";
       updateSelection();
     }
   });
 
-  render();
-  loadSeats();
-  window.setInterval(function () { loadSeats({ keepNotice: notice.classList.contains("success") }); }, 15000);
+  buildRoomPicker();
+  buildCoursePicker();
+  if (!isConfigured()) {
+    showNotice("Trang đã sẵn sàng nhưng chưa kết nối Google Sheet. Giáo viên cần hoàn tất bước triển khai dữ liệu trước khi học sinh đăng ký.", "info");
+  }
 })();
 </script>
 </body>

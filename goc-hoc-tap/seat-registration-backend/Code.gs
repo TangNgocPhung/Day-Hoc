@@ -1,29 +1,65 @@
+/**
+ * Backend đăng ký chỗ ngồi phòng máy - Trường THPT Nguyễn Khuyến.
+ *
+ * Mỗi sơ đồ chỗ ngồi được tính riêng theo cặp (phòng máy, nhóm tự chọn),
+ * nên cùng một máy có thể được nhóm TC_TIN_13 và TC_TIN_14 dùng ở hai buổi khác nhau.
+ *
+ * Cấu hình ROOMS phải khớp với file data/phong-may.js của trang web.
+ */
 var SETTINGS = {
   sheetName: "DangKyChoNgoi",
-  roomName: "Phòng máy 3",
-  className: "TC_TIN_15",
-  totalSeats: 50,
-  seatsPerRow: 10,
-  pairPositions: [1, 2]
+  pairPositions: [1, 2],
+  courses: ["TC_TIN_13", "TC_TIN_14", "TC_TIN_15", "TC_MOS_13", "TC_MOS_14", "TC_MOS_15"],
+  rooms: {
+    PM1: { name: "Phòng máy 1", rowCount: 4, seatsPerRow: 10, sharedSeats: true },
+    PM2: { name: "Phòng máy 2", rowCount: 4, seatsPerRow: 10, sharedSeats: true },
+    PM3: { name: "Phòng máy 3", rowCount: 4, seatsPerRow: 10, sharedSeats: true },
+    PM4: { name: "Phòng máy 4", rowCount: 4, seatsPerRow: 10, sharedSeats: true },
+    PM5: { name: "Phòng máy 5 - Phòng LAB", rowCount: 5, seatsPerRow: 8, sharedSeats: false }
+  }
 };
+
+var HEADERS = [
+  "Thời gian",
+  "Mã phòng",
+  "Phòng máy",
+  "Nhóm tự chọn",
+  "Lớp học",
+  "Họ và tên",
+  "Máy",
+  "Dãy",
+  "Vị trí trong dãy",
+  "Suất"
+];
 
 function setup() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   if (!spreadsheet) throw new Error("Hãy tạo mã này từ menu Tiện ích mở rộng > Apps Script của Google Sheet.");
   PropertiesService.getScriptProperties().setProperty("SPREADSHEET_ID", spreadsheet.getId());
+
   var sheet = spreadsheet.getSheetByName(SETTINGS.sheetName) || spreadsheet.insertSheet(SETTINGS.sheetName);
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["Thời gian", "Buổi đăng ký", "Lớp học", "Họ và tên", "Máy", "Dãy", "Vị trí trong dãy", "Suất"]);
-    sheet.setFrozenRows(1);
-    sheet.getRange(1, 1, 1, 8).setFontWeight("bold").setBackground("#256f69").setFontColor("#ffffff");
-    sheet.autoResizeColumns(1, 8);
+  if (sheet.getLastRow() > 1) {
+    throw new Error("Trang tính đã có " + (sheet.getLastRow() - 1) + " dòng dữ liệu cũ. "
+      + "Hãy xóa hết các dòng đó (giữ lại hàng tiêu đề) rồi chạy lại setup, vì cấu trúc cột đã thay đổi.");
   }
-  return "Đã khởi tạo dữ liệu cho " + SETTINGS.className;
+
+  sheet.clear();
+  sheet.appendRow(HEADERS);
+  sheet.setFrozenRows(1);
+  sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight("bold").setBackground("#256f69").setFontColor("#ffffff");
+  sheet.autoResizeColumns(1, HEADERS.length);
+  return "Đã khởi tạo dữ liệu cho " + Object.keys(SETTINGS.rooms).length + " phòng máy và "
+    + SETTINGS.courses.length + " nhóm tự chọn.";
 }
 
 function doGet(e) {
   try {
-    return jsonResponse_(buildPublicState_());
+    var params = (e && e.parameter) || {};
+    var room = SETTINGS.rooms[cleanText_(params.room, 10)];
+    var course = cleanText_(params.course, 30);
+    if (!room) return jsonResponse_({ ok: false, message: "Không tìm thấy phòng máy." });
+    if (SETTINGS.courses.indexOf(course) === -1) return jsonResponse_({ ok: false, message: "Nhóm tự chọn không hợp lệ." });
+    return jsonResponse_(buildPublicState_(cleanText_(params.room, 10), room, course));
   } catch (error) {
     return jsonResponse_({ ok: false, message: "Không thể đọc dữ liệu đăng ký." });
   }
@@ -44,50 +80,59 @@ function doPost(e) {
 }
 
 function register_(payload) {
-  var className = cleanText_(payload.className, 30);
-  var roomName = cleanText_(payload.roomName, 50);
+  var roomId = cleanText_(payload.roomId, 10);
+  var room = SETTINGS.rooms[roomId];
+  var course = cleanText_(payload.course, 30);
   var studentName = cleanText_(payload.studentName, 80);
   var studentClass = cleanText_(payload.studentClass, 20);
   var seatId = Number(payload.seatId);
 
-  if (className !== SETTINGS.className || roomName !== SETTINGS.roomName) {
-    return { ok: false, message: "Thông tin lớp hoặc phòng máy không đúng." };
-  }
+  if (!room) return { ok: false, message: "Không tìm thấy phòng máy." };
+  if (SETTINGS.courses.indexOf(course) === -1) return { ok: false, message: "Nhóm tự chọn không hợp lệ." };
   if (studentName.length < 2) return { ok: false, message: "Vui lòng nhập đầy đủ họ tên." };
   if (studentClass.length < 1) return { ok: false, message: "Vui lòng nhập lớp học." };
-  if (!Number.isInteger(seatId) || seatId < 1 || seatId > SETTINGS.totalSeats) {
+
+  var totalSeats = room.rowCount * room.seatsPerRow;
+  if (!Number.isInteger(seatId) || seatId < 1 || seatId > totalSeats) {
     return { ok: false, message: "Số máy không hợp lệ." };
   }
 
   var sheet = getSheet_();
   var records = readRecords_(sheet);
+
   var duplicateStudent = records.some(function (record) {
-    return record.className === className
+    return record.course === course
       && record.studentClass.toLowerCase() === studentClass.toLowerCase()
       && record.studentName.toLowerCase() === studentName.toLowerCase();
   });
-  if (duplicateStudent) return { ok: false, message: "Bạn đã đăng ký chỗ ngồi rồi." };
+  if (duplicateStudent) return { ok: false, message: "Bạn đã đăng ký chỗ ngồi cho nhóm này rồi." };
 
-  var seatRecords = records.filter(function (record) {
-    return record.className === className && record.seatId === seatId;
+  var scoped = records.filter(function (record) {
+    return record.roomId === roomId && record.course === course && record.seatId <= totalSeats;
   });
+  var seatRecords = scoped.filter(function (record) { return record.seatId === seatId; });
+
   var primarySeatIds = {};
-  records.forEach(function (record) {
-    if (record.className === className && record.slot === 1) primarySeatIds[record.seatId] = true;
+  scoped.forEach(function (record) {
+    if (record.slot === 1) primarySeatIds[record.seatId] = true;
   });
   var primaryOccupied = Object.keys(primarySeatIds).length;
-  var position = ((seatId - 1) % SETTINGS.seatsPerRow) + 1;
-  var row = Math.floor((seatId - 1) / SETTINGS.seatsPerRow) + 1;
+
+  var position = ((seatId - 1) % room.seatsPerRow) + 1;
+  var row = Math.floor((seatId - 1) / room.seatsPerRow) + 1;
   var slot = 1;
 
   if (seatRecords.length > 0) {
-    var pairAllowed = primaryOccupied >= SETTINGS.totalSeats && SETTINGS.pairPositions.indexOf(position) !== -1;
+    if (!room.sharedSeats) {
+      return { ok: false, code: "SEAT_TAKEN", message: "Máy này vừa có bạn đăng ký trước. Hãy chọn một máy khác." };
+    }
+    var pairAllowed = primaryOccupied >= totalSeats && SETTINGS.pairPositions.indexOf(position) !== -1;
     if (!pairAllowed) {
       return {
         ok: false,
-        code: primaryOccupied >= SETTINGS.totalSeats ? "PAIR_NOT_ALLOWED" : "SEAT_TAKEN",
-        message: primaryOccupied >= SETTINGS.totalSeats
-          ? "Máy này không thuộc bàn đầu được phép ghép. Hãy chọn chỗ khác."
+        code: primaryOccupied >= totalSeats ? "PAIR_NOT_ALLOWED" : "SEAT_TAKEN",
+        message: primaryOccupied >= totalSeats
+          ? "Máy này không thuộc hai máy đầu dãy được phép ghép. Hãy chọn chỗ khác."
           : "Máy này vừa có bạn đăng ký trước. Hãy chọn một máy khác."
       };
     }
@@ -97,7 +142,9 @@ function register_(payload) {
 
   sheet.appendRow([
     new Date(),
-    className,
+    roomId,
+    room.name,
+    course,
     safeCellText_(studentClass),
     safeCellText_(studentName),
     seatId,
@@ -109,8 +156,13 @@ function register_(payload) {
   return { ok: true, seatId: seatId, row: row, position: position, slot: slot };
 }
 
-function buildPublicState_() {
-  var records = readRecords_(getSheet_()).filter(function (record) { return record.className === SETTINGS.className; });
+function buildPublicState_(roomId, room, course) {
+  var totalSeats = room.rowCount * room.seatsPerRow;
+  var records = readRecords_(getSheet_()).filter(function (record) {
+    return record.roomId === roomId && record.course === course
+      && record.seatId >= 1 && record.seatId <= totalSeats;
+  });
+
   var counts = {};
   var primarySeatIds = {};
   records.forEach(function (record) {
@@ -118,18 +170,21 @@ function buildPublicState_() {
     if (record.slot === 1) primarySeatIds[record.seatId] = true;
   });
   var primaryOccupied = Object.keys(primarySeatIds).length;
+
   var seats = [];
-  for (var seatId = 1; seatId <= SETTINGS.totalSeats; seatId += 1) {
+  for (var seatId = 1; seatId <= totalSeats; seatId += 1) {
     seats.push({ seatId: seatId, occupantCount: counts[seatId] || 0 });
   }
+
   return {
     ok: true,
-    roomName: SETTINGS.roomName,
-    className: SETTINGS.className,
+    roomId: roomId,
+    roomName: room.name,
+    course: course,
     seats: seats,
     primaryOccupied: primaryOccupied,
     totalRegistrations: records.length,
-    pairEnabled: primaryOccupied >= SETTINGS.totalSeats,
+    pairEnabled: Boolean(room.sharedSeats) && primaryOccupied >= totalSeats,
     updatedAt: new Date().toISOString()
   };
 }
@@ -145,15 +200,16 @@ function getSheet_() {
 
 function readRecords_(sheet) {
   if (sheet.getLastRow() < 2) return [];
-  return sheet.getRange(2, 1, sheet.getLastRow() - 1, 8).getValues().map(function (row) {
+  return sheet.getRange(2, 1, sheet.getLastRow() - 1, HEADERS.length).getValues().map(function (row) {
     return {
-      className: String(row[1] || "").trim(),
-      studentClass: String(row[2] || "").replace(/^'/, "").trim(),
-      studentName: String(row[3] || "").trim(),
-      seatId: Number(row[4]),
-      slot: Number(row[7])
+      roomId: String(row[1] || "").trim(),
+      course: String(row[3] || "").trim(),
+      studentClass: String(row[4] || "").replace(/^'/, "").trim(),
+      studentName: String(row[5] || "").replace(/^'/, "").trim(),
+      seatId: Number(row[6]),
+      slot: Number(row[9])
     };
-  }).filter(function (record) { return record.seatId >= 1 && record.seatId <= SETTINGS.totalSeats; });
+  }).filter(function (record) { return record.seatId >= 1; });
 }
 
 function cleanText_(value, maxLength) {
