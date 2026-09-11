@@ -359,9 +359,11 @@
     return seat;
   }
 
+  var BLOCK_CLASS = { board: "board", door: "door", desk: "desk" };
+
   function blockElement(kind, label) {
     var block = document.createElement("div");
-    block.className = kind === "board" ? "board" : "desk";
+    block.className = BLOCK_CLASS[kind] || "desk";
     block.textContent = label;
     return block;
   }
