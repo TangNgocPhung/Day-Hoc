@@ -1,3 +1,3 @@
 window.SEAT_REGISTRATION_CONFIG = {
-  apiUrl: "https://script.google.com/macros/s/AKfycbw2DtCW9vHX_q_4g26Jq2pPMRzqXQHR3ub2lZMD1HqKWZ0c1ldetsLzpfK4layiWOWH/exec"
+  apiUrl: "https://script.google.com/macros/s/AKfycbxzMrH6au3l0sx689QK2gJXCEL7nzPlQh3bgcLwOAuFCrd7GIGKkolIl232yyrYdNk/exec"
 };
