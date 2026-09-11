@@ -262,6 +262,70 @@
   .notice.info { border-color: #b8cbe0; background: var(--blue-soft); color: #274d73; }
   .notice.error { border-color: #ddb5b5; background: var(--red-soft); color: #852e2e; }
 
+  .teacher-card { margin-top: 1.25rem; }
+  .teacher-card summary {
+    cursor: pointer;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.2rem;
+    list-style: none;
+  }
+  .teacher-card summary::-webkit-details-marker { display: none; }
+  .teacher-card summary::before { content: "🔒 "; }
+  .teacher-card[open] summary::before { content: "🔓 "; }
+  .teacher-card summary small {
+    display: block;
+    margin-top: .25rem;
+    color: var(--muted);
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-size: .78rem;
+    font-weight: 400;
+  }
+  .teacher-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: .8rem;
+    margin-top: 1.1rem;
+  }
+  .teacher-form .field { display: grid; gap: .35rem; }
+  .teacher-form label { font-size: .74rem; font-weight: 700; }
+  .teacher-form input, .teacher-form select {
+    min-height: 42px;
+    padding: .55rem .7rem;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: .88rem;
+  }
+  .teacher-form input:focus, .teacher-form select:focus {
+    outline: 3px solid rgba(52,97,143,.18);
+    border-color: var(--blue);
+  }
+  .teacher-form .full { grid-column: 1 / -1; }
+  .teacher-submit {
+    min-height: 44px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--green);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .teacher-submit:disabled { opacity: .55; cursor: not-allowed; }
+  .teacher-result {
+    display: none;
+    grid-column: 1 / -1;
+    padding: .75rem .9rem;
+    border-radius: 10px;
+    font-size: .84rem;
+    line-height: 1.5;
+  }
+  .teacher-result.show { display: block; }
+  .teacher-result.ok { border: 1px solid var(--green); background: var(--green-soft); color: var(--green); }
+  .teacher-result.fail { border: 1px solid #ddb5b5; background: var(--red-soft); color: #852e2e; }
+
   @media (max-width: 900px) {
     .grid { grid-template-columns: 1fr; }
   }
@@ -316,7 +380,7 @@
       </dl>
 
       <div class="qr-wrap">
-        <img src="assets/qr-chuyen-khoan-ocb.png" alt="Mã QR chuyển khoản OCB của cô Tăng Ngọc Phụng" id="qr-image">
+        <img src="assets/qr-chuyen-khoan-ocb.png?v=1" alt="Mã QR chuyển khoản OCB của cô Tăng Ngọc Phụng" id="qr-image">
         <div class="qr-missing" id="qr-missing" hidden>
           Chưa có ảnh mã QR.<br>
           Giáo viên lưu ảnh QR vào <code>goc-hoc-tap/assets/qr-chuyen-khoan-ocb.png</code> là mã sẽ hiện ở đây.
@@ -346,6 +410,7 @@
             <tr>
               <th>Họ và tên</th>
               <th>Lớp</th>
+              <th>Nhóm</th>
               <th>Trạng thái</th>
             </tr>
           </thead>
@@ -354,9 +419,45 @@
       </div>
     </section>
   </div>
+
+  <details class="card teacher-card" id="teacher-card">
+    <summary>
+      Dành cho giáo viên: ghi nhận học sinh nộp tiền mặt
+      <small>Cần mật khẩu. Học sinh không tự thêm tên mình vào danh sách được.</small>
+    </summary>
+    <form class="teacher-form" id="teacher-form">
+      <div class="field full">
+        <label for="teacher-password">Mật khẩu giáo viên</label>
+        <input id="teacher-password" type="password" autocomplete="current-password" required>
+      </div>
+      <div class="field">
+        <label for="cash-name">Họ và tên học sinh</label>
+        <input id="cash-name" type="text" minlength="2" maxlength="80" required>
+      </div>
+      <div class="field">
+        <label for="cash-class">Lớp gốc</label>
+        <input id="cash-class" type="text" placeholder="VD: 10A2" minlength="1" maxlength="20" required>
+      </div>
+      <div class="field">
+        <label for="cash-course">Nhóm tự chọn đang học</label>
+        <select id="cash-course" required></select>
+      </div>
+      <div class="field">
+        <label for="cash-amount">Số tiền (đ)</label>
+        <input id="cash-amount" type="number" min="1000" step="1000" value="25000" required>
+      </div>
+      <div class="field full">
+        <label for="cash-note">Ghi chú (không bắt buộc)</label>
+        <input id="cash-note" type="text" maxlength="120" placeholder="VD: nộp 2 cuốn">
+      </div>
+      <div class="teacher-result" id="teacher-result" role="status" aria-live="polite"></div>
+      <button class="teacher-submit full" id="teacher-submit" type="submit">Ghi nhận đã nộp tiền mặt</button>
+    </form>
+  </details>
 </main>
 
-<script src="seat-registration-config.js?v=7"></script>
+<script src="data/phong-may.js?v=2"></script>
+<script src="seat-registration-config.js?v=8"></script>
 <script>
 (function () {
   "use strict";
@@ -399,7 +500,7 @@
       var empty = document.createElement("tr");
       var cell = document.createElement("td");
       cell.className = "empty";
-      cell.colSpan = 3;
+      cell.colSpan = 4;
       cell.textContent = payments.length === 0
         ? "Chưa có học sinh nào trong danh sách đã nộp."
         : "Không tìm thấy học sinh phù hợp.";
@@ -412,6 +513,8 @@
         name.textContent = item.studentName;
         var studentClass = document.createElement("td");
         studentClass.textContent = item.studentClass;
+        var course = document.createElement("td");
+        course.textContent = (item.course || "").replace(/_/g, " ");
         var status = document.createElement("td");
         var badge = document.createElement("span");
         badge.className = "badge-paid";
@@ -419,6 +522,7 @@
         status.appendChild(badge);
         tr.appendChild(name);
         tr.appendChild(studentClass);
+        tr.appendChild(course);
         tr.appendChild(status);
         tbody.appendChild(tr);
       });
@@ -430,6 +534,12 @@
   }
 
   function fillClassFilter() {
+    var previous = classFilter.value;
+    classFilter.innerHTML = "";
+    var all = document.createElement("option");
+    all.value = "";
+    all.textContent = "Tất cả lớp";
+    classFilter.appendChild(all);
     var classes = [];
     payments.forEach(function (item) {
       if (item.studentClass && classes.indexOf(item.studentClass) === -1) classes.push(item.studentClass);
@@ -441,6 +551,7 @@
       option.textContent = name;
       classFilter.appendChild(option);
     });
+    if (classes.indexOf(previous) !== -1) classFilter.value = previous;
   }
 
   async function loadPayments() {
@@ -485,6 +596,80 @@
     } catch (error) {
       button.textContent = "Không chép được";
       setTimeout(function () { button.textContent = "Sao chép"; }, 1800);
+    }
+  });
+
+  /* ---------- Khung ghi nhận thu tiền mặt của giáo viên ---------- */
+
+  var teacherForm = document.getElementById("teacher-form");
+  var teacherResult = document.getElementById("teacher-result");
+  var teacherSubmit = document.getElementById("teacher-submit");
+  var passwordInput = document.getElementById("teacher-password");
+  var courseSelect = document.getElementById("cash-course");
+
+  ((window.PHONG_MAY && window.PHONG_MAY.courses) || []).forEach(function (course) {
+    var option = document.createElement("option");
+    option.value = course;
+    option.textContent = course.replace(/_/g, " ");
+    courseSelect.appendChild(option);
+  });
+
+  // Giữ mật khẩu trong phiên làm việc để cô không phải gõ lại sau mỗi lần ghi nhận.
+  try {
+    var saved = sessionStorage.getItem("teacherPassword");
+    if (saved) passwordInput.value = saved;
+  } catch (error) { /* trình duyệt chặn lưu trữ thì bỏ qua */ }
+
+  function showTeacherResult(message, ok) {
+    teacherResult.textContent = message;
+    teacherResult.className = "teacher-result show " + (ok ? "ok" : "fail");
+  }
+
+  teacherForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    if (!isConfigured()) {
+      showTeacherResult("Trang chưa kết nối Google Sheet nên chưa ghi nhận được.", false);
+      return;
+    }
+
+    var body = {
+      action: "addPayment",
+      password: passwordInput.value,
+      studentName: document.getElementById("cash-name").value.trim(),
+      studentClass: document.getElementById("cash-class").value.trim(),
+      course: courseSelect.value,
+      method: "Tiền mặt",
+      amount: Number(document.getElementById("cash-amount").value),
+      note: document.getElementById("cash-note").value.trim()
+    };
+
+    teacherSubmit.disabled = true;
+    teacherSubmit.textContent = "Đang ghi nhận...";
+    try {
+      var response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(body)
+      });
+      var result = await response.json();
+      if (!result.ok) {
+        showTeacherResult(result.message || "Không ghi nhận được.", false);
+        return;
+      }
+      try {
+        sessionStorage.setItem("teacherPassword", passwordInput.value);
+      } catch (error) { /* bỏ qua */ }
+      showTeacherResult("Đã ghi nhận: " + body.studentName + " · " + body.studentClass
+        + " · " + body.course.replace(/_/g, " ") + ".", true);
+      document.getElementById("cash-name").value = "";
+      document.getElementById("cash-note").value = "";
+      document.getElementById("cash-name").focus();
+      await loadPayments();
+    } catch (error) {
+      showTeacherResult("Không gửi được yêu cầu. Kiểm tra kết nối mạng rồi thử lại.", false);
+    } finally {
+      teacherSubmit.disabled = false;
+      teacherSubmit.textContent = "Ghi nhận đã nộp tiền mặt";
     }
   });
 

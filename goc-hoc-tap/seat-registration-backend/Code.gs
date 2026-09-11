@@ -37,9 +37,21 @@ var PAYMENT_HEADERS = [
   "Thời gian xác nhận",
   "Họ và tên",
   "Lớp",
+  "Nhóm tự chọn",
+  "Hình thức",
   "Số tiền",
   "Ghi chú"
 ];
+
+/**
+ * Mật khẩu giáo viên KHÔNG nằm trong mã nguồn, vì file này được đẩy lên
+ * GitHub công khai. Đặt nó trong Apps Script:
+ *   Cài đặt dự án > Thuộc tính tập lệnh > thêm TEACHER_PASSWORD
+ * Chưa đặt thì mọi yêu cầu ghi nhận thu tiền đều bị từ chối.
+ */
+function teacherPassword_() {
+  return PropertiesService.getScriptProperties().getProperty("TEACHER_PASSWORD") || "";
+}
 
 function setup() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -106,6 +118,7 @@ function doPost(e) {
   try {
     lock.waitLock(15000);
     var payload = JSON.parse((e.postData && e.postData.contents) || "{}");
+    if (payload.action === "addPayment") return jsonResponse_(addPayment_(payload));
     if (payload.action !== "register") return jsonResponse_({ ok: false, message: "Yêu cầu không hợp lệ." });
     return jsonResponse_(register_(payload));
   } catch (error) {
@@ -225,6 +238,60 @@ function buildPublicState_(roomId, room, course) {
   };
 }
 
+function addPayment_(payload) {
+  var password = teacherPassword_();
+  if (!password) {
+    return { ok: false, message: "Chưa đặt mật khẩu giáo viên trong Thuộc tính tập lệnh (TEACHER_PASSWORD)." };
+  }
+  if (String(payload.password || "") !== password) {
+    return { ok: false, message: "Mật khẩu không đúng." };
+  }
+
+  var studentName = cleanText_(payload.studentName, 80);
+  var studentClass = cleanText_(payload.studentClass, 20);
+  var course = cleanText_(payload.course, 30);
+  var method = cleanText_(payload.method, 20) || "Tiền mặt";
+  var amount = Number(payload.amount);
+  var note = cleanText_(payload.note, 120);
+
+  if (studentName.length < 2) return { ok: false, message: "Vui lòng nhập đầy đủ họ tên học sinh." };
+  if (studentClass.length < 1) return { ok: false, message: "Vui lòng nhập lớp của học sinh." };
+  if (SETTINGS.courses.indexOf(course) === -1) return { ok: false, message: "Nhóm tự chọn không hợp lệ." };
+  if (!isFinite(amount) || amount <= 0) amount = 25000;
+
+  var spreadsheetId = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+  if (!spreadsheetId) return { ok: false, message: "Chưa chạy hàm setup()." };
+  var spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+  var sheet = spreadsheet.getSheetByName(SETTINGS.paymentSheetName);
+  if (!sheet) {
+    setupPayments_(spreadsheet);
+    sheet = spreadsheet.getSheetByName(SETTINGS.paymentSheetName);
+  }
+
+  var existing = buildPaymentList_().payments || [];
+  var duplicate = existing.some(function (item) {
+    return item.studentName.toLowerCase() === studentName.toLowerCase()
+      && item.studentClass.toLowerCase() === studentClass.toLowerCase()
+      && item.course === course;
+  });
+  if (duplicate) return { ok: false, message: "Học sinh này đã có trong danh sách đã nộp của nhóm " + course + "." };
+
+  sheet.appendRow([
+    new Date(),
+    safeCellText_(studentName),
+    safeCellText_(studentClass),
+    course,
+    method,
+    amount,
+    safeCellText_(note)
+  ]);
+
+  return {
+    ok: true,
+    payment: { studentName: studentName, studentClass: studentClass, course: course, method: method }
+  };
+}
+
 function buildPaymentList_() {
   var spreadsheetId = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
   if (!spreadsheetId) return { ok: false, message: "Chưa chạy hàm setup()." };
@@ -238,7 +305,9 @@ function buildPaymentList_() {
   var payments = values.map(function (row) {
     return {
       studentName: String(row[1] || "").replace(/^'/, "").trim(),
-      studentClass: String(row[2] || "").replace(/^'/, "").trim()
+      studentClass: String(row[2] || "").replace(/^'/, "").trim(),
+      course: String(row[3] || "").trim(),
+      method: String(row[4] || "").trim()
     };
   }).filter(function (item) { return item.studentName.length > 0; });
 
