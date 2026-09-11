@@ -453,7 +453,7 @@
   </div>
 
   <section class="rules">
-    <strong>Quy tắc:</strong> mỗi máy ưu tiên một học sinh. Phòng máy 1 đến 4 có một số máy hỏng nên khi mọi máy trong phòng đều đã có người, hệ thống mở thêm một chỗ ghép tại hai máy đầu của từng dãy. Phòng LAB không ghép chung. Dữ liệu được kiểm tra lại ngay lúc gửi để ngăn hai bạn cùng chọn một máy. Xem vị trí và bố trí từng phòng tại <a href="so-do-phong-may.html">trang sơ đồ phòng máy</a>.
+    <strong>Quy tắc:</strong> mỗi máy ưu tiên một học sinh. Phòng máy 1 đến 4 có một số máy hỏng nên hai máy đầu của mỗi dãy (ô có nhãn <b>GHÉP</b>) cho hai bạn ngồi chung: bạn thứ hai cứ bấm vào ô đã có tên để đăng ký chỗ còn lại. Phòng LAB không ghép chung. Dữ liệu được kiểm tra lại ngay lúc gửi để ngăn hai bạn cùng chọn một máy. Xem vị trí và bố trí từng phòng tại <a href="so-do-phong-may.html">trang sơ đồ phòng máy</a>.
   </section>
 </main>
 
@@ -558,7 +558,7 @@
   function statusText(seat) {
     if (seat.occupantCount === 0) return "Còn trống";
     var who = (seat.occupants || []).join(" · ");
-    if (canPair(seat)) return (who || "Đã có 1 bạn") + " · còn 1 chỗ ghép";
+    if (canPair(seat)) return (who || "Đã có 1 bạn") + " · bấm để ngồi chung";
     return who || (seat.occupantCount > 1 ? "Đã đủ 2 bạn" : "Đã có người đăng ký");
   }
 
@@ -798,9 +798,8 @@
 
     var total = DATA.totalSeats(selectedRoom);
     occupancyElement.textContent = state.primaryOccupied + " / " + total;
-    occupancyNote.textContent = state.pairEnabled
-      ? "Đã mở chỗ ngồi ghép ở hai máy đầu mỗi dãy"
-      : (total - state.primaryOccupied) + " máy còn trống";
+    occupancyNote.textContent = (total - state.primaryOccupied) + " máy còn trống"
+      + (state.pairEnabled ? " · hai máy đầu mỗi dãy ngồi được 2 bạn" : "");
     updateSelection();
   }
 

@@ -40,7 +40,7 @@ Hàm `setup` tạo trang tính `DangKyChoNgoi` với 10 cột:
 ## Quy tắc chỗ ngồi
 
 - Mỗi máy ưu tiên một học sinh.
-- Phòng máy 1–4 (`sharedSeats: true`): khi **mọi máy trong phòng đều đã có người**, hệ thống mở thêm một chỗ ghép ở hai máy đầu mỗi dãy (`pairPositions`), tối đa 2 học sinh một máy.
+- Phòng máy 1–4 (`sharedSeats: true`): hai máy đầu mỗi dãy (`pairPositions`) nhận tối đa 2 học sinh ngay từ đầu, vì phòng có máy hỏng nên phải ngồi chung. Các máy còn lại chỉ 1 học sinh.
 - Phòng máy 5 / phòng LAB (`sharedSeats: false`): không ghép chung.
 - Một học sinh (trùng họ tên và lớp) chỉ đăng ký được một chỗ cho mỗi nhóm tự chọn.
 

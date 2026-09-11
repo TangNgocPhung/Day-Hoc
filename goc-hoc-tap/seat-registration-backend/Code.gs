@@ -112,12 +112,6 @@ function register_(payload) {
   });
   var seatRecords = scoped.filter(function (record) { return record.seatId === seatId; });
 
-  var primarySeatIds = {};
-  scoped.forEach(function (record) {
-    if (record.slot === 1) primarySeatIds[record.seatId] = true;
-  });
-  var primaryOccupied = Object.keys(primarySeatIds).length;
-
   var position = ((seatId - 1) % room.seatsPerRow) + 1;
   var row = Math.floor((seatId - 1) / room.seatsPerRow) + 1;
   var slot = 1;
@@ -126,14 +120,13 @@ function register_(payload) {
     if (!room.sharedSeats) {
       return { ok: false, code: "SEAT_TAKEN", message: "Máy này vừa có bạn đăng ký trước. Hãy chọn một máy khác." };
     }
-    var pairAllowed = primaryOccupied >= totalSeats && SETTINGS.pairPositions.indexOf(position) !== -1;
-    if (!pairAllowed) {
+    // Máy hỏng nên hai máy đầu mỗi dãy cho hai bạn ngồi chung ngay từ đầu,
+    // không phải chờ tới khi cả phòng kín chỗ.
+    if (SETTINGS.pairPositions.indexOf(position) === -1) {
       return {
         ok: false,
-        code: primaryOccupied >= totalSeats ? "PAIR_NOT_ALLOWED" : "SEAT_TAKEN",
-        message: primaryOccupied >= totalSeats
-          ? "Máy này không thuộc hai máy đầu dãy được phép ghép. Hãy chọn chỗ khác."
-          : "Máy này vừa có bạn đăng ký trước. Hãy chọn một máy khác."
+        code: "SEAT_TAKEN",
+        message: "Máy này vừa có bạn đăng ký trước. Hãy chọn một máy khác."
       };
     }
     if (seatRecords.length >= 2) return { ok: false, code: "SEAT_FULL", message: "Máy này đã đủ hai bạn. Hãy chọn chỗ khác." };
@@ -191,7 +184,7 @@ function buildPublicState_(roomId, room, course) {
     seats: seats,
     primaryOccupied: primaryOccupied,
     totalRegistrations: records.length,
-    pairEnabled: Boolean(room.sharedSeats) && primaryOccupied >= totalSeats,
+    pairEnabled: Boolean(room.sharedSeats),
     updatedAt: new Date().toISOString()
   };
 }
