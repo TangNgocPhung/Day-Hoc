@@ -309,17 +309,21 @@
       id: "PM2",
       name: "Phòng máy 2",
       layout: "vertical",
-      columns: [1, 2, 3, 4],
-      wall: { side: "left", label: "BẢNG · BÀN GV" },
-      note: "Bốn dãy máy xếp dọc, đánh số từ trái sang phải. Bảng và bàn giáo viên cùng nằm ở tường bên trái."
+      columns: [4, 3, 2, 1],
+      numberFrom: "bottom",
+      wall: { side: "left", label: "CỬA RA VÀO", kind: "door" },
+      deskRow: [{ label: "BÀN GV", column: 2, span: 2, kind: "desk" }],
+      note: "Bốn dãy máy xếp dọc, đánh số từ phải sang trái: dãy 1 sát bên phải, dãy 4 sát bên trái. Trong mỗi dãy, máy số 1 nằm ở cuối phòng, đếm ngược lên trên đến máy số 10. Bàn giáo viên ở cuối phòng, giữa dãy 2 và dãy 3. Cửa ra vào ở tường bên trái."
     },
     {
       id: "PM3",
       name: "Phòng máy 3",
       layout: "vertical",
-      columns: [1, 2, 3, 4],
-      wall: { side: "left", label: "BẢNG · BÀN GV" },
-      note: "Bố trí giống Phòng máy 2: bốn dãy dọc, bảng và bàn giáo viên ở tường bên trái."
+      columns: [4, 3, 2, 1],
+      numberFrom: "bottom",
+      wall: { side: "left", label: "CỬA RA VÀO", kind: "door" },
+      deskRow: [{ label: "BÀN GV", column: 2, span: 2, kind: "desk" }],
+      note: "Bố trí giống Phòng máy 2: dãy 1 sát bên phải, máy số 1 ở cuối phòng đếm ngược lên, bàn giáo viên giữa dãy 2 và dãy 3, cửa ra vào ở tường bên trái."
     },
     {
       id: "PM4",
