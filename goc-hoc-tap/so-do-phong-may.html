@@ -131,6 +131,7 @@
   .swatch--first { background: var(--green-soft); border-color: var(--green); }
   .swatch--board { background: var(--blue-soft); border-color: var(--blue); }
   .swatch--desk { background: var(--orange-soft); border-color: var(--orange); }
+  .swatch--door { background: var(--green-soft); border: 1px dashed var(--green); }
 
   .room-card {
     margin-bottom: 2rem;
@@ -160,7 +161,20 @@
     color: var(--green);
     font-weight: 600;
   }
-  .room-note { margin: 0 0 1.1rem; font-size: .85rem; color: var(--muted); line-height: 1.55; }
+  .room-note { margin: 0 0 .7rem; font-size: .85rem; color: var(--muted); line-height: 1.55; }
+  .room-location {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    margin: 0 0 1.1rem;
+    padding: .4rem .75rem;
+    border: 1px solid color-mix(in srgb, var(--green) 40%, var(--border));
+    border-radius: 999px;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: .78rem;
+    font-weight: 600;
+  }
 
   .room { display: flex; gap: .7rem; align-items: stretch; }
   .floor {
@@ -195,7 +209,7 @@
   .seat.is-first { border-color: var(--green); background: var(--green-soft); color: var(--green); }
 
   .deskrow { display: grid; gap: .55rem; margin-top: .6rem; }
-  .desk, .board {
+  .desk, .board, .door {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -210,6 +224,7 @@
   }
   .desk { border: 1px solid var(--orange); background: var(--orange-soft); color: var(--orange); }
   .board { border: 1px solid var(--blue); background: var(--blue-soft); color: var(--blue); }
+  .door { border: 1px dashed var(--green); background: var(--green-soft); color: var(--green); }
   .wall { min-width: 2.6rem; writing-mode: vertical-rl; }
   .wall.wall--left { transform: rotate(180deg); }
 
@@ -258,13 +273,14 @@
 <main class="page">
   <span class="eyebrow">PHÒNG THỰC HÀNH TIN HỌC</span>
   <h1>Sơ đồ phòng máy tính</h1>
-  <p class="lede">Vị trí các dãy máy, bảng và bàn giáo viên của năm phòng thực hành. Máy được đánh số theo dãy: dãy 1 gồm máy 01–10, dãy 2 gồm máy 11–20, và tiếp tục như vậy. Máy số 1 của mỗi dãy nằm ở đầu dãy, phía trên sơ đồ.</p>
+  <p class="lede">Vị trí các dãy máy, bảng và bàn giáo viên của năm phòng thực hành. Máy được đánh số theo dãy: dãy 1 gồm máy 01–10, dãy 2 gồm máy 11–20, và tiếp tục như vậy. Chiều đánh số trong mỗi dãy ghi rõ ở phần mô tả của từng phòng.</p>
 
   <div class="legend">
     <span><span class="swatch swatch--seat"></span>Máy học sinh</span>
     <span><span class="swatch swatch--first"></span>Máy đầu dãy (số 1 và 2)</span>
     <span><span class="swatch swatch--board"></span>Bảng</span>
     <span><span class="swatch swatch--desk"></span>Bàn giáo viên</span>
+    <span><span class="swatch swatch--door"></span>Cửa ra vào</span>
     <span><b>Mỗi dãy 10 máy</b></span>
   </div>
 
@@ -281,11 +297,13 @@
     {
       id: "PM1",
       name: "Phòng máy 1",
+      location: "Tầng trệt khu B, gần tiệm photo Nguyễn Khuyến",
       layout: "vertical",
       columns: [1, 2, 3, 4],
-      wall: { side: "right", label: "BẢNG" },
+      numberFrom: "bottom",
+      wall: { side: "right", label: "CỬA RA VÀO", kind: "door" },
       deskRow: [{ label: "BÀN GV", column: 2, span: 2, kind: "desk" }],
-      note: "Bốn dãy máy xếp dọc, đánh số từ trái sang phải. Bảng ở tường bên phải. Bàn giáo viên đặt ở cuối phòng, giữa dãy 2 và dãy 3."
+      note: "Bốn dãy máy xếp dọc, đánh số từ trái sang phải. Trong mỗi dãy, máy số 1 nằm ở cuối phòng phía bàn giáo viên, đếm ngược lên trên đến máy số 10. Cửa ra vào ở tường bên phải."
     },
     {
       id: "PM2",
@@ -343,7 +361,7 @@
 
   function wallElement(wall, side) {
     var element = document.createElement("div");
-    element.className = "board wall wall--" + side;
+    element.className = (wall.kind === "door" ? "door" : "board") + " wall wall--" + side;
     element.textContent = wall.label;
     return element;
   }
@@ -374,7 +392,9 @@
 
       var seats = document.createElement("div");
       seats.className = "seats";
-      for (var position = 1; position <= SEATS_PER_ROW; position += 1) {
+      for (var index = 1; index <= SEATS_PER_ROW; index += 1) {
+        // numberFrom "bottom": máy số 1 nằm ở cuối phòng nên vẽ từ máy 10 xuống máy 1.
+        var position = room.numberFrom === "bottom" ? SEATS_PER_ROW + 1 - index : index;
         seats.appendChild(seatElement((rowNumber - 1) * SEATS_PER_ROW + position, position));
       }
       col.appendChild(seats);
@@ -479,6 +499,13 @@
     note.className = "room-note";
     note.textContent = room.note;
     card.appendChild(note);
+
+    if (room.location) {
+      var location = document.createElement("p");
+      location.className = "room-location";
+      location.textContent = "📍 " + room.location;
+      card.appendChild(location);
+    }
 
     card.appendChild(room.layout === "vertical" ? renderVertical(room) : renderHorizontal(room));
     container.appendChild(card);
