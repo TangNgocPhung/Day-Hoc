@@ -89,14 +89,21 @@ function setupPayments() {
 
 function setupPayments_(spreadsheet) {
   var sheet = spreadsheet.getSheetByName(SETTINGS.paymentSheetName);
-  if (sheet) return "Trang tính " + SETTINGS.paymentSheetName + " đã có sẵn, không thay đổi gì.";
+  if (sheet) {
+    if (sheet.getLastRow() > 1) {
+      return "Trang tính " + SETTINGS.paymentSheetName + " đã có dữ liệu, giữ nguyên.";
+    }
+    // Chưa có dòng nào nên ghi lại hàng tiêu đề cho khớp cấu trúc cột mới.
+    sheet.clear();
+  } else {
+    sheet = spreadsheet.insertSheet(SETTINGS.paymentSheetName);
+  }
 
-  sheet = spreadsheet.insertSheet(SETTINGS.paymentSheetName);
   sheet.appendRow(PAYMENT_HEADERS);
   sheet.setFrozenRows(1);
   sheet.getRange(1, 1, 1, PAYMENT_HEADERS.length).setFontWeight("bold").setBackground("#a95b28").setFontColor("#ffffff");
   sheet.autoResizeColumns(1, PAYMENT_HEADERS.length);
-  return "Đã tạo trang tính " + SETTINGS.paymentSheetName + ".";
+  return "Đã tạo/cập nhật trang tính " + SETTINGS.paymentSheetName + " với " + PAYMENT_HEADERS.length + " cột.";
 }
 
 function doGet(e) {
