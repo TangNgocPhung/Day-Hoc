@@ -8,6 +8,7 @@
  */
 var SETTINGS = {
   sheetName: "DangKyChoNgoi",
+  paymentSheetName: "ThuTienDeCuong",
   pairPositions: [1, 2],
   courses: ["TC_TIN_13", "TC_TIN_14", "TC_TIN_15", "TC_MOS_13", "TC_MOS_14", "TC_MOS_15"],
   rooms: {
@@ -32,6 +33,14 @@ var HEADERS = [
   "Suất"
 ];
 
+var PAYMENT_HEADERS = [
+  "Thời gian xác nhận",
+  "Họ và tên",
+  "Lớp",
+  "Số tiền",
+  "Ghi chú"
+];
+
 function setup() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   if (!spreadsheet) throw new Error("Hãy tạo mã này từ menu Tiện ích mở rộng > Apps Script của Google Sheet.");
@@ -48,13 +57,40 @@ function setup() {
   sheet.setFrozenRows(1);
   sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight("bold").setBackground("#256f69").setFontColor("#ffffff");
   sheet.autoResizeColumns(1, HEADERS.length);
+  setupPayments_(spreadsheet);
+
   return "Đã khởi tạo dữ liệu cho " + Object.keys(SETTINGS.rooms).length + " phòng máy và "
     + SETTINGS.courses.length + " nhóm tự chọn.";
+}
+
+/**
+ * Tạo trang tính danh sách nộp tiền đề cương nếu chưa có.
+ * Giáo viên tự nhập từng dòng sau khi đối chiếu giao dịch; trang web chỉ đọc.
+ * Gọi riêng hàm này nếu Sheet đã có dữ liệu chỗ ngồi nên không chạy được setup.
+ */
+function setupPayments() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  if (!spreadsheet) throw new Error("Hãy chạy hàm này từ Apps Script của Google Sheet.");
+  PropertiesService.getScriptProperties().setProperty("SPREADSHEET_ID", spreadsheet.getId());
+  return setupPayments_(spreadsheet);
+}
+
+function setupPayments_(spreadsheet) {
+  var sheet = spreadsheet.getSheetByName(SETTINGS.paymentSheetName);
+  if (sheet) return "Trang tính " + SETTINGS.paymentSheetName + " đã có sẵn, không thay đổi gì.";
+
+  sheet = spreadsheet.insertSheet(SETTINGS.paymentSheetName);
+  sheet.appendRow(PAYMENT_HEADERS);
+  sheet.setFrozenRows(1);
+  sheet.getRange(1, 1, 1, PAYMENT_HEADERS.length).setFontWeight("bold").setBackground("#a95b28").setFontColor("#ffffff");
+  sheet.autoResizeColumns(1, PAYMENT_HEADERS.length);
+  return "Đã tạo trang tính " + SETTINGS.paymentSheetName + ".";
 }
 
 function doGet(e) {
   try {
     var params = (e && e.parameter) || {};
+    if (params.action === "payments") return jsonResponse_(buildPaymentList_());
     var room = SETTINGS.rooms[cleanText_(params.room, 10)];
     var course = cleanText_(params.course, 30);
     if (!room) return jsonResponse_({ ok: false, message: "Không tìm thấy phòng máy." });
@@ -187,6 +223,26 @@ function buildPublicState_(roomId, room, course) {
     pairEnabled: Boolean(room.sharedSeats),
     updatedAt: new Date().toISOString()
   };
+}
+
+function buildPaymentList_() {
+  var spreadsheetId = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+  if (!spreadsheetId) return { ok: false, message: "Chưa chạy hàm setup()." };
+
+  var sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName(SETTINGS.paymentSheetName);
+  if (!sheet || sheet.getLastRow() < 2) {
+    return { ok: true, payments: [], total: 0, updatedAt: new Date().toISOString() };
+  }
+
+  var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, PAYMENT_HEADERS.length).getValues();
+  var payments = values.map(function (row) {
+    return {
+      studentName: String(row[1] || "").replace(/^'/, "").trim(),
+      studentClass: String(row[2] || "").replace(/^'/, "").trim()
+    };
+  }).filter(function (item) { return item.studentName.length > 0; });
+
+  return { ok: true, payments: payments, total: payments.length, updatedAt: new Date().toISOString() };
 }
 
 function getSheet_() {
