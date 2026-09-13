@@ -729,6 +729,126 @@
       min-width: 0;
     }
   }
+  /* ==== Khung xem phiếu bài tập ngay trong trang ==== */
+  .sheet-viewer {
+    width: min(1140px, 96vw);
+    max-width: none;
+    height: min(92vh, 1000px);
+    max-height: none;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+  }
+
+  .sheet-viewer::backdrop {
+    background: rgba(15, 18, 14, 0.62);
+    backdrop-filter: blur(3px);
+  }
+
+  .sheet-viewer-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .sheet-viewer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface-2);
+  }
+
+  .sheet-viewer-eyebrow {
+    margin: 0 0 0.15rem;
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .sheet-viewer-head h2 {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+
+  .sheet-viewer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .sheet-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .sheet-btn:hover { border-color: var(--ink-faint); }
+
+  .sheet-btn--close {
+    min-width: 2.4rem;
+    font-size: 0.95rem;
+  }
+
+  .sheet-viewer-body {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    background: #ffffff;
+  }
+
+  .sheet-frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .sheet-loading {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: 1rem;
+    color: var(--ink-muted);
+    background: var(--surface);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .sheet-loading[hidden] { display: none !important; }
+
+  @media (max-width: 700px) {
+    .sheet-viewer {
+      width: 100vw;
+      height: 100vh;
+      border: 0;
+      border-radius: 0;
+    }
+    .sheet-viewer-head { flex-direction: column; align-items: flex-start; }
+    .sheet-viewer-actions { width: 100%; }
+    .sheet-btn { flex: 1 1 auto; }
+  }
 </style>
 </head>
 <body>
@@ -936,7 +1056,7 @@
                 <span class="resource-item-meta">5 câu trắc nghiệm &nbsp;·&nbsp; 4 câu tự luận</span>
               </div>
               <div class="card-actions">
-                <a class="resource-link" href="bai-tap/bai-tap-bai-10-tin-hoc-11.html" target="_blank" rel="noopener">Mở phiếu</a>
+                <a class="resource-link" href="bai-tap/bai-tap-bai-10-tin-hoc-11.html" target="_blank" rel="noopener" data-sheet data-sheet-title="Bài 10 — Quản lí dữ liệu trong bài toán quản lí">Mở phiếu</a>
                 <a class="resource-link resource-link--secondary" href="bai-tap/bai-tap-bai-10-tin-hoc-11.html" download>Tải về</a>
               </div>
             </li>
@@ -946,7 +1066,7 @@
                 <span class="resource-item-meta">10 câu trắc nghiệm &nbsp;·&nbsp; tự chấm điểm &nbsp;·&nbsp; có lời giải</span>
               </div>
               <div class="card-actions">
-                <a class="resource-link" href="bai-tap/bai-tap-bai-12-tin-hoc-11.html" target="_blank" rel="noopener">Mở phiếu</a>
+                <a class="resource-link" href="bai-tap/bai-tap-bai-12-tin-hoc-11.html" target="_blank" rel="noopener" data-sheet data-sheet-title="Bài 12 — Hệ quản trị CSDL và hệ CSDL">Mở phiếu</a>
                 <a class="resource-link resource-link--secondary" href="bai-tap/bai-tap-bai-12-tin-hoc-11.html" download>Tải về</a>
               </div>
             </li>
@@ -956,7 +1076,7 @@
                 <span class="resource-item-meta">3 câu trắc nghiệm &nbsp;·&nbsp; 7 bài thực hành khoá &nbsp;·&nbsp; tự chấm điểm</span>
               </div>
               <div class="card-actions">
-                <a class="resource-link" href="bai-tap/bai-tap-bai-13-tin-hoc-11.html" target="_blank" rel="noopener">Mở phiếu</a>
+                <a class="resource-link" href="bai-tap/bai-tap-bai-13-tin-hoc-11.html" target="_blank" rel="noopener" data-sheet data-sheet-title="Bài 13 — Cơ sở dữ liệu quan hệ">Mở phiếu</a>
                 <a class="resource-link resource-link--secondary" href="bai-tap/bai-tap-bai-13-tin-hoc-11.html" download>Tải về</a>
               </div>
             </li>
@@ -1208,6 +1328,103 @@
     var saved = savedId && document.getElementById(savedId);
     if (saved) activate(saved, false);
   } catch (e) {}
+})();
+</script>
+<dialog class="sheet-viewer" id="sheet-viewer" aria-labelledby="sheet-viewer-title">
+  <div class="sheet-viewer-inner">
+    <div class="sheet-viewer-head">
+      <div>
+        <p class="sheet-viewer-eyebrow">Phiếu bài tập</p>
+        <h2 id="sheet-viewer-title">Phiếu bài tập</h2>
+      </div>
+      <div class="sheet-viewer-actions">
+        <button class="sheet-btn" type="button" id="sheet-open-tab">Mở tab mới</button>
+        <button class="sheet-btn" type="button" id="sheet-print">In / Lưu PDF</button>
+        <button class="sheet-btn sheet-btn--close" type="button" id="sheet-close" aria-label="Đóng phiếu bài tập">✕</button>
+      </div>
+    </div>
+    <div class="sheet-viewer-body">
+      <p class="sheet-loading" id="sheet-loading">Đang mở phiếu bài tập…</p>
+      <iframe class="sheet-frame" id="sheet-frame" title="Nội dung phiếu bài tập" src="about:blank"></iframe>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  try {
+    var dialog = document.getElementById('sheet-viewer');
+    var frame = document.getElementById('sheet-frame');
+    var loading = document.getElementById('sheet-loading');
+    var titleBox = document.getElementById('sheet-viewer-title');
+    var closeBtn = document.getElementById('sheet-close');
+    var tabBtn = document.getElementById('sheet-open-tab');
+    var printBtn = document.getElementById('sheet-print');
+    var links = Array.prototype.slice.call(document.querySelectorAll('a[data-sheet]'));
+    if (!dialog || !frame || !loading || !titleBox || !closeBtn || !tabBtn || !printBtn || !links.length) return;
+    if (typeof dialog.showModal !== 'function') return;
+
+    var currentHref = '';
+
+    function openSheet(href, label) {
+      currentHref = href;
+      titleBox.textContent = label;
+      loading.hidden = false;
+      loading.textContent = 'Đang mở phiếu bài tập…';
+      frame.src = href;
+      dialog.showModal();
+    }
+
+    function closeSheet() {
+      if (dialog.open) dialog.close();
+    }
+
+    frame.addEventListener('load', function () {
+      if (frame.getAttribute('src') !== 'about:blank') loading.hidden = true;
+    });
+
+    links.forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+        event.preventDefault();
+        var label = link.getAttribute('data-sheet-title') || 'Phiếu bài tập';
+        openSheet(link.getAttribute('href'), label);
+      });
+    });
+
+    closeBtn.addEventListener('click', closeSheet);
+
+    dialog.addEventListener('click', function (event) {
+      if (event.target === dialog) closeSheet();
+    });
+
+    dialog.addEventListener('close', function () {
+      frame.src = 'about:blank';
+      loading.hidden = false;
+    });
+
+    tabBtn.addEventListener('click', function () {
+      if (!currentHref) return;
+      window.open(currentHref, '_blank', 'noopener');
+    });
+
+    printBtn.addEventListener('click', function () {
+      try {
+        if (frame.contentWindow && typeof frame.contentWindow.print === 'function') {
+          frame.contentWindow.focus();
+          frame.contentWindow.print();
+          return;
+        }
+        throw new Error('no print');
+      } catch (error) {
+        loading.hidden = false;
+        loading.textContent = 'Trình duyệt không cho in trực tiếp từ khung xem. Em hãy bấm “Mở tab mới” rồi in từ tab đó.';
+        window.setTimeout(function () { loading.hidden = true; }, 3500);
+      }
+    });
+  } catch (error) {
+    console.error('Không khởi tạo được khung xem phiếu bài tập:', error);
+  }
 })();
 </script>
 </body>
