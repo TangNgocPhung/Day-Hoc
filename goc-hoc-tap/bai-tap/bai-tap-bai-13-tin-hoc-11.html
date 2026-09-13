@@ -323,10 +323,28 @@
       .question-card, .card { box-shadow: none; break-inside: avoid; }
       .explain { display: block !important; }
     }
+  
+    .back-to-list {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      margin-bottom: 14px;
+      padding: 8px 13px;
+      min-height: 40px;
+      border: 1px solid currentColor;
+      border-radius: 10px;
+      font-size: .84rem;
+      font-weight: 600;
+      text-decoration: none;
+      opacity: .85;
+    }
+    .back-to-list:hover { opacity: 1; }
+    @media print { .back-to-list { display: none !important; } }
   </style>
 </head>
 <body>
   <main class="page-shell">
+    <a class="back-to-list" href="index.html">&#8592; Về danh sách phiếu bài tập</a>
     <header class="top-card">
       <p class="eyebrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"></path></svg>

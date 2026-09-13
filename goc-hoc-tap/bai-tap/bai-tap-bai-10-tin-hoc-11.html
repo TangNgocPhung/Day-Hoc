@@ -207,11 +207,30 @@
       break-inside: avoid;
     }
   }
-</style>
+
+    .back-to-list {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      margin-bottom: 14px;
+      padding: 8px 13px;
+      min-height: 40px;
+      border: 1px solid currentColor;
+      border-radius: 10px;
+      font-size: .84rem;
+      font-weight: 600;
+      text-decoration: none;
+      opacity: .85;
+    }
+    .back-to-list:hover { opacity: 1; }
+    @media print { .back-to-list { display: none !important; } }
+  </style>
 </head>
 <body>
 
 <div class="sheet">
+
+  <a class="back-to-list" href="index.html">&#8592; Về danh sách phiếu bài tập</a>
 
   <header class="title-block">
     <p class="kicker">Phiếu bài tập về nhà — Tin học 11</p>
