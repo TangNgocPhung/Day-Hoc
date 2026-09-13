@@ -255,6 +255,11 @@
     .foreign-tag { color: #4c337c; background: #ede7fb; }
     .definition { margin: 20px 0; padding: 22px; color: #fff; background: linear-gradient(125deg,var(--navy),#205f7e); border-radius: 16px; }
     .definition p { margin: 0; font-size: 1.07rem; }
+    .definition .definition-source { display: block; margin-top: 12px; color: #bdeff1; font-size: .86rem; font-style: normal; }
+    .definition .acid-gloss { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px 18px; margin-top: 14px; padding-top: 13px; border-top: 1px solid rgba(255,255,255,.2); }
+    .definition .acid-gloss span { color: #d8f4f5; font-size: .88rem; }
+    .definition .acid-gloss b { color: #8ce7ed; }
+    @media (max-width: 680px) { .definition .acid-gloss { grid-template-columns: 1fr; } }
     .concept-card { padding: 18px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--cyan); border-radius: 14px; }
     .concept-card h3 { margin: 0 0 6px; font-size: 1rem; }
     .concept-card p { margin: 0; color: var(--muted); font-size: .91rem; }
@@ -593,7 +598,16 @@
           <div class="table-card"><div class="table-title">Bản nhạc</div><table class="data-table"><thead><tr><th>Mid <span class="key-tag">PK</span></th><th>Aid <span class="key-tag foreign-tag">FK</span></th><th>TenBN</th></tr></thead><tbody><tr><td>0001</td><td>1</td><td>Du kích sông Thao</td></tr><tr><td>0002</td><td>2</td><td>Trường ca sông Lô</td></tr><tr><td>0003</td><td>3</td><td>Tình ca</td></tr><tr><td>0004</td><td>4</td><td>Xa khơi</td></tr><tr><td>0005</td><td>1</td><td>Việt Nam quê hương tôi</td></tr><tr><td>0006</td><td>2</td><td>Tiến về Hà Nội</td></tr></tbody></table></div>
           <div class="table-card"><div class="table-title">Bản thu âm</div><table class="data-table"><thead><tr><th>Mid <span class="key-tag foreign-tag">FK</span></th><th>Sid <span class="key-tag foreign-tag">FK</span></th></tr></thead><tbody><tr><td>0001</td><td>TK</td></tr><tr><td>0001</td><td>LD</td></tr><tr><td>0005</td><td>TK</td></tr><tr><td>0005</td><td>TN</td></tr><tr><td>0002</td><td>QH</td></tr><tr><td>0002</td><td>QH</td></tr></tbody></table></div>
         </div>
-        <div class="definition"><p><strong>Cơ sở dữ liệu quan hệ</strong> là CSDL lưu trữ dữ liệu dưới dạng các bảng có quan hệ với nhau.</p></div>
+        <div class="definition">
+          <p><strong>Cơ sở dữ liệu quan hệ</strong> là hệ thống quản lý dữ liệu lưu trữ thông tin dưới dạng các tập hợp bảng có quan hệ logic với nhau thông qua khóa chính (Primary Key) và khóa ngoại (Foreign Key), đảm bảo tuân thủ nghiêm ngặt các đặc tính ACID (Atomicity, Consistency, Isolation, Durability) để duy trì tính toàn vẹn dữ liệu.</p>
+          <cite class="definition-source">Nguồn: Microsoft – trích từ tài liệu Azure Cloud Architecture Guides.</cite>
+          <div class="acid-gloss">
+            <span><b>Atomicity</b> – tính nguyên tử: một giao dịch hoặc thực hiện trọn vẹn, hoặc không để lại thay đổi nào.</span>
+            <span><b>Consistency</b> – tính nhất quán: dữ liệu luôn thỏa mãn mọi ràng buộc đã đặt ra.</span>
+            <span><b>Isolation</b> – tính độc lập: các giao dịch chạy đồng thời không làm sai lệch kết quả của nhau.</span>
+            <span><b>Durability</b> – tính bền vững: kết quả đã ghi nhận không bị mất kể cả khi mất điện, sự cố.</span>
+          </div>
+        </div>
       </article>
 
       <article class="card">
