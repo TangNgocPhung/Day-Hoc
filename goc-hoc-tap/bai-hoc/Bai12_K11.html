@@ -425,6 +425,51 @@
             border-top: 1px solid var(--border);
             padding-top: 24px;
         }
+
+        /* ---- Hình minh hoạ có đánh số ---- */
+        .fig { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 22px; margin: 22px 0; }
+        .fig svg { width: 100%; max-width: 640px; height: auto; display: block; margin: 0 auto; }
+        .fig-title { font-weight: 700; color: var(--primary-dark); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; font-size: 16px; }
+        .fig-cap { text-align: center; font-size: 13px; font-style: italic; color: var(--text-light); margin-top: 12px; }
+
+        /* ---- Hộp ghi nhớ ---- */
+        .memo-box { background: #F5F3FF; border: 2px dashed var(--primary-light); border-radius: 16px; padding: 20px 24px; margin: 22px 0; }
+        .memo-title { font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .memo-box ul { margin: 0; padding-left: 22px; }
+        .memo-box li { margin-bottom: 6px; }
+
+        /* ---- Hộp lưu ý ---- */
+        .note-box { background: #FFF7ED; border-left: 6px solid var(--accent-dark); border-radius: 12px; padding: 16px 20px; margin: 20px 0; }
+        .note-box strong { color: #92400E; }
+
+        /* ---- Hỏi đáp có nút hiện đáp án ---- */
+        .qa-item { border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; margin-bottom: 14px; background: #F8FAFC; }
+        .qa-q { font-weight: 600; margin-bottom: 10px; }
+        .qa-a { display: none; margin-top: 12px; padding: 14px 16px; background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 10px; color: #065F46; }
+        .qa-a.show { display: block; }
+        .qa-a p, .qa-a li { color: #065F46; }
+        .btn-reveal { background: #EDE9FE; color: var(--primary-dark); border: none; padding: 7px 18px; border-radius: 30px; font-weight: 600; font-size: 13px; cursor: pointer; font-family: inherit; transition: 0.2s; }
+        .btn-reveal:hover { background: var(--primary-light); color: #fff; }
+
+        /* ---- Trò chơi xếp nhóm / phân loại ---- */
+        .sortq { border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; margin-bottom: 12px; background: white; }
+        .sortq-text { font-weight: 600; margin-bottom: 10px; }
+        .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { border: 2px solid var(--border); background: #F8FAFC; border-radius: 30px; padding: 6px 15px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--text); transition: 0.15s; }
+        .chip:hover:not(:disabled) { border-color: var(--primary); background: #F5F3FF; }
+        .chip.correct { background: #D1FAE5; border-color: var(--success); color: #065F46; }
+        .chip.wrong { background: #FEE2E2; border-color: var(--error); color: #991B1B; }
+        .chip:disabled { cursor: default; }
+        .score-line { font-weight: 700; color: var(--primary-dark); margin-top: 10px; }
+
+        /* ---- Bản đồ trạm ---- */
+        .map-label { background: rgba(255,255,255,0.94) !important; border: 1px solid var(--border) !important; border-radius: 8px !important; font-weight: 700 !important; font-size: 12px !important; color: var(--text) !important; box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important; padding: 3px 8px !important; }
+        .map-label::before { display: none !important; }
+        .map-fallback { display: none; background: #FEF3C7; border: 1px solid var(--accent); color: #92400E; border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; font-size: 14px; }
+        .map-fallback.show { display: block; }
+        .map-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--text-light); margin-top: 10px; }
+        .map-legend span { display: flex; align-items: center; gap: 6px; }
+        .map-legend i.dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
     </style>
 </head>
 <body class="js-enabled">
@@ -543,103 +588,456 @@
     <!-- HỆ QTCSDL -->
     <section id="section-qtcsdl" class="lesson-section">
         <h2><i class="fa-solid fa-database" style="color:var(--primary);"></i> 1. Hệ quản trị CSDL (Hệ QTCSDL)</h2>
+
         <div class="card-highlight">
-            <p><strong>Định nghĩa:</strong> Hệ QTCSDL là phần mềm cung cấp phương thức lưu trữ, cập nhật, truy xuất dữ liệu, bảo mật, an toàn và giao diện lập trình ứng dụng.</p>
+            <p><strong>Định nghĩa:</strong> <em>Hệ quản trị cơ sở dữ liệu</em> (Database Management System – hệ QTCSDL) là phần mềm cung cấp phương thức để <strong>lưu trữ, cập nhật và truy xuất dữ liệu</strong> của CSDL, <strong>bảo mật và an toàn dữ liệu</strong>, đồng thời cung cấp <strong>giao diện lập trình ứng dụng</strong> cho nhà phát triển.</p>
+            <p style="margin-bottom:0;">Điều quan trọng là các chức năng này được xây dựng một cách <strong>tổng quát</strong>, theo mô hình CSDL, <strong>không phụ thuộc</strong> vào một CSDL hay một ứng dụng cụ thể nào. Một hệ QTCSDL có thể quản trị nhiều CSDL khác nhau.</p>
         </div>
+
+        <div class="fig">
+            <div class="fig-title"><i class="fa-solid fa-diagram-project"></i> Hình 12.0 – Hệ QTCSDL đứng giữa con người và dữ liệu</div>
+            <svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sơ đồ người dùng và nhà phát triển làm việc với cơ sở dữ liệu thông qua hệ quản trị cơ sở dữ liệu">
+                <g fill="var(--primary)">
+                    <circle cx="52" cy="62" r="13"></circle>
+                    <path d="M30 105c0-12 10-21 22-21s22 9 22 21z"></path>
+                    <circle cx="52" cy="146" r="13"></circle>
+                    <path d="M30 189c0-12 10-21 22-21s22 9 22 21z"></path>
+                </g>
+                <text x="52" y="122" text-anchor="middle" font-size="11" fill="var(--text-light)" font-family="'Be Vietnam Pro', sans-serif">Người dùng</text>
+                <text x="52" y="206" text-anchor="middle" font-size="11" fill="var(--text-light)" font-family="'Be Vietnam Pro', sans-serif">Nhà phát triển</text>
+
+                <path d="M92 84 H170" stroke="var(--primary-light)" stroke-width="3" marker-end="url(#arrTip)"></path>
+                <path d="M92 168 H170" stroke="var(--primary-light)" stroke-width="3" marker-end="url(#arrTip)"></path>
+                <defs>
+                    <marker id="arrTip" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                        <path d="M0 0 L9 4.5 L0 9 z" fill="var(--primary-light)"></path>
+                    </marker>
+                </defs>
+
+                <rect x="176" y="30" width="250" height="176" rx="16" fill="var(--primary)"></rect>
+                <text x="301" y="60" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" font-family="'Be Vietnam Pro', sans-serif">HỆ QTCSDL</text>
+                <g font-size="11.5" font-family="'Be Vietnam Pro', sans-serif" fill="#3C1E76">
+                    <rect x="192" y="76" width="105" height="26" rx="13" fill="#EDE9FE"></rect>
+                    <text x="244" y="93" text-anchor="middle">a) Định nghĩa</text>
+                    <rect x="305" y="76" width="105" height="26" rx="13" fill="#EDE9FE"></rect>
+                    <text x="357" y="93" text-anchor="middle">b) Cập nhật</text>
+                    <rect x="192" y="112" width="105" height="26" rx="13" fill="#EDE9FE"></rect>
+                    <text x="244" y="129" text-anchor="middle">c) Bảo mật</text>
+                    <rect x="305" y="112" width="105" height="26" rx="13" fill="#EDE9FE"></rect>
+                    <text x="357" y="129" text-anchor="middle">d) Lập trình</text>
+                </g>
+                <text x="301" y="170" text-anchor="middle" font-size="11.5" fill="#DDD6FE" font-family="'Be Vietnam Pro', sans-serif">Oracle · MySQL · SQL Server</text>
+                <text x="301" y="188" text-anchor="middle" font-size="11.5" fill="#DDD6FE" font-family="'Be Vietnam Pro', sans-serif">PostgreSQL · SQLite · Access</text>
+
+                <path d="M432 118 H492" stroke="var(--primary-light)" stroke-width="3" marker-end="url(#arrTip)"></path>
+
+                <ellipse cx="558" cy="72" rx="52" ry="16" fill="var(--accent)"></ellipse>
+                <rect x="506" y="72" width="104" height="76" fill="var(--accent)"></rect>
+                <ellipse cx="558" cy="148" rx="52" ry="16" fill="var(--accent-dark)"></ellipse>
+                <ellipse cx="558" cy="110" rx="52" ry="16" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.55"></ellipse>
+                <text x="558" y="118" text-anchor="middle" font-size="17" font-weight="700" fill="#78350F" font-family="'Be Vietnam Pro', sans-serif">CSDL</text>
+                <text x="558" y="192" text-anchor="middle" font-size="11" fill="var(--text-light)" font-family="'Be Vietnam Pro', sans-serif">Dữ liệu lưu trên đĩa</text>
+            </svg>
+            <p class="fig-cap">Người dùng và nhà phát triển không thao tác thẳng vào tệp dữ liệu, mà đi qua hệ QTCSDL — nơi tập trung bốn nhóm chức năng của bài học.</p>
+        </div>
+
+        <h3><i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> Bốn nhóm chức năng của hệ QTCSDL</h3>
         <div class="grid-2col">
             <div class="card-highlight" style="border-left-color:#7C3AED;background:white;">
                 <h4><i class="fa-regular fa-pen-to-square"></i> a) Định nghĩa dữ liệu</h4>
-                <p>Khai báo CSDL, tạo/sửa cấu trúc bảng, ràng buộc toàn vẹn.</p>
+                <ul style="margin-bottom:0;">
+                    <li>Khai báo CSDL với tên gọi xác định (một hệ QTCSDL quản trị được nhiều CSDL).</li>
+                    <li>Tạo lập, sửa đổi cấu trúc bên trong mỗi CSDL.</li>
+                    <li>Cài đặt các <strong>ràng buộc toàn vẹn</strong> để kiểm soát tính đúng đắn của dữ liệu.</li>
+                </ul>
             </div>
             <div class="card-highlight" style="border-left-color:#F59E0B;background:white;">
-                <h4><i class="fa-regular fa-arrow-right-arrow-left"></i> b) Cập nhật & truy xuất</h4>
-                <p>Thêm, xoá, sửa dữ liệu; truy vấn theo tiêu chí.</p>
+                <h4><i class="fa-solid fa-right-left"></i> b) Cập nhật &amp; truy xuất dữ liệu</h4>
+                <ul style="margin-bottom:0;">
+                    <li><strong>Cập nhật:</strong> thêm, xoá, sửa dữ liệu để dữ liệu luôn phản ánh đúng thực tế.</li>
+                    <li><strong>Truy xuất:</strong> lấy ra dữ liệu theo những tiêu chí khác nhau do người dùng đặt.</li>
+                    <li>Đây còn được gọi chung là nhóm chức năng <em>thao tác dữ liệu</em>.</li>
+                </ul>
             </div>
             <div class="card-highlight" style="border-left-color:#10B981;background:white;">
-                <h4><i class="fa-solid fa-shield-halved"></i> c) Bảo mật & an toàn</h4>
-                <p>Quyền truy cập, kiểm soát giao dịch, sao lưu & phục hồi.</p>
+                <h4><i class="fa-solid fa-shield-halved"></i> c) Bảo mật &amp; an toàn CSDL</h4>
+                <ul style="margin-bottom:0;">
+                    <li>Kiểm soát <strong>quyền truy cập</strong>: chỉ người có thẩm quyền mới đọc/sửa được dữ liệu.</li>
+                    <li>Kiểm soát <strong>giao dịch</strong> khi nhiều người cùng sửa một bản ghi, bảo đảm tính nhất quán.</li>
+                    <li><strong>Sao lưu (backup)</strong> và khôi phục dữ liệu khi có sự cố.</li>
+                </ul>
             </div>
             <div class="card-highlight" style="border-left-color:#EF4444;background:white;">
-                <h4><i class="fa-regular fa-window-maximize"></i> d) Giao diện lập trình ứng dụng</h4>
-                <p>API cho nhà phát triển xây dựng ứng dụng chuyên biệt.</p>
+                <h4><i class="fa-solid fa-code"></i> d) Giao diện lập trình ứng dụng</h4>
+                <ul style="margin-bottom:0;">
+                    <li>Cung cấp công cụ để nhà phát triển <strong>gửi truy vấn tới CSDL từ ứng dụng</strong> của mình.</li>
+                    <li>Nhờ đó mỗi tổ chức viết được phần mềm riêng phù hợp công việc cụ thể.</li>
+                </ul>
             </div>
         </div>
-        <p><strong>Ví dụ hệ QTCSDL phổ biến:</strong> Oracle, MySQL, SQL Server, DB2, PostgreSQL, SQLite, Microsoft Access (hạn chế hiệu năng).</p>
+
+        <div class="activity-box">
+            <div class="activity-title"><i class="fa-solid fa-shapes"></i> Hoạt động nhóm – Xếp chức năng vào đúng nhóm</div>
+            <p>Mỗi nhóm đọc một việc mà hệ QTCSDL làm, rồi bấm chọn nhóm chức năng tương ứng. Nhóm nào xếp đúng cả 8 việc trước là thắng.</p>
+            <div id="fn-sort"></div>
+            <div class="score-line" id="fn-sort-score">Đã xếp đúng 0 / 8</div>
+        </div>
+
+        <div class="memo-box">
+            <div class="memo-title"><i class="fa-solid fa-bookmark"></i> Ghi nhớ</div>
+            <ul>
+                <li>Hệ QTCSDL là phần mềm cung cấp phương thức để lưu trữ, cập nhật và truy xuất dữ liệu của CSDL, bảo mật và an toàn dữ liệu.</li>
+                <li>Hệ QTCSDL cũng cung cấp giao diện lập trình ứng dụng cho các nhà phát triển ứng dụng và người dùng.</li>
+            </ul>
+        </div>
+
+        <h3><i class="fa-regular fa-circle-question" style="color:var(--primary);"></i> Câu hỏi củng cố (SGK tr.60)</h3>
+        <div class="qa-item">
+            <p class="qa-q">1. Nêu những khó khăn trong việc khai thác CSDL nếu không có hệ QTCSDL.</p>
+            <button class="btn-reveal" type="button" data-reveal="qa-qt-1">Xem gợi ý trả lời</button>
+            <div class="qa-a" id="qa-qt-1">
+                <ul style="margin-bottom:0;">
+                    <li>Người dùng phải tự biết cấu trúc các tệp lưu dữ liệu và tự viết chương trình để đọc, ghi — rất khó với người dùng phổ thông.</li>
+                    <li>Không có cơ chế kiểm tra tự động nên dữ liệu dễ sai sót, trùng lặp, mâu thuẫn.</li>
+                    <li>Không có phân quyền, không có sao lưu — dữ liệu dễ bị lộ hoặc mất khi có sự cố.</li>
+                    <li>Nhiều người cùng sửa một dữ liệu sẽ tranh chấp, ghi đè lên nhau.</li>
+                    <li>Mỗi ứng dụng mới lại phải viết lại phần đọc/ghi dữ liệu từ đầu, rất tốn công.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="qa-item">
+            <p class="qa-q">2. Tóm tắt các nhóm chức năng của hệ QTCSDL.</p>
+            <button class="btn-reveal" type="button" data-reveal="qa-qt-2">Xem gợi ý trả lời</button>
+            <div class="qa-a" id="qa-qt-2">
+                <p style="margin-bottom:0;">Bốn nhóm: <strong>(a)</strong> định nghĩa dữ liệu — khai báo CSDL, tạo/sửa cấu trúc, đặt ràng buộc toàn vẹn; <strong>(b)</strong> cập nhật và truy xuất dữ liệu; <strong>(c)</strong> bảo mật, an toàn CSDL — phân quyền, kiểm soát giao dịch, sao lưu và khôi phục; <strong>(d)</strong> giao diện lập trình ứng dụng cho nhà phát triển.</p>
+            </div>
+        </div>
+
+        <p style="margin-top:20px;"><strong>Ví dụ hệ QTCSDL phổ biến:</strong> Oracle, MySQL, SQL Server, DB2, PostgreSQL, SQLite… Microsoft Access cũng là một hệ QTCSDL nhưng có nhiều hạn chế về hiệu suất nên ít dùng cho các ứng dụng phức tạp, nhất là ứng dụng trực tuyến.</p>
     </section>
 
     <!-- HỆ CSDL -->
     <section id="section-hecsdl" class="lesson-section">
-        <h2><i class="fa-solid fa-server" style="color:var(--primary);"></i> 2. Hệ CSDL và mô hình Client–Server</h2>
-        <div class="sim-box">
-            <h3 style="margin:0;text-align:center;color:var(--primary-dark);">🏛️ Mô hình 3 thành phần của Hệ CSDL</h3>
-            <div class="sim-nodes">
-                <div class="sim-node"><i class="fa-regular fa-desktop"></i><h4>Phần mềm ứng dụng</h4><p style="font-size:13px;">Giao diện tra cứu</p></div>
-                <div class="sim-arrow"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
-                <div class="sim-node"><i class="fa-solid fa-server"></i><h4>Hệ QTCSDL</h4><p style="font-size:13px;">Xử lý yêu cầu</p></div>
-                <div class="sim-arrow"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
-                <div class="sim-node"><i class="fa-solid fa-database"></i><h4>CSDL</h4><p style="font-size:13px;">Lưu trữ vật lý</p></div>
+        <h2><i class="fa-solid fa-server" style="color:var(--primary);"></i> 2. Hệ CSDL và mô hình khách – chủ</h2>
+
+        <div class="activity-box">
+            <div class="activity-title"><i class="fa-regular fa-message"></i> Hoạt động 2 – SGK Tr.60 · Thảo luận về tra cứu điểm thi trực tuyến</div>
+            <p><strong>Tình huống:</strong> Khi lên mạng tra cứu điểm thi vào lớp 10, màn hình chỉ yêu cầu em nhập vài dữ liệu tối thiểu (thường là số báo danh). Vậy mà gần như ngay lập tức em nhận được đầy đủ họ tên, trường lớp, điểm từng môn, kết quả xét tuyển.</p>
+            <p><strong>Câu hỏi:</strong> Ngoài CSDL điểm thi, hệ thống đó còn cần có gì để cung cấp cho em thông tin nhanh và đúng như vậy?</p>
+            <button class="btn-reveal" type="button" data-reveal="qa-hd2">Xem gợi ý trả lời</button>
+            <div class="qa-a" id="qa-hd2">
+                <p style="margin-bottom:0;">Cần thêm <strong>một phần mềm tổ chức giao tiếp với người dùng</strong> (phần mềm tra cứu điểm thi) làm cầu nối giữa người dùng với CSDL điểm thi, và <strong>một hệ QTCSDL</strong> đứng phía sau để nhận yêu cầu, tìm kiếm rồi trả kết quả về. Ba thành phần đó hợp lại thành một <strong>hệ CSDL</strong>.</p>
             </div>
         </div>
-        <div class="card-highlight" style="margin-top:20px;">
-            <p><strong>🧩 Kiến trúc Client–Server:</strong> Phần "chủ" (server) xử lý dữ liệu, phần "khách" (client) giao diện người dùng, kết nối qua mạng hoặc cùng máy. Hệ QTCSDL thường đóng vai trò thành phần chủ.</p>
+
+        <div class="fig">
+            <div class="fig-title"><i class="fa-solid fa-desktop"></i> Hình 12.1 – Phần mềm khách và hệ QTCSDL cài trên cùng một máy tính</div>
+            <svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Người dùng làm việc với phần mềm khách, hệ quản trị cơ sở dữ liệu và cơ sở dữ liệu cùng nằm trên một máy tính">
+                <defs>
+                    <marker id="tip2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                        <path d="M0 0 L9 4.5 L0 9 z" fill="var(--primary-light)"></path>
+                    </marker>
+                </defs>
+                <g fill="var(--primary)">
+                    <circle cx="38" cy="66" r="12"></circle>
+                    <path d="M18 106c0-11 9-20 20-20s20 9 20 20z"></path>
+                    <circle cx="38" cy="128" r="12"></circle>
+                </g>
+                <text x="38" y="176" text-anchor="middle" font-size="11" fill="var(--text-light)" font-family="'Be Vietnam Pro', sans-serif">Người dùng</text>
+                <path d="M70 100 H108" stroke="var(--primary-light)" stroke-width="3" marker-end="url(#tip2)"></path>
+
+                <rect x="115" y="20" width="510" height="140" rx="16" fill="#F8FAFC" stroke="var(--primary)" stroke-width="2" stroke-dasharray="7 5"></rect>
+                <text x="135" y="42" font-size="12" font-weight="700" fill="var(--primary-dark)" font-family="'Be Vietnam Pro', sans-serif">MỘT MÁY TÍNH</text>
+
+                <rect x="140" y="58" width="130" height="72" rx="12" fill="#FDE9DC" stroke="var(--accent-dark)" stroke-width="2"></rect>
+                <text x="205" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#92400E" font-family="'Be Vietnam Pro', sans-serif">Phần mềm</text>
+                <text x="205" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="#92400E" font-family="'Be Vietnam Pro', sans-serif">khách</text>
+
+                <path d="M276 94 H320" stroke="var(--primary-light)" stroke-width="3" marker-end="url(#tip2)"></path>
+                <path d="M320 78 H276" stroke="var(--primary-light)" stroke-width="3" marker-end="url(#tip2)"></path>
+
+                <rect x="326" y="58" width="130" height="72" rx="12" fill="var(--primary)"></rect>
+                <text x="391" y="99" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="'Be Vietnam Pro', sans-serif">Hệ QTCSDL</text>
+
+                <path d="M462 94 H500" stroke="var(--primary-light)" stroke-width="3" marker-end="url(#tip2)"></path>
+                <path d="M500 78 H462" stroke="var(--primary-light)" stroke-width="3" marker-end="url(#tip2)"></path>
+
+                <ellipse cx="552" cy="60" rx="45" ry="13" fill="var(--accent)"></ellipse>
+                <rect x="507" y="60" width="90" height="62" fill="var(--accent)"></rect>
+                <ellipse cx="552" cy="122" rx="45" ry="13" fill="var(--accent-dark)"></ellipse>
+                <text x="552" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#78350F" font-family="'Be Vietnam Pro', sans-serif">CSDL</text>
+            </svg>
+            <p class="fig-cap">Trường hợp đơn giản nhất: cả ba thành phần cùng nằm trên một máy tính — ví dụ một CSDL Microsoft Access của cửa hàng nhỏ.</p>
         </div>
-        <p><strong>Ví dụ thực tế:</strong> Tra cứu điểm thi trực tuyến – phần mềm ứng dụng CSDL nhận số báo danh, truy vấn hệ QTCSDL và hiển thị kết quả.</p>
+
+        <div class="fig">
+            <div class="fig-title"><i class="fa-solid fa-network-wired"></i> Hình 12.2 – Hệ QTCSDL và phần mềm khách trên các máy tính khác nhau</div>
+            <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Người dùng truy cập qua phần mềm khách trên máy của mình, kết nối qua mạng tới máy chủ cài hệ quản trị cơ sở dữ liệu">
+                <rect x="12" y="30" width="240" height="130" rx="14" fill="#F8FAFC" stroke="var(--accent-dark)" stroke-width="2"></rect>
+                <text x="32" y="52" font-size="12" font-weight="700" fill="#92400E" font-family="'Be Vietnam Pro', sans-serif">MÁY CỦA NGƯỜI DÙNG</text>
+                <g fill="var(--primary)">
+                    <circle cx="62" cy="88" r="12"></circle>
+                    <path d="M42 128c0-11 9-20 20-20s20 9 20 20z"></path>
+                </g>
+                <rect x="104" y="72" width="128" height="64" rx="12" fill="#FDE9DC" stroke="var(--accent-dark)" stroke-width="2"></rect>
+                <text x="168" y="100" text-anchor="middle" font-size="12.5" font-weight="700" fill="#92400E" font-family="'Be Vietnam Pro', sans-serif">Phần mềm</text>
+                <text x="168" y="117" text-anchor="middle" font-size="12.5" font-weight="700" fill="#92400E" font-family="'Be Vietnam Pro', sans-serif">khách</text>
+
+                <path d="M258 96 H382" stroke="var(--primary-light)" stroke-width="3" stroke-dasharray="8 5"></path>
+                <path d="M382 112 H258" stroke="var(--primary-light)" stroke-width="3" stroke-dasharray="8 5"></path>
+                <ellipse cx="320" cy="70" rx="52" ry="20" fill="#EDE9FE"></ellipse>
+                <text x="320" y="75" text-anchor="middle" font-size="12" font-weight="700" fill="var(--primary-dark)" font-family="'Be Vietnam Pro', sans-serif">Mạng máy tính</text>
+                <text x="320" y="140" text-anchor="middle" font-size="11" fill="var(--text-light)" font-family="'Be Vietnam Pro', sans-serif">gửi yêu cầu / nhận kết quả</text>
+
+                <rect x="388" y="30" width="240" height="130" rx="14" fill="#F8FAFC" stroke="var(--primary)" stroke-width="2"></rect>
+                <text x="408" y="52" font-size="12" font-weight="700" fill="var(--primary-dark)" font-family="'Be Vietnam Pro', sans-serif">MÁY CHỦ CSDL</text>
+                <rect x="404" y="72" width="112" height="64" rx="12" fill="var(--primary)"></rect>
+                <text x="460" y="110" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="'Be Vietnam Pro', sans-serif">Hệ QTCSDL</text>
+                <ellipse cx="573" cy="76" rx="38" ry="11" fill="var(--accent)"></ellipse>
+                <rect x="535" y="76" width="76" height="48" fill="var(--accent)"></rect>
+                <ellipse cx="573" cy="124" rx="38" ry="11" fill="var(--accent-dark)"></ellipse>
+                <text x="573" y="106" text-anchor="middle" font-size="12.5" font-weight="700" fill="#78350F" font-family="'Be Vietnam Pro', sans-serif">CSDL</text>
+
+                <text x="320" y="190" text-anchor="middle" font-size="11.5" fill="var(--text-light)" font-family="'Be Vietnam Pro', sans-serif">Thành phần &#8220;khách&#8221; lo giao diện · thành phần &#8220;chủ&#8221; lo tính toán, xử lí dữ liệu</text>
+            </svg>
+            <p class="fig-cap">Các hệ QTCSDL nhiều người dùng thường được xây dựng theo mô hình hai thành phần: phần mềm khách (client) và phần chủ (server) — hai phần có thể ở cùng một máy hoặc ở hai máy khác nhau.</p>
+        </div>
+
+        <div class="fig">
+            <div class="fig-title"><i class="fa-solid fa-cubes"></i> Hình 12.3 – Hệ cơ sở dữ liệu</div>
+            <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nhiều phần mềm ứng dụng cơ sở dữ liệu cùng kết nối tới một hệ quản trị cơ sở dữ liệu và một cơ sở dữ liệu, tất cả tạo thành hệ cơ sở dữ liệu">
+                <defs>
+                    <marker id="tip3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                        <path d="M0 0 L9 4.5 L0 9 z" fill="var(--primary-light)"></path>
+                    </marker>
+                </defs>
+                <g fill="var(--primary)">
+                    <circle cx="34" cy="52" r="11"></circle>
+                    <path d="M16 88c0-10 8-18 18-18s18 8 18 18z"></path>
+                    <circle cx="34" cy="130" r="11"></circle>
+                    <path d="M16 166c0-10 8-18 18-18s18 8 18 18z"></path>
+                    <circle cx="34" cy="206" r="11"></circle>
+                </g>
+                <text x="34" y="245" text-anchor="middle" font-size="11" fill="var(--text-light)" font-family="'Be Vietnam Pro', sans-serif">Người dùng</text>
+
+                <rect x="96" y="16" width="528" height="222" rx="18" fill="#F5F3FF" stroke="var(--primary)" stroke-width="2" stroke-dasharray="8 5"></rect>
+                <text x="116" y="38" font-size="13" font-weight="700" fill="var(--primary-dark)" font-family="'Be Vietnam Pro', sans-serif">HỆ CSDL</text>
+
+                <g font-family="'Be Vietnam Pro', sans-serif">
+                    <rect x="118" y="52" width="128" height="46" rx="10" fill="#FDE9DC" stroke="var(--accent-dark)" stroke-width="1.8"></rect>
+                    <text x="182" y="72" text-anchor="middle" font-size="11.5" font-weight="700" fill="#92400E">Phần mềm ứng</text>
+                    <text x="182" y="88" text-anchor="middle" font-size="11.5" font-weight="700" fill="#92400E">dụng CSDL 1</text>
+                    <text x="182" y="126" text-anchor="middle" font-size="20" font-weight="700" fill="var(--text-light)">…</text>
+                    <rect x="118" y="146" width="128" height="46" rx="10" fill="#FDE9DC" stroke="var(--accent-dark)" stroke-width="1.8"></rect>
+                    <text x="182" y="166" text-anchor="middle" font-size="11.5" font-weight="700" fill="#92400E">Phần mềm ứng</text>
+                    <text x="182" y="182" text-anchor="middle" font-size="11.5" font-weight="700" fill="#92400E">dụng CSDL N</text>
+                </g>
+
+                <path d="M52 66 H112" stroke="var(--primary-light)" stroke-width="2.5" marker-end="url(#tip3)"></path>
+                <path d="M52 160 H112" stroke="var(--primary-light)" stroke-width="2.5" marker-end="url(#tip3)"></path>
+                <path d="M252 76 L332 112" stroke="var(--primary-light)" stroke-width="2.5" marker-end="url(#tip3)"></path>
+                <path d="M252 168 L332 138" stroke="var(--primary-light)" stroke-width="2.5" marker-end="url(#tip3)"></path>
+
+                <rect x="338" y="96" width="130" height="62" rx="12" fill="var(--primary)"></rect>
+                <text x="403" y="133" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="'Be Vietnam Pro', sans-serif">Hệ QTCSDL</text>
+
+                <path d="M474 118 H512" stroke="var(--primary-light)" stroke-width="2.5" marker-end="url(#tip3)"></path>
+                <path d="M512 138 H474" stroke="var(--primary-light)" stroke-width="2.5" marker-end="url(#tip3)"></path>
+
+                <ellipse cx="558" cy="92" rx="44" ry="13" fill="var(--accent)"></ellipse>
+                <rect x="514" y="92" width="88" height="62" fill="var(--accent)"></rect>
+                <ellipse cx="558" cy="154" rx="44" ry="13" fill="var(--accent-dark)"></ellipse>
+                <text x="558" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#78350F" font-family="'Be Vietnam Pro', sans-serif">CSDL</text>
+            </svg>
+            <p class="fig-cap">Nhiều phần mềm ứng dụng khác nhau (tra cứu điểm, xét tuyển, thống kê…) cùng khai thác một CSDL thông qua một hệ QTCSDL. Cả ba hợp lại được gọi là <strong>hệ CSDL</strong>.</p>
+        </div>
+
+        <div class="sim-box">
+            <h3 style="margin:0 0 14px;text-align:center;color:var(--primary-dark);">🏛️ Ba thành phần của hệ CSDL</h3>
+            <div class="sim-nodes">
+                <div class="sim-node"><i class="fa-regular fa-window-maximize"></i><h4>Phần mềm ứng dụng CSDL</h4><p style="font-size:13px;">Giao diện cho người dùng cuối</p></div>
+                <div class="sim-arrow"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                <div class="sim-node"><i class="fa-solid fa-server"></i><h4>Hệ QTCSDL</h4><p style="font-size:13px;">Nhận yêu cầu, xử lí dữ liệu</p></div>
+                <div class="sim-arrow"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                <div class="sim-node"><i class="fa-solid fa-database"></i><h4>CSDL</h4><p style="font-size:13px;">Nơi dữ liệu được lưu trữ</p></div>
+            </div>
+        </div>
+
+        <div class="memo-box">
+            <div class="memo-title"><i class="fa-solid fa-bookmark"></i> Ghi nhớ</div>
+            <ul>
+                <li><strong>Phần mềm ứng dụng CSDL</strong> là phần mềm được xây dựng để tương tác với hệ QTCSDL, nhằm hỗ trợ người dùng khai thác thông tin từ CSDL một cách thuận tiện theo yêu cầu xác định.</li>
+                <li>Một hệ thống gồm ba thành phần: <strong>CSDL, hệ QTCSDL và các phần mềm ứng dụng CSDL</strong> được gọi là một <strong>hệ CSDL</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="card-highlight">
+            <p style="margin-bottom:0;"><strong>🧩 Liên hệ thực tế:</strong> Các ứng dụng mua bán trực tuyến, đặt xe công nghệ, thanh toán điện tử… mà em vẫn dùng hằng ngày đều là <em>phần mềm ứng dụng CSDL</em> của một hệ CSDL cụ thể phía sau.</p>
+        </div>
+
+        <h3><i class="fa-regular fa-circle-question" style="color:var(--primary);"></i> Câu hỏi củng cố</h3>
+        <div class="qa-item">
+            <p class="qa-q">Hệ QTCSDL và hệ CSDL khác nhau như thế nào?</p>
+            <button class="btn-reveal" type="button" data-reveal="qa-hc-1">Xem gợi ý trả lời</button>
+            <div class="qa-a" id="qa-hc-1">
+                <p style="margin-bottom:0;"><strong>Hệ QTCSDL</strong> chỉ là <em>một phần mềm</em> — công cụ tổng quát để lưu trữ, cập nhật, truy xuất, bảo mật dữ liệu, không gắn với CSDL hay ứng dụng cụ thể nào. <strong>Hệ CSDL</strong> là <em>cả một hệ thống</em> gồm ba thành phần: CSDL cụ thể + hệ QTCSDL + các phần mềm ứng dụng CSDL phục vụ một bài toán quản lí xác định. Nói ngắn gọn: hệ QTCSDL là <em>một thành phần bên trong</em> hệ CSDL.</p>
+            </div>
+        </div>
     </section>
 
     <!-- TẬP TRUNG & PHÂN TÁN + BẢN ĐỒ -->
     <section id="section-phantan" class="lesson-section">
-        <h2><i class="fa-solid fa-globe" style="color:var(--primary);"></i> 3. CSDL tập trung và phân tán</h2>
+        <h2><i class="fa-solid fa-globe" style="color:var(--primary);"></i> 3. Hệ CSDL tập trung và phân tán</h2>
+
         <div class="grid-2col">
             <div class="card-highlight" style="margin:0;border-left-color:#7C3AED;">
-                <h3><i class="fa-solid fa-server"></i> Tập trung</h3>
-                <p>CSDL lưu trên một máy tính duy nhất. Phù hợp tổ chức vừa và nhỏ. Ví dụ: CSDL Microsoft Access của cửa hàng.</p>
+                <h3 style="margin-top:0;"><i class="fa-solid fa-server"></i> Hệ CSDL tập trung</h3>
+                <p style="margin-bottom:0;">Hệ CSDL mà CSDL được lưu trữ <strong>tập trung trên một máy tính</strong>. Bao gồm cả những CSDL một người dùng trên máy tính cá nhân — khi đó một người vừa thiết kế, vừa bảo trì, vừa viết ứng dụng, vừa là người dùng cuối.</p>
             </div>
             <div class="card-highlight" style="margin:0;border-left-color:#F59E0B;">
-                <h3><i class="fa-solid fa-network-wired"></i> Phân tán</h3>
-                <p>Dữ liệu phân tán trên nhiều máy tính (trạm) qua mạng. Ví dụ: ngân hàng, doanh nghiệp đa chi nhánh.</p>
+                <h3 style="margin-top:0;"><i class="fa-solid fa-network-wired"></i> Hệ CSDL phân tán</h3>
+                <p style="margin-bottom:0;">Dữ liệu được lưu trữ ở <strong>nhiều máy tính khác nhau</strong> của một mạng máy tính. Dữ liệu lưu tại mỗi trạm hình thành một <strong>CSDL cục bộ</strong> của trạm đó.</p>
             </div>
         </div>
 
-        <div class="illustration-card">
-            <svg viewBox="0 0 420 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="So sánh mô hình CSDL tập trung với một máy chủ duy nhất và mô hình phân tán với nhiều máy chủ liên kết">
-                <text x="105" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="var(--primary)" font-family="'Be Vietnam Pro', sans-serif">TẬP TRUNG</text>
-                <rect x="80" y="70" width="50" height="60" rx="8" fill="var(--primary)"></rect>
-                <rect x="92" y="82" width="26" height="6" rx="2" fill="#fff" opacity="0.7"></rect>
-                <rect x="92" y="94" width="26" height="6" rx="2" fill="#fff" opacity="0.7"></rect>
-                <rect x="92" y="106" width="18" height="6" rx="2" fill="#fff" opacity="0.7"></rect>
-                <circle cx="30" cy="50" r="8" fill="var(--accent)"></circle>
-                <circle cx="30" cy="150" r="8" fill="var(--accent)"></circle>
-                <circle cx="180" cy="100" r="8" fill="var(--accent)"></circle>
-                <line x1="30" y1="50" x2="80" y2="90" stroke="var(--border)" stroke-width="2"></line>
-                <line x1="30" y1="150" x2="80" y2="115" stroke="var(--border)" stroke-width="2"></line>
-                <line x1="180" y1="100" x2="130" y2="100" stroke="var(--border)" stroke-width="2"></line>
-                <text x="105" y="175" text-anchor="middle" font-size="10" fill="var(--text-light)" font-family="'Be Vietnam Pro', sans-serif">1 máy chủ duy nhất</text>
-
-                <line x1="210" y1="10" x2="210" y2="180" stroke="var(--border)" stroke-width="2" stroke-dasharray="4 4"></line>
-
-                <text x="315" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent-dark)" font-family="'Be Vietnam Pro', sans-serif">PHÂN TÁN</text>
-                <rect x="240" y="35" width="40" height="34" rx="6" fill="var(--accent-dark)"></rect>
-                <rect x="380" y="35" width="40" height="34" rx="6" fill="var(--accent-dark)"></rect>
-                <rect x="240" y="130" width="40" height="34" rx="6" fill="var(--accent-dark)"></rect>
-                <rect x="380" y="130" width="40" height="34" rx="6" fill="var(--accent-dark)"></rect>
-                <line x1="280" y1="52" x2="380" y2="52" stroke="var(--primary-light)" stroke-width="2"></line>
-                <line x1="260" y1="69" x2="260" y2="130" stroke="var(--primary-light)" stroke-width="2"></line>
-                <line x1="400" y1="69" x2="400" y2="130" stroke="var(--primary-light)" stroke-width="2"></line>
-                <line x1="280" y1="147" x2="380" y2="147" stroke="var(--primary-light)" stroke-width="2"></line>
-                <line x1="270" y1="60" x2="400" y2="150" stroke="var(--primary-light)" stroke-width="1.5" opacity="0.5"></line>
-                <line x1="400" y1="60" x2="270" y2="150" stroke="var(--primary-light)" stroke-width="1.5" opacity="0.5"></line>
-                <text x="330" y="175" text-anchor="middle" font-size="10" fill="var(--text-light)" font-family="'Be Vietnam Pro', sans-serif">Nhiều máy chủ liên kết</text>
+        <div class="fig">
+            <div class="fig-title"><i class="fa-solid fa-box-archive"></i> Hình 12.4 – Hệ CSDL tập trung</div>
+            <svg viewBox="0 0 420 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Người dùng truy cập phần mềm ứng dụng, hệ quản trị cơ sở dữ liệu và cơ sở dữ liệu đặt trên cùng một máy tính duy nhất">
+                <g fill="var(--primary)">
+                    <circle cx="150" cy="22" r="12"></circle>
+                    <path d="M130 60c0-11 9-19 20-19s20 8 20 19z"></path>
+                    <circle cx="240" cy="22" r="12"></circle>
+                    <path d="M220 60c0-11 9-19 20-19s20 8 20 19z"></path>
+                </g>
+                <path d="M195 64 V88" stroke="var(--primary-light)" stroke-width="3"></path>
+                <rect x="96" y="88" width="228" height="150" rx="16" fill="#F8FAFC" stroke="var(--primary)" stroke-width="2" stroke-dasharray="7 5"></rect>
+                <text x="112" y="108" font-size="11.5" font-weight="700" fill="var(--primary-dark)" font-family="'Be Vietnam Pro', sans-serif">MỘT MÁY TÍNH DUY NHẤT</text>
+                <rect x="120" y="118" width="180" height="34" rx="9" fill="#FDE9DC" stroke="var(--accent-dark)" stroke-width="1.8"></rect>
+                <text x="210" y="140" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E" font-family="'Be Vietnam Pro', sans-serif">Phần mềm ứng dụng CSDL</text>
+                <path d="M210 152 V162" stroke="var(--primary-light)" stroke-width="3"></path>
+                <rect x="120" y="162" width="180" height="32" rx="9" fill="var(--primary)"></rect>
+                <text x="210" y="183" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff" font-family="'Be Vietnam Pro', sans-serif">Hệ QTCSDL</text>
+                <path d="M210 194 V202" stroke="var(--primary-light)" stroke-width="3"></path>
+                <ellipse cx="210" cy="206" rx="58" ry="9" fill="var(--accent)"></ellipse>
+                <rect x="152" y="206" width="116" height="18" fill="var(--accent)"></rect>
+                <ellipse cx="210" cy="224" rx="58" ry="9" fill="var(--accent-dark)"></ellipse>
+                <text x="210" y="221" text-anchor="middle" font-size="12" font-weight="700" fill="#78350F" font-family="'Be Vietnam Pro', sans-serif">CSDL</text>
             </svg>
-            <p class="illustration-caption">CSDL tập trung dồn dữ liệu vào một máy chủ; CSDL phân tán chia dữ liệu ra nhiều máy chủ nối mạng với nhau — như bản đồ trạm chi nhánh bên dưới.</p>
+            <p class="fig-cap">Toàn bộ dữ liệu nằm gọn trên một máy — dễ quản lí, dễ bảo đảm nhất quán, nhưng khó mở rộng và cả hệ thống dừng nếu máy đó hỏng.</p>
         </div>
 
-        <div style="margin-top:24px;">
+        <div class="fig">
+            <div class="fig-title"><i class="fa-solid fa-sitemap"></i> Hình 12.5 – Hệ cơ sở dữ liệu phân tán</div>
+            <svg viewBox="0 0 640 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bốn trạm Hà Nội, Cần Thơ, Đà Nẵng và Thành phố Hồ Chí Minh, mỗi trạm có ứng dụng và cơ sở dữ liệu cục bộ, cùng nối vào một mạng máy tính ở giữa">
+                <ellipse cx="320" cy="165" rx="86" ry="42" fill="#EDE9FE" stroke="var(--primary)" stroke-width="2"></ellipse>
+                <text x="320" y="162" text-anchor="middle" font-size="14" font-weight="700" fill="var(--primary-dark)" font-family="'Be Vietnam Pro', sans-serif">Mạng</text>
+                <text x="320" y="180" text-anchor="middle" font-size="14" font-weight="700" fill="var(--primary-dark)" font-family="'Be Vietnam Pro', sans-serif">máy tính</text>
+
+                <line x1="196" y1="96" x2="264" y2="140" stroke="var(--primary-light)" stroke-width="2.5"></line>
+                <line x1="444" y1="96" x2="376" y2="140" stroke="var(--primary-light)" stroke-width="2.5"></line>
+                <line x1="196" y1="234" x2="264" y2="190" stroke="var(--primary-light)" stroke-width="2.5"></line>
+                <line x1="444" y1="234" x2="376" y2="190" stroke="var(--primary-light)" stroke-width="2.5"></line>
+
+                <g font-family="'Be Vietnam Pro', sans-serif">
+                    <rect x="16" y="22" width="180" height="98" rx="14" fill="#F8FAFC" stroke="var(--accent-dark)" stroke-width="2"></rect>
+                    <text x="32" y="44" font-size="12.5" font-weight="700" fill="#92400E">Hà Nội (trụ sở)</text>
+                    <rect x="32" y="54" width="70" height="26" rx="7" fill="#FDE9DC" stroke="var(--accent-dark)" stroke-width="1.4"></rect>
+                    <text x="67" y="72" text-anchor="middle" font-size="11" fill="#92400E">Ứng dụng</text>
+                    <rect x="110" y="54" width="72" height="50" rx="7" fill="var(--primary)"></rect>
+                    <text x="146" y="72" text-anchor="middle" font-size="10" fill="#fff">Hệ QTCSDL</text>
+                    <text x="146" y="88" text-anchor="middle" font-size="10" fill="#DDD6FE">CSDL cục bộ</text>
+
+                    <rect x="444" y="22" width="180" height="98" rx="14" fill="#F8FAFC" stroke="var(--accent-dark)" stroke-width="2"></rect>
+                    <text x="460" y="44" font-size="12.5" font-weight="700" fill="#92400E">Cần Thơ</text>
+                    <rect x="460" y="54" width="70" height="26" rx="7" fill="#FDE9DC" stroke="var(--accent-dark)" stroke-width="1.4"></rect>
+                    <text x="495" y="72" text-anchor="middle" font-size="11" fill="#92400E">Ứng dụng</text>
+                    <rect x="538" y="54" width="72" height="50" rx="7" fill="var(--primary)"></rect>
+                    <text x="574" y="72" text-anchor="middle" font-size="10" fill="#fff">Hệ QTCSDL</text>
+                    <text x="574" y="88" text-anchor="middle" font-size="10" fill="#DDD6FE">CSDL cục bộ</text>
+
+                    <rect x="16" y="210" width="180" height="98" rx="14" fill="#F8FAFC" stroke="var(--accent-dark)" stroke-width="2"></rect>
+                    <text x="32" y="232" font-size="12.5" font-weight="700" fill="#92400E">Đà Nẵng</text>
+                    <rect x="32" y="242" width="70" height="26" rx="7" fill="#FDE9DC" stroke="var(--accent-dark)" stroke-width="1.4"></rect>
+                    <text x="67" y="260" text-anchor="middle" font-size="11" fill="#92400E">Ứng dụng</text>
+                    <rect x="110" y="242" width="72" height="50" rx="7" fill="var(--primary)"></rect>
+                    <text x="146" y="260" text-anchor="middle" font-size="10" fill="#fff">Hệ QTCSDL</text>
+                    <text x="146" y="276" text-anchor="middle" font-size="10" fill="#DDD6FE">CSDL cục bộ</text>
+
+                    <rect x="444" y="210" width="180" height="98" rx="14" fill="#F8FAFC" stroke="var(--accent-dark)" stroke-width="2"></rect>
+                    <text x="460" y="232" font-size="12.5" font-weight="700" fill="#92400E">TP. Hồ Chí Minh</text>
+                    <rect x="460" y="242" width="70" height="26" rx="7" fill="#FDE9DC" stroke="var(--accent-dark)" stroke-width="1.4"></rect>
+                    <text x="495" y="260" text-anchor="middle" font-size="11" fill="#92400E">Ứng dụng</text>
+                    <rect x="538" y="242" width="72" height="50" rx="7" fill="var(--primary)"></rect>
+                    <text x="574" y="260" text-anchor="middle" font-size="10" fill="#fff">Hệ QTCSDL</text>
+                    <text x="574" y="276" text-anchor="middle" font-size="10" fill="#DDD6FE">CSDL cục bộ</text>
+                </g>
+            </svg>
+            <p class="fig-cap">Mỗi trạm có CSDL cục bộ và hệ QTCSDL riêng, chạy được <strong>ứng dụng cục bộ</strong>. Khi một ứng dụng cần dữ liệu của ít nhất hai trạm để cho ra kết quả thì gọi là <strong>ứng dụng toàn cục</strong> (ứng dụng phân tán).</p>
+        </div>
+
+        <div class="grid-2col">
+            <div class="card-highlight" style="margin:0;border-left-color:#10B981;background:white;">
+                <h4><i class="fa-solid fa-thumbs-up"></i> Ưu điểm của hệ CSDL phân tán</h4>
+                <ul style="margin-bottom:0;">
+                    <li><strong>Dễ mở rộng:</strong> thêm trạm dữ liệu mới mà không làm ảnh hưởng hoạt động của các trạm đang chạy.</li>
+                    <li><strong>Tính sẵn sàng và độ tin cậy cao:</strong> một trạm gặp sự cố, các trạm khác vẫn hoạt động; dữ liệu có thể được lưu bản sao ở nhiều nơi.</li>
+                    <li><strong>Tối ưu tốc độ:</strong> dữ liệu đặt gần nơi sử dụng nên giảm tải đường truyền khi truy xuất, cập nhật.</li>
+                </ul>
+            </div>
+            <div class="card-highlight" style="margin:0;border-left-color:#EF4444;background:white;">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Hạn chế so với tập trung</h4>
+                <ul style="margin-bottom:0;">
+                    <li>Thiết kế và triển khai <strong>phức tạp</strong> hơn nhiều.</li>
+                    <li>Khó bảo đảm <strong>tính nhất quán</strong> và bảo mật dữ liệu giữa các trạm.</li>
+                    <li><strong>Chi phí duy trì cao</strong> hơn.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="note-box">
+            <p style="margin-bottom:0;"><strong>⚠️ Lưu ý phân biệt:</strong> có hệ CSDL <em>tập trung</em> nhưng <em>xử lí phân tán</em> — điển hình là mô hình <strong>máy chủ tệp</strong>. Toàn bộ CSDL và phần mềm đặt trên máy chủ tệp; khi một máy trạm cần thao tác, toàn bộ dữ liệu và phần mềm được chuyển qua đường truyền vào RAM của máy trạm, việc xử lí thực hiện tại máy trạm rồi mới ghi lại về máy chủ. Đó <strong>không phải</strong> là hệ CSDL phân tán.</p>
+        </div>
+
+        <div class="activity-box">
+            <div class="activity-title"><i class="fa-solid fa-scale-balanced"></i> Hoạt động nhóm – Tập trung hay phân tán?</div>
+            <p>Đọc từng tình huống và chọn mô hình phù hợp. Thảo luận nhanh trong nhóm trước khi bấm chọn.</p>
+            <div id="tt-sort"></div>
+            <div class="score-line" id="tt-sort-score">Đã trả lời đúng 0 / 6</div>
+        </div>
+
+        <div style="margin-top:28px;">
             <h3><i class="fa-solid fa-map-location-dot"></i> Mô phỏng: Hệ CSDL phân tán toàn quốc</h3>
-            <p>Bản đồ các trạm chi nhánh (Hà Nội, Đà Nẵng, TP.HCM, Cần Thơ) kết nối mạng.</p>
+            <p>Bản đồ bốn trạm chi nhánh (Hà Nội, Đà Nẵng, TP. Hồ Chí Minh, Cần Thơ) nối với nhau qua mạng máy tính. Bấm nút bên dưới để giả lập sự cố mất kết nối ở một trạm và quan sát điều gì xảy ra với các trạm còn lại.</p>
+            <div class="map-fallback" id="map-fallback">⚠️ Không tải được bản đồ nền (có thể do mạng của trường chặn). Em vẫn xem được sơ đồ bốn trạm ở <strong>Hình 12.5</strong> phía trên nhé.</div>
             <div id="map-container"></div>
-            <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:10px;">
+            <div class="map-legend">
+                <span><i class="dot" style="background:#7C3AED;"></i> Trạm hoạt động bình thường</span>
+                <span><i class="dot" style="background:#EF4444;"></i> Trạm mất kết nối mạng</span>
+                <span><i class="dot" style="background:#A78BFA;"></i> Đường truyền giữa các trạm</span>
+            </div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:14px;">
                 <button class="btn btn-accent" id="btn-toggle-node"><i class="fa-solid fa-triangle-exclamation"></i> Giả lập sự cố Đà Nẵng</button>
                 <span class="status-badge ready" id="network-status-badge">🟢 4 trạm hoạt động ổn định</span>
+            </div>
+            <div class="card-highlight" style="margin-top:18px;">
+                <p style="margin-bottom:0;"><strong>💡 Rút ra:</strong> khi trạm Đà Nẵng mất kết nối, CSDL cục bộ của trạm đó <em>vẫn chạy</em> cho các ứng dụng cục bộ tại chỗ, ba trạm còn lại cũng vẫn làm việc bình thường. Chỉ những <strong>ứng dụng toàn cục</strong> cần dữ liệu của Đà Nẵng mới bị ảnh hưởng — đó chính là ưu điểm về <strong>tính sẵn sàng</strong> của hệ CSDL phân tán.</p>
+            </div>
+        </div>
+
+        <div class="memo-box">
+            <div class="memo-title"><i class="fa-solid fa-bookmark"></i> Ghi nhớ</div>
+            <ul>
+                <li>Hệ CSDL mà CSDL được lưu trữ tập trung trên một máy tính được gọi là <strong>hệ cơ sở dữ liệu tập trung</strong>.</li>
+                <li><strong>Hệ CSDL phân tán</strong> cho phép người dùng truy cập dữ liệu được lưu trữ ở nhiều máy tính khác nhau trên mạng máy tính.</li>
+            </ul>
+        </div>
+
+        <h3><i class="fa-regular fa-circle-question" style="color:var(--primary);"></i> Câu hỏi củng cố</h3>
+        <div class="qa-item">
+            <p class="qa-q">Hệ CSDL tập trung và hệ CSDL phân tán khác nhau như thế nào?</p>
+            <button class="btn-reveal" type="button" data-reveal="qa-pt-1">Xem gợi ý trả lời</button>
+            <div class="qa-a" id="qa-pt-1">
+                <p style="margin-bottom:0;">Khác nhau ở <strong>nơi lưu trữ dữ liệu</strong>: hệ tập trung lưu toàn bộ CSDL trên <em>một máy tính</em>; hệ phân tán chia dữ liệu ra <em>nhiều trạm</em> của một mạng máy tính, mỗi trạm có CSDL cục bộ và hệ QTCSDL riêng. Kéo theo đó: hệ phân tán dễ mở rộng, tính sẵn sàng cao hơn, nhưng thiết kế phức tạp, khó bảo đảm nhất quán và chi phí duy trì cao hơn.</p>
             </div>
         </div>
     </section>
@@ -705,6 +1103,44 @@ WHERE ma_nv = 'NV02';</textarea>
                 <button class="btn" id="btn-retry-quiz"><i class="fa-solid fa-rotate-right"></i> Làm lại</button>
             </div>
         </div>
+
+        <h3 style="margin-top:36px;"><i class="fa-solid fa-dumbbell" style="color:var(--primary);"></i> Luyện tập (SGK Tr.63)</h3>
+        <div class="qa-item">
+            <p class="qa-q">1. Hãy lập danh sách các chức năng của hệ QTCSDL trong từng nhóm chức năng.</p>
+            <button class="btn-reveal" type="button" data-reveal="qa-lt-1">Xem gợi ý trả lời</button>
+            <div class="qa-a" id="qa-lt-1">
+                <ul style="margin-bottom:0;">
+                    <li><strong>a) Định nghĩa dữ liệu:</strong> khai báo CSDL với tên xác định; tạo lập và sửa đổi cấu trúc bên trong CSDL; cài đặt các ràng buộc toàn vẹn.</li>
+                    <li><strong>b) Cập nhật và truy xuất dữ liệu:</strong> thêm, xoá, sửa dữ liệu; truy xuất dữ liệu theo các tiêu chí khác nhau.</li>
+                    <li><strong>c) Bảo mật, an toàn CSDL:</strong> kiểm soát quyền truy cập; kiểm soát giao dịch khi nhiều người dùng đồng thời; sao lưu dự phòng và khôi phục dữ liệu.</li>
+                    <li><strong>d) Giao diện lập trình ứng dụng:</strong> cung cấp công cụ để nhà phát triển gửi truy vấn tới CSDL từ ứng dụng của họ.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="qa-item">
+            <p class="qa-q">2. Hãy phân tích điểm mạnh và điểm yếu của CSDL phân tán so với CSDL tập trung.</p>
+            <button class="btn-reveal" type="button" data-reveal="qa-lt-2">Xem gợi ý trả lời</button>
+            <div class="qa-a" id="qa-lt-2">
+                <p><strong>Điểm mạnh:</strong> dễ mở rộng (thêm trạm mà không làm gián đoạn các trạm đang chạy); tính sẵn sàng và độ tin cậy cao (một trạm hỏng, hệ thống vẫn chạy; dữ liệu có bản sao ở trạm khác); tối ưu tốc độ vì dữ liệu đặt gần nơi sử dụng, giảm tải đường truyền.</p>
+                <p style="margin-bottom:0;"><strong>Điểm yếu:</strong> thiết kế và triển khai phức tạp; khó bảo đảm tính nhất quán của dữ liệu giữa các trạm; khó bảo mật hơn vì dữ liệu nằm ở nhiều nơi; chi phí duy trì cao.</p>
+            </div>
+        </div>
+
+        <h3 style="margin-top:32px;"><i class="fa-solid fa-lightbulb" style="color:var(--primary);"></i> Vận dụng (SGK Tr.63)</h3>
+        <div class="qa-item">
+            <p class="qa-q">1. Cho ví dụ về một hệ CSDL trên thực tế, chỉ rõ những thành phần của nó.</p>
+            <button class="btn-reveal" type="button" data-reveal="qa-vd-1">Xem gợi ý trả lời</button>
+            <div class="qa-a" id="qa-vd-1">
+                <p style="margin-bottom:0;">Ví dụ <strong>hệ CSDL quản lí thư viện trường</strong>: <em>CSDL</em> gồm các bảng Sách, Học sinh, Phiếu mượn…; <em>hệ QTCSDL</em> là MySQL (hoặc SQL Server) cài trên máy chủ của trường; <em>phần mềm ứng dụng CSDL</em> gồm phần mềm thủ thư dùng để nhập sách, ghi mượn – trả và trang tra cứu sách dành cho học sinh. Ba thành phần ấy hợp thành một hệ CSDL. Em có thể nêu ví dụ khác: hệ CSDL bán vé tàu, hệ CSDL tra cứu điểm thi, ứng dụng đặt xe công nghệ…</p>
+            </div>
+        </div>
+        <div class="qa-item">
+            <p class="qa-q">2. Hãy tìm hiểu qua Internet tên một số hệ quản trị CSDL thông dụng.</p>
+            <button class="btn-reveal" type="button" data-reveal="qa-vd-2">Xem gợi ý trả lời</button>
+            <div class="qa-a" id="qa-vd-2">
+                <p style="margin-bottom:0;"><strong>MySQL</strong> và <strong>PostgreSQL</strong> (mã nguồn mở, rất phổ biến cho ứng dụng web), <strong>Oracle Database</strong> và <strong>IBM DB2</strong> (dùng trong ngân hàng, doanh nghiệp lớn), <strong>Microsoft SQL Server</strong>, <strong>SQLite</strong> (nhỏ gọn, nhúng trong điện thoại và trình duyệt), <strong>Microsoft Access</strong> (đơn giản, dùng cho CSDL nhỏ), <strong>MongoDB</strong> (CSDL phi quan hệ). Khi tìm hiểu, em hãy ghi lại: hệ đó miễn phí hay trả phí, thường dùng cho loại ứng dụng nào.</p>
+            </div>
+        </div>
     </section>
     <div class="footer-note">📘 Bài 12 – Tin học 11 | Hệ QTCSDL & Hệ CSDL</div>
 </main>
@@ -724,7 +1160,12 @@ WHERE ma_nv = 'NV02';</textarea>
                 sections.forEach(s => s.classList.remove('active'));
                 btn.classList.add('active');
                 const target = document.getElementById(btn.dataset.target);
-                if(target) { target.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+                if(target) {
+                    target.classList.add('active');
+                    window.scrollTo({top:0,behavior:'smooth'});
+                    // Bản đồ chỉ đo được kích thước khi tab đã hiển thị
+                    if(btn.dataset.target === 'section-phantan') ensureMap();
+                }
             });
         });
 
@@ -740,39 +1181,129 @@ WHERE ma_nv = 'NV02';</textarea>
             });
         });
 
-        // Map
-        function initMap() {
-            if(!document.getElementById('map-container') || typeof L === 'undefined') return;
-            const map = L.map('map-container').setView([16.0, 107.0], 6);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:18, attribution:'© OpenStreetMap' }).addTo(map);
-            const locs = [
-                {name:'Hà Nội (Trụ sở)', coords:[21.0285,105.8542], id:'hn'},
-                {name:'Đà Nẵng', coords:[16.0471,108.2068], id:'dn'},
-                {name:'TP. Hồ Chí Minh', coords:[10.8231,106.6297], id:'hcm'},
-                {name:'Cần Thơ', coords:[10.0452,105.7469], id:'ct'}
-            ];
-            const markers = {};
-            locs.forEach(l => {
-                markers[l.id] = L.marker(l.coords).addTo(map).bindPopup(`<b>${l.name}</b><br>Trạm CSDL cục bộ: 🟢 hoạt động`);
-            });
-            let dnActive = true;
-            document.getElementById('btn-toggle-node').addEventListener('click', () => {
-                dnActive = !dnActive;
-                const badge = document.getElementById('network-status-badge');
-                if(dnActive) {
-                    markers.dn.setPopupContent('<b>Đà Nẵng</b><br>Trạm CSDL cục bộ: 🟢 hoạt động');
-                    document.getElementById('btn-toggle-node').innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Giả lập sự cố Đà Nẵng';
-                    badge.className = 'status-badge ready';
-                    badge.textContent = '🟢 4 trạm hoạt động ổn định';
-                } else {
-                    markers.dn.setPopupContent('<b>Đà Nẵng</b><br><span style="color:red">🔴 Mất kết nối mạng! (CSDL cục bộ vẫn hoạt động)</span>');
-                    document.getElementById('btn-toggle-node').innerHTML = '<i class="fa-solid fa-check"></i> Khôi phục Đà Nẵng';
-                    badge.className = 'status-badge error';
-                    badge.textContent = '🔴 Trạm Đà Nẵng mất kết nối, các trạm khác vẫn độc lập.';
-                }
+        // ---- Bản đồ hệ CSDL phân tán ----
+        // Lưu ý: tab "Tập trung & Phân tán" bị ẩn (display:none) khi trang vừa tải,
+        // nên phải đợi tab hiển thị rồi mới khởi tạo Leaflet, nếu không bản đồ
+        // đo được kích thước bằng 0 và chỉ hiện một mảng xám không có ô bản đồ nào.
+        const STATIONS = [
+            { id:'hn',  name:'Hà Nội (trụ sở)', coords:[21.0285, 105.8542] },
+            { id:'dn',  name:'Đà Nẵng',         coords:[16.0471, 108.2068] },
+            { id:'hcm', name:'TP. Hồ Chí Minh', coords:[10.8231, 106.6297] },
+            { id:'ct',  name:'Cần Thơ',         coords:[10.0452, 105.7469] }
+        ];
+        const LINKS = [['hn','dn'], ['dn','hcm'], ['hcm','ct'], ['hn','hcm']];
+        let vnMap = null, mapTries = 0;
+        const nodeLayer = {}, linkLayer = [];
+        let dnActive = true;
+
+        function stationStyle(active) {
+            return {
+                radius: 10,
+                color: '#ffffff',
+                weight: 3,
+                fillColor: active ? '#7C3AED' : '#EF4444',
+                fillOpacity: 1
+            };
+        }
+
+        function paintNetwork() {
+            if(!vnMap) return;
+            nodeLayer.dn.setStyle(stationStyle(dnActive));
+            nodeLayer.dn.setPopupContent(dnActive
+                ? '<b>Đà Nẵng</b><br>Trạm CSDL cục bộ: 🟢 hoạt động'
+                : '<b>Đà Nẵng</b><br><span style="color:#B91C1C">🔴 Mất kết nối mạng!</span><br>CSDL cục bộ vẫn phục vụ ứng dụng tại chỗ.');
+            linkLayer.forEach(link => {
+                const broken = !dnActive && link.pair.indexOf('dn') !== -1;
+                link.line.setStyle({
+                    color: broken ? '#EF4444' : '#A78BFA',
+                    dashArray: broken ? '6 8' : null,
+                    opacity: broken ? 0.75 : 0.95
+                });
             });
         }
-        setTimeout(initMap, 600);
+
+        function buildMap() {
+            vnMap = L.map('map-container', { scrollWheelZoom: false }).setView([16.2, 106.6], 5);
+
+            // Nguồn bản đồ nền: thử lần lượt, vì máy chủ tile của OpenStreetMap
+            // hay bị chặn ở một số mạng tại Việt Nam.
+            const TILE_SOURCES = [
+                { url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+                  opts: { subdomains:'abcd', maxZoom:18, attribution:'&copy; OpenStreetMap · &copy; CARTO' } },
+                { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+                  opts: { maxZoom:18, attribution:'Tiles &copy; Esri' } },
+                { url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  opts: { maxZoom:18, attribution:'&copy; OpenStreetMap' } }
+            ];
+
+            function useTileSource(index) {
+                const src = TILE_SOURCES[index];
+                const fb = document.getElementById('map-fallback');
+                if(!src) { if(fb) fb.classList.add('show'); return; }
+                const layer = L.tileLayer(src.url, src.opts);
+                let loaded = 0;
+                layer.on('tileload', () => { loaded++; });
+                layer.addTo(vnMap);
+                setTimeout(() => {
+                    if(loaded > 0) { if(fb) fb.classList.remove('show'); return; }
+                    vnMap.removeLayer(layer);
+                    useTileSource(index + 1);   // nguồn này hỏng, thử nguồn kế tiếp
+                }, 5000);
+            }
+            useTileSource(0);
+
+            const byId = {};
+            STATIONS.forEach(st => { byId[st.id] = st.coords; });
+            LINKS.forEach(pair => {
+                const line = L.polyline([byId[pair[0]], byId[pair[1]]], { color:'#A78BFA', weight:3, opacity:0.95 }).addTo(vnMap);
+                linkLayer.push({ pair: pair, line: line });
+            });
+
+            STATIONS.forEach(st => {
+                nodeLayer[st.id] = L.circleMarker(st.coords, stationStyle(true))
+                    .addTo(vnMap)
+                    .bindTooltip(st.name, { permanent:true, direction:'right', offset:[10,0], className:'map-label' })
+                    .bindPopup('<b>' + st.name + '</b><br>Trạm CSDL cục bộ: 🟢 hoạt động');
+            });
+
+            const toggleBtn = document.getElementById('btn-toggle-node');
+            if(toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    dnActive = !dnActive;
+                    const badge = document.getElementById('network-status-badge');
+                    paintNetwork();
+                    if(dnActive) {
+                        toggleBtn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Giả lập sự cố Đà Nẵng';
+                        badge.className = 'status-badge ready';
+                        badge.textContent = '🟢 4 trạm hoạt động ổn định';
+                    } else {
+                        toggleBtn.innerHTML = '<i class="fa-solid fa-check"></i> Khôi phục Đà Nẵng';
+                        badge.className = 'status-badge error';
+                        badge.textContent = '🔴 Đà Nẵng mất kết nối — 3 trạm còn lại vẫn chạy độc lập';
+                    }
+                });
+            }
+        }
+
+        function ensureMap() {
+            const box = document.getElementById('map-container');
+            if(!box) return;
+            if(vnMap) { setTimeout(() => vnMap.invalidateSize(), 80); return; }
+            // Chờ leaflet.js (nạp bằng defer) và chờ tab hiện ra để có kích thước thật
+            if(typeof L === 'undefined' || box.offsetWidth === 0) {
+                if(mapTries++ < 40) setTimeout(ensureMap, 200);
+                return;
+            }
+            buildMap();
+            setTimeout(() => vnMap.invalidateSize(), 120);
+        }
+
+        window.addEventListener('resize', () => { if(vnMap) vnMap.invalidateSize(); });
+        // Phòng trường hợp mục này đang mở sẵn khi tải trang
+        if(document.getElementById('section-phantan') &&
+           document.getElementById('section-phantan').classList.contains('active')) {
+            ensureMap();
+        }
 
         // SQL (MySQL) Runner — chạy bằng sql.js (SQLite biên dịch WebAssembly, tương thích cú pháp SQL chuẩn)
         function initSqlRunner() {
@@ -981,6 +1512,103 @@ WHERE ma_nv = 'NV02';</textarea>
                 });
             });
         });
+    })();
+</script>
+
+<!-- Hoạt động bổ sung: hiện đáp án, xếp nhóm chức năng, phân biệt tập trung/phân tán -->
+<script>
+    (function initExtras() {
+        // --- Nút "Xem gợi ý trả lời" ---
+        document.querySelectorAll('.btn-reveal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const box = document.getElementById(btn.dataset.reveal);
+                if(!box) return;
+                const open = box.classList.toggle('show');
+                btn.textContent = open ? 'Ẩn gợi ý' : 'Xem gợi ý trả lời';
+            });
+        });
+
+        // --- Bộ dựng câu hỏi phân loại dùng chung ---
+        function buildSorter(hostId, scoreId, groups, items, doneMsg) {
+            const host = document.getElementById(hostId);
+            const scoreEl = document.getElementById(scoreId);
+            if(!host) return;
+            let done = 0;
+
+            items.forEach(item => {
+                const wrap = document.createElement('div');
+                wrap.className = 'sortq';
+
+                const q = document.createElement('div');
+                q.className = 'sortq-text';
+                q.textContent = item.text;
+                wrap.appendChild(q);
+
+                const row = document.createElement('div');
+                row.className = 'chip-row';
+                groups.forEach(g => {
+                    const chip = document.createElement('button');
+                    chip.type = 'button';
+                    chip.className = 'chip';
+                    chip.textContent = g.label;
+                    chip.addEventListener('click', () => {
+                        if(wrap.dataset.solved) return;
+                        if(g.key === item.answer) {
+                            chip.classList.add('correct');
+                            wrap.dataset.solved = '1';
+                            row.querySelectorAll('.chip').forEach(c => { c.disabled = true; });
+                            done++;
+                            scoreEl.textContent = scoreEl.textContent.replace(/\d+ \//, done + ' /');
+                            if(item.why) {
+                                const why = document.createElement('div');
+                                why.style.cssText = 'margin-top:10px;font-size:13.5px;color:#065F46;';
+                                why.innerHTML = '✔ ' + item.why;
+                                wrap.appendChild(why);
+                            }
+                            if(done === items.length) {
+                                scoreEl.innerHTML = doneMsg;
+                            }
+                        } else {
+                            chip.classList.add('wrong');
+                            setTimeout(() => chip.classList.remove('wrong'), 600);
+                        }
+                    });
+                    row.appendChild(chip);
+                });
+                wrap.appendChild(row);
+                host.appendChild(wrap);
+            });
+        }
+
+        // --- Hoạt động 1: xếp chức năng vào 4 nhóm ---
+        buildSorter('fn-sort', 'fn-sort-score', [
+            { key:'a', label:'a) Định nghĩa dữ liệu' },
+            { key:'b', label:'b) Cập nhật & truy xuất' },
+            { key:'c', label:'c) Bảo mật & an toàn' },
+            { key:'d', label:'d) Giao diện lập trình' }
+        ], [
+            { text:'Khai báo một CSDL mới với tên gọi xác định.', answer:'a' },
+            { text:'Thêm một học sinh mới vào bảng dữ liệu.', answer:'b' },
+            { text:'Cấp cho giáo viên quyền xem điểm, không cho quyền sửa.', answer:'c' },
+            { text:'Cung cấp thư viện để lập trình viên gửi câu truy vấn từ ứng dụng đang viết.', answer:'d' },
+            { text:'Tạo bảng mới và khai báo ràng buộc "điểm phải từ 0 đến 10".', answer:'a', why:'Đặt ràng buộc toàn vẹn thuộc nhóm định nghĩa dữ liệu.' },
+            { text:'Tìm danh sách học sinh có điểm trung bình trên 8,0.', answer:'b' },
+            { text:'Sao lưu CSDL cuối mỗi ngày để phòng khi máy chủ hỏng.', answer:'c' },
+            { text:'Kiểm soát giao dịch khi hai người cùng sửa một bản ghi.', answer:'c', why:'Nhờ kiểm soát giao dịch, dữ liệu luôn nhất quán khi nhiều người dùng đồng thời.' }
+        ], '🎉 Xếp đúng cả 8 / 8 — nhóm em đã nắm chắc bốn nhóm chức năng của hệ QTCSDL!');
+
+        // --- Hoạt động 2: tập trung hay phân tán ---
+        buildSorter('tt-sort', 'tt-sort-score', [
+            { key:'tt', label:'Tập trung' },
+            { key:'pt', label:'Phân tán' }
+        ], [
+            { text:'Một cửa hàng nhỏ dùng CSDL Microsoft Access trên đúng một máy tính ở quầy thu ngân.', answer:'tt' },
+            { text:'Ngân hàng có trụ sở ở Hà Nội và chi nhánh ở Đà Nẵng, TP.HCM, Cần Thơ, mỗi nơi giữ dữ liệu khách hàng của mình.', answer:'pt' },
+            { text:'CSDL điểm thi của một trường THPT đặt trên máy chủ duy nhất trong phòng máy.', answer:'tt' },
+            { text:'Facebook, Google đặt máy chủ ở nhiều quốc gia để phục vụ người dùng gần nhất.', answer:'pt' },
+            { text:'Thư viện trường dùng phần mềm quản lí sách, dữ liệu lưu trên máy của thủ thư.', answer:'tt' },
+            { text:'Chuỗi siêu thị muốn thêm một kho dữ liệu cho chi nhánh mới mà không được làm gián đoạn các chi nhánh đang bán hàng.', answer:'pt', why:'Dễ mở rộng mà không ảnh hưởng trạm khác chính là ưu điểm của hệ CSDL phân tán.' }
+        ], '🎉 Đúng cả 6 / 6 — nhóm em phân biệt tốt hai mô hình rồi!');
     })();
 </script>
 </body>
