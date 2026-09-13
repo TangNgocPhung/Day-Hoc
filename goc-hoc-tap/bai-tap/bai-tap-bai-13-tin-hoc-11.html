@@ -1,0 +1,1142 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Phiếu bài tập tự chấm Bài 13 – Cơ sở dữ liệu quan hệ, Tin học 11 (theo Sách bài tập, Kết nối tri thức).">
+  <meta name="theme-color" content="#173F5F">
+  <title>Bài tập Bài 13 – Cơ sở dữ liệu quan hệ | Tin học 11</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173F5F'/%3E%3Cellipse cx='32' cy='17' rx='18' ry='8' fill='%2335C0CD'/%3E%3Cpath d='M14 17v15c0 4.4 8.1 8 18 8s18-3.6 18-8V17M14 32v15c0 4.4 8.1 8 18 8s18-3.6 18-8V32' fill='none' stroke='white' stroke-width='4'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --navy: #173F5F;
+      --navy-deep: #0e2b42;
+      --cyan: #35C0CD;
+      --cyan-dark: #158f9b;
+      --cyan-soft: #e7f9fb;
+      --navy-soft: #eaf1f5;
+      --paper: #ffffff;
+      --page: #f3f7f9;
+      --ink: #182b3a;
+      --muted: #607485;
+      --line: #d7e2e8;
+      --success: #16805d;
+      --success-soft: #e8f8f1;
+      --warning: #b66a00;
+      --warning-soft: #fff5df;
+      --danger: #b64040;
+      --danger-soft: #fff0f0;
+      --shadow: 0 16px 42px rgba(23, 63, 95, .11);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 96% 2%, rgba(53, 192, 205, .14), transparent 18rem),
+        var(--page);
+      font-family: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { touch-action: manipulation; }
+    h1, h2, h3 { line-height: 1.25; }
+
+    .page-shell { width: min(1000px, calc(100% - 26px)); margin: 26px auto 80px; }
+
+    .top-card {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(22px, 4vw, 34px);
+      color: #fff;
+      background: linear-gradient(130deg, var(--navy-deep), var(--navy) 64%, #176f83);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .top-card::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      top: -110px;
+      width: 260px;
+      height: 260px;
+      border: 2px solid rgba(255, 255, 255, .12);
+      border-radius: 50%;
+    }
+    .eyebrow { display: flex; align-items: center; gap: 9px; margin: 0 0 10px; color: #bfeff2; font-size: .88rem; font-weight: 700; }
+    .eyebrow svg { width: 20px; height: 20px; }
+    .top-card h1 { margin: 0; font-size: clamp(1.6rem, 4.4vw, 2.5rem); letter-spacing: -.02em; }
+    .subtitle { max-width: 720px; margin: 12px 0 0; color: #d8eef4; }
+
+    .card {
+      margin-top: 18px;
+      padding: clamp(18px, 3.4vw, 26px);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .card h2 { margin: 0 0 6px; color: var(--navy); font-size: 1.25rem; }
+    .card h2 + .lead { margin: 0 0 14px; color: var(--muted); }
+
+    .info-card { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { display: grid; gap: 6px; }
+    .field label { color: var(--navy); font-weight: 700; font-size: .93rem; }
+    .field input {
+      min-height: 48px;
+      padding: 10px 13px;
+      border: 1px solid #b8cbd4;
+      border-radius: 11px;
+      background: #fff;
+    }
+
+    .progress-panel { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .progress-copy { color: var(--navy); font-weight: 800; white-space: nowrap; }
+    .progress-track { flex: 1 1 200px; height: 11px; background: #e1eaee; border-radius: 999px; overflow: hidden; }
+    .progress-bar { width: 0; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--cyan-dark)); transition: width .25s; }
+    .save-state { color: var(--muted); font-size: .85rem; }
+
+    details.summary-box { border: 1px solid var(--line); border-radius: 14px; background: #f8fbfc; }
+    details.summary-box + details.summary-box { margin-top: 10px; }
+    details.summary-box > summary { padding: 13px 16px; color: var(--navy); font-weight: 700; cursor: pointer; }
+    details.summary-box .summary-body { padding: 0 16px 16px; }
+    details.summary-box ul { margin: 0; padding-left: 20px; }
+    details.summary-box li { margin: 6px 0; }
+    .term { color: var(--navy); font-weight: 700; }
+
+    .question-card {
+      margin-top: 16px;
+      padding: clamp(16px, 3vw, 22px);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--cyan);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    .question-head { display: flex; gap: 12px; align-items: flex-start; }
+    .question-number {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      min-width: 56px;
+      height: 34px;
+      padding: 0 9px;
+      color: #fff;
+      background: var(--navy);
+      border-radius: 999px;
+      font-size: .86rem;
+      font-weight: 800;
+    }
+    .question-text { margin: 0; font-weight: 600; }
+    .question-context { margin: 6px 0 0; color: var(--muted); font-size: .93rem; }
+
+    .options { display: grid; gap: 10px; margin: 14px 0 0; }
+    .option {
+      position: relative;
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 11px;
+      padding: 12px 14px;
+      background: #f7fafb;
+      border: 1.5px solid #d3e0e5;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .option:hover { border-color: var(--cyan-dark); }
+    .option input { position: absolute; opacity: 0; }
+    .option-letter {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      color: var(--navy);
+      background: #fff;
+      border: 1px solid #aebfc8;
+      border-radius: 50%;
+      font-weight: 800;
+    }
+    .option:has(input:checked) { background: var(--cyan-soft); border-color: var(--cyan-dark); }
+    .option:has(input:checked) .option-letter { color: #fff; background: var(--cyan-dark); border-color: var(--cyan-dark); }
+    .option:focus-within { outline: 3px solid rgba(53, 192, 205, .35); outline-offset: 2px; }
+    .option.is-correct { background: var(--success-soft); border-color: var(--success); }
+    .option.is-wrong { background: var(--danger-soft); border-color: var(--danger); }
+
+    .table-wrap { margin: 14px 0 0; overflow-x: auto; border: 1px solid var(--line); border-radius: 13px; }
+    table.data { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    table.data caption { padding: 10px 12px 0; color: var(--navy); font-weight: 700; text-align: left; }
+    table.data th, table.data td { padding: 9px 11px; border-bottom: 1px solid #e2eaee; text-align: left; white-space: nowrap; }
+    table.data th { color: var(--navy); background: var(--cyan-soft); }
+    table.data tbody tr:last-child td { border-bottom: 0; }
+
+    .pick-hint { margin: 14px 0 8px; color: var(--navy); font-weight: 700; font-size: .93rem; }
+    .pick-list { display: flex; flex-wrap: wrap; gap: 9px; margin: 0; padding: 0; border: 0; }
+    .pick-chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 8px 14px;
+      background: #f7fafb;
+      border: 1.5px solid #d3e0e5;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .pick-chip input { position: absolute; opacity: 0; }
+    .pick-chip .tick {
+      display: grid;
+      place-items: center;
+      width: 21px;
+      height: 21px;
+      color: transparent;
+      background: #fff;
+      border: 1.5px solid #aebfc8;
+      border-radius: 6px;
+      font-size: .8rem;
+      font-weight: 900;
+    }
+    .pick-chip:has(input:checked) { background: var(--cyan-soft); border-color: var(--cyan-dark); }
+    .pick-chip:has(input:checked) .tick { color: #fff; background: var(--cyan-dark); border-color: var(--cyan-dark); }
+    .pick-chip:focus-within { outline: 3px solid rgba(53, 192, 205, .35); outline-offset: 2px; }
+
+    .select-row { display: grid; gap: 6px; margin-top: 14px; max-width: 420px; }
+    .select-row label { color: var(--navy); font-weight: 700; font-size: .93rem; }
+    .select-row select { min-height: 48px; padding: 10px 12px; border: 1px solid #b8cbd4; border-radius: 11px; background: #fff; }
+
+    .join-output { margin-top: 14px; }
+    .join-empty {
+      display: grid;
+      place-items: center;
+      min-height: 110px;
+      padding: 16px;
+      color: var(--muted);
+      background: #f7fafb;
+      border: 1px dashed #b9cbd5;
+      border-radius: 13px;
+      text-align: center;
+    }
+
+    .explain {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: .95rem;
+    }
+    .explain.show { display: block; }
+    .explain.good { color: #0e6548; background: var(--success-soft); border-left: 4px solid var(--success); }
+    .explain.bad { color: #794000; background: var(--warning-soft); border-left: 4px solid var(--warning); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 10px 18px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .15s, background .15s;
+    }
+    .btn svg { width: 19px; height: 19px; }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .btn:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid rgba(53, 192, 205, .4); outline-offset: 2px; }
+    .btn-primary { color: #fff; background: var(--navy); }
+    .btn-primary:hover { background: #205477; }
+    .btn-accent { color: var(--navy-deep); background: var(--cyan); }
+    .btn-accent:hover { background: #5bd1da; }
+    .btn-secondary { color: var(--navy); background: #fff; border-color: #b9cbd5; }
+    .btn-secondary:hover { background: var(--navy-soft); }
+    .actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 20px; }
+
+    .alert {
+      display: none;
+      margin-top: 16px;
+      padding: 13px 15px;
+      color: #794000;
+      background: var(--warning-soft);
+      border: 1px solid #e7c482;
+      border-radius: 12px;
+    }
+    .alert.show { display: block; }
+
+    .result-card { display: none; }
+    .result-card.show { display: block; }
+    .result-main { display: flex; flex-wrap: wrap; gap: 22px; align-items: center; }
+    .score-ring {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 138px;
+      height: 138px;
+      color: #fff;
+      background: var(--navy);
+      border: 11px solid var(--cyan);
+      border-radius: 50%;
+      text-align: center;
+    }
+    .score-ring strong { display: block; font-size: 2.3rem; line-height: 1; }
+    .score-ring span { font-size: .8rem; }
+    .result-copy { flex: 1 1 260px; }
+    .result-copy h2 { margin: 0 0 6px; color: var(--navy); }
+    .result-meta { color: var(--muted); font-size: .9rem; }
+    .result-actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 18px; }
+
+    .footer-note { margin: 22px 0 0; color: var(--muted); font-size: .86rem; text-align: center; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 60;
+      max-width: min(420px, calc(100% - 28px));
+      padding: 12px 18px;
+      color: #fff;
+      background: var(--navy-deep);
+      border-radius: 12px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, .25);
+      opacity: 0;
+      transform: translate(-50%, 14px);
+      transition: opacity .2s, transform .2s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 680px) {
+      .info-card { grid-template-columns: 1fr; }
+      .question-head { flex-direction: column; gap: 8px; }
+      .actions .btn, .result-actions .btn { flex: 1 1 150px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+    @media print {
+      body { background: #fff; }
+      .top-card { print-color-adjust: exact; }
+      .actions, .result-actions, .progress-panel, .toast { display: none !important; }
+      .question-card, .card { box-shadow: none; break-inside: avoid; }
+      .explain { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="top-card">
+      <p class="eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"></path></svg>
+        Tin học 11 · Chủ đề F · Phiếu bài tập
+      </p>
+      <h1>Bài 13: Cơ sở dữ liệu quan hệ</h1>
+      <p class="subtitle">10 bài tập theo Sách bài tập (bài 13.1 – 13.10). Em làm trực tiếp trên trang, sau đó bấm <strong>Chấm bài</strong> để xem điểm và lời giải chi tiết.</p>
+    </header>
+
+    <section class="card info-card" aria-label="Thông tin học sinh">
+      <div class="field">
+        <label for="student-name">Họ và tên</label>
+        <input id="student-name" type="text" autocomplete="name" placeholder="Nhập họ và tên của em">
+      </div>
+      <div class="field">
+        <label for="student-class">Lớp</label>
+        <input id="student-class" type="text" autocomplete="off" placeholder="Ví dụ: 11A1">
+      </div>
+    </section>
+
+    <section class="card progress-panel" aria-label="Tiến độ làm bài">
+      <span class="progress-copy"><span id="answered-count">0</span>/10 bài đã làm</span>
+      <div class="progress-track" role="progressbar" aria-label="Số bài đã làm" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <span class="save-state" id="save-state">Bài làm được lưu trên máy của em</span>
+    </section>
+
+    <section class="card" id="tom-tat">
+      <h2>A. Tóm tắt kiến thức</h2>
+      <p class="lead">Đọc lại phần này trước khi làm bài tập.</p>
+      <details class="summary-box" open>
+        <summary>Cơ sở dữ liệu quan hệ là gì?</summary>
+        <div class="summary-body">
+          <p>CSDL quan hệ là CSDL mà dữ liệu được lưu trữ dưới dạng các bảng (hay lưu trữ theo cấu trúc bảng). Mỗi bảng lưu trữ những dữ liệu của các đối tượng có các thuộc tính giống nhau; mỗi cột của bảng tương ứng với một thuộc tính; mỗi hàng là một bộ dữ liệu của một đối tượng.</p>
+        </div>
+      </details>
+      <details class="summary-box">
+        <summary>Các thuật ngữ liên quan</summary>
+        <div class="summary-body">
+          <ul>
+            <li><span class="term">Bản ghi</span> (record hay row): là một bộ dữ liệu trên mỗi hàng của bảng.</li>
+            <li><span class="term">Trường</span> (field): là một cột của bảng.</li>
+            <li><span class="term">Khoá</span> của bảng: là trường hay một nhóm trường mà giá trị của chúng tại các bản ghi không trùng nhau. Vì vậy, giá trị của khoá xác định duy nhất một bản ghi của bảng.</li>
+            <li><span class="term">Khoá chính</span>: một bảng có thể có nhiều khoá; người ta thường chọn một khoá làm khoá chính, ưu tiên khoá gồm ít trường nhất và tiện lợi khi tham chiếu.</li>
+            <li><span class="term">Khoá ngoài</span>: là một hay một nhóm trường của bảng này nhưng lại là khoá chính của bảng khác. Khoá ngoài đóng vai trò tham chiếu, liên kết dữ liệu giữa hai bảng.</li>
+            <li><span class="term">Ràng buộc dữ liệu</span>: mỗi trường của bảng là các dữ liệu có cùng một kiểu (số nguyên, kí tự, ngày tháng, lôgic…). Việc ấn định kiểu dữ liệu và miền giá trị hợp lí giúp kiểm tra, ngăn chặn việc nhập dữ liệu không hợp lệ vào bảng.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <form id="worksheet-form" novalidate>
+      <section class="card" aria-labelledby="phan-b-title">
+        <h2 id="phan-b-title">B. Bài tập và thực hành</h2>
+        <p class="lead">Bài 13.1 – 13.3: chọn một phương án đúng. Bài 13.4 – 13.10: thao tác trực tiếp trên các bảng dữ liệu.</p>
+      </section>
+
+      <!-- 13.1 -->
+      <article class="question-card" id="card-q1" data-item="q1">
+        <div class="question-head">
+          <span class="question-number">13.1</span>
+          <div>
+            <p class="question-text">Hãy chọn phương án ghép đúng: CSDL quan hệ là…</p>
+          </div>
+        </div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q1" value="0"><span class="option-letter">A</span><span>CSDL mà dữ liệu được tổ chức lưu trữ dưới dạng các bảng có quan hệ với nhau.</span></label>
+          <label class="option"><input type="radio" name="q1" value="1"><span class="option-letter">B</span><span>CSDL gồm các dữ liệu có liên quan với nhau.</span></label>
+          <label class="option"><input type="radio" name="q1" value="2"><span class="option-letter">C</span><span>CSDL mà dữ liệu được tổ chức thành các nhóm có quan hệ với nhau.</span></label>
+          <label class="option"><input type="radio" name="q1" value="3"><span class="option-letter">D</span><span>CSDL gồm các dữ liệu được sắp xếp ở dạng bảng.</span></label>
+        </div>
+        <p class="explain" id="explain-q1" role="status"></p>
+      </article>
+
+      <!-- 13.2 -->
+      <article class="question-card" id="card-q2" data-item="q2">
+        <div class="question-head">
+          <span class="question-number">13.2</span>
+          <div>
+            <p class="question-text">Hãy chọn phương án ghép đúng: Bản ghi là một khái niệm trong CSDL quan hệ, nó…</p>
+          </div>
+        </div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q2" value="0"><span class="option-letter">A</span><span>chỉ các cột trong bảng dữ liệu.</span></label>
+          <label class="option"><input type="radio" name="q2" value="1"><span class="option-letter">B</span><span>chỉ các hàng trong bảng dữ liệu.</span></label>
+          <label class="option"><input type="radio" name="q2" value="2"><span class="option-letter">C</span><span>chỉ dữ liệu nằm trên một hàng, một cột cụ thể của bảng dữ liệu.</span></label>
+          <label class="option"><input type="radio" name="q2" value="3"><span class="option-letter">D</span><span>chỉ toàn bộ dữ liệu được ghi chép trong bảng.</span></label>
+        </div>
+        <p class="explain" id="explain-q2" role="status"></p>
+      </article>
+
+      <!-- 13.3 -->
+      <article class="question-card" id="card-q3" data-item="q3">
+        <div class="question-head">
+          <span class="question-number">13.3</span>
+          <div>
+            <p class="question-text">Hãy chọn phương án ghép đúng: Trường (dữ liệu) là một khái niệm trong CSDL quan hệ, nó…</p>
+          </div>
+        </div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q3" value="0"><span class="option-letter">A</span><span>chỉ các cột trong bảng dữ liệu.</span></label>
+          <label class="option"><input type="radio" name="q3" value="1"><span class="option-letter">B</span><span>chỉ các hàng trong bảng dữ liệu.</span></label>
+          <label class="option"><input type="radio" name="q3" value="2"><span class="option-letter">C</span><span>chỉ dữ liệu nằm trên một hàng, một cột cụ thể của bảng dữ liệu.</span></label>
+          <label class="option"><input type="radio" name="q3" value="3"><span class="option-letter">D</span><span>chỉ toàn bộ dữ liệu được ghi chép trong bảng.</span></label>
+        </div>
+        <p class="explain" id="explain-q3" role="status"></p>
+      </article>
+
+      <!-- 13.4 -->
+      <article class="question-card" id="card-q4" data-item="q4">
+        <div class="question-head">
+          <span class="question-number">13.4</span>
+          <div>
+            <p class="question-text">Hãy chỉ ra các khoá và khoá chính của bảng dữ liệu sau.</p>
+            <p class="question-context">Đánh dấu những trường mà <strong>một mình nó</strong> đã đủ để phân biệt mọi bản ghi, rồi chọn khoá chính.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>Danh sách môn học (Bảng A)</caption>
+            <thead><tr><th scope="col">Mã môn học</th><th scope="col">Môn học</th></tr></thead>
+            <tbody>
+              <tr><td>MAT10</td><td>Toán học</td></tr>
+              <tr><td>MAT11</td><td>Toán học</td></tr>
+              <tr><td>PHY10</td><td>Vật lí</td></tr>
+              <tr><td>PHY11</td><td>Vật lí</td></tr>
+              <tr><td>LIT10</td><td>Ngữ văn</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="pick-hint">Các trường có thể làm khoá:</p>
+        <fieldset class="pick-list">
+          <legend class="sr-only" style="position:absolute;left:-9999px;">Chọn các trường có thể làm khoá của Bảng A</legend>
+          <label class="pick-chip"><input type="checkbox" name="q4-key" value="Mã môn học"><span class="tick">✓</span><span>Mã môn học</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q4-key" value="Môn học"><span class="tick">✓</span><span>Môn học</span></label>
+        </fieldset>
+        <div class="select-row">
+          <label for="q4-primary">Khoá chính của Bảng A</label>
+          <select id="q4-primary" name="q4-primary">
+            <option value="">-- Chọn khoá chính --</option>
+            <option value="Mã môn học">Mã môn học</option>
+            <option value="Môn học">Môn học</option>
+          </select>
+        </div>
+        <p class="explain" id="explain-q4" role="status"></p>
+      </article>
+
+      <!-- 13.5 -->
+      <article class="question-card" id="card-q5" data-item="q5">
+        <div class="question-head">
+          <span class="question-number">13.5</span>
+          <div>
+            <p class="question-text">Hãy chỉ ra các khoá của bảng dữ liệu sau. Theo em có thể chọn khoá chính là khoá nào?</p>
+            <p class="question-context">Đánh dấu những trường mà một mình nó đã là khoá, rồi chọn khoá chính hợp lí nhất với nhà trường.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>Danh sách học sinh (Bảng B)</caption>
+            <thead><tr><th scope="col">Mã học sinh</th><th scope="col">Số CCCD</th><th scope="col">Họ và tên</th><th scope="col">Ngày sinh</th><th scope="col">Giới tính</th></tr></thead>
+            <tbody>
+              <tr><td>190001</td><td>032204200141</td><td>Trần Văn An</td><td>12/01/2004</td><td>Nam</td></tr>
+              <tr><td>190002</td><td>032203210023</td><td>Nguyễn Hoàng Anh</td><td>21/08/2003</td><td>Nam</td></tr>
+              <tr><td>190003</td><td>032304003252</td><td>Phan Vàng Anh</td><td>17/05/2004</td><td>Nữ</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="pick-hint">Các trường có thể làm khoá:</p>
+        <fieldset class="pick-list">
+          <legend style="position:absolute;left:-9999px;">Chọn các trường có thể làm khoá của Bảng B</legend>
+          <label class="pick-chip"><input type="checkbox" name="q5-key" value="Mã học sinh"><span class="tick">✓</span><span>Mã học sinh</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q5-key" value="Số CCCD"><span class="tick">✓</span><span>Số CCCD</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q5-key" value="Họ và tên"><span class="tick">✓</span><span>Họ và tên</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q5-key" value="Ngày sinh"><span class="tick">✓</span><span>Ngày sinh</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q5-key" value="Giới tính"><span class="tick">✓</span><span>Giới tính</span></label>
+        </fieldset>
+        <div class="select-row">
+          <label for="q5-primary">Khoá chính của Bảng B</label>
+          <select id="q5-primary" name="q5-primary">
+            <option value="">-- Chọn khoá chính --</option>
+            <option value="Mã học sinh">Mã học sinh</option>
+            <option value="Số CCCD">Số CCCD</option>
+            <option value="Họ và tên">Họ và tên</option>
+            <option value="Ngày sinh">Ngày sinh</option>
+          </select>
+        </div>
+        <p class="explain" id="explain-q5" role="status"></p>
+      </article>
+
+      <!-- 13.6 -->
+      <article class="question-card" id="card-q6" data-item="q6">
+        <div class="question-head">
+          <span class="question-number">13.6</span>
+          <div>
+            <p class="question-text">Hãy chỉ ra khoá và khoá chính của bảng dữ liệu sau.</p>
+            <p class="question-context">Ở bảng này, một trường đơn lẻ không đủ để phân biệt các bản ghi. Hãy đánh dấu <strong>tất cả các trường cùng tham gia</strong> tạo thành khoá.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>Điểm môn học (Bảng C)</caption>
+            <thead><tr><th scope="col">Mã học sinh</th><th scope="col">Mã môn học</th><th scope="col">Điểm</th></tr></thead>
+            <tbody>
+              <tr><td>190001</td><td>MAT11</td><td>9</td></tr>
+              <tr><td>190001</td><td>PHY11</td><td>10</td></tr>
+              <tr><td>190002</td><td>LIT10</td><td>8</td></tr>
+              <tr><td>190002</td><td>MAT10</td><td>8</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="question-context">Lưu ý: trong sách, mã học sinh ở Bảng C được in ngắn hơn Bảng B; phiếu này thống nhất dùng mã 6 chữ số để thấy rõ quan hệ tham chiếu giữa các bảng.</p>
+        <p class="pick-hint">Các trường tham gia tạo thành khoá:</p>
+        <fieldset class="pick-list">
+          <legend style="position:absolute;left:-9999px;">Chọn các trường tạo thành khoá của Bảng C</legend>
+          <label class="pick-chip"><input type="checkbox" name="q6-key" value="Mã học sinh"><span class="tick">✓</span><span>Mã học sinh</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q6-key" value="Mã môn học"><span class="tick">✓</span><span>Mã môn học</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q6-key" value="Điểm"><span class="tick">✓</span><span>Điểm</span></label>
+        </fieldset>
+        <div class="select-row">
+          <label for="q6-primary">Khoá chính của Bảng C</label>
+          <select id="q6-primary" name="q6-primary">
+            <option value="">-- Chọn khoá chính --</option>
+            <option value="Mã học sinh">Mã học sinh</option>
+            <option value="Mã môn học">Mã môn học</option>
+            <option value="cap">Mã học sinh + Mã môn học</option>
+            <option value="Điểm">Điểm</option>
+          </select>
+        </div>
+        <p class="explain" id="explain-q6" role="status"></p>
+      </article>
+
+      <!-- 13.7 -->
+      <article class="question-card" id="card-q7" data-item="q7">
+        <div class="question-head">
+          <span class="question-number">13.7</span>
+          <div>
+            <p class="question-text">Ba bảng A, B, C ở các câu 13.4, 13.5, 13.6 có quan hệ với nhau như thế nào? Hãy chỉ ra khoá ngoài của mỗi bảng (nếu có).</p>
+            <p class="question-context">Đánh dấu tất cả các phát biểu đúng (có thể chọn nhiều phát biểu).</p>
+          </div>
+        </div>
+        <p class="pick-hint">Chọn các phát biểu đúng:</p>
+        <fieldset class="pick-list" style="flex-direction:column;align-items:stretch;">
+          <legend style="position:absolute;left:-9999px;">Chọn các phát biểu đúng về khoá ngoài</legend>
+          <label class="pick-chip" style="border-radius:12px;justify-content:flex-start;"><input type="checkbox" name="q7" value="c-hs"><span class="tick">✓</span><span>Trường <strong>Mã học sinh</strong> của Bảng C là khoá ngoài, tham chiếu tới khoá chính của Bảng B.</span></label>
+          <label class="pick-chip" style="border-radius:12px;justify-content:flex-start;"><input type="checkbox" name="q7" value="c-mh"><span class="tick">✓</span><span>Trường <strong>Mã môn học</strong> của Bảng C là khoá ngoài, tham chiếu tới khoá chính của Bảng A.</span></label>
+          <label class="pick-chip" style="border-radius:12px;justify-content:flex-start;"><input type="checkbox" name="q7" value="ab-none"><span class="tick">✓</span><span>Bảng A và Bảng B không có khoá ngoài.</span></label>
+          <label class="pick-chip" style="border-radius:12px;justify-content:flex-start;"><input type="checkbox" name="q7" value="a-fk"><span class="tick">✓</span><span>Trường <strong>Mã môn học</strong> của Bảng A là khoá ngoài tham chiếu tới Bảng C.</span></label>
+          <label class="pick-chip" style="border-radius:12px;justify-content:flex-start;"><input type="checkbox" name="q7" value="b-fk"><span class="tick">✓</span><span>Trường <strong>Số CCCD</strong> của Bảng B là khoá ngoài tham chiếu tới Bảng C.</span></label>
+        </fieldset>
+        <p class="explain" id="explain-q7" role="status"></p>
+      </article>
+
+      <!-- 13.8 -->
+      <article class="question-card" id="card-q8" data-item="q8">
+        <div class="question-head">
+          <span class="question-number">13.8</span>
+          <div>
+            <p class="question-text">Hãy chỉ ra các trường khoá của bảng dưới đây. Theo em, nên chọn trường khoá nào làm khoá chính?</p>
+            <p class="question-context">Khi xe xuất xưởng, cặp số khung – số máy đã được ghi trên hồ sơ xuất xưởng và không trùng với xe khác. Khi mua xe, chủ xe đăng kí sử dụng và nhận số đăng kí xe duy nhất, phân biệt với mọi xe khác.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>Danh sách mô tô, xe máy (Bảng D)</caption>
+            <thead><tr><th scope="col">Số đăng kí</th><th scope="col">Số khung</th><th scope="col">Số máy</th><th scope="col">Nhãn hiệu</th><th scope="col">Loại</th><th scope="col">Dung tích</th></tr></thead>
+            <tbody>
+              <tr><td>23B1-27625</td><td>5835JY436287</td><td>JF86E0011170</td><td>HONDA</td><td>VISION</td><td>108</td></tr>
+              <tr><td>23G1-13521</td><td>1723JY136011</td><td>YL99E1000677</td><td>YAMAHA</td><td>SIRIUS</td><td>110</td></tr>
+              <tr><td>23A2-03214</td><td>4812JY22115</td><td>JF82E010253</td><td>HONDA</td><td>WINNER X</td><td>149</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="pick-hint">Các trường có thể làm khoá:</p>
+        <fieldset class="pick-list">
+          <legend style="position:absolute;left:-9999px;">Chọn các trường có thể làm khoá của Bảng D</legend>
+          <label class="pick-chip"><input type="checkbox" name="q8-key" value="Số đăng kí"><span class="tick">✓</span><span>Số đăng kí</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q8-key" value="Số khung"><span class="tick">✓</span><span>Số khung</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q8-key" value="Số máy"><span class="tick">✓</span><span>Số máy</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q8-key" value="Nhãn hiệu"><span class="tick">✓</span><span>Nhãn hiệu</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q8-key" value="Loại"><span class="tick">✓</span><span>Loại</span></label>
+          <label class="pick-chip"><input type="checkbox" name="q8-key" value="Dung tích"><span class="tick">✓</span><span>Dung tích</span></label>
+        </fieldset>
+        <div class="select-row">
+          <label for="q8-primary">Nên chọn khoá chính là</label>
+          <select id="q8-primary" name="q8-primary">
+            <option value="">-- Chọn khoá chính --</option>
+            <option value="Số đăng kí">Số đăng kí</option>
+            <option value="Số khung">Số khung</option>
+            <option value="Số máy">Số máy</option>
+            <option value="Nhãn hiệu">Nhãn hiệu</option>
+          </select>
+        </div>
+        <p class="explain" id="explain-q8" role="status"></p>
+      </article>
+
+      <!-- 13.9 -->
+      <article class="question-card" id="card-q9" data-item="q9">
+        <div class="question-head">
+          <span class="question-number">13.9</span>
+          <div>
+            <p class="question-text">Để quản lí người sở hữu mô tô, xe máy, người ta lập bảng dữ liệu sau. Hãy chỉ ra khoá chính của bảng này.</p>
+            <p class="question-context">Lưu ý: một người có thể sở hữu nhiều xe, nhưng mỗi xe chỉ có một chủ sở hữu tại một thời điểm.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>Danh sách người sở hữu mô tô, xe máy (Bảng E)</caption>
+            <thead><tr><th scope="col">Số đăng kí</th><th scope="col">Số CCCD</th><th scope="col">Họ và tên</th><th scope="col">Ngày sinh</th></tr></thead>
+            <tbody>
+              <tr><td>23G1-13521</td><td>012192011242</td><td>Nguyễn Thị Hoan</td><td>23/07/1992</td></tr>
+              <tr><td>23A2-03214</td><td>012094010134</td><td>Phạm Văn Đông</td><td>15/06/1994</td></tr>
+              <tr><td>23B1-27625</td><td>012088010236</td><td>Trần Quang Thọ</td><td>11/02/1988</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="select-row">
+          <label for="q9-primary">Khoá chính của Bảng E</label>
+          <select id="q9-primary" name="q9-primary">
+            <option value="">-- Chọn khoá chính --</option>
+            <option value="Số đăng kí">Số đăng kí</option>
+            <option value="Số CCCD">Số CCCD</option>
+            <option value="Họ và tên">Họ và tên</option>
+            <option value="Ngày sinh">Ngày sinh</option>
+          </select>
+        </div>
+        <p class="explain" id="explain-q9" role="status"></p>
+      </article>
+
+      <!-- 13.10 -->
+      <article class="question-card" id="card-q10" data-item="q10">
+        <div class="question-head">
+          <span class="question-number">13.10</span>
+          <div>
+            <p class="question-text">Bảng D và Bảng E là dữ liệu cơ bản để quản lí phương tiện mô tô, xe máy và chủ sở hữu. Hãy chỉ ra quan hệ tham chiếu khoá ngoài – khoá chính giữa hai bảng, rồi lập bảng gồm <em>Họ và tên</em> chủ phương tiện cùng <em>Nhãn hiệu</em>, <em>Loại</em> phương tiện họ sở hữu.</p>
+          </div>
+        </div>
+        <div class="select-row">
+          <label for="q10-fk">Trường dùng để tham chiếu giữa Bảng E và Bảng D</label>
+          <select id="q10-fk" name="q10-fk">
+            <option value="">-- Chọn trường tham chiếu --</option>
+            <option value="Số đăng kí">Số đăng kí</option>
+            <option value="Số CCCD">Số CCCD</option>
+            <option value="Số khung">Số khung</option>
+            <option value="Họ và tên">Họ và tên</option>
+          </select>
+        </div>
+        <div class="actions" style="margin-top:14px;">
+          <button class="btn btn-accent" type="button" id="join-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h7M13 17h7M8 3l3 4-3 4M16 13l3 4-3 4"></path></svg>
+            Ghép hai bảng
+          </button>
+          <button class="btn btn-secondary" type="button" id="join-reset">Xoá bảng ghép</button>
+        </div>
+        <div class="join-output" id="join-output">
+          <div class="join-empty">Chọn trường tham chiếu rồi bấm “Ghép hai bảng” để tạo bảng kết quả.</div>
+        </div>
+        <p class="explain" id="explain-q10" role="status"></p>
+      </article>
+
+      <div class="alert" id="form-alert" role="alert"></div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="submit-btn" type="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg>
+          Chấm bài
+        </button>
+        <button class="btn btn-secondary" id="clear-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 11v5M14 11v5"></path></svg>
+          Xoá bài làm
+        </button>
+      </div>
+    </form>
+
+    <section class="card result-card" id="result-card" aria-live="polite" tabindex="-1">
+      <div class="result-main">
+        <div class="score-ring">
+          <div><strong id="score-value">0</strong><span>điểm</span></div>
+        </div>
+        <div class="result-copy">
+          <h2 id="result-title">Kết quả bài làm</h2>
+          <p id="result-message"></p>
+          <p class="result-meta" id="result-meta"></p>
+        </div>
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-primary" id="copy-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>
+          Sao chép kết quả
+        </button>
+        <button class="btn btn-secondary" id="print-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 14h12v7H6z"></path></svg>
+          In / Lưu PDF
+        </button>
+        <button class="btn btn-secondary" id="retry-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>
+          Làm lại
+        </button>
+      </div>
+    </section>
+
+    <p class="footer-note">Phiếu bài tập biên soạn theo Sách bài tập Tin học 11 – Kết nối tri thức với cuộc sống, Bài 13. Bài làm chỉ lưu trên thiết bị của em, trang không gửi dữ liệu lên Internet.</p>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    window.WS13 = {
+      answers: {
+        q1: { type: "radio", correct: 0, good: "Đúng! CSDL quan hệ tổ chức dữ liệu thành các bảng có quan hệ với nhau.", bad: "Đáp án đúng là A. Hai dấu hiệu bắt buộc là dữ liệu lưu theo bảng và giữa các bảng có quan hệ." },
+        q2: { type: "radio", correct: 1, good: "Đúng! Mỗi hàng của bảng là một bản ghi, chứa dữ liệu của một đối tượng.", bad: "Đáp án đúng là B. Bản ghi (record, row) là một hàng của bảng; cột mới là trường." },
+        q3: { type: "radio", correct: 0, good: "Đúng! Mỗi cột của bảng là một trường, ứng với một thuộc tính của đối tượng.", bad: "Đáp án đúng là A. Trường (field) là một cột của bảng; hàng mới là bản ghi." },
+        q4: { type: "keys", keys: ["Mã môn học"], primary: "Mã môn học",
+          good: "Đúng! Chỉ Mã môn học là khoá nên cũng là khoá chính.",
+          bad: "Khoá duy nhất của Bảng A là Mã môn học, đồng thời là khoá chính. Trường Môn học không phải khoá vì giá trị Toán học lặp lại ở MAT10 và MAT11." },
+        q5: { type: "keys", keys: ["Mã học sinh", "Số CCCD"], primary: "Mã học sinh",
+          good: "Đúng! Bảng B có hai khoá là Mã học sinh và Số CCCD; nên chọn Mã học sinh làm khoá chính.",
+          bad: "Bảng B có hai khoá: Mã học sinh và Số CCCD. Nên chọn Mã học sinh làm khoá chính vì mã do nhà trường cấp, ngắn gọn và luôn có; Họ và tên, Ngày sinh, Giới tính đều có thể trùng nhau." },
+        q6: { type: "keys", keys: ["Mã học sinh", "Mã môn học"], primary: "cap",
+          good: "Đúng! Khoá của Bảng C gồm cặp trường Mã học sinh và Mã môn học, đồng thời là khoá chính.",
+          bad: "Một mình Mã học sinh hoặc Mã môn học đều bị lặp (190001 xuất hiện hai lần). Khoá là nhóm hai trường Mã học sinh + Mã môn học, và đó cũng là khoá chính." },
+        q7: { type: "multi", correct: ["c-hs", "c-mh", "ab-none"],
+          good: "Đúng! Bảng C tham chiếu tới cả Bảng B và Bảng A qua hai khoá ngoài.",
+          bad: "Ba phát biểu đúng là: Mã học sinh của Bảng C là khoá ngoài tham chiếu Bảng B; Mã môn học của Bảng C là khoá ngoài tham chiếu Bảng A; Bảng A và Bảng B không có khoá ngoài. Khoá ngoài luôn nằm ở bảng tham chiếu đến bảng khác." },
+        q8: { type: "keys", keys: ["Số đăng kí", "Số khung", "Số máy"], primary: "Số đăng kí",
+          good: "Đúng! Ba trường Số đăng kí, Số khung, Số máy đều là khoá; nên chọn Số đăng kí làm khoá chính.",
+          bad: "Số đăng kí, Số khung và Số máy đều nhận giá trị duy nhất nên đều là khoá. Nên chọn Số đăng kí làm khoá chính vì đây là trường dùng để quản lí phương tiện và được Bảng E tham chiếu tới. Nhãn hiệu, Loại, Dung tích đều có thể trùng nhau." },
+        q9: { type: "primary", primary: "Số đăng kí",
+          good: "Đúng! Mỗi xe chỉ có một chủ sở hữu nên Số đăng kí xác định duy nhất một bản ghi.",
+          bad: "Khoá chính là Số đăng kí. Số CCCD, Họ và tên, Ngày sinh đều có thể lặp lại vì một người có thể sở hữu nhiều xe." },
+        q10: { type: "primary", primary: "Số đăng kí",
+          good: "Đúng! Số đăng kí trong Bảng E là khoá ngoài, tham chiếu tới khoá chính Số đăng kí của Bảng D.",
+          bad: "Trường tham chiếu là Số đăng kí: nó là khoá ngoài của Bảng E và là khoá chính của Bảng D. Hai bảng không có chung trường Số CCCD hay Số khung." }
+      },
+      order: ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10"]
+    };
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const toast = document.getElementById("toast");
+        let toastTimer = null;
+        window.WS13.showToast = function (message) {
+          if (!toast) return;
+          toast.textContent = message;
+          toast.classList.add("show");
+          if (toastTimer) window.clearTimeout(toastTimer);
+          toastTimer = window.setTimeout(function () { toast.classList.remove("show"); }, 2600);
+        };
+
+        const form = document.getElementById("worksheet-form");
+        const countLabel = document.getElementById("answered-count");
+        const bar = document.getElementById("progress-bar");
+        const track = document.querySelector(".progress-track");
+        if (!form || !countLabel || !bar || !track) return;
+
+        function itemAnswered(key) {
+          const spec = window.WS13.answers[key];
+          if (!spec) return false;
+          if (spec.type === "radio") return !!form.querySelector('input[name="' + key + '"]:checked');
+          if (spec.type === "multi") return !!form.querySelector('input[name="' + key + '"]:checked');
+          if (spec.type === "primary") {
+            const select = form.querySelector('[name="' + key + '-primary"]') || form.querySelector('[name="' + key + '-fk"]');
+            return !!(select && select.value);
+          }
+          if (spec.type === "keys") {
+            const hasKey = !!form.querySelector('input[name="' + key + '-key"]:checked');
+            const select = form.querySelector('[name="' + key + '-primary"]');
+            return hasKey && !!(select && select.value);
+          }
+          return false;
+        }
+        window.WS13.itemAnswered = itemAnswered;
+
+        function updateProgress() {
+          const done = window.WS13.order.filter(itemAnswered).length;
+          countLabel.textContent = String(done);
+          bar.style.width = (done / window.WS13.order.length * 100) + "%";
+          track.setAttribute("aria-valuenow", String(done));
+        }
+        window.WS13.updateProgress = updateProgress;
+
+        form.addEventListener("change", function () {
+          updateProgress();
+          if (window.WS13.saveState) window.WS13.saveState();
+        });
+        updateProgress();
+      } catch (error) {
+        console.error("Không khởi tạo được thanh tiến độ:", error);
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const STORAGE_KEY = "bai-tap-13-tin-hoc-11";
+        const form = document.getElementById("worksheet-form");
+        const nameInput = document.getElementById("student-name");
+        const classInput = document.getElementById("student-class");
+        const saveState = document.getElementById("save-state");
+        if (!form) return;
+
+        function collect() {
+          const data = { name: nameInput ? nameInput.value : "", cls: classInput ? classInput.value : "", radios: {}, checks: [], selects: {} };
+          Array.from(form.querySelectorAll('input[type="radio"]:checked')).forEach(function (input) { data.radios[input.name] = input.value; });
+          Array.from(form.querySelectorAll('input[type="checkbox"]:checked')).forEach(function (input) { data.checks.push(input.name + "::" + input.value); });
+          Array.from(form.querySelectorAll("select")).forEach(function (select) { if (select.value) data.selects[select.name] = select.value; });
+          return data;
+        }
+        function save() {
+          try {
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(collect()));
+            if (saveState) saveState.textContent = "Đã lưu trên máy của em";
+          } catch (error) {
+            if (saveState) saveState.textContent = "Không lưu được (trình duyệt chặn lưu trữ)";
+          }
+        }
+        window.WS13.saveState = save;
+        window.WS13.clearStorage = function () {
+          try { window.localStorage.removeItem(STORAGE_KEY); } catch (error) { /* bỏ qua */ }
+        };
+
+        let raw = null;
+        try { raw = window.localStorage.getItem(STORAGE_KEY); } catch (error) { raw = null; }
+        if (raw) {
+          try {
+            const data = JSON.parse(raw);
+            if (data && typeof data === "object") {
+              if (nameInput && data.name) nameInput.value = data.name;
+              if (classInput && data.cls) classInput.value = data.cls;
+              Object.keys(data.radios || {}).forEach(function (name) {
+                const input = form.querySelector('input[name="' + name + '"][value="' + data.radios[name] + '"]');
+                if (input) input.checked = true;
+              });
+              (data.checks || []).forEach(function (entry) {
+                const parts = entry.split("::");
+                const input = form.querySelector('input[name="' + parts[0] + '"][value="' + parts[1] + '"]');
+                if (input) input.checked = true;
+              });
+              Object.keys(data.selects || {}).forEach(function (name) {
+                const select = form.querySelector('[name="' + name + '"]');
+                if (select) select.value = data.selects[name];
+              });
+              if (window.WS13.updateProgress) window.WS13.updateProgress();
+            }
+          } catch (error) {
+            console.warn("Không đọc được bài làm đã lưu:", error);
+          }
+        }
+        if (nameInput) nameInput.addEventListener("input", save);
+        if (classInput) classInput.addEventListener("input", save);
+      } catch (error) {
+        console.error("Không khởi tạo được chức năng lưu bài làm:", error);
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const vehicles = [
+          { dk: "23B1-27625", khung: "5835JY436287", may: "JF86E0011170", hieu: "HONDA", loai: "VISION" },
+          { dk: "23G1-13521", khung: "1723JY136011", may: "YL99E1000677", hieu: "YAMAHA", loai: "SIRIUS" },
+          { dk: "23A2-03214", khung: "4812JY22115", may: "JF82E010253", hieu: "HONDA", loai: "WINNER X" }
+        ];
+        const owners = [
+          { dk: "23G1-13521", ten: "Nguyễn Thị Hoan" },
+          { dk: "23A2-03214", ten: "Phạm Văn Đông" },
+          { dk: "23B1-27625", ten: "Trần Quang Thọ" }
+        ];
+        const select = document.getElementById("q10-fk");
+        const joinButton = document.getElementById("join-btn");
+        const resetButton = document.getElementById("join-reset");
+        const output = document.getElementById("join-output");
+        if (!select || !joinButton || !resetButton || !output) return;
+
+        function showEmpty(message) {
+          output.replaceChildren();
+          const box = document.createElement("div");
+          box.className = "join-empty";
+          box.textContent = message;
+          output.append(box);
+        }
+        function buildJoin() {
+          const field = select.value;
+          if (!field) {
+            showEmpty("Em hãy chọn trường tham chiếu trước khi ghép hai bảng.");
+            return;
+          }
+          if (field !== "Số đăng kí") {
+            showEmpty("Không ghép được bằng trường " + field + ": trường này không đồng thời có mặt ở cả Bảng D và Bảng E. Hãy thử lại với trường chung của hai bảng.");
+            return;
+          }
+          const wrap = document.createElement("div");
+          wrap.className = "table-wrap";
+          const table = document.createElement("table");
+          table.className = "data";
+          const caption = document.createElement("caption");
+          caption.textContent = "Kết quả ghép Bảng E và Bảng D theo Số đăng kí";
+          table.append(caption);
+          const thead = document.createElement("thead");
+          const headRow = document.createElement("tr");
+          ["Họ và tên", "Số đăng kí", "Nhãn hiệu", "Loại"].forEach(function (title) {
+            const th = document.createElement("th");
+            th.scope = "col";
+            th.textContent = title;
+            headRow.append(th);
+          });
+          thead.append(headRow);
+          table.append(thead);
+          const tbody = document.createElement("tbody");
+          owners.forEach(function (owner) {
+            const vehicle = vehicles.find(function (item) { return item.dk === owner.dk; });
+            if (!vehicle) return;
+            const tr = document.createElement("tr");
+            [owner.ten, owner.dk, vehicle.hieu, vehicle.loai].forEach(function (value) {
+              const td = document.createElement("td");
+              td.textContent = value;
+              tr.append(td);
+            });
+            tbody.append(tr);
+          });
+          table.append(tbody);
+          wrap.append(table);
+          output.replaceChildren(wrap);
+          const note = document.createElement("p");
+          note.className = "question-context";
+          note.textContent = "Mỗi dòng của Bảng E tìm được đúng một dòng của Bảng D có cùng Số đăng kí, nên bảng kết quả có 3 dòng.";
+          output.append(note);
+          if (window.WS13 && window.WS13.showToast) window.WS13.showToast("Đã ghép hai bảng theo Số đăng kí.");
+        }
+
+        joinButton.addEventListener("click", buildJoin);
+        resetButton.addEventListener("click", function () {
+          showEmpty("Chọn trường tham chiếu rồi bấm “Ghép hai bảng” để tạo bảng kết quả.");
+        });
+        window.WS13.resetJoin = function () {
+          showEmpty("Chọn trường tham chiếu rồi bấm “Ghép hai bảng” để tạo bảng kết quả.");
+        };
+      } catch (error) {
+        console.error("Không khởi tạo được phần ghép bảng:", error);
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const NEWLINE = String.fromCharCode(10);
+      try {
+        const form = document.getElementById("worksheet-form");
+        const alertBox = document.getElementById("form-alert");
+        const resultCard = document.getElementById("result-card");
+        const scoreValue = document.getElementById("score-value");
+        const resultTitle = document.getElementById("result-title");
+        const resultMessage = document.getElementById("result-message");
+        const resultMeta = document.getElementById("result-meta");
+        const clearButton = document.getElementById("clear-btn");
+        const retryButton = document.getElementById("retry-btn");
+        const copyButton = document.getElementById("copy-btn");
+        const printButton = document.getElementById("print-btn");
+        const nameInput = document.getElementById("student-name");
+        const classInput = document.getElementById("student-class");
+        if (!form || !alertBox || !resultCard || !scoreValue) return;
+
+        const specs = window.WS13.answers;
+        const order = window.WS13.order;
+        let lastReport = "";
+
+        function setExplain(key, ok, text) {
+          const box = document.getElementById("explain-" + key);
+          if (!box) return;
+          box.className = "explain show " + (ok ? "good" : "bad");
+          box.textContent = (ok ? "Đúng. " : "Chưa đúng. ") + text;
+        }
+        function clearExplains() {
+          order.forEach(function (key) {
+            const box = document.getElementById("explain-" + key);
+            if (box) { box.className = "explain"; box.textContent = ""; }
+          });
+          Array.from(form.querySelectorAll(".option")).forEach(function (option) {
+            option.classList.remove("is-correct", "is-wrong");
+          });
+        }
+        function checkedValues(name) {
+          return Array.from(form.querySelectorAll('input[name="' + name + '"]:checked')).map(function (input) { return input.value; });
+        }
+        function sameSet(a, b) {
+          if (a.length !== b.length) return false;
+          const sortedA = a.slice().sort();
+          const sortedB = b.slice().sort();
+          return sortedA.every(function (value, index) { return value === sortedB[index]; });
+        }
+        function gradeItem(key) {
+          const spec = specs[key];
+          if (!spec) return false;
+          if (spec.type === "radio") {
+            const chosen = form.querySelector('input[name="' + key + '"]:checked');
+            const options = Array.from(form.querySelectorAll('#card-' + key + ' .option'));
+            options.forEach(function (option, index) {
+              if (index === spec.correct) option.classList.add("is-correct");
+            });
+            const ok = !!chosen && Number(chosen.value) === spec.correct;
+            if (chosen && !ok) {
+              const wrong = options[Number(chosen.value)];
+              if (wrong) wrong.classList.add("is-wrong");
+            }
+            setExplain(key, ok, ok ? spec.good : spec.bad);
+            return ok;
+          }
+          if (spec.type === "multi") {
+            const ok = sameSet(checkedValues(key), spec.correct);
+            setExplain(key, ok, ok ? spec.good : spec.bad);
+            return ok;
+          }
+          if (spec.type === "primary") {
+            const select = form.querySelector('[name="' + key + '-primary"]') || form.querySelector('[name="' + key + '-fk"]');
+            const ok = !!select && select.value === spec.primary;
+            setExplain(key, ok, ok ? spec.good : spec.bad);
+            return ok;
+          }
+          if (spec.type === "keys") {
+            const select = form.querySelector('[name="' + key + '-primary"]');
+            const keysOk = sameSet(checkedValues(key + "-key"), spec.keys);
+            const primaryOk = !!select && select.value === spec.primary;
+            const ok = keysOk && primaryOk;
+            let text = ok ? spec.good : spec.bad;
+            if (!ok && keysOk && !primaryOk) text = "Phần chọn khoá đã đúng, chỉ còn khoá chính chưa đúng. " + spec.bad;
+            setExplain(key, ok, text);
+            return ok;
+          }
+          return false;
+        }
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+          const missing = order.filter(function (key) { return !window.WS13.itemAnswered(key); });
+          if (missing.length) {
+            alertBox.className = "alert show";
+            alertBox.textContent = "Em còn " + missing.length + " bài chưa làm xong (bài " + missing.map(function (key) { return "13." + key.replace("q", ""); }).join(", ") + "). Hãy hoàn thành rồi chấm bài nhé.";
+            const firstCard = document.getElementById("card-" + missing[0]);
+            if (firstCard) firstCard.scrollIntoView({ block: "center" });
+            return;
+          }
+          alertBox.className = "alert";
+          alertBox.textContent = "";
+          clearExplains();
+          let score = 0;
+          const detail = [];
+          order.forEach(function (key) {
+            const ok = gradeItem(key);
+            if (ok) score += 1;
+            detail.push("13." + key.replace("q", "") + ": " + (ok ? "Đúng" : "Chưa đúng"));
+          });
+          scoreValue.textContent = String(score);
+          resultTitle.textContent = score === 10 ? "Xuất sắc!" : score >= 8 ? "Làm rất tốt!" : score >= 5 ? "Khá, cần xem lại vài bài" : "Cần ôn lại kiến thức Bài 13";
+          resultMessage.textContent = score >= 8
+            ? "Em đã nắm chắc khái niệm bản ghi, trường, khoá, khoá chính và khoá ngoài."
+            : "Hãy đọc lại phần Tóm tắt kiến thức, chú ý điều kiện “giá trị không trùng nhau” của khoá và vị trí của khoá ngoài, rồi làm lại.";
+          const who = (nameInput && nameInput.value.trim() ? nameInput.value.trim() : "(chưa nhập tên)") + " · Lớp " + (classInput && classInput.value.trim() ? classInput.value.trim() : "(chưa nhập)");
+          resultMeta.textContent = who + " · Chấm lúc " + new Date().toLocaleString("vi-VN");
+          lastReport = ["Phiếu bài tập Bài 13 - Cơ sở dữ liệu quan hệ", who, "Điểm: " + score + "/10"].concat(detail).join(NEWLINE);
+          resultCard.classList.add("show");
+          resultCard.scrollIntoView({ block: "start" });
+          resultCard.focus({ preventScroll: true });
+        });
+
+        function resetAll() {
+          form.reset();
+          clearExplains();
+          alertBox.className = "alert";
+          alertBox.textContent = "";
+          resultCard.classList.remove("show");
+          lastReport = "";
+          if (window.WS13.resetJoin) window.WS13.resetJoin();
+          if (window.WS13.clearStorage) window.WS13.clearStorage();
+          if (window.WS13.updateProgress) window.WS13.updateProgress();
+          if (window.WS13.showToast) window.WS13.showToast("Đã xoá bài làm, em có thể bắt đầu lại.");
+          const top = document.getElementById("tom-tat");
+          if (top) top.scrollIntoView({ block: "start" });
+        }
+        if (clearButton) clearButton.addEventListener("click", resetAll);
+        if (retryButton) retryButton.addEventListener("click", resetAll);
+
+        if (copyButton) {
+          copyButton.addEventListener("click", async function () {
+            if (!lastReport) {
+              if (window.WS13.showToast) window.WS13.showToast("Em hãy chấm bài trước khi sao chép kết quả.");
+              return;
+            }
+            try {
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(lastReport);
+                if (window.WS13.showToast) window.WS13.showToast("Đã sao chép kết quả vào bộ nhớ tạm.");
+              } else {
+                throw new Error("Trình duyệt không hỗ trợ sao chép tự động.");
+              }
+            } catch (error) {
+              if (window.WS13.showToast) window.WS13.showToast("Không sao chép được. Em hãy dùng nút In / Lưu PDF.");
+            }
+          });
+        }
+        if (printButton) {
+          printButton.addEventListener("click", function () { window.print(); });
+        }
+      } catch (error) {
+        console.error("Không khởi tạo được chức năng chấm bài:", error);
+      }
+    });
+  </script>
+</body>
+</html>
