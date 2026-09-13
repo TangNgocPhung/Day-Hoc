@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Danh sách bài tập thực hành MOS Excel 11 — tệp dữ liệu Excel theo từng chủ đề của đề cương MO-200.">
+<title>Danh Sách Bài Tập MOS Excel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #EFF1EC;
+    --surface: #FFFFFF;
+    --surface-2: #F6F7F1;
+    --ink: #232823;
+    --ink-muted: #5B6259;
+    --ink-faint: #8B9186;
+    --rule: #DEE2D5;
+    --border: #D6DACC;
+    --on-accent: #FFFFFF;
+
+    --accent-1: #3D7A34;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+    --shadow: 0 10px 30px -14px rgba(35, 40, 35, 0.28);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1B1D18;
+      --surface: #232620;
+      --surface-2: #292C24;
+      --ink: #ECEEE5;
+      --ink-muted: #ABB2A0;
+      --ink-faint: #767C6B;
+      --rule: #363A30;
+      --border: #383C31;
+      --on-accent: #15160F;
+
+      --accent-1: #8ED67D;
+
+      --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1B1D18;
+    --surface: #232620;
+    --surface-2: #292C24;
+    --ink: #ECEEE5;
+    --ink-muted: #ABB2A0;
+    --ink-faint: #767C6B;
+    --rule: #363A30;
+    --border: #383C31;
+    --on-accent: #15160F;
+
+    --accent-1: #8ED67D;
+
+    --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    border-bottom: 1px solid var(--border);
+    border-top: 4px solid var(--accent-1);
+    backdrop-filter: blur(10px);
+  }
+  .topbar-inner {
+    max-width: 900px; margin: 0 auto;
+    padding: 0.8rem clamp(1rem, 4vw, 2rem);
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.84rem; font-weight: 600; text-decoration: none; color: var(--ink-muted);
+  }
+  .back-link:hover { color: var(--accent-1); }
+  .back-link svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .lesson-tag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; color: var(--accent-1); }
+
+  .page { max-width: 900px; margin: 0 auto; padding: clamp(1.75rem, 4vw, 3rem) clamp(1.25rem, 4vw, 2rem) 4rem; }
+
+  .masthead { max-width: 680px; margin-bottom: 1.75rem; }
+  .masthead-eyebrow {
+    display: block; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.12em; color: var(--ink-faint); margin-bottom: 0.75rem;
+  }
+  .masthead-title {
+    font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem, 4.4vw, 2.6rem);
+    line-height: 1.08; margin: 0 0 0.6rem; text-wrap: balance;
+  }
+  .masthead-sub { font-size: 1rem; color: var(--ink-muted); margin: 0; max-width: 62ch; }
+
+  .summary-strip { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.25rem 0 0.5rem; }
+  .summary-pill {
+    font-family: var(--font-mono); font-size: 0.76rem; font-weight: 600; color: var(--ink-muted);
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 0.4rem 0.8rem;
+  }
+  .summary-pill strong { color: var(--accent-1); }
+
+  .how-box {
+    margin-top: 1.5rem; padding: 0.9rem 1.05rem;
+    border: 1px dashed var(--border); border-radius: 12px;
+    background: var(--surface-2); color: var(--ink-muted); font-size: 0.88rem;
+  }
+  .how-box strong { color: var(--ink); }
+
+  .semester-block { margin-top: 2.25rem; }
+  .semester-head {
+    display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 1rem;
+    padding-bottom: 0.6rem; border-bottom: 1px solid var(--border);
+  }
+  .semester-head h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.4rem; margin: 0; }
+  .semester-count { font-family: var(--font-mono); font-size: 0.82rem; color: var(--ink-muted); }
+
+  .sheet-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.65rem; }
+
+  .sheet-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    padding: 0.9rem 1.05rem; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2);
+  }
+  .sheet-row-main { display: flex; align-items: flex-start; gap: 0.9rem; min-width: 0; }
+  .sheet-num {
+    flex: 0 0 auto; width: 2.5rem; height: 2.5rem; border-radius: 10px;
+    background: color-mix(in srgb, var(--accent-1) 14%, var(--surface));
+    color: var(--accent-1); display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.92rem;
+  }
+  .sheet-info { min-width: 0; }
+  .sheet-topic-tag {
+    display: inline-block; font-family: var(--font-mono); font-size: 0.64rem; font-weight: 600;
+    letter-spacing: 0.06em; color: var(--accent-1); margin-bottom: 0.25rem;
+  }
+  .sheet-info h3 { margin: 0 0 0.2rem; font-size: 0.98rem; font-weight: 700; line-height: 1.35; }
+  .sheet-meta { margin: 0; font-family: var(--font-mono); font-size: 0.76rem; color: var(--ink-muted); }
+
+  .sheet-actions { flex: 0 0 auto; display: flex; gap: 0.45rem; flex-wrap: wrap; }
+  .sheet-link {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.82rem; font-weight: 600; padding: 0.5rem 0.85rem; border-radius: 9px; white-space: nowrap;
+    background: var(--accent-1); color: var(--on-accent); text-decoration: none; border: 1px solid var(--accent-1);
+    transition: transform 0.14s ease;
+  }
+  .sheet-link:hover { transform: translateY(-1px); }
+  .sheet-link svg { width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .sheet-link--secondary { background: transparent; color: var(--accent-1); }
+  .sheet-link:focus-visible, .back-link:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+  .sheet-status--pending {
+    flex: 0 0 auto; display: inline-flex; align-items: center;
+    color: var(--ink-faint); background: transparent; border: 1px dashed var(--border);
+    font-style: italic; font-weight: 500; font-size: 0.82rem; padding: 0.5rem 0.85rem; border-radius: 9px;
+  }
+
+  .site-footer { border-top: 1px solid var(--border); background: var(--surface-2); margin-top: 3rem; }
+  .footer-inner {
+    max-width: 900px; margin: 0 auto; padding: 1.4rem clamp(1.25rem, 4vw, 2rem);
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .footer-logo { width: 44px; height: 44px; object-fit: contain; flex: 0 0 auto; }
+  .footer-text { font-size: 0.82rem; color: var(--ink-muted); }
+  .footer-text strong { color: var(--ink); }
+
+  @media (max-width: 560px) {
+    .sheet-actions { width: 100%; }
+    .sheet-link { flex: 1 1 auto; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="icon-back" viewBox="0 0 24 24"><polyline points="15,5 8,12 15,19"></polyline></symbol>
+  <symbol id="icon-arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12,5 19,12 12,19"></polyline></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="back-link" href="../index.html">
+      <svg aria-hidden="true"><use href="#icon-back"></use></svg>
+      Về Góc Học Tập
+    </a>
+    <span class="lesson-tag">MOS EXCEL 11 · BÀI TẬP THỰC HÀNH</span>
+  </div>
+</header>
+
+<div class="page">
+  <header class="masthead">
+    <span class="masthead-eyebrow">THƯ VIỆN BÀI TẬP THỰC HÀNH</span>
+    <h1 class="masthead-title">Bài tập MOS Excel 11</h1>
+    <p class="masthead-sub">Bộ 10 bài tập thực hành bám theo đề cương MO-200, sắp xếp từ thao tác cơ bản với sổ tính đến hàm, biểu đồ, lọc dữ liệu và in ấn. Mỗi bài là một tệp Excel gồm dữ liệu gốc để em thao tác; phần lớn các bài có sẵn trang tính <em>Yêu cầu</em> ghi rõ từng câu.</p>
+    <div class="summary-strip">
+      <span class="summary-pill">Đã có bài · <strong id="sheet-progress">10 bài</strong></span>
+      <span class="summary-pill">Chứng chỉ · <strong>MO-200</strong></span>
+      <span class="summary-pill">Định dạng · <strong>XLSX</strong></span>
+    </div>
+    <p class="how-box"><strong>Cách dùng:</strong> bấm <em>Tải tệp dữ liệu</em> để tải bài về máy, lưu vào thư mục Lop_HoTen của em rồi mở bằng Excel. Đọc trang tính <em>Yêu cầu</em> trước khi làm, sau đó thực hiện lần lượt trên từng trang tính và nhớ lưu lại bài.</p>
+  </header>
+
+  <section class="semester-block" id="de-cuong-mo200">
+    <div class="semester-head">
+      <h2>Đề cương MO-200 · Microsoft Excel</h2>
+      <span class="semester-count">Bài 1 – Bài 10 · Cả năm học</span>
+    </div>
+    <ul class="sheet-list">
+      <li class="sheet-row">
+        <div class="sheet-row-main">
+          <span class="sheet-num">1</span>
+          <div class="sheet-info">
+            <span class="sheet-topic-tag" title="CHỨNG CHỈ MOS · MICROSOFT EXCEL">MO-200</span>
+            <h3>Bài tập 01 – Khởi tạo và định dạng trang tính</h3>
+            <p class="sheet-meta">Sổ tính, trang tính · 7 trang tính · Có sheet Yêu cầu</p>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <a class="sheet-link" href="../documents/mos-excel/bai-tap/Data_Baitap01.xlsx" download>Tải tệp dữ liệu<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        </div>
+      </li>
+      <li class="sheet-row">
+        <div class="sheet-row-main">
+          <span class="sheet-num">2</span>
+          <div class="sheet-info">
+            <span class="sheet-topic-tag" title="CHỨNG CHỈ MOS · MICROSOFT EXCEL">MO-200</span>
+            <h3>Bài tập 02 – Định dạng ô tính và bảng tính</h3>
+            <p class="sheet-meta">Định dạng · 6 trang tính · Có sheet Yêu cầu</p>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <a class="sheet-link" href="../documents/mos-excel/bai-tap/Data_Baitap02.xlsx" download>Tải tệp dữ liệu<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        </div>
+      </li>
+      <li class="sheet-row">
+        <div class="sheet-row-main">
+          <span class="sheet-num">3</span>
+          <div class="sheet-info">
+            <span class="sheet-topic-tag" title="CHỨNG CHỈ MOS · MICROSOFT EXCEL">MO-200</span>
+            <h3>Bài tập 03 – Các thao tác với bảng tính</h3>
+            <p class="sheet-meta">Nhập, sao chép, chèn/xoá, điền tự động, tìm &amp; thay thế · Có sheet Yêu cầu</p>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <a class="sheet-link" href="../documents/mos-excel/bai-tap/Data_Baitap03.xlsx" download>Tải tệp dữ liệu<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        </div>
+      </li>
+      <li class="sheet-row">
+        <div class="sheet-row-main">
+          <span class="sheet-num">4</span>
+          <div class="sheet-info">
+            <span class="sheet-topic-tag" title="CHỨNG CHỈ MOS · MICROSOFT EXCEL">MO-200</span>
+            <h3>Bài tập 04 – Hàm thống kê, hàm ngày giờ và xử lý chuỗi</h3>
+            <p class="sheet-meta">COUNT, COUNTA, MAX, MIN, AVERAGE, LEFT, RIGHT, MID · 5 trang tính</p>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <a class="sheet-link" href="../documents/mos-excel/bai-tap/Data_Baitap04.xlsx" download>Tải tệp dữ liệu<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        </div>
+      </li>
+      <li class="sheet-row">
+        <div class="sheet-row-main">
+          <span class="sheet-num">5</span>
+          <div class="sheet-info">
+            <span class="sheet-topic-tag" title="CHỨNG CHỈ MOS · MICROSOFT EXCEL">MO-200</span>
+            <h3>Bài tập 05 – Hàm điều kiện và thống kê có điều kiện</h3>
+            <p class="sheet-meta">IF, SUMIF, COUNTIF, AVERAGEIF · 5 trang tính</p>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <a class="sheet-link" href="../documents/mos-excel/bai-tap/Data_Baitap05.xlsx" download>Tải tệp dữ liệu<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        </div>
+      </li>
+      <li class="sheet-row">
+        <div class="sheet-row-main">
+          <span class="sheet-num">6</span>
+          <div class="sheet-info">
+            <span class="sheet-topic-tag" title="CHỨNG CHỈ MOS · MICROSOFT EXCEL">MO-200</span>
+            <h3>Bài tập 06 – Hàm dò tìm và bảng thống kê</h3>
+            <p class="sheet-meta">VLOOKUP, HLOOKUP, bảng phụ · 5 trang tính</p>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <a class="sheet-link" href="../documents/mos-excel/bai-tap/Data_Baitap06.xlsx" download>Tải tệp dữ liệu<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        </div>
+      </li>
+      <li class="sheet-row">
+        <div class="sheet-row-main">
+          <span class="sheet-num">7</span>
+          <div class="sheet-info">
+            <span class="sheet-topic-tag" title="CHỨNG CHỈ MOS · MICROSOFT EXCEL">MO-200</span>
+            <h3>Bài tập 07 – Biểu đồ</h3>
+            <p class="sheet-meta">Column, Pie, định dạng biểu đồ · Có sheet Yêu cầu</p>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <a class="sheet-link" href="../documents/mos-excel/bai-tap/Data_Baitap07.xlsx" download>Tải tệp dữ liệu<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        </div>
+      </li>
+      <li class="sheet-row">
+        <div class="sheet-row-main">
+          <span class="sheet-num">8</span>
+          <div class="sheet-info">
+            <span class="sheet-topic-tag" title="CHỨNG CHỈ MOS · MICROSOFT EXCEL">MO-200</span>
+            <h3>Bài tập 08 – Sắp xếp, trích lọc và định dạng có điều kiện</h3>
+            <p class="sheet-meta">Sort, Filter, Conditional Formatting · Có sheet Yêu cầu</p>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <a class="sheet-link" href="../documents/mos-excel/bai-tap/Data_Baitap08.xlsx" download>Tải tệp dữ liệu<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        </div>
+      </li>
+      <li class="sheet-row">
+        <div class="sheet-row-main">
+          <span class="sheet-num">9</span>
+          <div class="sheet-info">
+            <span class="sheet-topic-tag" title="CHỨNG CHỈ MOS · MICROSOFT EXCEL">MO-200</span>
+            <h3>Bài tập 09 – Định dạng trang in</h3>
+            <p class="sheet-meta">Page Setup, Print Titles, Page Break · Có sheet Yêu cầu</p>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <a class="sheet-link" href="../documents/mos-excel/bai-tap/Data_Baitap09.xlsx" download>Tải tệp dữ liệu<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        </div>
+      </li>
+      <li class="sheet-row">
+        <div class="sheet-row-main">
+          <span class="sheet-num">10</span>
+          <div class="sheet-info">
+            <span class="sheet-topic-tag" title="CHỨNG CHỈ MOS · MICROSOFT EXCEL">MO-200</span>
+            <h3>Bài tập 10 – Ôn tập tổng hợp</h3>
+            <p class="sheet-meta">Tổng hợp kỹ năng MO-200 · Có sheet Yêu cầu chung</p>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <a class="sheet-link" href="../documents/mos-excel/bai-tap/Data_Baitap10.xlsx" download>Tải tệp dữ liệu<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        </div>
+      </li>
+    </ul>
+  </section>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <img class="footer-logo" src="../assets/logo-thpt-nguyen-khuyen.png" alt="Logo Trường THPT Nguyễn Khuyến" width="44" height="44" loading="lazy">
+    <p class="footer-text"><strong>Trường THPT Nguyễn Khuyến</strong> · Góc học tập môn Tin học · GV: Tăng Ngọc Phụng</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    try {
+      var available = document.querySelectorAll('.sheet-actions .sheet-link:not(.sheet-link--secondary)');
+      var progress = document.getElementById('sheet-progress');
+      if (progress) progress.textContent = available.length + ' bài';
+    } catch (error) {
+      console.error('Không cập nhật được số phiếu bài tập:', error);
+    }
+  })();
+</script>
+
+</body>
+</html>
