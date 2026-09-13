@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bài tập về nhà Tin học 11 — Bài 10: Quản lí dữ liệu</title>
+<style>
+  :root{
+    --paper:#F7F4EC;
+    --ink:#2B2A28;
+    --rule:#C9C2AE;
+    --accent:#8A5A34;
+    --accent-soft:#EFE3D2;
+    --stamp:#5B6B4E;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    padding:40px 16px 80px;
+    background:var(--paper);
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px);
+    background-size: 100% 38px;
+    background-attachment:local;
+    font-family: "Iowan Old Style","Palatino Linotype", Georgia, "Times New Roman", serif;
+    color:var(--ink);
+    line-height:1.65;
+  }
+
+  .sheet{
+    max-width: 760px;
+    margin:0 auto;
+    background: transparent;
+  }
+
+  header.title-block{
+    border-bottom: 3px double var(--ink);
+    padding-bottom: 18px;
+    margin-bottom: 28px;
+  }
+
+  .kicker{
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: var(--accent);
+    font-size: 0.95rem;
+    margin: 0 0 6px;
+  }
+
+  h1{
+    font-size: 1.7rem;
+    margin: 0 0 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+
+  .meta-grid{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 10px 28px;
+    font-size: 0.95rem;
+  }
+
+  .meta-item{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    white-space:nowrap;
+  }
+
+  .meta-item span.label{
+    color:#5A564C;
+  }
+
+  .fill-line{
+    display:inline-block;
+    border-bottom: 1px solid var(--ink);
+    min-width: 130px;
+    height: 1.2em;
+  }
+
+  .fill-line.short{ min-width: 60px; }
+  .fill-line.long{ min-width: 220px; }
+
+  section.part{
+    margin-bottom: 34px;
+  }
+
+  .part-heading{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin: 0 0 20px;
+  }
+
+  .part-heading .badge{
+    background: var(--stamp);
+    color: var(--paper);
+    font-weight:700;
+    font-size:0.85rem;
+    padding: 4px 10px;
+    border-radius: 3px;
+    transform: rotate(-1.5deg);
+    box-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+  }
+
+  .part-heading h2{
+    font-size: 1.15rem;
+    margin:0;
+    font-weight:700;
+  }
+
+  .question{
+    margin-bottom: 24px;
+    padding-left: 4px;
+  }
+
+  .qnum{
+    font-weight:700;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  .qtext{
+    margin: 0 0 12px;
+  }
+
+  .options{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-left: 6px;
+  }
+
+  @media (min-width: 620px){
+    .options{
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding: 6px 10px;
+    border: 1px solid transparent;
+  }
+
+  .option .box{
+    flex:0 0 auto;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--ink);
+    margin-top: 3px;
+    background: var(--paper);
+  }
+
+  .option .opt-text{
+    font-size: 0.98rem;
+  }
+
+  .short-answer{
+    margin-top: 6px;
+  }
+
+  .answer-lines{
+    margin-left: 6px;
+  }
+
+  .answer-lines .fill-line-block{
+    display:block;
+    border-bottom: 1px solid var(--rule);
+    height: 34px;
+  }
+
+  .answer-lines.tall .fill-line-block{
+    height: 34px;
+  }
+
+  .hint{
+    font-style: italic;
+    color:#6B665A;
+    font-size: 0.88rem;
+    margin: 4px 0 10px 6px;
+  }
+
+  footer{
+    margin-top: 40px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    font-size: 0.82rem;
+    color:#77715F;
+    text-align:center;
+  }
+
+  @media print{
+    body{
+      background-image: none;
+      padding: 0.6cm;
+    }
+    .part{
+      break-inside: avoid;
+    }
+    .question{
+      break-inside: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <header class="title-block">
+    <p class="kicker">Phiếu bài tập về nhà — Tin học 11</p>
+    <h1>Bài 10: Quản lí dữ liệu trong bài toán quản lí</h1>
+    <div class="meta-grid">
+      <div class="meta-item"><span class="label">Họ và tên:</span><span class="fill-line long"></span></div>
+      <div class="meta-item"><span class="label">Lớp:</span><span class="fill-line short"></span></div>
+      <div class="meta-item"><span class="label">Ngày làm:</span><span class="fill-line"></span></div>
+    </div>
+  </header>
+
+  <section class="part">
+    <div class="part-heading">
+      <span class="badge">Phần A</span>
+      <h2>Trắc nghiệm khách quan</h2>
+    </div>
+    <p class="hint">Đánh dấu ✕ vào ô vuông trước phương án em chọn.</p>
+
+    <div class="question">
+      <p class="qtext"><span class="qnum">10.1.</span> Đặc điểm nào dưới đây không phải là phổ biến với các bài toán quản lí?</p>
+      <div class="options">
+        <label class="option"><span class="box"></span><span class="opt-text">A. Phổ biến trong thực tiễn xã hội.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">B. Có mục tiêu là quản lí các đối tượng (con người, vật tư, phương tiện, tiền, hàng hoá, môi trường,…) phục vụ các hoạt động điều hành xã hội hay sản xuất, kinh doanh, dịch vụ.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">C. Đòi hỏi phải thu thập dữ liệu thường xuyên, chính xác và kịp thời; tổng hợp phân tích dữ liệu để có thể có được những thông tin cần thiết phục vụ các yêu cầu quản lí.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">D. Chủ yếu phải giải các phương trình được mô tả bằng các biểu thức toán học phức tạp.</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="qtext"><span class="qnum">10.4.</span> Công việc nào dưới đây không phải là công việc cập nhật dữ liệu?</p>
+      <div class="options">
+        <label class="option"><span class="box"></span><span class="opt-text">A. Ghi chép (thêm) dữ liệu mới thu thập được.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">B. Xoá dữ liệu không còn ý nghĩa.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">C. Tìm kiếm các dữ liệu thoả mãn một tiêu chí xác định.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">D. Sửa chữa dữ liệu đã có để đảm bảo tính chính xác của dữ liệu.</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="qtext"><span class="qnum">10.6.</span> Truy xuất dữ liệu là gì? Câu trả lời nào sau đây là đúng đắn và đầy đủ nhất?</p>
+      <div class="options">
+        <label class="option"><span class="box"></span><span class="opt-text">A. Lấy ra các dữ liệu lưu trữ thoả mãn một số tiêu chí nào đó.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">B. Lấy ra các dữ liệu lưu trữ thoả mãn một tiêu chí nào đó và sắp xếp chúng theo một thứ tự xác định.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">C. Lấy ra tất cả các dữ liệu đã được lưu trữ.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">D. Lấy ra tất cả các dữ liệu đã được lưu trữ và sắp xếp theo một thứ tự nào đó.</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="qtext"><span class="qnum">10.7.</span> Khai thác thông tin từ các dữ liệu lưu trữ là gì? Câu trả lời nào sau đây là đúng và đầy đủ nhất?</p>
+      <div class="options">
+        <label class="option"><span class="box"></span><span class="opt-text">A. Đơn giản là việc truy xuất dữ liệu theo những yêu cầu cụ thể của người dùng.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">B. Là việc cập nhật và truy xuất dữ liệu.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">C. Là việc tổng hợp, phân tích, sắp xếp, tính toán, thống kê,… từ những dữ liệu đã có để rút ra được những thông tin có giá trị về những đối tượng mà các dữ liệu phản ánh.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">D. Là việc in ra giấy toàn bộ dữ liệu lưu trữ.</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="qtext"><span class="qnum">10.8.</span> Trường hợp phải thu thập dữ liệu thường xuyên với tần suất và khối lượng lớn, người ta thường sử dụng phương pháp thu thập dữ liệu nào dưới đây?</p>
+      <div class="options">
+        <label class="option"><span class="box"></span><span class="opt-text">A. Dùng thiết bị ghi hình.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">B. Dùng thiết bị ghi âm.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">C. Ghi chép thủ công.</span></label>
+        <label class="option"><span class="box"></span><span class="opt-text">D. Dùng thiết bị thu thập dữ liệu tự động.</span></label>
+      </div>
+    </div>
+  </section>
+
+  <section class="part">
+    <div class="part-heading">
+      <span class="badge">Phần B</span>
+      <h2>Tự luận</h2>
+    </div>
+
+    <div class="question">
+      <p class="qtext"><span class="qnum">10.2.</span> Giả sử em được giao quản lí quầy hàng trên một trang bán hàng trực tuyến. Khi có một đơn mua hàng gửi tới em cần phản hồi cho khách hàng biết những mặt hàng nào có đủ số lượng theo yêu cầu, tổng số tiền khách hàng cần thanh toán. Những dữ liệu nào theo em cần phải được quản lí?</p>
+      <div class="short-answer answer-lines tall">
+        <span class="fill-line-block"></span>
+        <span class="fill-line-block"></span>
+        <span class="fill-line-block"></span>
+        <span class="fill-line-block"></span>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="qtext"><span class="qnum">10.3.</span> Để giải quyết yêu cầu quản lí thư viện, theo em những dữ liệu nào là những dữ liệu cần phải được quản lí?</p>
+      <div class="short-answer answer-lines tall">
+        <span class="fill-line-block"></span>
+        <span class="fill-line-block"></span>
+        <span class="fill-line-block"></span>
+        <span class="fill-line-block"></span>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="qtext"><span class="qnum">10.5.</span> Hãy nêu ví dụ về việc cập nhật dữ liệu cho bài toán quản lí thư viện.</p>
+      <div class="short-answer answer-lines tall">
+        <span class="fill-line-block"></span>
+        <span class="fill-line-block"></span>
+        <span class="fill-line-block"></span>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="qtext"><span class="qnum">10.9.</span> Hãy quan sát thực tế xung quanh và kể tên một số hoạt động quản lí dùng thiết bị thu thập, lưu trữ dữ liệu tự động.</p>
+      <div class="short-answer answer-lines tall">
+        <span class="fill-line-block"></span>
+        <span class="fill-line-block"></span>
+        <span class="fill-line-block"></span>
+        <span class="fill-line-block"></span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Bài 10 — Quản lí dữ liệu trong bài toán quản lí · Nộp lại theo hướng dẫn của giáo viên
+  </footer>
+
+</div>
+
+</body>
+</html>
