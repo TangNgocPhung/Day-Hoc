@@ -1,0 +1,2047 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bài học tương tác Tin học 11 – Bài 17: Quản trị cơ sở dữ liệu trên máy tính, Chủ đề F.">
+  <meta name="theme-color" content="#173F5F">
+  <title>Bài 17: Quản trị cơ sở dữ liệu trên máy tính – Tin học 11</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173F5F'/%3E%3Cellipse cx='32' cy='17' rx='18' ry='8' fill='%2335C0CD'/%3E%3Cpath d='M14 17v15c0 4.4 8.1 8 18 8s18-3.6 18-8V17M14 32v15c0 4.4 8.1 8 18 8s18-3.6 18-8V32' fill='none' stroke='white' stroke-width='4'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --navy: #173F5F;
+      --navy-dark: #0e2b42;
+      --navy-soft: #eaf1f5;
+      --cyan: #35C0CD;
+      --cyan-dark: #158f9b;
+      --cyan-soft: #e7f9fb;
+      --ink: #182b3a;
+      --muted: #607485;
+      --paper: #ffffff;
+      --page: #f3f7f9;
+      --line: #d7e2e8;
+      --success: #16805d;
+      --success-soft: #e8f8f1;
+      --warning: #b66a00;
+      --warning-soft: #fff5df;
+      --danger: #b64040;
+      --danger-soft: #fff0f0;
+      --purple: #7458b3;
+      --shadow: 0 16px 42px rgba(23, 63, 95, .11);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 96% 2%, rgba(53, 192, 205, .14), transparent 18rem),
+        var(--page);
+      font-family: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+    button, input, textarea, select { font: inherit; }
+    button, [role="button"] { touch-action: manipulation; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 12px;
+      top: -80px;
+      padding: 10px 14px;
+      color: #fff;
+      background: var(--navy-dark);
+      border-radius: 9px;
+    }
+    .skip-link:focus { top: 12px; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background: linear-gradient(125deg, var(--navy-dark), var(--navy) 62%, #176f83);
+    }
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border: 2px solid rgba(255,255,255,.1);
+      border-radius: 50%;
+    }
+    .hero::before { width: 320px; height: 320px; right: -85px; top: -170px; }
+    .hero::after { width: 200px; height: 200px; right: 45px; top: -120px; }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1160px, calc(100% - 32px));
+      margin: auto;
+      padding: 38px 0 34px;
+    }
+    .breadcrumb { margin: 0 0 16px; color: #bfeff2; font-size: .88rem; font-weight: 600; }
+    .lesson-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      color: var(--navy-dark);
+      background: var(--cyan);
+      border-radius: 999px;
+      font-size: .84rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .lesson-mark svg { width: 19px; height: 19px; }
+    h1 {
+      max-width: 860px;
+      margin: 0;
+      font-size: clamp(2.15rem, 6vw, 4.6rem);
+      line-height: 1.08;
+      letter-spacing: -.045em;
+    }
+    .hero-subtitle { max-width: 760px; margin: 16px 0 0; color: #d8eef4; font-size: 1.03rem; }
+
+    .lesson-nav-wrap {
+      position: sticky;
+      z-index: 30;
+      top: 0;
+      background: rgba(255,255,255,.95);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 5px 18px rgba(23,63,95,.07);
+      backdrop-filter: blur(12px);
+    }
+    .lesson-nav {
+      display: flex;
+      gap: 7px;
+      width: min(1160px, calc(100% - 24px));
+      margin: auto;
+      padding: 10px 0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .nav-link {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--navy); background: var(--navy-soft); }
+    .nav-link[aria-current="page"] { color: #fff; background: var(--navy); }
+    .nav-link:focus-visible,
+    .btn:focus-visible,
+    .map-node:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible { outline: 3px solid rgba(53,192,205,.4); outline-offset: 2px; }
+
+    main { width: min(1160px, calc(100% - 28px)); margin: 28px auto 70px; }
+    .lesson-panel { margin-bottom: 28px; scroll-margin-top: 88px; }
+    .js-enabled .lesson-panel:not(.active) { display: none; }
+    .js-enabled .lesson-panel.active { display: block; animation: panelIn .24s ease both; }
+    @keyframes panelIn { from { opacity: .2; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    .section-heading { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+    .section-no {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 48px;
+      height: 48px;
+      color: #fff;
+      background: var(--navy);
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      box-shadow: 0 7px 16px rgba(23,63,95,.18);
+    }
+    .section-heading h2 { margin: 0; color: var(--navy); font-size: clamp(1.55rem, 4vw, 2.25rem); line-height: 1.2; }
+    .section-heading p { margin: 5px 0 0; color: var(--muted); }
+    h3 { color: var(--navy); line-height: 1.3; }
+    .card {
+      padding: clamp(20px, 4vw, 30px);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .callout {
+      padding: 17px 19px;
+      background: var(--cyan-soft);
+      border-left: 5px solid var(--cyan);
+      border-radius: 0 14px 14px 0;
+    }
+    .callout p { margin: 0; }
+    .callout strong { color: var(--navy); }
+    .mini-label { display: block; margin-bottom: 6px; color: var(--cyan-dark); font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 47px;
+      padding: 10px 17px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .15s, background .15s, border-color .15s, box-shadow .15s;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .btn:disabled { cursor: not-allowed; opacity: .52; }
+    .btn-primary { color: #fff; background: var(--navy); box-shadow: 0 8px 18px rgba(23,63,95,.18); }
+    .btn-primary:hover:not(:disabled) { background: #205477; }
+    .btn-accent { color: var(--navy-dark); background: var(--cyan); }
+    .btn-accent:hover:not(:disabled) { background: #5bd1da; }
+    .btn-secondary { color: var(--navy); background: #fff; border-color: #b9cbd5; }
+    .btn-secondary:hover:not(:disabled) { background: var(--navy-soft); }
+    .btn-danger { color: var(--danger); background: #fff; border-color: #e0aaaa; }
+    .button-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+
+    .scenario-card { display: grid; grid-template-columns: 1.2fr .8fr; gap: 26px; align-items: center; }
+    .scenario-card h2 { margin-top: 0; font-size: clamp(1.7rem,4vw,2.5rem); }
+    .scenario-visual {
+      position: relative;
+      min-height: 280px;
+      padding: 26px;
+      background: linear-gradient(145deg, var(--navy-dark), var(--navy));
+      border-radius: 18px;
+      color: #fff;
+      overflow: hidden;
+    }
+    .search-bar { display: flex; gap: 8px; padding: 10px; background: #fff; border-radius: 11px; color: var(--muted); }
+    .search-dot { width: 22px; height: 22px; border: 3px solid var(--cyan); border-radius: 50%; position: relative; }
+    .search-dot::after { content: ""; position: absolute; width: 8px; height: 3px; right: -7px; bottom: -3px; background: var(--cyan); transform: rotate(45deg); }
+    .music-result { margin-top: 15px; padding: 13px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16); border-radius: 11px; }
+    .music-result small { color: #bdeff1; }
+    .pulse-line { height: 7px; margin-top: 9px; background: linear-gradient(90deg,var(--cyan) 65%,rgba(255,255,255,.15) 65%); border-radius: 9px; }
+    .prediction-box { margin-top: 20px; padding: 17px; background: #f7fafc; border: 1px solid var(--line); border-radius: 14px; }
+    .prediction-box fieldset { margin: 0; padding: 0; border: 0; }
+    .prediction-box legend { margin-bottom: 10px; font-weight: 700; }
+    .choice-line { display: flex; gap: 9px; align-items: flex-start; margin: 8px 0; cursor: pointer; }
+    .choice-line input { width: 19px; height: 19px; margin-top: 3px; accent-color: var(--cyan-dark); }
+    .feedback { display: none; margin-top: 13px; padding: 12px 14px; border-radius: 10px; }
+    .feedback.show { display: block; }
+    .feedback.success { color: #0f6044; background: var(--success-soft); border: 1px solid #93d2b8; }
+    .feedback.hint { color: #7a4a00; background: var(--warning-soft); border: 1px solid #e7c482; }
+
+    .goal-card { min-height: 190px; }
+    .goal-icon { display: grid; place-items: center; width: 43px; height: 43px; margin-bottom: 13px; color: var(--navy); background: var(--cyan-soft); border-radius: 12px; font-weight: 800; }
+    .goal-card h3 { margin: 0 0 7px; font-size: 1.05rem; }
+    .goal-card p { margin: 0; color: var(--muted); font-size: .93rem; }
+
+    .data-story { margin-bottom: 22px; }
+    .data-tables { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 20px 0; overflow-x: auto; }
+    .table-card { min-width: 180px; overflow: hidden; border: 1px solid #bdd0d9; border-radius: 12px; }
+    .table-title { padding: 8px 10px; color: #fff; background: var(--navy); font-size: .9rem; font-weight: 800; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .data-table th, .data-table td { padding: 7px 8px; border-bottom: 1px solid #dce7eb; text-align: left; white-space: nowrap; }
+    .data-table th { color: var(--navy-dark); background: #dff6f7; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .key-tag { display: inline-block; margin-left: 4px; padding: 1px 5px; color: #5b3b00; background: #ffe39d; border-radius: 5px; font-size: .68rem; font-weight: 800; vertical-align: 1px; }
+    .foreign-tag { color: #4c337c; background: #ede7fb; }
+    .definition { margin: 20px 0; padding: 22px; color: #fff; background: linear-gradient(125deg,var(--navy),#205f7e); border-radius: 16px; }
+    .definition p { margin: 0; font-size: 1.07rem; }
+    .concept-card { padding: 18px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--cyan); border-radius: 14px; }
+    .concept-card h3 { margin: 0 0 6px; font-size: 1rem; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: .91rem; }
+    .schema-example { overflow-x: auto; margin: 20px 0; }
+    .schema-example table { width: 100%; min-width: 670px; border-collapse: collapse; }
+    .schema-example caption { margin-bottom: 9px; color: var(--navy); font-weight: 700; text-align: left; }
+    .schema-example th, .schema-example td { padding: 9px 11px; border: 1px solid var(--line); text-align: left; }
+    .schema-example th { background: var(--navy); color: #fff; }
+    .schema-example tbody tr:nth-child(even) { background: #f1f9fa; }
+
+    .map-layout { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(260px,.65fr); gap: 20px; }
+    .map-board {
+      position: relative;
+      min-height: 520px;
+      padding: 24px;
+      background: linear-gradient(160deg,#f7fcfd,#edf6f8);
+      border: 1px solid #cce1e7;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .map-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .map-lines path { fill: none; stroke: #35aebb; stroke-width: 3; stroke-dasharray: 7 5; }
+    .map-grid { position: relative; z-index: 2; display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); min-height: 470px; gap: 18px; align-items: center; }
+    .map-node {
+      min-height: 104px;
+      padding: 14px;
+      color: var(--ink);
+      background: #fff;
+      border: 2px solid #afcbd4;
+      border-radius: 15px;
+      box-shadow: 0 10px 22px rgba(23,63,95,.09);
+      cursor: pointer;
+      text-align: left;
+    }
+    .map-node:hover, .map-node.selected { border-color: var(--cyan-dark); transform: translateY(-2px); }
+    .map-node strong { display: block; color: var(--navy); }
+    .map-node small { display: block; margin-top: 5px; color: var(--muted); }
+    #map-node-nhacsi { grid-area: 1 / 1; }
+    #map-node-bannhac { grid-area: 2 / 2; }
+    #map-node-casi { grid-area: 3 / 1; }
+    #map-node-banthuam { grid-area: 3 / 3; }
+    .map-detail { min-height: 520px; }
+    .map-detail h3 { margin-top: 0; }
+    .field-list { display: grid; gap: 8px; margin: 14px 0; }
+    .field-chip { display: flex; justify-content: space-between; gap: 10px; padding: 9px 11px; background: #f4f8fa; border-radius: 9px; }
+    .field-chip code { color: var(--navy); font-weight: 700; }
+    .relation-note { margin-top: 15px; padding: 12px; color: #12616a; background: var(--cyan-soft); border-radius: 10px; }
+
+    .three-wrap { margin-top: 22px; }
+    .three-layout { display: grid; grid-template-columns: 1fr 280px; gap: 20px; }
+    .three-stage {
+      position: relative;
+      min-height: 430px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(53,192,205,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(53,192,205,.08) 1px, transparent 1px),
+        radial-gradient(circle at center,#244f68,#0d2639 75%);
+      background-size: 32px 32px,32px 32px,auto;
+      border-radius: 18px;
+      cursor: grab;
+      touch-action: none;
+      perspective: 900px;
+    }
+    .three-stage:active { cursor: grabbing; }
+    .schema-world {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 270px;
+      height: 200px;
+      transform-style: preserve-3d;
+      transform: translate(-50%,-50%) rotateX(-18deg) rotateY(28deg) scale(.9);
+      transition: transform .08s linear;
+    }
+    .db-plane {
+      position: absolute;
+      width: 230px;
+      min-height: 140px;
+      padding: 13px;
+      color: #fff;
+      background: rgba(23,63,95,.9);
+      border: 2px solid var(--cyan);
+      border-radius: 12px;
+      box-shadow: 0 0 28px rgba(53,192,205,.22);
+      backface-visibility: visible;
+    }
+    .db-plane strong { display: block; color: #8ce7ed; margin-bottom: 7px; }
+    .db-plane span { display: block; padding: 3px 0; font-size: .78rem; border-top: 1px solid rgba(255,255,255,.13); }
+    .plane-front { transform: translateZ(110px); }
+    .plane-right { transform: rotateY(90deg) translateZ(110px); }
+    .plane-top { transform: rotateX(90deg) translateZ(70px); }
+    .three-controls { padding: 18px; background: #f7fafb; border: 1px solid var(--line); border-radius: 15px; }
+    .three-controls h3 { margin-top: 0; }
+    .three-controls label { display: block; margin: 14px 0 6px; font-weight: 700; }
+    .three-controls input[type="range"] { width: 100%; accent-color: var(--cyan-dark); }
+    .three-readout { color: var(--muted); font-size: .88rem; }
+    .fallback-description { margin-top: 12px; color: var(--muted); font-size: .9rem; }
+
+    .lab-task { margin-bottom: 18px; }
+    .task-list { margin: 8px 0 0; padding-left: 20px; }
+    .task-list li { margin: 5px 0; }
+    .simulation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .sim-source, .sim-output { min-width: 0; }
+    .sim-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+    .sim-table { width: 100%; border-collapse: collapse; font-size: .83rem; }
+    .sim-table th, .sim-table td { padding: 8px 9px; border-bottom: 1px solid #e1e9ed; text-align: left; white-space: nowrap; }
+    .sim-table th { color: var(--navy); background: var(--cyan-soft); }
+    .sim-table tr.active-row { background: #fff2c9; outline: 2px solid #e0a72e; outline-offset: -2px; }
+    .sim-table tr.matched-row { background: var(--success-soft); }
+    .output-empty { display: grid; place-items: center; min-height: 190px; padding: 18px; color: var(--muted); background: #f7fafb; border: 1px dashed #b9cbd5; border-radius: 12px; text-align: center; }
+    .sim-status { margin: 15px 0 0; padding: 12px 14px; background: var(--navy-soft); border-radius: 10px; }
+    .step-meter { display: flex; align-items: center; gap: 10px; margin: 15px 0; }
+    .meter-track { flex: 1; height: 10px; background: #e0e9ee; border-radius: 999px; overflow: hidden; }
+    .meter-fill { width: 0; height: 100%; background: linear-gradient(90deg,var(--cyan),var(--cyan-dark)); transition: width .25s; }
+    .chart-card { margin-top: 20px; }
+    .bar-chart { display: grid; gap: 12px; margin-top: 15px; }
+    .bar-row { display: grid; grid-template-columns: minmax(145px,1fr) 2fr 35px; gap: 10px; align-items: center; }
+    .bar-track { height: 18px; background: #e8eff2; border-radius: 999px; overflow: hidden; }
+    .bar-fill { height: 100%; width: 0; background: linear-gradient(90deg,var(--cyan),#167d99); border-radius: inherit; transition: width .35s; }
+    .conclusion-box { margin-top: 20px; padding: 18px; background: #f7fafb; border-radius: 14px; }
+    .conclusion-box label { display: block; margin-bottom: 7px; font-weight: 700; }
+    .conclusion-box textarea { width: 100%; min-height: 90px; padding: 12px; border: 1px solid #b8cbd4; border-radius: 10px; resize: vertical; }
+
+    .code-layout { display: grid; grid-template-columns: minmax(0,1.5fr) minmax(280px,.5fr); gap: 20px; }
+    .code-panel { overflow: hidden; padding: 0; }
+    .code-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 15px 18px; color: #fff; background: var(--navy-dark); }
+    .code-head strong { color: #fff; }
+    .status-stack { display: flex; flex-wrap: wrap; gap: 8px; }
+    .status-pill { padding: 4px 9px; background: rgba(255,255,255,.11); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; font-size: .78rem; }
+    .status-pill.ready { color: #bff6db; }
+    .status-pill.running { color: #ffdfa1; }
+    .status-pill.error { color: #ffc4c4; }
+    .code-body { padding: 18px; background: #112433; }
+    .sample-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .sample-btn { min-height: 38px; padding: 7px 11px; color: #c8f5f7; background: #1d3b4e; border: 1px solid #38627a; border-radius: 8px; cursor: pointer; }
+    .sample-btn:hover { background: #285169; }
+    #sql-editor {
+      width: 100%;
+      min-height: 190px;
+      padding: 16px;
+      color: #eaf8fa;
+      background: #0b1b28;
+      border: 1px solid #31556c;
+      border-radius: 10px;
+      font: 500 15px/1.65 Consolas, "Courier New", monospace;
+      resize: vertical;
+      tab-size: 2;
+    }
+    .code-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
+    .code-output { min-height: 180px; max-height: 420px; margin-top: 14px; overflow: auto; color: #dbf4f5; background: #08151f; border: 1px solid #2a4a5f; border-radius: 10px; }
+    .code-placeholder { margin: 0; padding: 16px; color: #8eabbc; font-family: Consolas, monospace; white-space: pre-wrap; }
+    .result-table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+    .result-table th, .result-table td { padding: 9px 10px; border-bottom: 1px solid #254152; text-align: left; white-space: nowrap; }
+    .result-table th { position: sticky; top: 0; color: #9ce7eb; background: #132d3d; }
+    .result-table td { color: #e8f3f5; }
+    .error-output { margin: 0; padding: 16px; color: #ffc2c2; white-space: pre-wrap; }
+    .dataset-card h3 { margin-top: 0; }
+    .dataset-card details { margin: 10px 0; border: 1px solid var(--line); border-radius: 10px; }
+    .dataset-card summary { padding: 10px 12px; color: var(--navy); font-weight: 700; cursor: pointer; }
+    .dataset-card .mini-data { padding: 0 12px 12px; overflow-x: auto; }
+    .dataset-card table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+    .dataset-card th, .dataset-card td { padding: 5px 7px; border: 1px solid var(--line); text-align: left; }
+    .dataset-card th { background: var(--cyan-soft); }
+
+    .quiz-shell { max-width: 820px; margin: auto; }
+    .quiz-top { display: flex; align-items: center; gap: 13px; margin-bottom: 18px; }
+    .quiz-count { color: var(--navy); font-weight: 800; white-space: nowrap; }
+    .quiz-progress { flex: 1; height: 11px; background: #e1eaee; border-radius: 999px; overflow: hidden; }
+    .quiz-progress-fill { width: 20%; height: 100%; background: linear-gradient(90deg,var(--cyan),var(--cyan-dark)); transition: width .25s; }
+    .quiz-card h3 { margin: 0 0 17px; font-size: 1.2rem; }
+    .quiz-options { display: grid; gap: 10px; }
+    .quiz-option { position: relative; display: grid; grid-template-columns: 34px 1fr; gap: 11px; padding: 13px 14px; background: #f7fafb; border: 1.5px solid #d3e0e5; border-radius: 12px; cursor: pointer; }
+    .quiz-option:hover { border-color: var(--cyan-dark); }
+    .quiz-option input { position: absolute; opacity: 0; }
+    .option-letter { display: grid; place-items: center; width: 30px; height: 30px; color: var(--navy); background: #fff; border: 1px solid #aebfc8; border-radius: 50%; font-weight: 800; }
+    .quiz-option:has(input:checked) { background: var(--cyan-soft); border-color: var(--cyan-dark); }
+    .quiz-option:has(input:checked) .option-letter { color: #fff; background: var(--cyan-dark); border-color: var(--cyan-dark); }
+    .quiz-option.correct { background: var(--success-soft); border-color: var(--success); }
+    .quiz-option.wrong { background: var(--danger-soft); border-color: var(--danger); }
+    .quiz-feedback { display: none; margin-top: 14px; padding: 13px 15px; border-radius: 11px; }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.correct { color: #0e6548; background: var(--success-soft); border-left: 4px solid var(--success); }
+    .quiz-feedback.wrong { color: #794000; background: var(--warning-soft); border-left: 4px solid var(--warning); }
+    .quiz-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 17px; }
+    .quiz-result { display: none; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-disc { display: grid; place-items: center; width: 150px; height: 150px; margin: 0 auto 18px; color: #fff; background: var(--navy); border: 12px solid var(--cyan); border-radius: 50%; }
+    .score-disc strong { font-size: 2.4rem; line-height: 1; }
+    .score-disc span { display: block; font-size: .8rem; }
+
+    .summary-map { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; align-items: stretch; }
+    .summary-node { position: relative; padding: 17px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--cyan); border-radius: 13px; }
+    .summary-node:not(:last-child)::after { content: "→"; position: absolute; right: -15px; top: 42%; z-index: 2; color: var(--cyan-dark); font-weight: 800; }
+    .summary-node strong { display: block; color: var(--navy); margin-bottom: 5px; }
+    .summary-node span { color: var(--muted); font-size: .87rem; }
+    .final-score { margin-top: 22px; padding: 20px; color: #fff; background: linear-gradient(120deg,var(--navy),#1b657a); border-radius: 15px; }
+    .final-score h3 { margin: 0 0 5px; color: #fff; }
+    .final-score p { margin: 0; color: #d8f4f5; }
+
+    dialog { width: min(680px, calc(100% - 28px)); padding: 0; border: 0; border-radius: 18px; box-shadow: 0 24px 70px rgba(0,0,0,.28); }
+    dialog::backdrop { background: rgba(8,28,42,.65); backdrop-filter: blur(3px); }
+    .dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; color: #fff; background: var(--navy); }
+    .dialog-head h2 { margin: 0; font-size: 1.2rem; }
+    .dialog-close { width: 42px; height: 42px; color: #fff; background: transparent; border: 1px solid rgba(255,255,255,.3); border-radius: 10px; cursor: pointer; }
+    .dialog-body { padding: 20px; }
+    .dialog-body dl { display: grid; grid-template-columns: 140px 1fr; gap: 10px 16px; margin: 0; }
+    .dialog-body dt { color: var(--navy); font-weight: 800; }
+    .dialog-body dd { margin: 0; color: var(--muted); }
+    .noscript-note { margin: 20px auto; padding: 14px; color: #704900; background: var(--warning-soft); border: 1px solid #e3c078; border-radius: 10px; }
+    footer { padding: 24px 16px; color: #bdd4df; background: var(--navy-dark); text-align: center; font-size: .86rem; }
+
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .data-tables { grid-template-columns: repeat(2,minmax(220px,1fr)); }
+      .map-layout, .three-layout, .code-layout { grid-template-columns: 1fr; }
+      .map-detail { min-height: auto; }
+      .three-controls { order: -1; }
+      .summary-map { grid-template-columns: 1fr 1fr; }
+      .summary-node::after { display: none; }
+    }
+    @media (max-width: 680px) {
+      body { font-size: 16px; }
+      .hero-inner { padding-top: 27px; }
+      .scenario-card, .grid-2, .grid-3, .simulation-grid { grid-template-columns: 1fr; }
+      .scenario-visual { min-height: 240px; }
+      .data-tables { grid-template-columns: repeat(4,210px); }
+      .map-board { min-height: 600px; padding: 14px; }
+      .map-grid { grid-template: repeat(4,1fr) / 1fr; min-height: 565px; }
+      #map-node-nhacsi { grid-area: 1 / 1; }
+      #map-node-bannhac { grid-area: 2 / 1; }
+      #map-node-casi { grid-area: 3 / 1; }
+      #map-node-banthuam { grid-area: 4 / 1; }
+      .map-lines { display: none; }
+      .three-stage { min-height: 390px; }
+      .schema-world { transform: translate(-50%,-50%) rotateX(-18deg) rotateY(28deg) scale(.72); }
+      .bar-row { grid-template-columns: 115px 1fr 28px; font-size: .82rem; }
+      .summary-map { grid-template-columns: 1fr; }
+      .quiz-actions .btn, .code-actions .btn { flex: 1 1 140px; }
+      .dialog-body dl { grid-template-columns: 1fr; gap: 3px; }
+      .dialog-body dd { margin-bottom: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+    @media print {
+      body { background: #fff; }
+      .hero { print-color-adjust: exact; }
+      .lesson-nav-wrap, .button-row, .code-actions, .quiz-actions { display: none !important; }
+      .lesson-panel { display: block !important; break-before: page; }
+      .lesson-panel:first-of-type { break-before: auto; }
+      .card { box-shadow: none; }
+      .three-stage { min-height: 330px; print-color-adjust: exact; }
+    }
+
+    /* ==== Bổ sung riêng cho Bài 17 ==== */
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+    .compare-card { padding: 18px; border: 1px solid var(--line); border-radius: 15px; background: #fff; }
+    .compare-card.manual { border-top: 4px solid #b66a00; }
+    .compare-card.computer { border-top: 4px solid var(--cyan); }
+    .compare-card h3 { margin: 0 0 8px; font-size: 1.02rem; }
+    .compare-card ul { margin: 0; padding-left: 19px; color: var(--muted); font-size: .93rem; }
+    .compare-card li { margin: 4px 0; }
+
+    .benefit-list { display: grid; gap: 12px; margin-top: 16px; }
+    .benefit-item { display: grid; grid-template-columns: 40px 1fr; gap: 13px; align-items: start; padding: 14px 16px; background: #f7fafb; border-radius: 13px; }
+    .benefit-item .benefit-icon { display: grid; place-items: center; width: 40px; height: 40px; color: var(--navy); background: var(--cyan-soft); border-radius: 11px; font-weight: 800; }
+    .benefit-item strong { color: var(--navy); }
+    .benefit-item p { margin: 3px 0 0; color: var(--muted); font-size: .93rem; }
+
+    .step-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; margin-top: 16px; }
+    .step-card { padding: 16px; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--cyan); border-radius: 13px; }
+    .step-card span.step-no { display: inline-block; margin-bottom: 7px; padding: 2px 9px; color: #fff; background: var(--navy); border-radius: 999px; font-size: .78rem; font-weight: 800; }
+    .step-card h3 { margin: 0 0 5px; font-size: .98rem; }
+    .step-card p { margin: 0; color: var(--muted); font-size: .9rem; }
+    code.inline { padding: 2px 6px; background: var(--navy-soft); border-radius: 6px; color: var(--navy); font-family: Consolas, "Courier New", monospace; font-size: .92em; }
+
+    .console-shot { margin-top: 16px; padding: 14px 16px; color: #dbf4f5; background: #08151f; border: 1px solid #2a4a5f; border-radius: 12px; font-family: Consolas, "Courier New", monospace; font-size: .88rem; white-space: pre-wrap; }
+    .console-shot .prompt-line { color: #8ce7ed; }
+    figure { margin: 20px 0 0; }
+    figcaption { margin-top: 9px; color: var(--muted); font-size: .87rem; text-align: center; }
+
+    #map-node-nguoidung { grid-area: 1 / 1; }
+    #map-node-maykhach { grid-area: 1 / 2; }
+    #map-node-cong { grid-area: 1 / 3; }
+    #map-node-mysql { grid-area: 2 / 3; }
+    #map-node-thumuc { grid-area: 2 / 2; }
+    #map-node-csdl { grid-area: 2 / 1; }
+    .map-grid { grid-template: repeat(2, 1fr) / repeat(3, 1fr); min-height: 400px; }
+    .map-board { min-height: 470px; }
+    .map-detail { min-height: 470px; }
+
+    .layer-plane {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 250px;
+      margin: -70px 0 0 -125px;
+      padding: 13px 15px;
+      color: #fff;
+      background: rgba(23,63,95,.92);
+      border: 2px solid var(--cyan);
+      border-radius: 13px;
+      box-shadow: 0 0 26px rgba(53,192,205,.25);
+    }
+    .layer-plane strong { display: block; margin-bottom: 6px; color: #8ce7ed; }
+    .layer-plane span { display: block; padding: 3px 0; font-size: .78rem; border-top: 1px solid rgba(255,255,255,.14); }
+    #layer-client { transform: translateZ(105px); }
+    #layer-server { transform: translateZ(0); }
+    #layer-store { transform: translateZ(-105px); }
+
+    .conn-layout { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr); gap: 20px; }
+    .conn-form { display: grid; gap: 12px; margin-top: 14px; }
+    .conn-field { display: grid; gap: 5px; }
+    .conn-field label { font-weight: 700; font-size: .92rem; }
+    .conn-field input, .conn-field select { min-height: 46px; padding: 10px 12px; border: 1px solid #b8cbd4; border-radius: 10px; background: #fff; }
+    .conn-field small { color: var(--muted); font-size: .82rem; }
+    .conn-log { min-height: 210px; max-height: 340px; overflow: auto; margin-top: 14px; padding: 14px 16px; color: #dbf4f5; background: #08151f; border: 1px solid #2a4a5f; border-radius: 12px; font-family: Consolas, "Courier New", monospace; font-size: .86rem; white-space: pre-wrap; }
+    .db-list { display: grid; gap: 8px; margin-top: 14px; }
+    .db-item { display: flex; justify-content: space-between; gap: 10px; padding: 10px 12px; background: #f4f8fa; border: 1px solid var(--line); border-radius: 10px; }
+    .db-item strong { color: var(--navy); }
+    .db-item span { color: var(--muted); font-size: .88rem; }
+
+    .chart-controls { display: grid; gap: 6px; margin: 16px 0 6px; }
+    .chart-controls label { font-weight: 700; }
+    .chart-controls input[type="range"] { width: 100%; accent-color: var(--cyan-dark); }
+    .bar-row.manual .bar-fill { background: linear-gradient(90deg,#e9a23b,#b66a00); }
+    .bar-row { grid-template-columns: minmax(170px,1fr) 2fr 92px; }
+    .bar-row span.bar-value { color: var(--navy); font-weight: 700; font-size: .88rem; text-align: right; }
+    .source-note { margin-top: 12px; color: var(--muted); font-size: .84rem; }
+
+    .mindmap-wrap { margin-top: 18px; overflow-x: auto; }
+    .mindmap-wrap svg { min-width: 640px; }
+
+    @media (max-width: 900px) {
+      .compare-grid, .conn-layout { grid-template-columns: 1fr; }
+      .step-cards { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .map-grid { grid-template: repeat(6, 1fr) / 1fr; min-height: 620px; }
+      #map-node-nguoidung { grid-area: 1 / 1; }
+      #map-node-maykhach { grid-area: 2 / 1; }
+      #map-node-cong { grid-area: 3 / 1; }
+      #map-node-mysql { grid-area: 4 / 1; }
+      #map-node-thumuc { grid-area: 5 / 1; }
+      #map-node-csdl { grid-area: 6 / 1; }
+      .map-board { min-height: 680px; }
+      .bar-row { grid-template-columns: 120px 1fr 74px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Bỏ qua điều hướng</a>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="breadcrumb">Chủ đề F · Giải quyết vấn đề với sự trợ giúp của máy tính · Tin học 11</p>
+      <span class="lesson-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg>
+        Bài 17
+      </span>
+      <h1>Quản trị cơ sở dữ liệu trên máy tính</h1>
+      <p class="hero-subtitle">Từ cuốn sổ ghi tay đến hệ quản trị MySQL: em sẽ thấy máy tính giúp cập nhật, tìm kiếm và bảo vệ dữ liệu nhanh, chính xác đến mức nào.</p>
+    </div>
+  </header>
+
+  <div class="lesson-nav-wrap">
+    <nav class="lesson-nav" aria-label="Các phần của bài học">
+      <a class="nav-link" href="#khoi-dong" data-panel="khoi-dong" aria-current="page">Khởi động</a>
+      <a class="nav-link" href="#muc-tieu" data-panel="muc-tieu">Mục tiêu</a>
+      <a class="nav-link" href="#kien-thuc" data-panel="kien-thuc">Kiến thức mới</a>
+      <a class="nav-link" href="#truc-quan" data-panel="truc-quan">Sơ đồ &amp; 3D</a>
+      <a class="nav-link" href="#thuc-hanh" data-panel="thuc-hanh">Thực hành kết nối</a>
+      <a class="nav-link" href="#phong-ma" data-panel="phong-ma">Phòng lệnh MySQL</a>
+      <a class="nav-link" href="#luyen-tap" data-panel="luyen-tap">Luyện tập</a>
+      <a class="nav-link" href="#tong-ket" data-panel="tong-ket">Tổng kết</a>
+    </nav>
+  </div>
+
+  <noscript>
+    <p class="noscript-note">Trình duyệt đang tắt JavaScript. Toàn bộ nội dung kiến thức và câu hỏi vẫn hiển thị nối tiếp nhau; riêng mô phỏng, mô hình 3D và phòng chạy lệnh sẽ không hoạt động.</p>
+  </noscript>
+
+  <main id="main-content">
+    <!-- 1. KHỞI ĐỘNG -->
+    <section class="lesson-panel active" id="khoi-dong">
+      <div class="card scenario-card">
+        <div>
+          <span class="mini-label">Khởi động</span>
+          <h2>Một buổi sáng ở phòng giao dịch ngân hàng</h2>
+          <p>Cô Lan là giao dịch viên. Mỗi ngày cô tiếp nhận hàng trăm lượt gửi tiền, rút tiền, chuyển khoản. Nếu tất cả đều ghi bằng tay vào sổ: mỗi giao dịch phải viết lại số dư, đối chiếu chữ kí, lật tìm trang cũ để kiểm tra. Cuối ngày, cả phòng phải cộng lại sổ sách để khớp số liệu.</p>
+          <p>Ở trường em cũng vậy: sổ điểm, sổ thu tiền, danh sách mượn sách… nếu ghi tay thì tìm một thông tin có thể mất rất nhiều thời gian.</p>
+          <div class="prediction-box">
+            <fieldset>
+              <legend>Dự đoán trước khi học</legend>
+              <p style="margin:0 0 10px;color:#607485;font-size:.93rem;">Nếu số giao dịch trong ngày tăng lên gấp 10 lần mà vẫn quản lí thủ công thì điều gì sẽ xảy ra?</p>
+              <label class="choice-line"><input type="radio" name="warmup" value="same"><span>Thời gian xử lí gần như không đổi vì con người quen việc.</span></label>
+              <label class="choice-line"><input type="radio" name="warmup" value="grow"><span>Thời gian xử lí tăng gần gấp 10 lần và nguy cơ nhầm lẫn, sai sót cũng tăng theo.</span></label>
+              <label class="choice-line"><input type="radio" name="warmup" value="faster"><span>Càng nhiều giao dịch thì xử lí càng nhanh vì làm nhiều thành quen.</span></label>
+            </fieldset>
+            <div class="button-row">
+              <button class="btn btn-primary" type="button" id="warmup-check">Kiểm tra dự đoán</button>
+              <button class="btn btn-secondary" type="button" data-panel="kien-thuc">Vào bài học</button>
+            </div>
+            <p class="feedback" id="warmup-feedback" role="status"></p>
+          </div>
+        </div>
+        <div class="scenario-visual" aria-hidden="true">
+          <div class="search-bar"><span class="search-dot"></span><span>Tìm giao dịch của khách hàng…</span></div>
+          <div class="music-result"><strong>Sổ ghi tay</strong><small>Lật từng trang · đối chiếu thủ công</small><div class="pulse-line" style="background:linear-gradient(90deg,#e9a23b 22%,rgba(255,255,255,.15) 22%)"></div></div>
+          <div class="music-result"><strong>Hệ QTCSDL trên máy tính</strong><small>Truy vấn theo mã khách hàng · trả kết quả tức thì</small><div class="pulse-line"></div></div>
+          <div class="music-result"><strong>Kết quả</strong><small>Cùng một câu hỏi, hai khoảng thời gian rất khác nhau</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. MỤC TIÊU -->
+    <section class="lesson-panel" id="muc-tieu">
+      <div class="section-heading">
+        <span class="section-no">2</span>
+        <div>
+          <h2>Mục tiêu bài học</h2>
+          <p>Sau bài học này em sẽ:</p>
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="card goal-card">
+          <div class="goal-icon">01</div>
+          <h3>Nêu được lợi ích của quản trị CSDL trên máy tính</h3>
+          <p>Giải thích vì sao việc lưu trữ, cập nhật, tìm kiếm và bảo vệ dữ liệu bằng hệ QTCSDL lại tiện lợi, kịp thời, nhanh chóng và hạn chế sai sót hơn cách làm thủ công.</p>
+        </div>
+        <div class="card goal-card">
+          <div class="goal-icon">02</div>
+          <h3>Làm quen với hệ QTCSDL MySQL</h3>
+          <p>Biết MySQL là hệ QTCSDL mã nguồn mở miễn phí, biết vai trò của tài khoản <code class="inline">root</code>, cổng <code class="inline">3306</code> và cách gọi <code class="inline">mysql.exe</code> trong cửa sổ lệnh.</p>
+        </div>
+        <div class="card goal-card">
+          <div class="goal-icon">03</div>
+          <h3>Làm quen với phần mềm HeidiSQL</h3>
+          <p>Hiểu HeidiSQL là công cụ đồ họa hỗ trợ tiếng Việt giúp kết nối và khai thác CSDL; đọc và điền đúng các thông số trong cửa sổ Trình quản lí phiên.</p>
+        </div>
+      </div>
+      <div class="button-row">
+        <button class="btn btn-accent" type="button" id="open-glossary">Mở bảng thuật ngữ</button>
+        <button class="btn btn-secondary" type="button" data-panel="kien-thuc">Bắt đầu học</button>
+      </div>
+    </section>
+
+    <!-- 3. KIẾN THỨC MỚI -->
+    <section class="lesson-panel" id="kien-thuc">
+      <div class="section-heading">
+        <span class="section-no">3</span>
+        <div>
+          <h2>Kiến thức mới</h2>
+          <p>Hai nội dung chính: lợi ích của quản trị CSDL trên máy tính và bộ đôi MySQL – HeidiSQL.</p>
+        </div>
+      </div>
+
+      <div class="card data-story">
+        <span class="mini-label">Mục 1</span>
+        <h3>Lợi ích của việc quản trị cơ sở dữ liệu trên máy tính</h3>
+        <p>Trước khi có máy tính và các giải pháp quản trị CSDL, việc quản lí dữ liệu thủ công rất vất vả, khó kiểm soát, đòi hỏi nhiều công sức, đặc biệt với khối lượng dữ liệu lớn: chỉ một sai sót nhỏ cũng có thể gây hậu quả lớn, như trong ngành ngân hàng.</p>
+        <div class="compare-grid">
+          <div class="compare-card manual">
+            <h3>Quản lí thủ công</h3>
+            <ul>
+              <li>Ghi chép, đối chiếu, cộng sổ bằng tay.</li>
+              <li>Tìm một bản ghi phải lật nhiều trang, nhiều quyển.</li>
+              <li>Dễ nhầm số liệu, khó phát hiện sai sót.</li>
+              <li>Chỉ phục vụ được tại chỗ, trong giờ làm việc.</li>
+            </ul>
+          </div>
+          <div class="compare-card computer">
+            <h3>Quản trị CSDL trên máy tính</h3>
+            <ul>
+              <li>Dữ liệu nhập một lần, hệ thống tự cập nhật số dư, tổng hợp.</li>
+              <li>Tìm kiếm theo mã khách hàng, số tài khoản trong tích tắc.</li>
+              <li>Ràng buộc dữ liệu giúp hạn chế dữ liệu dư thừa và sai sót.</li>
+              <li>Phục vụ trực tuyến 24/7 qua máy tính, điện thoại.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="benefit-list">
+          <div class="benefit-item"><span class="benefit-icon">✓</span><div><strong>Tiện lợi</strong><p>Người dùng tự thực hiện nhiều giao dịch từ xa; nhân viên không phải chép lại dữ liệu nhiều lần.</p></div></div>
+          <div class="benefit-item"><span class="benefit-icon">✓</span><div><strong>Kịp thời</strong><p>Số dư, danh sách, báo cáo được cập nhật ngay sau mỗi thao tác, giúp ra quyết định đúng lúc.</p></div></div>
+          <div class="benefit-item"><span class="benefit-icon">✓</span><div><strong>Nhanh chóng</strong><p>Truy vấn trên hàng triệu bản ghi vẫn cho kết quả trong thời gian rất ngắn.</p></div></div>
+          <div class="benefit-item"><span class="benefit-icon">✓</span><div><strong>Hạn chế sai sót</strong><p>Hệ QTCSDL kiểm soát dữ liệu dư thừa, giữ tính nhất quán, đảm bảo an ninh và an toàn dữ liệu.</p></div></div>
+        </div>
+        <div class="definition">
+          <p><strong>Ghi nhớ.</strong> Việc dùng hệ QTCSDL trên máy tính đem lại nhiều lợi ích to lớn: tiện lợi, kịp thời, nhanh chóng, hạn chế sai sót.</p>
+        </div>
+      </div>
+
+      <div class="card data-story">
+        <span class="mini-label">Mục 2</span>
+        <h3>Hệ quản trị cơ sở dữ liệu MySQL và phần mềm HeidiSQL</h3>
+        <p>Để làm việc được với CSDL (khởi tạo, tạo bảng, cập nhật dữ liệu và khai thác thông tin) cần có <strong>một hệ QTCSDL</strong> và <strong>một phần mềm giúp giao tiếp</strong> với hệ QTCSDL đó. Các hệ QTCSDL phổ biến hiện nay có ORACLE, MySQL, Microsoft SQL Server… Trong đó <strong>MySQL</strong> là sản phẩm mã nguồn mở miễn phí, được đánh giá là gọn nhẹ, tốc độ xử lí nhanh, hỗ trợ quản lí chặt chẽ và an toàn dữ liệu, rất phù hợp cho các bài toán quản trị CSDL lớn trên Internet.</p>
+
+        <h3 style="margin-top:22px;">a) Cài đặt và làm việc với MySQL</h3>
+        <div class="step-cards">
+          <div class="step-card"><span class="step-no">Bước 1</span><h3>Tải bộ cài đặt</h3><p>Truy cập trang <code class="inline">dev.mysql.com/downloads/mysql/</code> và chọn bản cài đặt tự động (MSI), bản ZIP gọn nhẹ hoặc bản đầy đủ.</p></div>
+          <div class="step-card"><span class="step-no">Bước 2</span><h3>Đặt mật khẩu cho root</h3><p>Quá trình cài đặt yêu cầu nhập mật khẩu cho người dùng <code class="inline">root</code> – tương tự tài khoản quản trị của hệ điều hành Windows. Cần ghi nhớ mật khẩu này.</p></div>
+          <div class="step-card"><span class="step-no">Bước 3</span><h3>MySQL chạy như một dịch vụ</h3><p>Sau khi cài, MySQL tự khởi động cùng máy dưới dạng một dịch vụ (Service) và chờ các phần mềm khách kết nối tới.</p></div>
+        </div>
+        <p style="margin-top:18px;">MySQL có sẵn phần mềm khách dùng giao diện dòng lệnh tên là <code class="inline">mysql.exe</code> trong thư mục <code class="inline">bin</code>. Mở cửa sổ lệnh (ví dụ <code class="inline">cmd.exe</code>), gõ <code class="inline">mysql -u root -p</code> rồi nhấn <kbd>Enter</kbd> (<em>u</em> là viết tắt của <em>user</em>, <em>p</em> là viết tắt của <em>password</em>), nhập mật khẩu của root và nhấn <kbd>Enter</kbd> để mở cửa sổ làm việc của MySQL.</p>
+        <figure>
+          <div class="console-shot"><span class="prompt-line">C:\Temp&gt;mysql -u root -p</span>
+Enter password: ********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 97
+Server version: 5.5.5-10.6.4-MariaDB mariadb.org binary distribution
+
+mysql&gt; </div>
+          <figcaption>Mô phỏng cửa sổ làm việc của MySQL sau khi đăng nhập (tương ứng Hình 17.1 và 17.2, SGK Tin học 11 – Kết nối tri thức).</figcaption>
+        </figure>
+        <p style="margin-top:16px;">Trong cửa sổ làm việc này, em nhập các câu truy vấn SQL và nhận được thông báo về kết quả cùng thời gian thực hiện, tính đến phần trăm giây. Ví dụ câu lệnh <code class="inline">select * from mymusic.bannhac;</code> cho biết toàn bộ nội dung bảng <code class="inline">bannhac</code>.</p>
+
+        <h3 style="margin-top:24px;">b) Phần mềm HeidiSQL</h3>
+        <p>Phần mềm <code class="inline">mysql.exe</code> tuy gọn nhẹ nhưng dùng giao diện dòng lệnh nên chưa thật thuận tiện với người mới. <strong>HeidiSQL</strong> là phần mềm mã nguồn mở, miễn phí, dùng giao diện đồ họa, kết nối và làm việc được với nhiều hệ QTCSDL như MySQL, MariaDB, Microsoft SQL Server, PostgreSQL… Đặc biệt, HeidiSQL có hỗ trợ tiếng Việt nên được lựa chọn giới thiệu trong sách giáo khoa.</p>
+        <p>Tải phần mềm tại <code class="inline">www.heidisql.com/download.php</code> với hai lựa chọn: bản cài đặt tự động (Installer) hoặc bản Portable dạng nén, chỉ cần giải nén và chạy tệp <code class="inline">heidisql.exe</code>.</p>
+        <div class="schema-example">
+          <table>
+            <caption>Các ô cần quan tâm trong cửa sổ Trình quản lí phiên của HeidiSQL</caption>
+            <thead><tr><th>Ô nhập</th><th>Giá trị thường dùng</th><th>Ý nghĩa</th></tr></thead>
+            <tbody>
+              <tr><td>Kiểu mạng</td><td>MariaDB or MySQL (TCP/IP)</td><td>Giá trị mặc định, phù hợp để kết nối tới MySQL hoặc MariaDB.</td></tr>
+              <tr><td>Library</td><td>libmariadb.dll</td><td>Thư viện kết nối, để nguyên giá trị mặc định.</td></tr>
+              <tr><td>Tên máy chủ / IP</td><td>127.0.0.1</td><td>Địa chỉ máy chủ CSDL. Giá trị này nghĩa là MySQL và HeidiSQL cùng cài trên một máy.</td></tr>
+              <tr><td>Người dùng</td><td>root</td><td>Tên người dùng CSDL có quyền quản trị.</td></tr>
+              <tr><td>Mật khẩu</td><td>(mật khẩu đã đặt khi cài MySQL)</td><td>Mật khẩu của người dùng root.</td></tr>
+              <tr><td>Cổng</td><td>3306</td><td>Cổng mặc định để các phần mềm giao tiếp với hệ QTCSDL.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout">
+          <p><strong>Chú ý.</strong> Khi cài đặt HeidiSQL, nếu máy tính kết nối Internet, phần mềm sẽ tự động nhận biết mã vùng quốc gia và thiết lập giao diện với ngôn ngữ tương ứng. Em có thể tự thiết lập lại ngôn ngữ bằng công cụ <code class="inline">Tools/Preferences/General</code>.</p>
+        </div>
+        <div class="definition" style="margin-top:20px;">
+          <p><strong>Ghi nhớ.</strong> MySQL và HeidiSQL là các phần mềm mã nguồn mở, được nhiều người dùng để quản trị các CSDL.</p>
+        </div>
+        <div class="button-row">
+          <button class="btn btn-primary" type="button" data-panel="truc-quan">Xem sơ đồ hệ thống</button>
+          <button class="btn btn-secondary" type="button" id="open-glossary-2">Bảng thuật ngữ</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. SƠ ĐỒ & 3D -->
+    <section class="lesson-panel" id="truc-quan">
+      <div class="section-heading">
+        <span class="section-no">4</span>
+        <div>
+          <h2>Sơ đồ hệ thống và mô hình 3D</h2>
+          <p>Bấm vào từng chặng trên sơ đồ để xem dữ liệu đi qua đâu; xoay mô hình 3D để thấy ba lớp của hệ thống.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="mini-label">Sơ đồ tương tác</span>
+        <h3>Đường đi của một yêu cầu dữ liệu</h3>
+        <p>Khi em gõ một câu truy vấn trong HeidiSQL, dữ liệu không đi thẳng từ màn hình tới ổ đĩa. Hãy bấm lần lượt sáu chặng dưới đây.</p>
+        <div class="map-layout" style="margin-top:16px;">
+          <div class="map-board">
+            <svg class="map-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M 20 25 H 32"></path>
+              <path d="M 53 25 H 65"></path>
+              <path d="M 92 40 V 60"></path>
+              <path d="M 65 75 H 53"></path>
+              <path d="M 32 75 H 20"></path>
+            </svg>
+            <div class="map-grid">
+              <button class="map-node" type="button" id="map-node-nguoidung" data-stop="nguoidung"><strong>1. Người dùng</strong><small>Gõ câu truy vấn hoặc bấm nút trên giao diện</small></button>
+              <button class="map-node" type="button" id="map-node-maykhach" data-stop="maykhach"><strong>2. Phần mềm khách</strong><small>HeidiSQL hoặc mysql.exe</small></button>
+              <button class="map-node" type="button" id="map-node-cong" data-stop="cong"><strong>3. Cổng 3306</strong><small>Cửa giao tiếp tới máy chủ</small></button>
+              <button class="map-node" type="button" id="map-node-mysql" data-stop="mysql"><strong>4. Máy chủ MySQL</strong><small>Dịch vụ chạy nền, kiểm tra quyền</small></button>
+              <button class="map-node" type="button" id="map-node-thumuc" data-stop="thumuc"><strong>5. Thư mục dữ liệu</strong><small>Nơi MySQL lưu tệp dữ liệu trên đĩa</small></button>
+              <button class="map-node" type="button" id="map-node-csdl" data-stop="csdl"><strong>6. CSDL mymusic</strong><small>Các bảng nhacsi, bannhac, casi…</small></button>
+            </div>
+          </div>
+          <div class="card map-detail" id="map-detail">
+            <span class="mini-label">Đang xem</span>
+            <h3>Hãy chọn một chặng</h3>
+            <p>Bấm vào một ô trên sơ đồ để đọc mô tả chi tiết về vai trò của chặng đó trong hệ thống quản trị CSDL.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card three-wrap">
+        <span class="mini-label">Mô hình 3D</span>
+        <h3>Ba lớp của một hệ quản trị CSDL</h3>
+        <p>Kéo chuột (hoặc vuốt ngón tay) trên khung để xoay, dùng con lăn hoặc thanh trượt để phóng to – thu nhỏ.</p>
+        <div class="three-layout" style="margin-top:16px;">
+          <div class="three-stage" id="three-stage" role="img" aria-label="Mô hình ba lớp: lớp phần mềm khách, lớp hệ quản trị MySQL và lớp lưu trữ dữ liệu">
+            <div class="schema-world" id="schema-world">
+              <div class="layer-plane" id="layer-client"><strong>Lớp 1 · Phần mềm khách</strong><span>HeidiSQL (đồ họa)</span><span>mysql.exe (dòng lệnh)</span><span>Nhận thao tác của người dùng</span></div>
+              <div class="layer-plane" id="layer-server"><strong>Lớp 2 · Hệ QTCSDL MySQL</strong><span>Kiểm tra tài khoản, phân quyền</span><span>Phân tích và thực hiện truy vấn</span><span>Giữ tính nhất quán của dữ liệu</span></div>
+              <div class="layer-plane" id="layer-store"><strong>Lớp 3 · Lưu trữ dữ liệu</strong><span>Các tệp CSDL trên đĩa</span><span>Bảng, chỉ mục, nhật kí</span><span>Sao lưu và phục hồi</span></div>
+            </div>
+          </div>
+          <div class="three-controls">
+            <h3>Điều khiển</h3>
+            <label for="zoom-control">Phóng to: <span id="zoom-value">90%</span></label>
+            <input type="range" id="zoom-control" min="55" max="135" value="90" step="5">
+            <div class="button-row">
+              <button class="btn btn-secondary" type="button" id="rotate-left">⟲ Xoay trái</button>
+              <button class="btn btn-secondary" type="button" id="rotate-right">⟳ Xoay phải</button>
+              <button class="btn btn-accent" type="button" id="reset-3d">Đặt lại</button>
+            </div>
+            <p class="three-readout" id="three-readout" role="status">Góc X: -18° · Góc Y: 28°</p>
+            <p class="fallback-description">Nếu không xoay được mô hình: người dùng thao tác ở lớp 1, mọi yêu cầu được lớp 2 (MySQL) kiểm tra quyền và thực hiện, dữ liệu thật nằm ở lớp 3 trên đĩa. Người dùng không bao giờ mở trực tiếp tệp dữ liệu ở lớp 3.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. THỰC HÀNH + MÔ PHỎNG + BIỂU ĐỒ -->
+    <section class="lesson-panel" id="thuc-hanh">
+      <div class="section-heading">
+        <span class="section-no">5</span>
+        <div>
+          <h2>Thực hành: kết nối HeidiSQL tới MySQL</h2>
+          <p>Mô phỏng cửa sổ Trình quản lí phiên. Em điền thông số, dự đoán kết quả rồi bấm “Mở” để xem hệ thống phản hồi.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="lab-task">
+          <span class="mini-label">Nhiệm vụ</span>
+          <h3>Kết nối thành công tới máy chủ MySQL trên chính máy của em</h3>
+          <ol class="task-list">
+            <li>Đọc kĩ tình huống: MySQL đã được cài trên cùng máy, mật khẩu của <code class="inline">root</code> là <code class="inline">Tinhoc@11</code> (giả định của bài thực hành).</li>
+            <li>Điền các ô Tên máy chủ/IP, Người dùng, Mật khẩu, Cổng.</li>
+            <li>Chọn dự đoán bên dưới rồi bấm <strong>Mở</strong>.</li>
+            <li>Đọc thông báo trong khung nhật kí, sửa lại thông số nếu kết nối thất bại.</li>
+            <li>Thử cố ý nhập cổng 3307 hoặc sai mật khẩu để xem lỗi mà thực tế em hay gặp.</li>
+          </ol>
+        </div>
+        <div class="conn-layout">
+          <div>
+            <h3 style="margin-top:0;">Trình quản lí phiên (mô phỏng)</h3>
+            <div class="conn-form">
+              <div class="conn-field">
+                <label for="conn-net">Kiểu mạng</label>
+                <select id="conn-net">
+                  <option value="tcp" selected>MariaDB or MySQL (TCP/IP)</option>
+                  <option value="ssh">MariaDB or MySQL (SSH tunnel)</option>
+                </select>
+              </div>
+              <div class="conn-field">
+                <label for="conn-host">Tên máy chủ / IP</label>
+                <input type="text" id="conn-host" value="127.0.0.1" autocomplete="off" spellcheck="false">
+                <small>Cùng một máy thì dùng 127.0.0.1 hoặc localhost.</small>
+              </div>
+              <div class="conn-field">
+                <label for="conn-user">Người dùng</label>
+                <input type="text" id="conn-user" value="" autocomplete="off" spellcheck="false">
+              </div>
+              <div class="conn-field">
+                <label for="conn-pass">Mật khẩu</label>
+                <input type="text" id="conn-pass" value="" autocomplete="off" spellcheck="false">
+                <small>Ô này hiển thị rõ để em dễ quan sát khi học; trong HeidiSQL thật, mật khẩu được che.</small>
+              </div>
+              <div class="conn-field">
+                <label for="conn-port">Cổng</label>
+                <input type="number" id="conn-port" value="3306" min="1" max="65535">
+              </div>
+            </div>
+            <div class="prediction-box">
+              <fieldset>
+                <legend>Dự đoán</legend>
+                <p style="margin:0 0 10px;color:#607485;font-size:.93rem;">Nếu giữ nguyên mọi thông số đúng nhưng đổi cổng thành 3307 thì chuyện gì xảy ra?</p>
+                <label class="choice-line"><input type="radio" name="conn-predict" value="ok"><span>Vẫn kết nối được vì MySQL chấp nhận mọi cổng.</span></label>
+                <label class="choice-line"><input type="radio" name="conn-predict" value="fail"><span>Không kết nối được vì không có dịch vụ nào lắng nghe ở cổng đó.</span></label>
+                <label class="choice-line"><input type="radio" name="conn-predict" value="slow"><span>Kết nối được nhưng chạy chậm hơn.</span></label>
+              </fieldset>
+            </div>
+            <div class="button-row">
+              <button class="btn btn-primary" type="button" id="conn-open">Mở kết nối</button>
+              <button class="btn btn-secondary" type="button" id="conn-fill">Điền thông số mẫu</button>
+              <button class="btn btn-danger" type="button" id="conn-reset">Đặt lại</button>
+            </div>
+          </div>
+          <div>
+            <div class="status-stack" style="margin-bottom:10px;">
+              <span class="status-pill" id="conn-status">Trạng thái: Chưa kết nối</span>
+            </div>
+            <div class="conn-log" id="conn-log" role="status" aria-live="polite">Nhật kí kết nối sẽ hiển thị tại đây sau khi em bấm “Mở kết nối”.</div>
+            <div id="conn-result"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <span class="mini-label">Mô phỏng trọng tâm · Biểu đồ</span>
+        <h3>Thủ công hay máy tính? Hãy tự rút ra kết luận</h3>
+        <p>Kéo thanh trượt để thay đổi số giao dịch cần xử lí trong một ngày và quan sát hai cột thời gian.</p>
+        <div class="chart-controls">
+          <label for="load-control">Số giao dịch trong ngày: <strong id="load-value">300</strong></label>
+          <input type="range" id="load-control" min="50" max="3000" step="50" value="300">
+        </div>
+        <div class="bar-chart">
+          <div class="bar-row manual">
+            <span>Quản lí thủ công</span>
+            <div class="bar-track"><div class="bar-fill" id="bar-manual"></div></div>
+            <span class="bar-value" id="value-manual">10,0 giờ</span>
+          </div>
+          <div class="bar-row">
+            <span>Dùng hệ QTCSDL</span>
+            <div class="bar-track"><div class="bar-fill" id="bar-computer"></div></div>
+            <span class="bar-value" id="value-computer">0,4 giờ</span>
+          </div>
+          <div class="bar-row manual">
+            <span>Sai sót ước tính (thủ công)</span>
+            <div class="bar-track"><div class="bar-fill" id="bar-err-manual"></div></div>
+            <span class="bar-value" id="value-err-manual">5 lỗi</span>
+          </div>
+          <div class="bar-row">
+            <span>Sai sót ước tính (máy tính)</span>
+            <div class="bar-track"><div class="bar-fill" id="bar-err-computer"></div></div>
+            <span class="bar-value" id="value-err-computer">0 lỗi</span>
+          </div>
+        </div>
+        <p class="sim-status" id="chart-status" role="status">Hãy kéo thanh trượt để so sánh.</p>
+        <p class="source-note">Quy ước dùng cho mô phỏng: mỗi giao dịch thủ công mất 2 phút và có tỉ lệ nhầm lẫn 1,5%; mỗi giao dịch trên hệ QTCSDL mất 5 giây và tỉ lệ nhầm lẫn 0,02%. Đây là <strong>số liệu giả định để minh họa xu hướng</strong>, không phải số đo thực tế của một ngân hàng cụ thể.</p>
+        <div class="conclusion-box">
+          <label for="sim-conclusion">Câu hỏi kết luận: vì sao khi khối lượng công việc tăng, lợi ích của hệ QTCSDL càng rõ?</label>
+          <textarea id="sim-conclusion" placeholder="Viết 1–2 câu kết luận của em…"></textarea>
+          <div class="button-row">
+            <button class="btn btn-primary" type="button" id="check-conclusion">Gửi kết luận</button>
+            <button class="btn btn-secondary" type="button" id="chart-reset">Đặt lại biểu đồ</button>
+          </div>
+          <p class="feedback" id="conclusion-feedback" role="status"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. PHÒNG LỆNH MYSQL -->
+    <section class="lesson-panel" id="phong-ma">
+      <div class="section-heading">
+        <span class="section-no">6</span>
+        <div>
+          <h2>Phòng thực hành: cửa sổ lệnh MySQL</h2>
+          <p>Gõ câu lệnh SQL như trong cửa sổ <code class="inline">mysql&gt;</code>. Bộ chạy được cô lập trong Web Worker, chỉ làm việc trên dữ liệu mẫu của bài.</p>
+        </div>
+      </div>
+      <div class="code-layout">
+        <div class="card code-panel">
+          <div class="code-head">
+            <strong>mysql&gt; cửa sổ lệnh mô phỏng</strong>
+            <div class="status-stack">
+              <span class="status-pill" id="engine-status">Bộ máy: Đang tải</span>
+              <span class="status-pill" id="run-status">Lượt chạy: Chưa chạy</span>
+              <span class="status-pill" id="db-status">CSDL: chưa chọn</span>
+            </div>
+          </div>
+          <div class="code-body">
+            <div class="sample-row">
+              <button class="sample-btn" type="button" data-query="SHOW DATABASES;">SHOW DATABASES;</button>
+              <button class="sample-btn" type="button" data-query="USE mymusic;">USE mymusic;</button>
+              <button class="sample-btn" type="button" data-query="SHOW TABLES;">SHOW TABLES;</button>
+              <button class="sample-btn" type="button" data-query="DESCRIBE bannhac;">DESCRIBE bannhac;</button>
+              <button class="sample-btn" type="button" data-query="SELECT * FROM nhacsi;">SELECT * FROM nhacsi;</button>
+              <button class="sample-btn" type="button" data-query="SELECT tenBannhac, tenNhacsi FROM bannhac JOIN nhacsi ON bannhac.idNhacsi = nhacsi.idNhacsi ORDER BY tenBannhac;">Ghép hai bảng</button>
+            </div>
+            <label class="mini-label" for="sql-editor" style="color:#8ce7ed;">Vùng nhập lệnh</label>
+            <textarea id="sql-editor" spellcheck="false" aria-describedby="sql-hint">SELECT * FROM mymusic.bannhac;</textarea>
+            <p id="sql-hint" style="margin:9px 0 0;color:#8eabbc;font-size:.85rem;">Mỗi lần chạy một câu lệnh. Hỗ trợ: SHOW DATABASES, USE, SHOW TABLES, DESCRIBE và SELECT (có WHERE, JOIN, ORDER BY).</p>
+            <div class="code-actions">
+              <button class="btn btn-accent" type="button" id="sql-run">▶ Chạy lệnh</button>
+              <button class="btn btn-danger" type="button" id="sql-stop" disabled>■ Dừng</button>
+              <button class="btn btn-secondary" type="button" id="sql-reset">Đặt lại mã</button>
+              <button class="btn btn-secondary" type="button" id="sql-clear">Xóa kết quả</button>
+            </div>
+            <div class="code-output" id="sql-output" role="region" aria-live="polite" aria-label="Kết quả chạy lệnh">
+              <pre class="code-placeholder">Kết quả sẽ hiển thị tại đây.</pre>
+            </div>
+          </div>
+        </div>
+        <div class="card dataset-card">
+          <h3>Dữ liệu mẫu: CSDL <code class="inline">mymusic</code></h3>
+          <p style="color:#607485;font-size:.92rem;">Bốn bảng dưới đây mô phỏng CSDL đã dùng ở các bài trước.</p>
+          <details open>
+            <summary>bannhac</summary>
+            <div class="mini-data"><table><thead><tr><th>idBannhac</th><th>tenBannhac</th><th>idNhacsi</th></tr></thead><tbody>
+              <tr><td>1</td><td>Du kích sông Thao</td><td>1</td></tr>
+              <tr><td>2</td><td>Trường ca sông Lô</td><td>2</td></tr>
+              <tr><td>3</td><td>Tình ca</td><td>3</td></tr>
+              <tr><td>4</td><td>Xa khơi</td><td>4</td></tr>
+              <tr><td>5</td><td>Việt Nam quê hương tôi</td><td>1</td></tr>
+              <tr><td>6</td><td>Tiến về Hà Nội</td><td>2</td></tr>
+              <tr><td>7</td><td>Nhạc rừng</td><td>3</td></tr>
+              <tr><td>8</td><td>Tiếng hát giữa rừng Pác Bó</td><td>4</td></tr>
+            </tbody></table></div>
+          </details>
+          <details>
+            <summary>nhacsi</summary>
+            <div class="mini-data"><table><thead><tr><th>idNhacsi</th><th>tenNhacsi</th></tr></thead><tbody>
+              <tr><td>1</td><td>Đỗ Nhuận</td></tr><tr><td>2</td><td>Văn Cao</td></tr><tr><td>3</td><td>Hoàng Việt</td></tr><tr><td>4</td><td>Nguyễn Tài Tuệ</td></tr>
+            </tbody></table></div>
+          </details>
+          <details>
+            <summary>casi</summary>
+            <div class="mini-data"><table><thead><tr><th>idCasi</th><th>tenCasi</th></tr></thead><tbody>
+              <tr><td>1</td><td>Trần Khánh</td></tr><tr><td>2</td><td>Lê Dung</td></tr><tr><td>3</td><td>Tấn Nhân</td></tr><tr><td>4</td><td>Quốc Hương</td></tr>
+            </tbody></table></div>
+          </details>
+          <details>
+            <summary>banthuam</summary>
+            <div class="mini-data"><table><thead><tr><th>idBannhac</th><th>idCasi</th></tr></thead><tbody>
+              <tr><td>1</td><td>1</td></tr><tr><td>1</td><td>2</td></tr><tr><td>5</td><td>1</td></tr><tr><td>5</td><td>3</td></tr><tr><td>2</td><td>4</td></tr><tr><td>3</td><td>2</td></tr>
+            </tbody></table></div>
+          </details>
+          <div class="callout" style="margin-top:14px;">
+            <p><strong>Câu hỏi trong SGK.</strong> Cần gõ câu truy vấn nào để đọc toàn bộ thông tin bảng <code class="inline">nhacsi</code> trong CSDL <code class="inline">mymusic</code>? Hãy thử ngay ở vùng nhập lệnh bên cạnh.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. LUYỆN TẬP -->
+    <section class="lesson-panel" id="luyen-tap">
+      <div class="section-heading">
+        <span class="section-no">7</span>
+        <div>
+          <h2>Luyện tập</h2>
+          <p>5 câu hỏi, mỗi lần một câu. Trả lời xong mới chuyển được câu tiếp theo.</p>
+        </div>
+      </div>
+      <div class="quiz-shell">
+        <div class="quiz-top">
+          <span class="quiz-count" id="quiz-count">Câu 1/5</span>
+          <div class="quiz-progress" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="1" aria-label="Tiến độ luyện tập">
+            <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+          </div>
+        </div>
+        <div class="card quiz-card" id="quiz-card">
+          <h3 id="quiz-question">Lợi ích nổi bật của việc quản trị CSDL trên máy tính so với quản lí thủ công là gì?</h3>
+          <div class="quiz-options" id="quiz-options">
+            <p style="color:#607485;margin:0;">Đang tải các phương án trả lời…</p>
+          </div>
+          <p class="quiz-feedback" id="quiz-feedback" role="status">Chọn một phương án để nhận phản hồi.</p>
+          <div class="quiz-actions">
+            <button class="btn btn-secondary" type="button" id="quiz-retry">Làm lại</button>
+            <button class="btn btn-primary" type="button" id="quiz-next" disabled>Câu tiếp theo</button>
+          </div>
+        </div>
+        <div class="card quiz-result" id="quiz-result">
+          <div class="score-disc"><div><strong id="quiz-score">0/5</strong><span>điểm</span></div></div>
+          <h3 id="quiz-result-title">Hoàn thành!</h3>
+          <p id="quiz-result-text">Kết quả của em sẽ hiển thị tại đây.</p>
+          <div class="quiz-actions" style="justify-content:center;">
+            <button class="btn btn-accent" type="button" id="quiz-retry-2">Làm lại từ đầu</button>
+            <button class="btn btn-secondary" type="button" data-panel="tong-ket">Xem tổng kết</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. TỔNG KẾT -->
+    <section class="lesson-panel" id="tong-ket">
+      <div class="section-heading">
+        <span class="section-no">8</span>
+        <div>
+          <h2>Tổng kết</h2>
+          <p>Sơ đồ tư duy của bài và kết quả luyện tập của em.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="summary-map">
+          <div class="summary-node"><strong>Nhu cầu</strong><span>Dữ liệu lớn, cập nhật liên tục, quản lí thủ công dễ sai sót.</span></div>
+          <div class="summary-node"><strong>Lợi ích</strong><span>Tiện lợi, kịp thời, nhanh chóng, hạn chế sai sót.</span></div>
+          <div class="summary-node"><strong>Hệ QTCSDL</strong><span>MySQL: mã nguồn mở, miễn phí, nhanh, an toàn; chạy như một dịch vụ.</span></div>
+          <div class="summary-node"><strong>Phần mềm khách</strong><span>mysql.exe dòng lệnh; HeidiSQL đồ họa, hỗ trợ tiếng Việt.</span></div>
+          <div class="summary-node"><strong>Kết nối</strong><span>127.0.0.1 · root · mật khẩu · cổng 3306.</span></div>
+        </div>
+        <div class="mindmap-wrap">
+          <svg viewBox="0 0 700 300" role="img" aria-label="Sơ đồ tư duy Bài 17: trung tâm là Quản trị CSDL trên máy tính với ba nhánh Lợi ích, MySQL và HeidiSQL">
+            <rect x="255" y="125" width="190" height="52" rx="14" fill="#173F5F"></rect>
+            <text x="350" y="147" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700" font-family="Be Vietnam Pro, Arial, sans-serif">Quản trị CSDL</text>
+            <text x="350" y="166" text-anchor="middle" fill="#8ce7ed" font-size="13" font-family="Be Vietnam Pro, Arial, sans-serif">trên máy tính</text>
+            <path d="M255 151 C 190 151 190 60 140 60" fill="none" stroke="#35C0CD" stroke-width="3"></path>
+            <path d="M255 151 C 190 151 190 250 140 250" fill="none" stroke="#35C0CD" stroke-width="3"></path>
+            <path d="M445 151 C 515 151 515 60 565 60" fill="none" stroke="#35C0CD" stroke-width="3"></path>
+            <path d="M445 151 C 515 151 515 250 565 250" fill="none" stroke="#35C0CD" stroke-width="3"></path>
+            <g font-family="Be Vietnam Pro, Arial, sans-serif">
+              <rect x="10" y="36" width="132" height="48" rx="12" fill="#e7f9fb" stroke="#35C0CD" stroke-width="2"></rect>
+              <text x="76" y="56" text-anchor="middle" fill="#173F5F" font-size="13" font-weight="700">Lợi ích</text>
+              <text x="76" y="74" text-anchor="middle" fill="#607485" font-size="11">Tiện lợi · kịp thời</text>
+              <rect x="10" y="226" width="132" height="48" rx="12" fill="#e7f9fb" stroke="#35C0CD" stroke-width="2"></rect>
+              <text x="76" y="246" text-anchor="middle" fill="#173F5F" font-size="13" font-weight="700">Hạn chế sai sót</text>
+              <text x="76" y="264" text-anchor="middle" fill="#607485" font-size="11">Nhất quán · an toàn</text>
+              <rect x="563" y="36" width="130" height="48" rx="12" fill="#eaf1f5" stroke="#173F5F" stroke-width="2"></rect>
+              <text x="628" y="56" text-anchor="middle" fill="#173F5F" font-size="13" font-weight="700">MySQL</text>
+              <text x="628" y="74" text-anchor="middle" fill="#607485" font-size="11">root · cổng 3306</text>
+              <rect x="563" y="226" width="130" height="48" rx="12" fill="#eaf1f5" stroke="#173F5F" stroke-width="2"></rect>
+              <text x="628" y="246" text-anchor="middle" fill="#173F5F" font-size="13" font-weight="700">HeidiSQL</text>
+              <text x="628" y="264" text-anchor="middle" fill="#607485" font-size="11">Giao diện đồ họa</text>
+            </g>
+          </svg>
+        </div>
+        <div class="final-score">
+          <h3>Kết quả luyện tập: <span id="summary-score">Chưa hoàn thành</span></h3>
+          <p id="summary-message">Hãy hoàn thành 5 câu luyện tập để cập nhật kết quả tại đây.</p>
+        </div>
+        <div class="callout" style="margin-top:20px;">
+          <p><strong>Vận dụng.</strong> Truy cập Internet với các cụm từ khóa thích hợp (ví dụ “MySQL là gì”, “HeidiSQL hướng dẫn sử dụng”) để tìm hiểu thêm thông tin về MySQL và HeidiSQL; sau đó thực hành cài đặt MySQL và HeidiSQL trên máy của em.</p>
+        </div>
+        <div class="button-row">
+          <button class="btn btn-secondary" type="button" data-panel="khoi-dong">Quay lại đầu bài</button>
+          <button class="btn btn-accent" type="button" data-panel="luyen-tap">Luyện tập lại</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="glossary-dialog" aria-labelledby="glossary-title">
+    <div class="dialog-head">
+      <h2 id="glossary-title">Bảng thuật ngữ</h2>
+      <button class="dialog-close" type="button" id="close-glossary" aria-label="Đóng bảng thuật ngữ">✕</button>
+    </div>
+    <div class="dialog-body">
+      <dl>
+        <dt>Hệ QTCSDL</dt><dd>Phần mềm quản trị cơ sở dữ liệu: tạo lập, cập nhật, khai thác và bảo vệ dữ liệu.</dd>
+        <dt>MySQL</dt><dd>Hệ QTCSDL mã nguồn mở, miễn phí, gọn nhẹ, tốc độ xử lí nhanh, phổ biến cho các CSDL lớn trên Internet.</dd>
+        <dt>root</dt><dd>Người dùng có quyền quản trị cao nhất của MySQL, được tạo và đặt mật khẩu khi cài đặt.</dd>
+        <dt>Cổng 3306</dt><dd>Cổng mặc định để các phần mềm khách giao tiếp với hệ QTCSDL MySQL hoặc MariaDB.</dd>
+        <dt>127.0.0.1</dt><dd>Địa chỉ IP chỉ chính máy tính đang dùng; tương đương tên localhost.</dd>
+        <dt>Service</dt><dd>Dịch vụ chạy nền của hệ điều hành; sau khi cài đặt, MySQL tự khởi động dưới dạng dịch vụ.</dd>
+        <dt>mysql.exe</dt><dd>Phần mềm khách dùng giao diện dòng lệnh đi kèm MySQL, nằm trong thư mục bin.</dd>
+        <dt>HeidiSQL</dt><dd>Phần mềm khách mã nguồn mở, miễn phí, giao diện đồ họa, hỗ trợ tiếng Việt, kết nối được nhiều hệ QTCSDL.</dd>
+      </dl>
+    </div>
+  </dialog>
+
+  <footer>
+    <p>Tin học 11 · Chủ đề F · Bài 17: Quản trị cơ sở dữ liệu trên máy tính · Bài học tương tác phục vụ dạy học.</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const root = document.documentElement;
+        const panels = Array.from(document.querySelectorAll(".lesson-panel"));
+        const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+        const panelLinks = Array.from(document.querySelectorAll("[data-panel]"));
+        if (!root || panels.length === 0 || navLinks.length === 0) return;
+        root.classList.add("js-enabled");
+
+        function showPanel(panelId, updateHash) {
+          const target = document.getElementById(panelId);
+          if (!target || !target.classList.contains("lesson-panel")) return;
+          panels.forEach(function (panel) { panel.classList.toggle("active", panel.id === panelId); });
+          navLinks.forEach(function (link) {
+            if (link.dataset.panel === panelId) link.setAttribute("aria-current", "page");
+            else link.removeAttribute("aria-current");
+          });
+          if (updateHash && window.history && window.history.replaceState) window.history.replaceState(null, "", "#" + panelId);
+          const anchor = document.querySelector(".lesson-nav-wrap");
+          if (anchor) window.scrollTo({ top: anchor.offsetTop, behavior: "smooth" });
+        }
+
+        panelLinks.forEach(function (link) {
+          link.addEventListener("click", function (event) {
+            const panelId = link.dataset.panel;
+            if (!panelId) return;
+            event.preventDefault();
+            showPanel(panelId, true);
+          });
+        });
+
+        const initialId = window.location.hash.replace("#", "");
+        if (initialId && document.getElementById(initialId)) showPanel(initialId, false);
+
+        const warmupButton = document.getElementById("warmup-check");
+        const warmupFeedback = document.getElementById("warmup-feedback");
+        if (warmupButton && warmupFeedback) {
+          warmupButton.addEventListener("click", function () {
+            const selected = document.querySelector('input[name="warmup"]:checked');
+            if (!selected) {
+              warmupFeedback.className = "feedback show hint";
+              warmupFeedback.textContent = "Em hãy chọn một dự đoán trước khi kiểm tra.";
+              return;
+            }
+            if (selected.value === "grow") {
+              warmupFeedback.className = "feedback show success";
+              warmupFeedback.textContent = "Chính xác! Công việc thủ công tăng gần như tỉ lệ thuận với khối lượng dữ liệu, đồng thời mệt mỏi và nhầm lẫn cũng tăng. Đó là lí do cần hệ QTCSDL trên máy tính.";
+            } else {
+              warmupFeedback.className = "feedback show hint";
+              warmupFeedback.textContent = "Chưa đúng. Gợi ý: mỗi giao dịch thủ công đều tốn một khoảng thời gian cố định để ghi, đối chiếu và cộng sổ; số giao dịch tăng thì tổng thời gian và số lần nhầm lẫn cũng tăng theo.";
+            }
+          });
+        }
+
+        const dialog = document.getElementById("glossary-dialog");
+        const openButtons = [document.getElementById("open-glossary"), document.getElementById("open-glossary-2")];
+        const closeDialog = document.getElementById("close-glossary");
+        openButtons.forEach(function (button) {
+          if (!button) return;
+          button.addEventListener("click", function () {
+            if (dialog && typeof dialog.showModal === "function") dialog.showModal();
+            else window.alert("Trình duyệt chưa hỗ trợ hộp thoại. Các thuật ngữ chính đều đã được giải thích trong phần Kiến thức mới.");
+          });
+        });
+        if (dialog && closeDialog) {
+          closeDialog.addEventListener("click", function () { dialog.close(); });
+          dialog.addEventListener("click", function (event) { if (event.target === dialog) dialog.close(); });
+        }
+      } catch (error) {
+        console.error("Không thể khởi tạo điều hướng:", error);
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const mapDetail = document.getElementById("map-detail");
+        const mapNodes = Array.from(document.querySelectorAll(".map-node"));
+        const stopInfo = {
+          nguoidung: { title: "1. Người dùng", description: "Giáo viên, học sinh hoặc nhân viên nhập yêu cầu: gõ câu truy vấn, bấm nút thêm/sửa/xóa dữ liệu.", facts: [["Vai trò", "Đưa ra yêu cầu"], ["Không làm", "Không mở trực tiếp tệp dữ liệu"]], note: "Người dùng chỉ nhìn thấy giao diện, không thấy cách dữ liệu được lưu." },
+          maykhach: { title: "2. Phần mềm khách", description: "HeidiSQL (giao diện đồ họa) hoặc mysql.exe (giao diện dòng lệnh) nhận yêu cầu và chuyển thành câu lệnh SQL gửi đi.", facts: [["Ví dụ", "HeidiSQL, mysql.exe"], ["Thông số", "Máy chủ, người dùng, mật khẩu, cổng"]], note: "Cùng một máy chủ MySQL có thể phục vụ nhiều phần mềm khách khác nhau." },
+          cong: { title: "3. Cổng 3306", description: "Câu lệnh SQL được gửi qua mạng tới cổng mà dịch vụ MySQL đang lắng nghe. Mặc định là cổng 3306.", facts: [["Mặc định", "3306"], ["Sai cổng", "Không thể kết nối"]], note: "Nếu nhập sai cổng, HeidiSQL báo lỗi không kết nối được máy chủ." },
+          mysql: { title: "4. Máy chủ MySQL", description: "Dịch vụ MySQL kiểm tra tài khoản và quyền, phân tích câu lệnh rồi thực hiện trên dữ liệu.", facts: [["Chạy nền", "Dạng Service của Windows"], ["Bảo vệ", "Phân quyền, giữ tính nhất quán"]], note: "Đây là nơi mọi ràng buộc dữ liệu được kiểm tra, giúp hạn chế sai sót." },
+          thumuc: { title: "5. Thư mục dữ liệu", description: "MySQL lưu dữ liệu thành các tệp trên đĩa trong thư mục dữ liệu riêng của nó.", facts: [["Nội dung", "Tệp bảng, chỉ mục, nhật kí"], ["Truy cập", "Chỉ qua hệ QTCSDL"]], note: "Người dùng không sửa trực tiếp các tệp này; mọi thay đổi phải đi qua hệ QTCSDL." },
+          csdl: { title: "6. CSDL mymusic", description: "Một cơ sở dữ liệu cụ thể gồm các bảng nhacsi, bannhac, casi, banthuam đã làm quen ở các bài trước.", facts: [["Số bảng", "4 bảng"], ["Khai thác", "Bằng câu lệnh SELECT"]], note: "Kết quả truy vấn quay ngược theo đúng con đường này để hiển thị trên màn hình." }
+        };
+        if (mapDetail && mapNodes.length) {
+          mapNodes.forEach(function (node) {
+            node.addEventListener("click", function () {
+              const info = stopInfo[node.dataset.stop];
+              if (!info) return;
+              mapNodes.forEach(function (item) { item.classList.toggle("selected", item === node); });
+              mapDetail.replaceChildren();
+              const label = document.createElement("span"); label.className = "mini-label"; label.textContent = "Đang xem";
+              const heading = document.createElement("h3"); heading.textContent = info.title;
+              const description = document.createElement("p"); description.textContent = info.description;
+              const list = document.createElement("div"); list.className = "field-list";
+              info.facts.forEach(function (fact) {
+                const chip = document.createElement("div"); chip.className = "field-chip";
+                const code = document.createElement("code"); code.textContent = fact[0];
+                const meaning = document.createElement("span"); meaning.textContent = fact[1];
+                chip.append(code, meaning); list.append(chip);
+              });
+              const note = document.createElement("div"); note.className = "relation-note"; note.textContent = info.note;
+              mapDetail.append(label, heading, description, list, note);
+            });
+          });
+        }
+
+        const stage = document.getElementById("three-stage");
+        const world = document.getElementById("schema-world");
+        const zoom = document.getElementById("zoom-control");
+        const zoomValue = document.getElementById("zoom-value");
+        const readout = document.getElementById("three-readout");
+        const leftButton = document.getElementById("rotate-left");
+        const rightButton = document.getElementById("rotate-right");
+        const resetButton = document.getElementById("reset-3d");
+        let rotateX = -18;
+        let rotateY = 28;
+        let scale = 0.9;
+        let dragging = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        function updateWorld() {
+          if (!world || !readout || !zoomValue) return;
+          world.style.transform = "translate(-50%,-50%) rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) scale(" + scale + ")";
+          zoomValue.textContent = Math.round(scale * 100) + "%";
+          readout.textContent = "Góc X: " + Math.round(rotateX) + "° · Góc Y: " + Math.round(rotateY) + "°";
+        }
+        if (stage && world && zoom && leftButton && rightButton && resetButton) {
+          stage.addEventListener("pointerdown", function (event) { dragging = true; lastX = event.clientX; lastY = event.clientY; if (stage.setPointerCapture) stage.setPointerCapture(event.pointerId); });
+          stage.addEventListener("pointermove", function (event) { if (!dragging) return; rotateY += (event.clientX - lastX) * 0.5; rotateX -= (event.clientY - lastY) * 0.35; rotateX = Math.max(-75, Math.min(75, rotateX)); lastX = event.clientX; lastY = event.clientY; updateWorld(); });
+          stage.addEventListener("pointerup", function () { dragging = false; });
+          stage.addEventListener("pointercancel", function () { dragging = false; });
+          stage.addEventListener("wheel", function (event) { event.preventDefault(); scale = Math.max(0.55, Math.min(1.35, scale + (event.deltaY < 0 ? 0.05 : -0.05))); zoom.value = String(Math.round(scale * 100)); updateWorld(); }, { passive: false });
+          zoom.addEventListener("input", function () { scale = Number(zoom.value) / 100; updateWorld(); });
+          leftButton.addEventListener("click", function () { rotateY -= 25; updateWorld(); });
+          rightButton.addEventListener("click", function () { rotateY += 25; updateWorld(); });
+          resetButton.addEventListener("click", function () { rotateX = -18; rotateY = 28; scale = 0.9; zoom.value = "90"; updateWorld(); });
+          updateWorld();
+        }
+      } catch (error) {
+        console.error("Không thể khởi tạo phần sơ đồ và mô hình 3D:", error);
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const NEWLINE = String.fromCharCode(10);
+      try {
+        const PASSWORD = "Tinhoc@11";
+        const hostInput = document.getElementById("conn-host");
+        const userInput = document.getElementById("conn-user");
+        const passInput = document.getElementById("conn-pass");
+        const portInput = document.getElementById("conn-port");
+        const netSelect = document.getElementById("conn-net");
+        const openButton = document.getElementById("conn-open");
+        const fillButton = document.getElementById("conn-fill");
+        const resetButton = document.getElementById("conn-reset");
+        const logBox = document.getElementById("conn-log");
+        const statusPill = document.getElementById("conn-status");
+        const resultBox = document.getElementById("conn-result");
+
+        function setStatus(text, state) {
+          if (!statusPill) return;
+          statusPill.textContent = "Trạng thái: " + text;
+          statusPill.className = "status-pill " + (state || "");
+        }
+        function writeLog(lines) {
+          if (!logBox) return;
+          logBox.textContent = lines.join(NEWLINE);
+          logBox.scrollTop = 0;
+        }
+        function showDatabases() {
+          if (!resultBox) return;
+          resultBox.replaceChildren();
+          const label = document.createElement("span");
+          label.className = "mini-label";
+          label.textContent = "Vùng danh sách các CSDL đã có";
+          const list = document.createElement("div");
+          list.className = "db-list";
+          const items = [["information_schema", "CSDL hệ thống · 79 bảng"], ["mymusic", "CSDL của bài học · 4 bảng"]];
+          items.forEach(function (item) {
+            const row = document.createElement("div");
+            row.className = "db-item";
+            const name = document.createElement("strong"); name.textContent = item[0];
+            const note = document.createElement("span"); note.textContent = item[1];
+            row.append(name, note); list.append(row);
+          });
+          const hint = document.createElement("p");
+          hint.style.color = "#607485";
+          hint.style.fontSize = "0.9rem";
+          hint.textContent = "Đây chính là vùng bên trái cửa sổ làm việc của HeidiSQL. Bấm vào một CSDL để xem các bảng bên trong (trong bài học, em hãy sang phần Phòng lệnh MySQL để thử truy vấn).";
+          resultBox.append(label, list, hint);
+        }
+        function clearResult() { if (resultBox) resultBox.replaceChildren(); }
+
+        function openConnection() {
+          if (!hostInput || !userInput || !passInput || !portInput || !netSelect) return;
+          const host = hostInput.value.trim();
+          const user = userInput.value.trim();
+          const pass = passInput.value;
+          const port = Number(portInput.value);
+          const prediction = document.querySelector('input[name="conn-predict"]:checked');
+          const lines = [];
+          lines.push("HeidiSQL · Trình quản lí phiên (mô phỏng)");
+          lines.push("Kiểu mạng: " + (netSelect.value === "tcp" ? "MariaDB or MySQL (TCP/IP)" : "MariaDB or MySQL (SSH tunnel)"));
+          lines.push("Đang kết nối tới " + (host || "(trống)") + ":" + (portInput.value || "(trống)") + " với người dùng " + (user || "(trống)"));
+          lines.push("");
+
+          clearResult();
+          if (netSelect.value !== "tcp") {
+            lines.push("LỖI: Chưa cấu hình máy chủ SSH.");
+            lines.push("Gợi ý: với bài học này, MySQL nằm ngay trên máy của em nên hãy chọn kiểu mạng mặc định MariaDB or MySQL (TCP/IP).");
+            setStatus("Kết nối thất bại", "error");
+            writeLog(lines);
+            return;
+          }
+          if (host !== "127.0.0.1" && host.toLowerCase() !== "localhost") {
+            lines.push("LỖI 2005: Unknown MySQL server host " + (host || "(trống)"));
+            lines.push("Gợi ý: MySQL và HeidiSQL được cài trên cùng một máy, hãy nhập 127.0.0.1 hoặc localhost.");
+            setStatus("Sai địa chỉ máy chủ", "error");
+            writeLog(lines);
+            return;
+          }
+          if (!Number.isFinite(port) || port !== 3306) {
+            lines.push("LỖI 2003: Can't connect to MySQL server on " + host + " (10061)");
+            lines.push("Gợi ý: không có dịch vụ nào đang lắng nghe ở cổng " + (portInput.value || "(trống)") + ". Cổng mặc định của MySQL và MariaDB là 3306.");
+            setStatus("Sai cổng", "error");
+            writeLog(lines);
+            if (prediction) {
+              lines.push("");
+              lines.push(prediction.value === "fail" ? "Dự đoán của em chính xác: sai cổng thì không kết nối được." : "So với dự đoán của em: kết quả cho thấy sai cổng thì không kết nối được.");
+              writeLog(lines);
+            }
+            return;
+          }
+          if (user !== "root") {
+            lines.push("LỖI 1045: Access denied for user '" + (user || "") + "'@'localhost'");
+            lines.push("Gợi ý: người dùng có quyền quản trị được tạo khi cài MySQL có tên là root.");
+            setStatus("Sai tên người dùng", "error");
+            writeLog(lines);
+            return;
+          }
+          if (pass !== PASSWORD) {
+            lines.push("LỖI 1045: Access denied for user 'root'@'localhost' (using password: " + (pass ? "YES" : "NO") + ")");
+            lines.push("Gợi ý: mật khẩu của root trong tình huống này là Tinhoc@11 (phân biệt chữ hoa, chữ thường).");
+            setStatus("Sai mật khẩu", "error");
+            writeLog(lines);
+            return;
+          }
+          lines.push("Kết nối thành công.");
+          lines.push("Server version: 5.5.5-10.6.4-MariaDB");
+          lines.push("Uptime: 14 ngày · Server tĩnh: Idle");
+          lines.push("Đã nạp danh sách các CSDL hiện có.");
+          setStatus("Đã kết nối", "ready");
+          writeLog(lines);
+          showDatabases();
+        }
+
+        if (openButton && fillButton && resetButton) {
+          openButton.addEventListener("click", openConnection);
+          fillButton.addEventListener("click", function () {
+            hostInput.value = "127.0.0.1";
+            userInput.value = "root";
+            passInput.value = PASSWORD;
+            portInput.value = "3306";
+            netSelect.value = "tcp";
+            setStatus("Đã điền thông số mẫu", "");
+            writeLog(["Đã điền sẵn thông số đúng. Hãy bấm “Mở kết nối” để xem kết quả,", "hoặc tự sửa một ô để quan sát thông báo lỗi tương ứng."]);
+            clearResult();
+          });
+          resetButton.addEventListener("click", function () {
+            hostInput.value = "127.0.0.1";
+            userInput.value = "";
+            passInput.value = "";
+            portInput.value = "3306";
+            netSelect.value = "tcp";
+            document.querySelectorAll('input[name="conn-predict"]').forEach(function (input) { input.checked = false; });
+            setStatus("Chưa kết nối", "");
+            if (logBox) logBox.textContent = "Nhật kí kết nối sẽ hiển thị tại đây sau khi em bấm “Mở kết nối”.";
+            clearResult();
+          });
+        }
+
+        const loadControl = document.getElementById("load-control");
+        const loadValue = document.getElementById("load-value");
+        const barManual = document.getElementById("bar-manual");
+        const barComputer = document.getElementById("bar-computer");
+        const barErrManual = document.getElementById("bar-err-manual");
+        const barErrComputer = document.getElementById("bar-err-computer");
+        const valueManual = document.getElementById("value-manual");
+        const valueComputer = document.getElementById("value-computer");
+        const valueErrManual = document.getElementById("value-err-manual");
+        const valueErrComputer = document.getElementById("value-err-computer");
+        const chartStatus = document.getElementById("chart-status");
+        const chartReset = document.getElementById("chart-reset");
+
+        function formatHours(hours) {
+          return hours.toFixed(1).replace(".", ",") + " giờ";
+        }
+        function updateChart() {
+          if (!loadControl || !loadValue) return;
+          const n = Number(loadControl.value);
+          const manualHours = n * 2 / 60;
+          const computerHours = n * 5 / 3600;
+          const manualErrors = Math.round(n * 0.015);
+          const computerErrors = Math.round(n * 0.0002);
+          const maxHours = 3000 * 2 / 60;
+          loadValue.textContent = String(n);
+          if (barManual) barManual.style.width = (manualHours / maxHours * 100) + "%";
+          if (barComputer) barComputer.style.width = (computerHours / maxHours * 100) + "%";
+          if (barErrManual) barErrManual.style.width = (manualErrors / 45 * 100) + "%";
+          if (barErrComputer) barErrComputer.style.width = Math.max(computerErrors / 45 * 100, 1) + "%";
+          if (valueManual) valueManual.textContent = formatHours(manualHours);
+          if (valueComputer) valueComputer.textContent = formatHours(computerHours);
+          if (valueErrManual) valueErrManual.textContent = manualErrors + " lỗi";
+          if (valueErrComputer) valueErrComputer.textContent = computerErrors + " lỗi";
+          if (chartStatus) {
+            const ratio = computerHours > 0 ? Math.round(manualHours / computerHours) : 0;
+            chartStatus.textContent = "Với " + n + " giao dịch: cách thủ công cần " + formatHours(manualHours) + ", hệ QTCSDL cần " + formatHours(computerHours) + " — nhanh hơn khoảng " + ratio + " lần, và số lỗi giảm từ " + manualErrors + " xuống " + computerErrors + ".";
+          }
+        }
+        if (loadControl) {
+          loadControl.addEventListener("input", updateChart);
+          updateChart();
+        }
+        if (chartReset && loadControl) {
+          chartReset.addEventListener("click", function () {
+            loadControl.value = "300";
+            updateChart();
+          });
+        }
+
+        const conclusionButton = document.getElementById("check-conclusion");
+        const conclusion = document.getElementById("sim-conclusion");
+        const conclusionFeedback = document.getElementById("conclusion-feedback");
+        if (conclusionButton && conclusion && conclusionFeedback) {
+          conclusionButton.addEventListener("click", function () {
+            const raw = conclusion.value.trim().toLowerCase();
+            const text = raw.normalize ? raw.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d") : raw;
+            if (!text) {
+              conclusionFeedback.className = "feedback show hint";
+              conclusionFeedback.textContent = "Em hãy viết ít nhất một câu kết luận trước khi gửi.";
+              return;
+            }
+            const keywords = ["nhanh", "thoi gian", "sai sot", "loi", "tang", "khoi luong", "nhieu", "giam"];
+            const hasIdea = keywords.some(function (word) { return text.indexOf(word) !== -1; });
+            conclusionFeedback.className = "feedback show " + (hasIdea ? "success" : "hint");
+            conclusionFeedback.textContent = hasIdea ? "Kết luận hợp lí. Thời gian xử lí thủ công tăng tỉ lệ với số giao dịch, còn máy tính xử lí mỗi giao dịch trong vài giây và gần như không nhầm lẫn, nên khối lượng càng lớn thì khoảng cách càng xa." : "Gợi ý: hãy so sánh cột thời gian và cột sai sót khi kéo thanh trượt từ 50 lên 3000 giao dịch, rồi nêu nhận xét về xu hướng.";
+          });
+        }
+      } catch (error) {
+        console.error("Không thể khởi tạo phần thực hành và biểu đồ:", error);
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const engineStatus = document.getElementById("engine-status");
+      const runStatus = document.getElementById("run-status");
+      const dbStatus = document.getElementById("db-status");
+      const editor = document.getElementById("sql-editor");
+      const output = document.getElementById("sql-output");
+      const runButton = document.getElementById("sql-run");
+      const stopButton = document.getElementById("sql-stop");
+      const resetButton = document.getElementById("sql-reset");
+      const clearButton = document.getElementById("sql-clear");
+      const sampleButtons = Array.from(document.querySelectorAll(".sample-btn"));
+      let sqlWorker = null;
+      let activeReject = null;
+      let activeRun = false;
+      let defaultCode = "";
+      let currentDb = "";
+
+      try {
+        if (!engineStatus || !runStatus || !dbStatus || !editor || !output || !runButton || !stopButton || !resetButton || !clearButton) return;
+        defaultCode = editor.value.trim();
+
+        function createSqlEngine() {
+
+          const databases = ["information_schema", "mymusic"];
+          const tables = {
+            bannhac: [
+              {idBannhac:1,tenBannhac:"Du kích sông Thao",idNhacsi:1},
+              {idBannhac:2,tenBannhac:"Trường ca sông Lô",idNhacsi:2},
+              {idBannhac:3,tenBannhac:"Tình ca",idNhacsi:3},
+              {idBannhac:4,tenBannhac:"Xa khơi",idNhacsi:4},
+              {idBannhac:5,tenBannhac:"Việt Nam quê hương tôi",idNhacsi:1},
+              {idBannhac:6,tenBannhac:"Tiến về Hà Nội",idNhacsi:2},
+              {idBannhac:7,tenBannhac:"Nhạc rừng",idNhacsi:3},
+              {idBannhac:8,tenBannhac:"Tiếng hát giữa rừng Pác Bó",idNhacsi:4}
+            ],
+            nhacsi: [
+              {idNhacsi:1,tenNhacsi:"Đỗ Nhuận"},{idNhacsi:2,tenNhacsi:"Văn Cao"},{idNhacsi:3,tenNhacsi:"Hoàng Việt"},{idNhacsi:4,tenNhacsi:"Nguyễn Tài Tuệ"}
+            ],
+            casi: [
+              {idCasi:1,tenCasi:"Trần Khánh"},{idCasi:2,tenCasi:"Lê Dung"},{idCasi:3,tenCasi:"Tấn Nhân"},{idCasi:4,tenCasi:"Quốc Hương"}
+            ],
+            banthuam: [
+              {idBannhac:1,idCasi:1},{idBannhac:1,idCasi:2},{idBannhac:5,idCasi:1},{idBannhac:5,idCasi:3},{idBannhac:2,idCasi:4},{idBannhac:3,idCasi:2}
+            ]
+          };
+          const fieldTypes = {
+            idBannhac: "int(11)", idNhacsi: "int(11)", idCasi: "int(11)",
+            tenBannhac: "varchar(255)", tenNhacsi: "varchar(255)", tenCasi: "varchar(255)"
+          };
+          function findTable(name) {
+            const plain = name.includes(".") ? name.split(".").pop() : name;
+            const dbPart = name.includes(".") ? name.split(".")[0].toLowerCase() : "";
+            if (dbPart && dbPart !== "mymusic") throw new Error("Phòng thực hành chỉ có dữ liệu của CSDL mymusic.");
+            const key = Object.keys(tables).find(function (item) { return item.toLowerCase() === plain.toLowerCase(); });
+            if (!key) throw new Error("Không tìm thấy bảng " + plain + " trong CSDL mymusic.");
+            return key;
+          }
+          function getValue(row, field) {
+            const key = Object.keys(row).find(function (name) { return name.toLowerCase() === field.toLowerCase(); });
+            if (key !== undefined) return row[key];
+            const shortName = field.includes(".") ? field.split(".").pop() : field;
+            const shortKey = Object.keys(row).find(function (name) { return name.toLowerCase() === shortName.toLowerCase(); });
+            if (shortKey !== undefined) return row[shortKey];
+            throw new Error("Không tìm thấy trường " + field + ".");
+          }
+          function expandRow(table, row) {
+            const result = {};
+            Object.keys(row).forEach(function (key) { result[key] = row[key]; result[table + "." + key] = row[key]; });
+            return result;
+          }
+          function runSelect(cleaned, db) {
+            const pattern = /^SELECT\s+(.+?)\s+FROM\s+([A-Za-z][A-Za-z0-9_.]*)(?:\s+JOIN\s+([A-Za-z][A-Za-z0-9_.]*)\s+ON\s+([A-Za-z0-9_.]+)\s*=\s*([A-Za-z0-9_.]+))?(?:\s+WHERE\s+([A-Za-z0-9_.]+)\s*=\s*(?:'([^']*)'|"([^"]*)"|([A-Za-z0-9_.-]+)))?(?:\s+ORDER\s+BY\s+([A-Za-z0-9_.]+)(?:\s+(ASC|DESC))?)?$/i;
+            const match = cleaned.match(pattern);
+            if (!match) throw new Error("Cú pháp chưa đúng. Gợi ý: SELECT trường FROM bảng [WHERE trường = giá trị] [ORDER BY trường];");
+            const qualified = match[2].includes(".");
+            if (!qualified && !db) throw new Error("Chưa chọn CSDL. Hãy gõ USE mymusic; trước, hoặc viết đầy đủ dạng mymusic.bannhac.");
+            const base = findTable(match[2]);
+            const join = match[3] ? findTable(match[3]) : null;
+            let rows = tables[base].map(function (row) { return expandRow(base, row); });
+            if (join) {
+              const leftField = match[4];
+              const rightField = match[5];
+              const joined = [];
+              rows.forEach(function (left) {
+                tables[join].forEach(function (rightRaw) {
+                  const right = expandRow(join, rightRaw);
+                  const combined = Object.assign({}, left, right);
+                  if (String(getValue(combined, leftField)) === String(getValue(combined, rightField))) joined.push(combined);
+                });
+              });
+              rows = joined;
+            }
+            if (match[6]) {
+              const whereField = match[6];
+              const target = match[7] !== undefined ? match[7] : (match[8] !== undefined ? match[8] : match[9]);
+              rows = rows.filter(function (row) { return String(getValue(row, whereField)) === String(target); });
+            }
+            if (match[10]) {
+              const orderField = match[10];
+              const direction = (match[11] || "ASC").toUpperCase() === "DESC" ? -1 : 1;
+              rows.sort(function (a, b) { return String(getValue(a, orderField)).localeCompare(String(getValue(b, orderField)), "vi", { numeric: true }) * direction; });
+            }
+            let columns;
+            if (match[1].trim() === "*") {
+              columns = Object.keys(tables[base][0]);
+              if (join) columns = columns.concat(Object.keys(tables[join][0]).filter(function (name) { return columns.indexOf(name) === -1; }));
+            } else {
+              columns = match[1].split(",").map(function (field) { return field.trim(); });
+            }
+            const projected = rows.map(function (row) {
+              const item = {};
+              columns.forEach(function (field) { item[field] = getValue(row, field); });
+              return item;
+            });
+            return { kind: "table", columns: columns, rows: projected, db: db };
+          }
+          function run(query, db) {
+            const cleaned = String(query || "").trim().replace(/;\s*$/, "").replace(/\s+/g, " ");
+            if (!cleaned) throw new Error("Hãy nhập một câu lệnh SQL.");
+            if (cleaned.indexOf(";") !== -1) throw new Error("Mỗi lần chỉ chạy được một câu lệnh. Hãy bỏ bớt dấu chấm phẩy ở giữa.");
+            if (/^SHOW\s+DATABASES$/i.test(cleaned)) {
+              return { kind: "table", columns: ["Database"], rows: databases.map(function (name) { return { Database: name }; }), db: db };
+            }
+            if (/^USE\s+[A-Za-z_][A-Za-z0-9_]*$/i.test(cleaned)) {
+              const name = cleaned.split(/\s+/)[1];
+              const found = databases.find(function (item) { return item.toLowerCase() === name.toLowerCase(); });
+              if (!found) throw new Error("Không có CSDL tên " + name + ". Hãy gõ SHOW DATABASES; để xem danh sách.");
+              if (found !== "mymusic") throw new Error("information_schema là CSDL hệ thống. Phòng thực hành chỉ hỗ trợ truy vấn trên mymusic.");
+              return { kind: "message", message: "Database changed", db: found };
+            }
+            if (/^SHOW\s+TABLES$/i.test(cleaned)) {
+              if (!db) throw new Error("Chưa chọn CSDL. Hãy gõ USE mymusic; trước.");
+              return { kind: "table", columns: ["Tables_in_" + db], rows: Object.keys(tables).map(function (name) { const item = {}; item["Tables_in_" + db] = name; return item; }), db: db };
+            }
+            if (/^(DESCRIBE|DESC)\s+[A-Za-z][A-Za-z0-9_.]*$/i.test(cleaned)) {
+              const target = cleaned.split(/\s+/)[1];
+              if (!target.includes(".") && !db) throw new Error("Chưa chọn CSDL. Hãy gõ USE mymusic; trước.");
+              const key = findTable(target);
+              const rows = Object.keys(tables[key][0]).map(function (field, index) {
+                return { Field: field, Type: fieldTypes[field] || "varchar(255)", Key: index === 0 ? "PRI" : "" };
+              });
+              return { kind: "table", columns: ["Field", "Type", "Key"], rows: rows, db: db };
+            }
+            if (/^SELECT\s/i.test(cleaned)) return runSelect(cleaned, db);
+            throw new Error("Phòng thực hành hỗ trợ các lệnh: SHOW DATABASES, USE, SHOW TABLES, DESCRIBE và SELECT.");
+          }
+          return function (code, db) { return run(code, db); };
+        }
+        const workerSource = "self.onmessage = function (event) { var payload = event.data || {}; try { var engine = (" + createSqlEngine.toString() + ")(); self.postMessage({ ok: true, result: engine(payload.code, payload.db || '') }); } catch (error) { self.postMessage({ ok: false, error: error && error.message ? error.message : String(error) }); } };";
+        const localEngine = createSqlEngine();
+        let workerAvailable = false;
+        try {
+          if (typeof Worker === "function" && typeof Blob === "function" && window.URL && typeof URL.createObjectURL === "function") {
+            const probe = new Worker(URL.createObjectURL(new Blob(["self.close();"], { type: "text/javascript" })));
+            probe.terminate();
+            workerAvailable = true;
+          }
+        } catch (probeError) {
+          workerAvailable = false;
+          console.warn("Trình duyệt chặn Web Worker, phòng lệnh chuyển sang chế độ dự phòng.", probeError);
+        }
+
+        function createWorker() {
+          if (sqlWorker) sqlWorker.terminate();
+          const blob = new Blob([workerSource], { type: "text/javascript" });
+          sqlWorker = new Worker(URL.createObjectURL(blob));
+          return sqlWorker;
+        }
+        function setEngine(text, state) { engineStatus.textContent = "Bộ máy: " + text; engineStatus.className = "status-pill " + state; }
+        function setRun(text, state) { runStatus.textContent = "Lượt chạy: " + text; runStatus.className = "status-pill " + state; }
+        function setDb(name) { currentDb = name; dbStatus.textContent = "CSDL: " + (name || "chưa chọn"); dbStatus.className = "status-pill " + (name ? "ready" : ""); }
+        function clearOutput() {
+          output.replaceChildren();
+          const pre = document.createElement("pre");
+          pre.className = "code-placeholder";
+          pre.textContent = "Kết quả sẽ hiển thị tại đây.";
+          output.append(pre);
+        }
+        function showError(message) {
+          output.replaceChildren();
+          const pre = document.createElement("pre");
+          pre.className = "error-output";
+          pre.textContent = "Lỗi: " + message;
+          output.append(pre);
+        }
+        function showMessage(message) {
+          output.replaceChildren();
+          const pre = document.createElement("pre");
+          pre.className = "code-placeholder";
+          pre.textContent = message;
+          output.append(pre);
+        }
+        function showResult(result) {
+          output.replaceChildren();
+          if (!result.rows.length) {
+            showMessage("Câu lệnh chạy thành công nhưng không có bản ghi phù hợp (Empty set).");
+            return;
+          }
+          const table = document.createElement("table");
+          table.className = "result-table";
+          const thead = document.createElement("thead");
+          const headRow = document.createElement("tr");
+          result.columns.forEach(function (column) { const th = document.createElement("th"); th.textContent = column; headRow.append(th); });
+          thead.append(headRow); table.append(thead);
+          const tbody = document.createElement("tbody");
+          result.rows.forEach(function (row) {
+            const tr = document.createElement("tr");
+            result.columns.forEach(function (column) { const td = document.createElement("td"); td.textContent = String(row[column]); tr.append(td); });
+            tbody.append(tr);
+          });
+          table.append(tbody);
+          output.append(table);
+        }
+
+        async function runSql() {
+          let timeoutId = null;
+          try {
+            const code = editor.value.trim();
+            if (!code) throw new Error("Hãy nhập câu lệnh SQL trước khi chạy.");
+            if (!workerAvailable && typeof localEngine !== "function") {
+              throw new Error("Không khởi tạo được bộ chạy câu lệnh. Hãy tải lại trang hoặc dùng Chrome, Edge, Firefox phiên bản mới.");
+            }
+            activeRun = true;
+            runButton.disabled = true;
+            stopButton.disabled = false;
+            runButton.setAttribute("aria-busy", "true");
+            setRun("Đang chạy", "running");
+            output.replaceChildren();
+            const waiting = document.createElement("pre");
+            waiting.className = "code-placeholder";
+            waiting.textContent = "Đang thực hiện câu lệnh...";
+            output.append(waiting);
+            let result;
+            if (workerAvailable) {
+              const worker = createWorker();
+              result = await new Promise(function (resolve, reject) {
+                activeReject = reject;
+                worker.onmessage = function (event) {
+                  if (event.data && event.data.ok) resolve(event.data.result);
+                  else reject(new Error(event.data && event.data.error ? event.data.error : "Không nhận được kết quả hợp lệ."));
+                };
+                worker.onerror = function () { reject(new Error("Bộ chạy gặp lỗi nội bộ.")); };
+                timeoutId = window.setTimeout(function () {
+                  if (sqlWorker) { sqlWorker.terminate(); sqlWorker = null; }
+                  reject(new Error("Quá thời gian 4 giây. Hãy kiểm tra lại câu lệnh, có thể nó quá phức tạp hoặc gây lặp vô hạn."));
+                }, 4000);
+                worker.postMessage({ code: code, db: currentDb });
+              });
+            } else {
+              result = localEngine(code, currentDb);
+            }
+            if (result.kind === "message") {
+              showMessage(result.message);
+              setDb(result.db || currentDb);
+              setRun("Thành công", "ready");
+            } else {
+              showResult(result);
+              setRun("Thành công · " + result.rows.length + " dòng", "ready");
+            }
+          } catch (error) {
+            const message = error && error.message ? error.message : String(error);
+            showError(message);
+            setRun(message.indexOf("Quá thời gian") === 0 ? "Quá thời gian" : "Lỗi mã", "error");
+          } finally {
+            if (timeoutId) window.clearTimeout(timeoutId);
+            activeReject = null;
+            activeRun = false;
+            runButton.disabled = false;
+            stopButton.disabled = true;
+            runButton.removeAttribute("aria-busy");
+          }
+        }
+        function stopRun() {
+          if (!activeRun) return;
+          if (sqlWorker) { sqlWorker.terminate(); sqlWorker = null; }
+          if (activeReject) activeReject(new Error("Đã dừng theo yêu cầu của em."));
+        }
+
+        sampleButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            editor.value = button.dataset.query || "";
+            setRun("Đã nạp lệnh mẫu", "ready");
+          });
+        });
+        runButton.addEventListener("click", runSql);
+        stopButton.addEventListener("click", stopRun);
+        resetButton.addEventListener("click", function () {
+          editor.value = defaultCode;
+          setRun("Đã đặt lại mã", "ready");
+          setDb("");
+          clearOutput();
+        });
+        clearButton.addEventListener("click", function () {
+          clearOutput();
+          setRun("Chưa chạy", "");
+        });
+
+        setDb("");
+        runButton.disabled = false;
+        if (workerAvailable) {
+          setEngine("Sẵn sàng", "ready");
+        } else {
+          setEngine("Sẵn sàng (chế độ dự phòng)", "running");
+          setRun("Chưa chạy", "");
+          showMessage("Trình duyệt đang chặn vùng chạy cô lập (thường gặp khi mở tệp trực tiếp bằng file://). Phòng lệnh vẫn chạy được ở chế độ dự phòng ngay trong trang.");
+        }
+      } catch (error) {
+        if (engineStatus) { engineStatus.textContent = "Bộ máy: Lỗi tải"; engineStatus.className = "status-pill error"; }
+        if (runStatus) { runStatus.textContent = "Lượt chạy: Không sẵn sàng"; runStatus.className = "status-pill error"; }
+        if (runButton) runButton.disabled = false;
+        if (stopButton) stopButton.disabled = true;
+        if (output) output.textContent = "Không thể khởi tạo phòng lệnh MySQL. Hãy tải lại trang hoặc thử trình duyệt khác.";
+        console.error("Không thể khởi tạo phòng lệnh MySQL:", error);
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const quizData = [
+          {
+            question: "Lợi ích nổi bật của việc quản trị CSDL trên máy tính so với quản lí thủ công là gì?",
+            options: [
+              "Giúp giảm số lượng dữ liệu cần lưu trữ.",
+              "Tiện lợi, kịp thời, nhanh chóng và hạn chế sai sót.",
+              "Không cần người quản trị và không cần sao lưu dữ liệu.",
+              "Làm cho dữ liệu không bao giờ thay đổi."
+            ],
+            answer: 1,
+            correct: "Đúng! Đây chính là bốn lợi ích được nhấn mạnh trong bài: tiện lợi, kịp thời, nhanh chóng, hạn chế sai sót.",
+            hint: "Hãy nhớ lại ví dụ ngân hàng: khách hàng giao dịch từ xa, số dư cập nhật ngay, tìm kiếm nhanh và ít nhầm lẫn."
+          },
+          {
+            question: "Khi cài đặt MySQL, chương trình yêu cầu nhập mật khẩu cho người dùng nào?",
+            options: [
+              "admin",
+              "guest",
+              "root",
+              "mysql.exe"
+            ],
+            answer: 2,
+            correct: "Chính xác! root là người dùng có quyền quản trị cao nhất của MySQL, tương tự tài khoản administrator của Windows.",
+            hint: "Đó là tài khoản quản trị cao nhất, cùng tên với tài khoản quản trị trên các hệ điều hành họ Unix."
+          },
+          {
+            question: "Trong cửa sổ Trình quản lí phiên của HeidiSQL, ô Cổng thường được đặt giá trị mặc định nào?",
+            options: [
+              "80",
+              "3306",
+              "8080",
+              "127"
+            ],
+            answer: 1,
+            correct: "Đúng! 3306 là cổng mặc định để các phần mềm giao tiếp với MySQL hoặc MariaDB.",
+            hint: "Đây là cổng mặc định của MySQL/MariaDB, không phải cổng của web (80) hay 8080."
+          },
+          {
+            question: "Phát biểu nào đúng về mysql.exe và HeidiSQL?",
+            options: [
+              "Cả hai đều là hệ QTCSDL, thay thế cho MySQL Server.",
+              "mysql.exe dùng giao diện dòng lệnh, HeidiSQL dùng giao diện đồ họa; cả hai đều là phần mềm khách kết nối tới máy chủ CSDL.",
+              "HeidiSQL chỉ làm việc được với MySQL và là phần mềm thương mại có phí.",
+              "mysql.exe chỉ dùng để cài đặt MySQL, không chạy được câu truy vấn."
+            ],
+            answer: 1,
+            correct: "Chính xác! Cả hai đều là phần mềm khách; khác nhau ở giao diện dòng lệnh và giao diện đồ họa. HeidiSQL còn là phần mềm mã nguồn mở, miễn phí và làm việc được với nhiều hệ QTCSDL.",
+            hint: "Hãy phân biệt hệ QTCSDL (MySQL Server) với phần mềm khách dùng để giao tiếp với nó."
+          },
+          {
+            question: "Cần gõ câu truy vấn nào trong cửa sổ lệnh MySQL để đọc toàn bộ thông tin bảng nhacsi trong CSDL mymusic?",
+            options: [
+              "SHOW nhacsi;",
+              "OPEN TABLE mymusic.nhacsi;",
+              "SELECT * FROM mymusic.nhacsi;",
+              "USE nhacsi;"
+            ],
+            answer: 2,
+            correct: "Đúng! SELECT * FROM mymusic.nhacsi; đọc toàn bộ các trường của mọi bản ghi. Nếu đã gõ USE mymusic; thì chỉ cần SELECT * FROM nhacsi;",
+            hint: "Dấu * nghĩa là lấy tất cả các trường; cần chỉ rõ tên CSDL và tên bảng sau từ khóa FROM."
+          }
+        ];
+        const question = document.getElementById("quiz-question");
+        const options = document.getElementById("quiz-options");
+        const feedback = document.getElementById("quiz-feedback");
+        const nextButton = document.getElementById("quiz-next");
+        const retryButtons = [document.getElementById("quiz-retry"), document.getElementById("quiz-retry-2")];
+        const quizCard = document.getElementById("quiz-card");
+        const resultCard = document.getElementById("quiz-result");
+        const count = document.getElementById("quiz-count");
+        const progressFill = document.getElementById("quiz-progress-fill");
+        const progress = document.querySelector(".quiz-progress");
+        const scoreText = document.getElementById("quiz-score");
+        const resultTitle = document.getElementById("quiz-result-title");
+        const resultText = document.getElementById("quiz-result-text");
+        const summaryScore = document.getElementById("summary-score");
+        const summaryMessage = document.getElementById("summary-message");
+        const letters = ["A", "B", "C", "D"];
+        let current = 0;
+        let score = 0;
+        let answered = false;
+
+        function renderQuestion() {
+          if (!question || !options || !feedback || !nextButton || !count || !progressFill || !progress) return;
+          const item = quizData[current];
+          question.textContent = "Câu " + (current + 1) + ". " + item.question;
+          options.replaceChildren();
+          item.options.forEach(function (text, index) {
+            const label = document.createElement("label");
+            label.className = "quiz-option";
+            const input = document.createElement("input");
+            input.type = "radio";
+            input.name = "quiz-answer";
+            input.value = String(index);
+            const letter = document.createElement("span");
+            letter.className = "option-letter";
+            letter.textContent = letters[index];
+            const copy = document.createElement("span");
+            copy.textContent = text;
+            label.append(input, letter, copy);
+            options.append(label);
+          });
+          count.textContent = "Câu " + (current + 1) + "/" + quizData.length;
+          progressFill.style.width = ((current + 1) / quizData.length * 100) + "%";
+          progress.setAttribute("aria-valuenow", String(current + 1));
+          feedback.className = "quiz-feedback";
+          feedback.textContent = "Chọn một phương án để nhận phản hồi.";
+          nextButton.disabled = true;
+          nextButton.textContent = current === quizData.length - 1 ? "Xem kết quả" : "Câu tiếp theo";
+          answered = false;
+        }
+        function selectAnswer(event) {
+          const input = event.target.closest('input[name="quiz-answer"]');
+          if (!input || answered) return;
+          answered = true;
+          const chosen = Number(input.value);
+          const item = quizData[current];
+          Array.from(options.querySelectorAll("input")).forEach(function (control) { control.disabled = true; });
+          Array.from(options.querySelectorAll(".quiz-option")).forEach(function (label, index) {
+            if (index === item.answer) label.classList.add("correct");
+            if (index === chosen && chosen !== item.answer) label.classList.add("wrong");
+          });
+          if (chosen === item.answer) {
+            score += 1;
+            feedback.className = "quiz-feedback show correct";
+            feedback.textContent = item.correct;
+          } else {
+            feedback.className = "quiz-feedback show wrong";
+            feedback.textContent = "Chưa đúng. " + item.hint + " Đáp án đúng là " + letters[item.answer] + ".";
+          }
+          nextButton.disabled = false;
+        }
+        function showResult() {
+          if (!quizCard || !resultCard || !scoreText || !resultTitle || !resultText) return;
+          quizCard.hidden = true;
+          resultCard.classList.add("show");
+          scoreText.textContent = score + "/" + quizData.length;
+          resultTitle.textContent = score === 5 ? "Xuất sắc!" : score >= 4 ? "Làm rất tốt!" : score >= 3 ? "Đã nắm được ý chính" : "Cần ôn lại một chút";
+          resultText.textContent = score >= 4 ? "Em đã nắm vững lợi ích của quản trị CSDL trên máy tính và cách kết nối MySQL bằng HeidiSQL." : "Hãy xem lại phần lợi ích, tài khoản root, cổng 3306 và vai trò của mysql.exe, HeidiSQL rồi làm lại nhé.";
+          if (summaryScore) summaryScore.textContent = score + "/" + quizData.length;
+          if (summaryMessage) summaryMessage.textContent = resultText.textContent;
+        }
+        function nextQuestion() {
+          if (!answered) return;
+          if (current < quizData.length - 1) { current += 1; renderQuestion(); }
+          else showResult();
+        }
+        function retryQuiz() {
+          current = 0;
+          score = 0;
+          answered = false;
+          if (resultCard) resultCard.classList.remove("show");
+          if (quizCard) quizCard.hidden = false;
+          if (summaryScore) summaryScore.textContent = "Chưa hoàn thành";
+          if (summaryMessage) summaryMessage.textContent = "Hãy hoàn thành 5 câu luyện tập để cập nhật kết quả tại đây.";
+          renderQuestion();
+        }
+        if (options && nextButton) {
+          options.addEventListener("change", selectAnswer);
+          nextButton.addEventListener("click", nextQuestion);
+          retryButtons.forEach(function (button) { if (button) button.addEventListener("click", retryQuiz); });
+          renderQuestion();
+        }
+      } catch (error) {
+        console.error("Không thể khởi tạo phần luyện tập:", error);
+      }
+    });
+  </script>
+</body>
+</html>
