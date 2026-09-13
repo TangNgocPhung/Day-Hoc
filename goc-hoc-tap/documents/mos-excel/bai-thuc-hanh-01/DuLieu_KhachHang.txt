@@ -1,0 +1,21 @@
+﻿Ma KH	Ten khach hang	Dien thoai	Thanh pho
+KH001	Nguyễn Văn An	0989556300	TP HCM
+KH002	Trần Thị Bình	0950821670	Bình Dương
+KH003	Lê Hoàng Cường	0912634789	Đồng Nai
+KH004	Phạm Thu Dung	0938281047	TP HCM
+KH005	Võ Minh Đức	0935139968	Long An
+KH006	Đặng Kim Giang	0962918645	TP HCM
+KH007	Bùi Thanh Hà	0990801554	Bình Dương
+KH008	Hoàng Gia Khánh	0996145723	Đồng Nai
+KH009	Ngô Bảo Lâm	0987438238	TP HCM
+KH010	Đỗ Thị Mai	0923466434	Long An
+KH011	Nguyễn Văn An	0915651615	TP HCM
+KH012	Trần Thị Bình	0929643919	Bình Dương
+KH013	Lê Hoàng Cường	0938621040	Đồng Nai
+KH014	Phạm Thu Dung	0969262721	TP HCM
+KH015	Võ Minh Đức	0944665427	Long An
+KH016	Đặng Kim Giang	0911285166	TP HCM
+KH017	Bùi Thanh Hà	0991917530	Bình Dương
+KH018	Hoàng Gia Khánh	0954151649	Đồng Nai
+KH019	Ngô Bảo Lâm	0949772036	TP HCM
+KH020	Đỗ Thị Mai	0961830854	Long An
