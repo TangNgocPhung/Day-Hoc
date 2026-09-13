@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Phiếu bài tập tự chấm Bài 12 – Hệ quản trị cơ sở dữ liệu và hệ cơ sở dữ liệu, Tin học 11.">
+  <meta name="theme-color" content="#173c73">
+  <title>Bài tập Bài 12 – Hệ QTCSDL và Hệ CSDL | Tin học 11</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173c73'/%3E%3Cellipse cx='32' cy='18' rx='18' ry='8' fill='%23ffd166'/%3E%3Cpath d='M14 18v14c0 4.4 8.1 8 18 8s18-3.6 18-8V18M14 32v14c0 4.4 8.1 8 18 8s18-3.6 18-8V32' fill='none' stroke='%23fff' stroke-width='4'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --navy: #173c73;
+      --navy-deep: #0c284f;
+      --blue: #2876c8;
+      --sky: #eaf4ff;
+      --yellow: #ffd166;
+      --yellow-soft: #fff6d6;
+      --paper: #ffffff;
+      --page: #eef4fa;
+      --ink: #172338;
+      --muted: #5e6d82;
+      --line: #d7e1ed;
+      --success: #16794b;
+      --success-soft: #e9f8f0;
+      --danger: #b53737;
+      --danger-soft: #fff0ef;
+      --shadow: 0 18px 50px rgba(20, 51, 91, .13);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 7% 4%, rgba(255, 209, 102, .28) 0 7rem, transparent 7.1rem),
+        radial-gradient(circle at 96% 15%, rgba(40, 118, 200, .12) 0 10rem, transparent 10.1rem),
+        var(--page);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    button, input { font: inherit; }
+
+    button { touch-action: manipulation; }
+
+    .page-shell {
+      width: min(980px, calc(100% - 28px));
+      margin: 28px auto 80px;
+    }
+
+    .top-card {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background: linear-gradient(130deg, var(--navy-deep), var(--navy) 64%, #20558f);
+      border-radius: 28px;
+      padding: clamp(24px, 5vw, 46px);
+      box-shadow: var(--shadow);
+    }
+
+    .top-card::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -85px;
+      top: -90px;
+      border: 34px solid rgba(255, 255, 255, .07);
+      border-radius: 50%;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 14px;
+      padding: 6px 11px;
+      color: var(--navy-deep);
+      background: var(--yellow);
+      border-radius: 999px;
+      font-size: .84rem;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow svg { width: 18px; height: 18px; }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 750px;
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.65rem);
+      line-height: 1.08;
+      letter-spacing: -.035em;
+    }
+
+    .subtitle {
+      position: relative;
+      z-index: 1;
+      max-width: 690px;
+      margin: 17px 0 0;
+      color: #dbeaff;
+      font-size: 1.05rem;
+    }
+
+    .info-card {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 14px;
+      margin: -18px 26px 24px;
+      padding: 22px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 28px rgba(20, 51, 91, .09);
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .field input {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 13px;
+      color: var(--ink);
+      background: #f8fbff;
+      border: 1px solid #c9d7e6;
+      border-radius: 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+
+    .field input:focus {
+      background: #fff;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(40, 118, 200, .13);
+    }
+
+    .progress-panel {
+      position: sticky;
+      top: 10px;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 0 0 20px;
+      padding: 13px 18px;
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(20, 51, 91, .08);
+      backdrop-filter: blur(10px);
+    }
+
+    .progress-copy { flex: 0 0 auto; font-weight: 800; color: var(--navy); }
+    .progress-track { flex: 1; height: 10px; overflow: hidden; background: #e3ebf4; border-radius: 999px; }
+    .progress-bar { width: 0; height: 100%; background: linear-gradient(90deg, var(--yellow), #ffb43c); border-radius: inherit; transition: width .25s ease; }
+    .save-state { flex: 0 0 auto; color: var(--muted); font-size: .84rem; }
+
+    .quiz-intro {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      margin: 0 0 18px;
+      padding: 16px 18px;
+      background: var(--yellow-soft);
+      border: 1px solid #f0d16f;
+      border-radius: 14px;
+    }
+
+    .quiz-intro svg { flex: 0 0 auto; width: 24px; height: 24px; color: #8a5b00; }
+    .quiz-intro p { margin: 0; color: #624a18; }
+
+    .question-card {
+      margin-bottom: 18px;
+      padding: clamp(19px, 4vw, 28px);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 7px 22px rgba(20, 51, 91, .055);
+      scroll-margin-top: 90px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .question-card.missing {
+      border-color: #df6b57;
+      box-shadow: 0 0 0 4px rgba(181, 55, 55, .1);
+    }
+
+    .question-heading {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 13px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    .question-number {
+      display: grid;
+      place-items: center;
+      min-width: 58px;
+      height: 36px;
+      padding: 0 9px;
+      color: #fff;
+      background: var(--navy);
+      border-radius: 10px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    .question-text { margin: 3px 0 0; font-size: 1.05rem; font-weight: 700; }
+    .question-context { margin: 12px 0 -2px; color: var(--navy); font-weight: 700; }
+
+    .options { display: grid; gap: 10px; }
+
+    .option {
+      position: relative;
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 11px;
+      align-items: start;
+      min-height: 54px;
+      padding: 13px 15px;
+      background: #f8fbff;
+      border: 1.5px solid #d6e1ed;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform .15s, border-color .15s, background .15s, box-shadow .15s;
+    }
+
+    .option:hover { transform: translateY(-1px); border-color: #8bb7e5; background: #f0f7ff; }
+    .option:focus-within { box-shadow: 0 0 0 4px rgba(40, 118, 200, .13); }
+    .option input { position: absolute; opacity: 0; pointer-events: none; }
+
+    .letter {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      color: var(--navy);
+      background: #fff;
+      border: 1.5px solid #aebfd2;
+      border-radius: 50%;
+      font-weight: 800;
+      transition: color .15s, background .15s, border-color .15s;
+    }
+
+    .option-text { padding-top: 2px; }
+    .option:has(input:checked) { border-color: var(--blue); background: var(--sky); box-shadow: inset 4px 0 0 var(--blue); }
+    .option:has(input:checked) .letter { color: #fff; background: var(--blue); border-color: var(--blue); }
+
+    .graded .option { cursor: default; }
+    .graded .option:hover { transform: none; }
+    .graded .option.correct { border-color: #55a97d; background: var(--success-soft); box-shadow: inset 4px 0 0 var(--success); }
+    .graded .option.correct .letter { color: #fff; background: var(--success); border-color: var(--success); }
+    .graded .option.wrong { border-color: #e19a94; background: var(--danger-soft); box-shadow: inset 4px 0 0 var(--danger); }
+    .graded .option.wrong .letter { color: #fff; background: var(--danger); border-color: var(--danger); }
+
+    .explanation {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      color: #285340;
+      background: var(--success-soft);
+      border-left: 4px solid var(--success);
+      border-radius: 0 12px 12px 0;
+    }
+
+    .graded .explanation { display: block; }
+    .explanation strong { color: var(--success); }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 27px 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 49px;
+      padding: 11px 20px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, background .15s;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:focus-visible { outline: 3px solid rgba(40, 118, 200, .28); outline-offset: 2px; }
+    .btn svg { width: 20px; height: 20px; }
+    .btn-primary { color: #fff; background: var(--navy); box-shadow: 0 8px 18px rgba(23, 60, 115, .22); }
+    .btn-primary:hover { background: #20508f; }
+    .btn-secondary { color: var(--navy); background: #fff; border-color: #b9c9da; }
+    .btn-secondary:hover { background: var(--sky); }
+    .btn[hidden] { display: none; }
+
+    .alert {
+      display: none;
+      margin: 18px 0;
+      padding: 13px 16px;
+      color: #782d28;
+      background: var(--danger-soft);
+      border: 1px solid #e6aaa5;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    .alert.show { display: block; }
+
+    .result-card {
+      display: none;
+      overflow: hidden;
+      margin: 26px 0;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      scroll-margin-top: 90px;
+    }
+
+    .result-card.show { display: block; animation: reveal .35s ease both; }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-main {
+      display: grid;
+      grid-template-columns: 145px 1fr;
+      gap: 24px;
+      align-items: center;
+      padding: clamp(24px, 5vw, 38px);
+    }
+
+    .score-ring {
+      display: grid;
+      place-items: center;
+      width: 136px;
+      height: 136px;
+      background: conic-gradient(var(--success) var(--score-angle, 0deg), #e1e9f1 0);
+      border-radius: 50%;
+    }
+
+    .score-inner {
+      display: grid;
+      place-items: center;
+      width: 106px;
+      height: 106px;
+      color: var(--navy);
+      background: #fff;
+      border-radius: 50%;
+      text-align: center;
+    }
+
+    .score-inner strong { display: block; font-size: 2.15rem; line-height: 1; }
+    .score-inner span { color: var(--muted); font-size: .83rem; }
+    .result-copy h2 { margin: 0 0 5px; color: var(--navy); font-size: clamp(1.45rem, 4vw, 2.05rem); }
+    .result-copy p { margin: 0; color: var(--muted); }
+    .result-meta { margin-top: 12px !important; color: var(--ink) !important; font-weight: 700; }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 18px clamp(24px, 5vw, 38px);
+      background: #f6f9fc;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-note { margin-top: 28px; color: var(--muted); font-size: .86rem; text-align: center; }
+
+    .toast {
+      position: fixed;
+      z-index: 20;
+      left: 50%;
+      bottom: 24px;
+      padding: 11px 16px;
+      color: #fff;
+      background: #172338;
+      border-radius: 10px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, .24);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 12px);
+      transition: opacity .2s, transform .2s;
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 640px) {
+      .page-shell { width: min(100% - 18px, 980px); margin-top: 9px; }
+      .top-card { border-radius: 20px; }
+      .info-card { grid-template-columns: 1fr; margin: 12px 0 18px; }
+      .progress-panel { top: 6px; gap: 10px; padding: 11px 13px; }
+      .save-state { display: none; }
+      .question-heading { grid-template-columns: 1fr; gap: 8px; }
+      .question-number { width: max-content; }
+      .option { grid-template-columns: 31px 1fr; padding: 12px; }
+      .result-main { grid-template-columns: 1fr; text-align: center; }
+      .score-ring { margin: auto; }
+      .result-actions { justify-content: center; }
+      .btn { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page-shell { width: 100%; margin: 0; }
+      .top-card { padding: 20px; border-radius: 0; box-shadow: none; print-color-adjust: exact; }
+      .info-card { margin: 14px 0; box-shadow: none; }
+      .progress-panel, .quiz-intro, .actions, .result-actions, .footer-note, .toast { display: none !important; }
+      .question-card { break-inside: avoid; box-shadow: none; }
+      .result-card.show { box-shadow: none; break-inside: avoid; }
+      .explanation { print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="top-card">
+      <p class="eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"></path></svg>
+        Tin học 11 · Phiếu luyện tập
+      </p>
+      <h1>Bài 12: Hệ quản trị cơ sở dữ liệu và hệ cơ sở dữ liệu</h1>
+      <p class="subtitle">Chọn một đáp án đúng cho mỗi câu. Sau khi hoàn thành, em hãy bấm <strong>Chấm bài</strong> để xem điểm và lời giải.</p>
+    </header>
+
+    <section class="info-card" aria-label="Thông tin học sinh">
+      <div class="field">
+        <label for="student-name">Họ và tên</label>
+        <input id="student-name" type="text" autocomplete="name" placeholder="Nhập họ và tên của em">
+      </div>
+      <div class="field">
+        <label for="student-class">Lớp</label>
+        <input id="student-class" type="text" autocomplete="off" placeholder="Ví dụ: 11A1">
+      </div>
+    </section>
+
+    <section class="progress-panel" aria-label="Tiến độ làm bài">
+      <span class="progress-copy"><span id="answered-count">0</span>/10 câu</span>
+      <div class="progress-track" role="progressbar" aria-label="Số câu đã trả lời" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <span class="save-state">Tự động lưu</span>
+    </section>
+
+    <div class="quiz-intro">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7h.01"></path></svg>
+      <p><strong>Gợi ý:</strong> Đọc kĩ các cụm từ “không thuộc”, “ghép sai” và “không đúng” trước khi chọn đáp án.</p>
+    </div>
+
+    <form id="quiz-form" novalidate>
+      <div id="questions"></div>
+      <div class="alert" id="form-alert" role="alert"></div>
+      <div class="actions">
+        <button class="btn btn-primary" id="submit-btn" type="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg>
+          Chấm bài
+        </button>
+        <button class="btn btn-secondary" id="clear-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 11v5M14 11v5"></path></svg>
+          Xóa lựa chọn
+        </button>
+      </div>
+    </form>
+
+    <section class="result-card" id="result-card" aria-live="polite" tabindex="-1">
+      <div class="result-main">
+        <div class="score-ring" id="score-ring">
+          <div class="score-inner"><div><strong id="score-value">0</strong><span>điểm</span></div></div>
+        </div>
+        <div class="result-copy">
+          <h2 id="result-title">Kết quả bài làm</h2>
+          <p id="result-message"></p>
+          <p class="result-meta" id="result-meta"></p>
+        </div>
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-primary" id="copy-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>
+          Sao chép kết quả
+        </button>
+        <button class="btn btn-secondary" id="print-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 14h12v7H6z"></path></svg>
+          In / Lưu PDF
+        </button>
+        <button class="btn btn-secondary" id="retry-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>
+          Làm lại
+        </button>
+      </div>
+    </section>
+
+    <p class="footer-note">Bài làm được lưu trên chính thiết bị đang sử dụng. Trang này không tự gửi dữ liệu lên Internet.</p>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const quizData = [
+      {
+        id: "12.1",
+        question: "Hãy chọn câu đúng về hệ QTCSDL:",
+        options: [
+          "Phần mềm hệ thống chuyên dụng quản lí thư mục, tệp chứa dữ liệu.",
+          "Phần mềm cung cấp phương thức để lưu trữ, cập nhật và truy xuất dữ liệu của CSDL, bảo mật và an toàn dữ liệu. Hệ QTCSDL cũng cung cấp các công cụ cho người dùng phát triển ứng dụng.",
+          "Phần mềm giúp người dùng trực tiếp cập nhật và truy xuất CSDL.",
+          "Phần mềm giúp truy cập từ xa vào CSDL."
+        ],
+        answer: 1,
+        explanation: "Hệ QTCSDL cung cấp đầy đủ các phương thức lưu trữ, cập nhật, truy xuất, bảo mật, an toàn dữ liệu và công cụ phát triển ứng dụng."
+      },
+      {
+        id: "12.2",
+        question: "Nhóm chức năng nào không thuộc chức năng của hệ quản trị CSDL?",
+        options: [
+          "Định nghĩa dữ liệu.",
+          "Cập nhật và truy xuất dữ liệu.",
+          "Xác định vị trí lưu trữ dữ liệu.",
+          "Bảo mật và an toàn dữ liệu."
+        ],
+        answer: 2,
+        explanation: "Ba nhóm chức năng chính là định nghĩa dữ liệu; cập nhật và truy xuất dữ liệu; bảo mật và an toàn dữ liệu."
+      },
+      {
+        id: "12.3",
+        question: "Chức năng nào không thuộc nhóm chức năng định nghĩa CSDL của hệ QTCSDL?",
+        options: [
+          "Chỉnh sửa dữ liệu lưu trữ trong CSDL.",
+          "Khai báo tên của các CSDL.",
+          "Tạo lập và sửa đổi cấu trúc bên trong của mỗi CSDL.",
+          "Khai báo các ràng buộc đảm bảo tính toàn vẹn dữ liệu."
+        ],
+        answer: 0,
+        explanation: "Chỉnh sửa dữ liệu đang lưu thuộc nhóm cập nhật dữ liệu, không thuộc nhóm định nghĩa CSDL."
+      },
+      {
+        id: "12.4",
+        question: "Chọn phương án ghép sai.",
+        context: "Nhóm chức năng cập nhật và truy xuất CSDL",
+        options: [
+          "Thêm dữ liệu vào dữ liệu đã có.",
+          "Thay đổi cấu trúc dữ liệu.",
+          "Truy xuất dữ liệu theo những tiêu chí khác nhau.",
+          "Sửa chữa, xoá bỏ dữ liệu được lưu trữ trong CSDL."
+        ],
+        answer: 1,
+        explanation: "Thay đổi cấu trúc dữ liệu thuộc nhóm chức năng định nghĩa CSDL, không thuộc nhóm cập nhật và truy xuất."
+      },
+      {
+        id: "12.5",
+        question: "Chọn phương án ghép sai.",
+        context: "Nhóm chức năng bảo mật, an toàn dữ liệu",
+        options: [
+          "Chỉnh sửa các dữ liệu không chính xác trong CSDL.",
+          "Quản lí quyền truy cập của người dùng đối với CSDL.",
+          "Sao lưu dữ liệu và phục hồi dữ liệu từ bản sao lưu.",
+          "Kiểm soát các giao dịch với CSDL."
+        ],
+        answer: 0,
+        explanation: "Chỉnh sửa dữ liệu không chính xác là thao tác cập nhật dữ liệu. Các phương án còn lại đều phục vụ bảo mật và an toàn dữ liệu."
+      },
+      {
+        id: "12.6",
+        question: "Phần mềm ứng dụng CSDL là gì?",
+        options: [
+          "Là phần mềm quản trị CSDL.",
+          "Là phần mềm được xây dựng tương tác với hệ QTCSDL nhằm mục đích hỗ trợ người dùng khai thác thông tin từ CSDL một cách thuận tiện theo các yêu cầu xác định.",
+          "Là phần mềm hỗ trợ người dùng cập nhật, truy xuất CSDL theo một giao diện đồ hoạ.",
+          "Là phần mềm thực hiện các chức năng phân tích, thống kê từ dữ liệu trong CSDL để phục vụ một yêu cầu thực tiễn."
+        ],
+        answer: 1,
+        explanation: "Phần mềm ứng dụng CSDL tương tác với hệ QTCSDL để giúp người dùng khai thác thông tin thuận tiện theo yêu cầu."
+      },
+      {
+        id: "12.7",
+        question: "Các hệ QTCSDL cung cấp giao diện lập trình ứng dụng nhằm mục đích gì?",
+        options: [
+          "Hỗ trợ người dùng cập nhật, truy xuất dữ liệu bằng các thao tác trực tiếp.",
+          "Hỗ trợ người phát triển ứng dụng CSDL các công cụ để có thể cập nhật và truy xuất dữ liệu từ bên trong chương trình ứng dụng của họ.",
+          "Hỗ trợ người dùng dễ dàng cập nhật, truy xuất dữ liệu với giao diện trực quan.",
+          "Hỗ trợ người dùng truy cập dữ liệu từ xa qua mạng."
+        ],
+        answer: 1,
+        explanation: "Giao diện lập trình ứng dụng (API) dành cho người phát triển để chương trình của họ có thể cập nhật và truy xuất CSDL."
+      },
+      {
+        id: "12.8",
+        question: "Hệ CSDL là gì?",
+        options: [
+          "Là hệ thống gồm ba thành phần: các phần mềm ứng dụng CSDL, hệ quản trị CSDL và các CSDL.",
+          "Là tập hợp tất cả các CSDL.",
+          "Là tập hợp tất cả các CSDL trong một hệ QTCSDL.",
+          "Là hệ thống các phần mềm ứng dụng CSDL."
+        ],
+        answer: 0,
+        explanation: "Một hệ CSDL gồm ba thành phần: CSDL, hệ QTCSDL và các phần mềm ứng dụng CSDL."
+      },
+      {
+        id: "12.9",
+        question: "Hệ CSDL tập trung là gì?",
+        options: [
+          "Là hệ CSDL mà tất cả các thành phần của nó cùng tập trung trên một máy tính.",
+          "Là hệ CSDL mà CSDL của nó được lưu trữ trên một máy tính.",
+          "Là hệ CSDL một người dùng trên một máy tính.",
+          "Là hệ CSDL mà tất cả các ứng dụng CSDL được cài đặt tập trung trên một máy tính."
+        ],
+        answer: 1,
+        explanation: "Hệ CSDL tập trung được xác định bởi việc CSDL được lưu trữ tập trung trên một máy tính; các ứng dụng không nhất thiết cùng ở đó."
+      },
+      {
+        id: "12.10",
+        question: "Với hệ CSDL phân tán, khẳng định nào sau đây là không đúng?",
+        options: [
+          "CSDL được lưu trữ phân tán trên nhiều máy tính, có thể ở rất xa nhau về vị trí địa lí nhưng được kết nối với nhau qua mạng máy tính.",
+          "Hệ CSDL phân tán cho phép người dùng truy cập dữ liệu được lưu trữ ở nhiều máy tính khác nhau trên mạng máy tính.",
+          "Hệ CSDL phân tán là hệ thống có nhiều ứng dụng được cài đặt phân tán trên các máy tính khác nhau cùng truy cập một CSDL.",
+          "Dễ dàng mở rộng, tính sẵn sàng và độ tin cậy được nâng cao."
+        ],
+        answer: 2,
+        explanation: "Trong hệ CSDL phân tán, dữ liệu của CSDL phải được phân tán trên nhiều máy tính; nhiều ứng dụng phân tán cùng truy cập một CSDL tập trung chưa đủ để tạo thành hệ CSDL phân tán."
+      }
+    ];
+
+    const letters = ["A", "B", "C", "D"];
+    const storageKey = "bai12-tin11-worksheet-v1";
+    const questionsContainer = document.getElementById("questions");
+    const form = document.getElementById("quiz-form");
+    const resultCard = document.getElementById("result-card");
+    const formAlert = document.getElementById("form-alert");
+    const progressTrack = document.querySelector(".progress-track");
+    let graded = false;
+    let lastScore = null;
+
+    function renderQuestions() {
+      questionsContainer.innerHTML = quizData.map((item, qIndex) => `
+        <section class="question-card" id="question-${qIndex + 1}" data-question="${qIndex}">
+          <div class="question-heading">
+            <span class="question-number">${item.id}</span>
+            <div>
+              <p class="question-text">${item.question}</p>
+              ${item.context ? `<p class="question-context">${item.context}</p>` : ""}
+            </div>
+          </div>
+          <div class="options" role="radiogroup" aria-label="Câu ${item.id}">
+            ${item.options.map((option, optionIndex) => `
+              <label class="option" data-option="${optionIndex}">
+                <input type="radio" name="q${qIndex}" value="${optionIndex}" aria-label="${letters[optionIndex]}. ${option}">
+                <span class="letter">${letters[optionIndex]}</span>
+                <span class="option-text">${option}</span>
+              </label>
+            `).join("")}
+          </div>
+          <div class="explanation"><strong>Đáp án ${letters[item.answer]}.</strong> ${item.explanation}</div>
+        </section>
+      `).join("");
+    }
+
+    function getAnswers() {
+      return quizData.map((_, index) => {
+        const selected = form.querySelector(`input[name="q${index}"]:checked`);
+        return selected ? Number(selected.value) : null;
+      });
+    }
+
+    function updateProgress() {
+      const answered = getAnswers().filter(value => value !== null).length;
+      document.getElementById("answered-count").textContent = answered;
+      document.getElementById("progress-bar").style.width = `${answered * 10}%`;
+      progressTrack.setAttribute("aria-valuenow", answered);
+    }
+
+    function saveWork() {
+      const data = {
+        name: document.getElementById("student-name").value,
+        className: document.getElementById("student-class").value,
+        answers: getAnswers()
+      };
+      try { localStorage.setItem(storageKey, JSON.stringify(data)); } catch (_) {}
+    }
+
+    function loadWork() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey));
+        if (!saved) return;
+        document.getElementById("student-name").value = saved.name || "";
+        document.getElementById("student-class").value = saved.className || "";
+        if (Array.isArray(saved.answers)) {
+          saved.answers.forEach((answer, index) => {
+            if (answer !== null && answer !== undefined) {
+              const input = form.querySelector(`input[name="q${index}"][value="${answer}"]`);
+              if (input) input.checked = true;
+            }
+          });
+        }
+      } catch (_) {}
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2300);
+    }
+
+    function clearGrading() {
+      graded = false;
+      lastScore = null;
+      document.querySelectorAll(".question-card").forEach(card => {
+        card.classList.remove("graded", "missing");
+        card.querySelectorAll(".option").forEach(option => option.classList.remove("correct", "wrong"));
+        card.querySelectorAll("input").forEach(input => input.disabled = false);
+      });
+      resultCard.classList.remove("show");
+      document.getElementById("submit-btn").hidden = false;
+      formAlert.classList.remove("show");
+    }
+
+    function gradeQuiz() {
+      const answers = getAnswers();
+      const missing = answers.map((answer, index) => answer === null ? index : -1).filter(index => index >= 0);
+
+      document.querySelectorAll(".question-card").forEach(card => card.classList.remove("missing"));
+      if (missing.length) {
+        missing.forEach(index => document.getElementById(`question-${index + 1}`).classList.add("missing"));
+        formAlert.textContent = `Em còn ${missing.length} câu chưa trả lời. Hãy hoàn thành các câu được đánh dấu.`;
+        formAlert.classList.add("show");
+        document.getElementById(`question-${missing[0] + 1}`).scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      formAlert.classList.remove("show");
+      let score = 0;
+      quizData.forEach((item, index) => {
+        const card = document.getElementById(`question-${index + 1}`);
+        card.classList.add("graded");
+        card.querySelectorAll("input").forEach(input => input.disabled = true);
+        card.querySelector(`[data-option="${item.answer}"]`).classList.add("correct");
+        if (answers[index] === item.answer) {
+          score += 1;
+        } else {
+          card.querySelector(`[data-option="${answers[index]}"]`).classList.add("wrong");
+        }
+      });
+
+      graded = true;
+      lastScore = score;
+      const percent = score * 10;
+      const title = score === 10 ? "Xuất sắc!" : score >= 8 ? "Làm rất tốt!" : score >= 6 ? "Khá tốt!" : score >= 5 ? "Em đã hoàn thành!" : "Cần ôn lại một chút";
+      const message = score >= 8
+        ? "Em đã nắm vững phần lớn kiến thức của Bài 12."
+        : score >= 5
+          ? "Hãy xem lại lời giải ở những câu chưa đúng để ghi nhớ chắc hơn."
+          : "Em nên đọc lại phần tóm tắt kiến thức rồi thử làm lại bài nhé.";
+      const studentName = document.getElementById("student-name").value.trim() || "Học sinh";
+      const className = document.getElementById("student-class").value.trim();
+
+      document.getElementById("score-value").textContent = score;
+      document.getElementById("score-ring").style.setProperty("--score-angle", `${percent * 3.6}deg`);
+      document.getElementById("result-title").textContent = title;
+      document.getElementById("result-message").textContent = message;
+      document.getElementById("result-meta").textContent = `${studentName}${className ? ` · Lớp ${className}` : ""} · Đúng ${score}/10 câu`;
+      document.getElementById("submit-btn").hidden = true;
+      resultCard.classList.add("show");
+      resultCard.focus({ preventScroll: true });
+      resultCard.scrollIntoView({ behavior: "smooth", block: "center" });
+      saveWork();
+    }
+
+    function resetAnswers(confirmFirst) {
+      if (confirmFirst && !window.confirm("Em có chắc muốn xóa toàn bộ lựa chọn và làm lại từ đầu không?")) return;
+      form.reset();
+      document.getElementById("student-name").value = "";
+      document.getElementById("student-class").value = "";
+      clearGrading();
+      updateProgress();
+      try { localStorage.removeItem(storageKey); } catch (_) {}
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function retryQuiz() {
+      form.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+      clearGrading();
+      updateProgress();
+      saveWork();
+      document.getElementById("question-1").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    async function copyResult() {
+      if (lastScore === null) return;
+      const name = document.getElementById("student-name").value.trim() || "Học sinh";
+      const className = document.getElementById("student-class").value.trim() || "—";
+      const text = `KẾT QUẢ BÀI 12 – TIN HỌC 11\nHọ và tên: ${name}\nLớp: ${className}\nĐiểm: ${lastScore}/10\nSố câu đúng: ${lastScore}/10`;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("Đã sao chép kết quả");
+      } catch (_) {
+        const helper = document.createElement("textarea");
+        helper.value = text;
+        helper.style.position = "fixed";
+        helper.style.opacity = "0";
+        document.body.appendChild(helper);
+        helper.select();
+        document.execCommand("copy");
+        helper.remove();
+        showToast("Đã sao chép kết quả");
+      }
+    }
+
+    renderQuestions();
+    loadWork();
+    updateProgress();
+
+    form.addEventListener("change", event => {
+      if (!event.target.matches('input[type="radio"]') || graded) return;
+      event.target.closest(".question-card").classList.remove("missing");
+      formAlert.classList.remove("show");
+      updateProgress();
+      saveWork();
+    });
+
+    ["student-name", "student-class"].forEach(id => {
+      document.getElementById(id).addEventListener("input", saveWork);
+    });
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      gradeQuiz();
+    });
+
+    document.getElementById("clear-btn").addEventListener("click", () => resetAnswers(true));
+    document.getElementById("retry-btn").addEventListener("click", retryQuiz);
+    document.getElementById("copy-btn").addEventListener("click", copyResult);
+    document.getElementById("print-btn").addEventListener("click", () => window.print());
+  </script>
+</body>
+</html>
