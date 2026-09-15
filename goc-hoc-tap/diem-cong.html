@@ -59,6 +59,7 @@
     text-decoration: none;
     color: var(--orange);
   }
+  .topbar-actions { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
   .back-link {
     text-decoration: none;
     color: var(--green);
@@ -284,6 +285,66 @@
   .action-btn:hover { border-color: var(--green); color: var(--green); }
   .action-btn.danger:hover { border-color: var(--red); background: var(--red-soft); color: var(--red); }
 
+  /* ---------- Màn hình khóa ---------- */
+  .lock {
+    display: grid;
+    place-items: center;
+    padding: clamp(2rem, 8vw, 5rem) clamp(1rem, 4vw, 2rem);
+  }
+  /* display: grid ở trên mạnh hơn thuộc tính hidden của trình duyệt nên phải tắt lại bằng tay. */
+  .lock[hidden] { display: none; }
+  .lock-card {
+    width: min(26rem, 100%);
+    display: grid;
+    gap: .75rem;
+    padding: clamp(1.4rem, 4vw, 2rem);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    text-align: left;
+  }
+  .lock-card h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 0; }
+  .lock-card p { margin: 0; color: var(--muted); font-size: .86rem; line-height: 1.6; }
+  .lock-card label { font-size: .78rem; font-weight: 700; }
+  .lock-card input[type="password"] {
+    min-height: 44px;
+    padding: .55rem .7rem;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    font: inherit;
+    font-size: .95rem;
+  }
+  .lock-card input[type="password"]:focus { outline: 3px solid rgba(52,97,143,.18); border-color: var(--blue); }
+  .lock-remember {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    font-size: .8rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .lock-error {
+    padding: .6rem .8rem;
+    border: 1px solid #ddb5b5;
+    border-radius: 10px;
+    background: var(--red-soft);
+    color: #852e2e;
+    font-size: .82rem;
+  }
+  .lock-btn {
+    padding: .5rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font: inherit;
+    font-size: .78rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .lock-btn:hover { border-color: var(--red); background: var(--red-soft); color: var(--red); }
+
   .site-footer {
     border-top: 1px solid var(--border);
     background: rgba(255,255,255,.7);
@@ -309,11 +370,29 @@
 <header class="topbar">
   <div class="topbar-inner">
     <a class="brand" href="index.html">Góc Học Tập</a>
-    <a class="back-link" href="index.html">← Về trang môn học</a>
+    <div class="topbar-actions">
+      <button class="lock-btn" id="lock-again" type="button" hidden>🔒 Khóa lại</button>
+      <a class="back-link" href="index.html">← Về trang môn học</a>
+    </div>
   </div>
 </header>
 
-<main class="page">
+<section class="lock" id="lock-screen">
+  <form class="lock-card" id="lock-form" autocomplete="off">
+    <span class="eyebrow">KHU VỰC CỦA GIÁO VIÊN</span>
+    <h1>Sổ điểm cộng · điểm trừ</h1>
+    <p>Trang này chỉ dành cho giáo viên. Cô nhập mật khẩu để mở sổ điểm.</p>
+    <label for="lock-input">Mật khẩu</label>
+    <input id="lock-input" type="password" autocomplete="current-password" required>
+    <label class="lock-remember">
+      <input id="lock-remember" type="checkbox"> Ghi nhớ trên máy này
+    </label>
+    <button class="submit" type="submit">Mở sổ điểm</button>
+    <p class="lock-error" id="lock-error" role="alert" hidden>Mật khẩu chưa đúng, cô thử lại nhé.</p>
+  </form>
+</section>
+
+<main class="page" id="page-main" hidden>
   <span class="eyebrow">CÔNG CỤ CỦA GIÁO VIÊN</span>
   <h1>Sổ điểm cộng · điểm trừ</h1>
   <p class="lede">
@@ -475,6 +554,27 @@
     </div>
     <p class="count" id="data-result" style="margin-top:.9rem"></p>
   </section>
+
+  <section class="card" aria-labelledby="pass-title">
+    <h2 id="pass-title">Đổi mật khẩu mở sổ<small>Mật khẩu mới chỉ có hiệu lực trên máy đang dùng; máy khác vẫn mở bằng mật khẩu mặc định.</small></h2>
+    <form class="form" id="pass-form" autocomplete="off">
+      <div class="field">
+        <label for="pass-old">Mật khẩu hiện tại</label>
+        <input id="pass-old" type="password" autocomplete="current-password" required>
+      </div>
+      <div class="field">
+        <label for="pass-new">Mật khẩu mới <em>(ít nhất 4 ký tự)</em></label>
+        <input id="pass-new" type="password" autocomplete="new-password" minlength="4" required>
+      </div>
+      <div class="field full">
+        <label for="pass-confirm">Nhập lại mật khẩu mới</label>
+        <input id="pass-confirm" type="password" autocomplete="new-password" required>
+      </div>
+      <div class="result" id="pass-result" role="status"></div>
+      <button class="submit full" type="submit">Đổi mật khẩu</button>
+      <button class="action-btn full" id="pass-reset" type="button">Dùng lại mật khẩu mặc định trên máy này</button>
+    </form>
+  </section>
 </main>
 
 <footer class="site-footer">
@@ -486,7 +586,14 @@
 (function () {
   "use strict";
 
+  /* Mã băm SHA-256 của mật khẩu mặc định. Trang chỉ so mã băm nên mật khẩu thật
+     không nằm trong mã nguồn. Cô đổi mật khẩu bằng khung "Đổi mật khẩu mở sổ"
+     ở cuối trang; mật khẩu mới được lưu riêng cho máy đang dùng. */
+  var DEFAULT_PASS_HASH = "617d0f7a1a2697a7745a81a9169ebd058f6a9fd5a478493ae5909d2c8d5bdb0e";
+
   var STORAGE_KEY = "gocHocTap.diemCong.v1";
+  var UNLOCK_KEY = "gocHocTap.diemCong.unlocked";
+  var PASS_HASH_KEY = "gocHocTap.diemCong.passHash";
   var COLUMNS = [
     "Thường xuyên 1",
     "Thường xuyên 2",
@@ -605,6 +712,139 @@
   function newId() {
     return "dc-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
   }
+
+  /* ---------- Khóa trang ---------- */
+
+  var lockScreen = document.getElementById("lock-screen");
+  var lockForm = document.getElementById("lock-form");
+  var lockInput = document.getElementById("lock-input");
+  var lockRemember = document.getElementById("lock-remember");
+  var lockError = document.getElementById("lock-error");
+  var lockAgain = document.getElementById("lock-again");
+  var pageMain = document.getElementById("page-main");
+
+  function readUnlockFlag() {
+    try {
+      return sessionStorage.getItem(UNLOCK_KEY) === "1" || localStorage.getItem(UNLOCK_KEY) === "1";
+    } catch (error) {
+      return false;
+    }
+  }
+
+  // Mật khẩu cô tự đặt chỉ lưu dưới dạng mã băm, và chỉ nằm trên máy đang dùng.
+  function currentPassHash() {
+    try {
+      return localStorage.getItem(PASS_HASH_KEY) || DEFAULT_PASS_HASH;
+    } catch (error) {
+      return DEFAULT_PASS_HASH;
+    }
+  }
+
+  function hashPass(text) {
+    if (!window.crypto || !window.crypto.subtle || !window.TextEncoder) {
+      return Promise.reject(new Error("no-crypto"));
+    }
+    return window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function (buffer) {
+      return Array.prototype.map.call(new Uint8Array(buffer), function (byte) {
+        return ("0" + byte.toString(16)).slice(-2);
+      }).join("");
+    });
+  }
+
+  function showLockError(message) {
+    lockError.textContent = message;
+    lockError.hidden = false;
+  }
+
+  function openPage() {
+    lockScreen.hidden = true;
+    pageMain.hidden = false;
+    lockAgain.hidden = false;
+  }
+
+  function unlock(remember) {
+    try {
+      // Chỉ lưu dấu "đã mở", không bao giờ lưu mật khẩu.
+      (remember ? localStorage : sessionStorage).setItem(UNLOCK_KEY, "1");
+    } catch (error) { /* trình duyệt chặn lưu trữ thì vẫn mở được cho phiên này */ }
+    openPage();
+  }
+
+  lockForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    lockError.hidden = true;
+    hashPass(lockInput.value.trim()).then(function (hash) {
+      if (hash !== currentPassHash()) {
+        showLockError("Mật khẩu chưa đúng, cô thử lại nhé.");
+        lockInput.select();
+        return;
+      }
+      lockInput.value = "";
+      unlock(lockRemember.checked);
+    }).catch(function () {
+      showLockError("Trình duyệt chưa kiểm tra được mật khẩu. Cô mở trang bằng địa chỉ https thay vì mở thẳng file trên máy.");
+    });
+  });
+
+  lockAgain.addEventListener("click", function () {
+    try {
+      sessionStorage.removeItem(UNLOCK_KEY);
+      localStorage.removeItem(UNLOCK_KEY);
+    } catch (error) { /* bỏ qua */ }
+    window.location.reload();
+  });
+
+  /* ---------- Đổi mật khẩu ---------- */
+
+  var passForm = document.getElementById("pass-form");
+  var passOld = document.getElementById("pass-old");
+  var passNew = document.getElementById("pass-new");
+  var passConfirm = document.getElementById("pass-confirm");
+  var passResult = document.getElementById("pass-result");
+
+  function showPassResult(message, ok) {
+    passResult.textContent = message;
+    passResult.className = "result show " + (ok ? "ok" : "fail");
+  }
+
+  passForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    var wanted = passNew.value.trim();
+    if (wanted.length < 4) {
+      showPassResult("Mật khẩu mới phải có ít nhất 4 ký tự.", false);
+      return;
+    }
+    if (wanted !== passConfirm.value.trim()) {
+      showPassResult("Hai ô mật khẩu mới chưa giống nhau.", false);
+      return;
+    }
+
+    hashPass(passOld.value.trim()).then(function (oldHash) {
+      if (oldHash !== currentPassHash()) {
+        showPassResult("Mật khẩu hiện tại chưa đúng.", false);
+        return null;
+      }
+      return hashPass(wanted).then(function (newHash) {
+        localStorage.setItem(PASS_HASH_KEY, newHash);
+        passForm.reset();
+        showPassResult("Đã đổi mật khẩu cho máy này. Lần sau cô mở sổ bằng mật khẩu mới.", true);
+      });
+    }).catch(function () {
+      showPassResult("Chưa đổi được mật khẩu. Cô mở trang bằng địa chỉ https và kiểm tra trình duyệt có cho phép lưu dữ liệu.", false);
+    });
+  });
+
+  document.getElementById("pass-reset").addEventListener("click", function () {
+    if (!window.confirm("Trả máy này về mật khẩu mặc định?")) return;
+    try {
+      localStorage.removeItem(PASS_HASH_KEY);
+      passForm.reset();
+      showPassResult("Máy này đã quay về mật khẩu mặc định.", true);
+    } catch (error) {
+      showPassResult("Trình duyệt không cho xóa mật khẩu đã lưu.", false);
+    }
+  });
 
   /* ---------- Lưu trữ ---------- */
 
@@ -1048,6 +1288,9 @@
   syncPointChips();
   load();
   render();
+
+  if (readUnlockFlag()) openPage();
+  else lockInput.focus();
 })();
 </script>
 </body>
