@@ -116,6 +116,27 @@
   }
   .summary-pill strong { color: var(--accent-1); }
 
+  .game-banner {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.2rem;
+    margin-top: 1.4rem; padding: 1rem 1.15rem;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-1); border-radius: 14px;
+  }
+  .game-banner .game-emoji { font-size: 1.9rem; line-height: 1; }
+  .game-banner-copy { flex: 1 1 260px; min-width: 0; }
+  .game-banner-copy h3 {
+    font-family: var(--font-display); font-weight: 600; font-size: 1.08rem; margin: 0 0 0.2rem;
+  }
+  .game-banner-copy p { margin: 0; font-size: 0.85rem; line-height: 1.55; color: var(--ink-muted); }
+  .game-banner-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: var(--font-mono); font-size: 0.74rem; font-weight: 600;
+    padding: 0.55rem 1rem; border-radius: 999px;
+    background: var(--accent-1); color: var(--on-accent); text-decoration: none;
+    white-space: nowrap;
+  }
+  .game-banner-link:hover { filter: brightness(1.08); }
+
   .semester-block { margin-top: 2.25rem; }
   .semester-head {
     display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 1rem;
@@ -215,6 +236,15 @@
       <span class="summary-pill">Học kỳ 1 · <strong>15 bài</strong></span>
       <span class="summary-pill">Học kỳ 2 · <strong>15 bài</strong></span>
       <span class="summary-pill">Đã có bài giảng · <strong id="lesson-progress">3 / 30</strong></span>
+    </div>
+
+    <div class="game-banner">
+      <span class="game-emoji" aria-hidden="true">🎮</span>
+      <div class="game-banner-copy">
+        <h3>Trò chơi ôn tập: Săn điểm khí hậu Sài Gòn</h3>
+        <p>Trắc nghiệm vui có tính điểm, chuỗi combo và đồng hồ đếm ngược — ôn lại Bài 1 (đặc điểm khí hậu) và Bài 2 (biểu hiện &amp; nguyên nhân của biến đổi khí hậu). Dùng cho phần khởi động hoặc củng cố cuối tiết.</p>
+      </div>
+      <a class="game-banner-link" href="tro-choi-on-tap-bai1-bai2.html" target="_blank" rel="noopener">▶ Chơi ngay</a>
     </div>
   </header>
 

@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trò chơi ôn tập · Khí hậu &amp; Biến đổi khí hậu TP.HCM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --ink:#1E2A27;
+    --ink-soft:#48584F;
+    --paper:#ECEFE1;
+    --paper-2:#F7F8EF;
+    --line:#D6D9C4;
+    --dusk:#12262C;
+    --dusk-2:#1D4750;
+    --dusk-3:#265861;
+    --rain:#5AA6B4;
+    --rain-soft:#CDE6E3;
+    --rain-ink:#0E3A40;
+    --sun:#E4A23B;
+    --sun-soft:#F5DCA9;
+    --sun-ink:#5A3B0E;
+    --ember:#B5533A;
+    --good:#2F7D5B;
+    --good-soft:#D4EDDF;
+    --bad:#B5533A;
+    --bad-soft:#F6DED6;
+    --backdrop:#D6DAC6;
+    --shadow: 0 40px 70px -30px rgba(8,18,16,0.5);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{
+    padding:clamp(1rem,4vw,3rem) 1rem;
+    background:var(--backdrop);
+    color:var(--ink);
+    font-family:'Be Vietnam Pro','Segoe UI',system-ui,sans-serif;
+    display:flex;
+    justify-content:center;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .sheet{
+    width:100%;
+    max-width:780px;
+    background:var(--paper);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    position:relative;
+    align-self:flex-start;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:
+      radial-gradient(120% 140% at 85% 5%, color-mix(in srgb, var(--sun) 32%, transparent), transparent 55%),
+      linear-gradient(160deg, var(--dusk) 0%, var(--dusk-2) 62%, var(--dusk-3) 100%);
+    color:var(--paper-2);
+    padding:clamp(1.5rem,4vw,2.4rem);
+    position:relative;
+    overflow:hidden;
+  }
+  .kicker{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.7rem; font-weight:600; letter-spacing:0.16em;
+    color:var(--rain-soft);
+    margin-bottom:0.6rem;
+  }
+  .hero h1{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:clamp(1.6rem,4.6vw,2.4rem);
+    line-height:1.08;
+    margin:0 0 0.6rem;
+    text-wrap:balance;
+  }
+  .hero h1 em{ font-style:italic; font-weight:500; color:var(--sun-soft); }
+  .hero-sub{
+    margin:0; max-width:46ch;
+    font-size:0.92rem; line-height:1.55;
+    color:color-mix(in srgb, var(--paper-2) 80%, transparent);
+  }
+
+  /* ---------- SCREENS ---------- */
+  .screen{ display:none; }
+  .screen.on{ display:block; animation:fade .35s ease; }
+  @keyframes fade{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:none; } }
+
+  .pad{ padding:clamp(1.1rem,3.5vw,2rem); }
+
+  /* ---------- SETUP ---------- */
+  .setup-block{ margin-bottom:1.4rem; }
+  .setup-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.66rem; font-weight:700; letter-spacing:0.12em;
+    color:var(--rain-ink);
+    display:block; margin-bottom:0.6rem;
+  }
+  .choice-grid{ display:grid; gap:0.6rem; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); }
+  .choice{
+    text-align:left;
+    background:var(--paper-2);
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:0.85rem 0.95rem;
+    cursor:pointer;
+    font-family:inherit;
+    color:var(--ink);
+    transition:transform .12s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .choice:hover{ transform:translateY(-2px); box-shadow:0 10px 22px -16px rgba(10,25,22,.6); }
+  .choice b{ display:block; font-size:0.95rem; font-weight:700; margin-bottom:0.18rem; }
+  .choice span{ display:block; font-size:0.76rem; line-height:1.45; color:var(--ink-soft); }
+  .choice.sel{
+    border-color:var(--rain-ink);
+    background:var(--rain-soft);
+    box-shadow:inset 0 0 0 3px color-mix(in srgb, var(--rain) 25%, transparent);
+  }
+  .choice .emoji{ font-size:1.1rem; margin-right:.35rem; }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+    padding:0.75rem 1.4rem;
+    border-radius:999px;
+    border:1px solid transparent;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.78rem; font-weight:700; letter-spacing:0.04em;
+    cursor:pointer;
+    text-decoration:none;
+    transition:transform .12s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn--primary{ background:var(--sun); color:var(--dusk); box-shadow:0 12px 24px -14px rgba(180,120,20,.9); }
+  .btn--primary:hover{ background:color-mix(in srgb, var(--sun) 88%, white); }
+  .btn--dark{ background:var(--dusk-2); color:var(--paper-2); }
+  .btn--dark:hover{ background:var(--dusk-3); }
+  .btn--ghost{ background:transparent; border-color:var(--line); color:var(--ink-soft); }
+  .btn--ghost:hover{ background:var(--paper-2); }
+  .btn-row{ display:flex; flex-wrap:wrap; gap:0.6rem; align-items:center; }
+
+  .rules{
+    margin-top:1.3rem;
+    background:var(--paper-2);
+    border:1px dashed color-mix(in srgb, var(--rain-ink) 35%, var(--line));
+    border-radius:14px;
+    padding:0.9rem 1.05rem;
+  }
+  .rules h3{
+    font-family:'Fraunces',Georgia,serif; font-size:0.98rem; margin:0 0 0.45rem;
+  }
+  .rules ul{ margin:0; padding-left:1.1rem; }
+  .rules li{ font-size:0.82rem; line-height:1.6; color:var(--ink-soft); }
+
+  /* ---------- HUD ---------- */
+  .hud{
+    display:flex; flex-wrap:wrap; gap:0.7rem 1rem; align-items:center; justify-content:space-between;
+    padding:0.8rem clamp(1.1rem,3.5vw,2rem);
+    background:var(--paper-2);
+    border-bottom:1px solid var(--line);
+  }
+  .hud-left{ display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap; }
+  .hud-chip{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.68rem; font-weight:700; letter-spacing:0.05em;
+    padding:0.32rem 0.6rem; border-radius:999px;
+    background:var(--rain-soft); color:var(--rain-ink);
+  }
+  .hud-chip.b2{ background:var(--sun-soft); color:var(--sun-ink); }
+  .score-box{ display:flex; align-items:baseline; gap:0.35rem; }
+  .score-box b{
+    font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;
+    font-size:1.25rem; font-weight:700; color:var(--rain-ink);
+  }
+  .score-box span{ font-size:0.7rem; color:var(--ink-soft); }
+  .streak{
+    font-family:'IBM Plex Mono',monospace; font-size:0.72rem; font-weight:700;
+    padding:0.3rem 0.6rem; border-radius:999px;
+    background:var(--sun-soft); color:var(--sun-ink);
+    opacity:0; transform:scale(.8); transition:opacity .2s ease, transform .2s ease;
+  }
+  .streak.on{ opacity:1; transform:scale(1); }
+  .icon-btn{
+    border:1px solid var(--line); background:var(--paper);
+    width:2.1rem; height:2.1rem; border-radius:50%;
+    cursor:pointer; font-size:0.95rem; line-height:1;
+    display:inline-flex; align-items:center; justify-content:center;
+  }
+  .icon-btn:hover{ background:var(--paper-2); }
+
+  .progress-track{ height:6px; background:var(--line); }
+  .progress-fill{
+    height:100%; width:0%;
+    background:linear-gradient(90deg, var(--rain), var(--sun));
+    transition:width .35s ease;
+  }
+  .timer-track{ height:4px; background:color-mix(in srgb, var(--line) 60%, transparent); }
+  .timer-fill{ height:100%; width:100%; background:var(--rain); transition:width .25s linear; }
+  .timer-fill.warn{ background:var(--ember); }
+
+  /* ---------- QUESTION ---------- */
+  .qmeta{
+    display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;
+    font-family:'IBM Plex Mono',monospace; font-size:0.66rem; letter-spacing:0.08em;
+    color:var(--ink-soft);
+    margin-bottom:0.7rem;
+  }
+  .qtext{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700; font-size:clamp(1.15rem,3.2vw,1.5rem);
+    line-height:1.3; margin:0 0 1.1rem;
+    text-wrap:balance;
+  }
+  .answers{ display:grid; gap:0.6rem; }
+  .ans{
+    display:flex; align-items:flex-start; gap:0.75rem;
+    text-align:left;
+    background:var(--paper-2);
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:0.8rem 0.95rem;
+    font-family:inherit; font-size:0.92rem; line-height:1.5;
+    color:var(--ink);
+    cursor:pointer;
+    transition:transform .12s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .ans:hover:not(:disabled){ transform:translateX(3px); border-color:var(--rain); box-shadow:0 8px 18px -14px rgba(10,25,22,.7); }
+  .ans:disabled{ cursor:default; }
+  .ans .key{
+    flex:0 0 auto;
+    width:1.55rem; height:1.55rem; border-radius:8px;
+    background:var(--rain-soft); color:var(--rain-ink);
+    font-family:'IBM Plex Mono',monospace; font-size:0.76rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ans.correct{ background:var(--good-soft); border-color:var(--good); }
+  .ans.correct .key{ background:var(--good); color:#fff; }
+  .ans.wrong{ background:var(--bad-soft); border-color:var(--bad); animation:shake .4s ease; }
+  .ans.wrong .key{ background:var(--bad); color:#fff; }
+  .ans.dim{ opacity:.5; }
+  @keyframes shake{
+    0%,100%{ transform:translateX(0); }
+    20%{ transform:translateX(-7px); }
+    40%{ transform:translateX(6px); }
+    60%{ transform:translateX(-4px); }
+    80%{ transform:translateX(3px); }
+  }
+
+  .feedback{
+    margin-top:1rem;
+    border-radius:14px;
+    padding:0.9rem 1.05rem;
+    display:none;
+    animation:fade .3s ease;
+  }
+  .feedback.on{ display:block; }
+  .feedback.ok{ background:var(--good-soft); border:1px solid color-mix(in srgb, var(--good) 45%, transparent); }
+  .feedback.no{ background:var(--bad-soft); border:1px solid color-mix(in srgb, var(--bad) 45%, transparent); }
+  .feedback h4{
+    font-family:'Fraunces',Georgia,serif; font-size:1rem; margin:0 0 0.35rem;
+  }
+  .feedback p{ margin:0; font-size:0.86rem; line-height:1.6; color:var(--ink-soft); }
+  .feedback .points{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:0.72rem;
+    color:var(--sun-ink); background:var(--sun-soft);
+    padding:0.15rem 0.45rem; border-radius:6px; margin-left:0.4rem;
+  }
+  .next-row{ margin-top:1rem; display:flex; justify-content:flex-end; }
+
+  /* ---------- RESULT ---------- */
+  .result-head{ text-align:center; padding-top:0.4rem; }
+  .medal{ font-size:3.6rem; line-height:1; animation:pop .5s cubic-bezier(.2,1.4,.5,1); }
+  @keyframes pop{ from{ transform:scale(.3) rotate(-15deg); opacity:0; } to{ transform:none; opacity:1; } }
+  .rank{
+    font-family:'Fraunces',Georgia,serif; font-weight:700;
+    font-size:clamp(1.4rem,4vw,1.9rem); margin:0.4rem 0 0.2rem;
+  }
+  .rank-sub{ margin:0; font-size:0.88rem; color:var(--ink-soft); }
+  .score-strip{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line); border-radius:14px; overflow:hidden;
+    margin:1.3rem 0;
+  }
+  .score-cell{ background:var(--paper-2); padding:0.85rem 0.5rem; text-align:center; }
+  .score-cell b{
+    display:block; font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;
+    font-size:clamp(1rem,3vw,1.3rem); font-weight:700; color:var(--rain-ink);
+  }
+  .score-cell span{ display:block; margin-top:0.25rem; font-size:0.65rem; color:var(--ink-soft); line-height:1.35; }
+  .review h3{ font-family:'Fraunces',Georgia,serif; font-size:1.05rem; margin:0 0 0.6rem; }
+  .review-item{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-left:3px solid var(--ember);
+    border-radius:12px;
+    padding:0.7rem 0.9rem;
+    margin-bottom:0.55rem;
+  }
+  .review-item p{ margin:0; font-size:0.84rem; line-height:1.55; }
+  .review-item .q{ font-weight:600; color:var(--ink); margin-bottom:0.3rem; }
+  .review-item .a{ color:var(--good); font-weight:600; }
+  .review-item .e{ color:var(--ink-soft); margin-top:0.25rem; font-size:0.8rem; }
+  .perfect{
+    background:var(--good-soft);
+    border:1px dashed var(--good);
+    border-radius:14px; padding:1rem;
+    text-align:center; font-size:0.9rem; color:var(--ink-soft);
+  }
+
+  .site-footer{
+    border-top:1px solid var(--line);
+    padding:0.9rem clamp(1.1rem,3.5vw,2rem);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.62rem; letter-spacing:0.04em;
+    color:var(--ink-soft);
+    display:flex; flex-wrap:wrap; gap:0.4rem 1rem; justify-content:space-between;
+    background:var(--paper-2);
+  }
+  .site-footer a{ color:var(--rain-ink); text-decoration:none; }
+  .site-footer a:hover{ text-decoration:underline; }
+
+  #confetti{
+    position:fixed; inset:0; width:100%; height:100%;
+    pointer-events:none; z-index:50;
+  }
+
+  @media (max-width:520px){
+    .score-strip{ grid-template-columns:repeat(2,1fr); }
+    .hud{ gap:0.5rem; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<main class="sheet">
+
+  <!-- ============ MÀN HÌNH BẮT ĐẦU ============ -->
+  <section class="screen on" id="screen-start">
+    <div class="hero">
+      <span class="kicker">TRÒ CHƠI ÔN TẬP · GIÁO DỤC ĐỊA PHƯƠNG 10</span>
+      <h1>Săn điểm <em>khí hậu</em> Sài Gòn</h1>
+      <p class="hero-sub">Ôn lại Bài 1 (Đặc điểm khí hậu TP.HCM) và Bài 2 (Biểu hiện &amp; nguyên nhân của biến đổi khí hậu). Trả lời nhanh, đúng liên tiếp để nhân điểm và leo lên hạng cao nhất!</p>
+    </div>
+
+    <div class="pad">
+      <div class="setup-block">
+        <span class="setup-label">1 · CHỌN BỘ CÂU HỎI</span>
+        <div class="choice-grid" id="set-choices">
+          <button class="choice" data-set="1" type="button">
+            <b><span class="emoji">🌤️</span>Bài 1</b>
+            <span>Đặc điểm khí hậu TP.HCM — nhiệt độ, hai mùa, mưa, gió mùa.</span>
+          </button>
+          <button class="choice" data-set="2" type="button">
+            <b><span class="emoji">🌊</span>Bài 2</b>
+            <span>Biểu hiện &amp; nguyên nhân của biến đổi khí hậu ở TP.HCM.</span>
+          </button>
+          <button class="choice sel" data-set="0" type="button">
+            <b><span class="emoji">🔥</span>Tổng hợp cả hai bài</b>
+            <span>Trộn đều câu hỏi của Bài 1 và Bài 2 — dành cho lúc ôn tập chung.</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="setup-block">
+        <span class="setup-label">2 · CHỌN CHẾ ĐỘ CHƠI</span>
+        <div class="choice-grid" id="mode-choices">
+          <button class="choice sel" data-mode="relax" type="button">
+            <b><span class="emoji">🧘</span>Thư giãn</b>
+            <span>Không giới hạn thời gian, suy nghĩ thoải mái rồi chọn.</span>
+          </button>
+          <button class="choice" data-mode="rush" type="button">
+            <b><span class="emoji">⏱️</span>Tính giờ 20 giây</b>
+            <span>Trả lời càng nhanh điểm thưởng càng cao. Hết giờ là mất lượt!</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn--primary" id="btn-start" type="button">▶ Bắt đầu chơi</button>
+        <button class="icon-btn" id="btn-sound" type="button" title="Bật/tắt âm thanh" aria-label="Bật hoặc tắt âm thanh">🔊</button>
+        <span style="font-size:0.72rem;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;" id="qcount-note"></span>
+      </div>
+
+      <div class="rules">
+        <h3>Luật chơi</h3>
+        <ul>
+          <li>Mỗi câu đúng được <b>100 điểm</b>; đúng liên tiếp được cộng thêm <b>điểm combo</b> (tối đa +100).</li>
+          <li>Chế độ tính giờ: mỗi giây còn lại đổi thành <b>5 điểm thưởng</b>.</li>
+          <li>Có thể bấm phím <b>1 · 2 · 3 · 4</b> để chọn đáp án và <b>Enter</b> để sang câu tiếp theo.</li>
+          <li>Sai không sao — cuối lượt chơi sẽ có phần <b>xem lại câu sai</b> kèm giải thích.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MÀN HÌNH CHƠI ============ -->
+  <section class="screen" id="screen-play">
+    <div class="hud">
+      <div class="hud-left">
+        <span class="hud-chip" id="chip-lesson">BÀI 1</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--ink-soft);" id="qindex">Câu 1 / 12</span>
+        <span class="streak" id="streak">🔥 chuỗi 0</span>
+      </div>
+      <div class="hud-left">
+        <div class="score-box"><b id="score">0</b><span>điểm</span></div>
+        <button class="icon-btn" id="btn-quit" type="button" title="Thoát về màn hình đầu" aria-label="Thoát">✕</button>
+      </div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+    <div class="timer-track"><div class="timer-fill" id="timer"></div></div>
+
+    <div class="pad">
+      <div class="qmeta" id="qmeta"></div>
+      <h2 class="qtext" id="qtext">—</h2>
+      <div class="answers" id="answers"></div>
+      <div class="feedback" id="feedback">
+        <h4 id="fb-title">—</h4>
+        <p id="fb-text">—</p>
+      </div>
+      <div class="next-row"><button class="btn btn--dark" id="btn-next" type="button" style="display:none;">Câu tiếp theo →</button></div>
+    </div>
+  </section>
+
+  <!-- ============ MÀN HÌNH KẾT QUẢ ============ -->
+  <section class="screen" id="screen-end">
+    <div class="hero">
+      <span class="kicker">KẾT QUẢ LƯỢT CHƠI</span>
+      <h1 id="end-title">Xong rồi!</h1>
+      <p class="hero-sub" id="end-sub">—</p>
+    </div>
+    <div class="pad">
+      <div class="result-head">
+        <div class="medal" id="medal">🏅</div>
+        <h2 class="rank" id="rank">—</h2>
+        <p class="rank-sub" id="rank-sub">—</p>
+      </div>
+
+      <div class="score-strip">
+        <div class="score-cell"><b id="r-score">0</b><span>Tổng điểm</span></div>
+        <div class="score-cell"><b id="r-correct">0</b><span>Câu đúng</span></div>
+        <div class="score-cell"><b id="r-percent">0%</b><span>Tỉ lệ chính xác</span></div>
+        <div class="score-cell"><b id="r-streak">0</b><span>Chuỗi dài nhất</span></div>
+      </div>
+
+      <div class="review" id="review"></div>
+
+      <div class="btn-row" style="margin-top:1.3rem;">
+        <button class="btn btn--primary" id="btn-again" type="button">↻ Chơi lại bộ đề này</button>
+        <button class="btn btn--ghost" id="btn-home" type="button">Đổi bộ đề</button>
+        <a class="btn btn--ghost" href="bai1-khi-hau-tphcm.html">Xem lại Bài 1</a>
+        <a class="btn btn--ghost" href="bai2-bien-doi-khi-hau-tphcm.html">Xem lại Bài 2</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <span>GIÁO DỤC ĐỊA PHƯƠNG 10 · CHỦ ĐỀ 1 · TRÒ CHƠI ÔN TẬP BÀI 1 – BÀI 2</span>
+    <span><a href="index.html">← Thư viện bài giảng</a> · GV: TĂNG NGỌC PHỤNG</span>
+  </footer>
+</main>
+
+<script>
+/* ============================================================
+   NGÂN HÀNG CÂU HỎI — bám sát nội dung Bài 1 và Bài 2
+   b: bài (1 hoặc 2) · q: câu hỏi · a: các phương án
+   c: chỉ số đáp án đúng · e: giải thích
+   ============================================================ */
+const BANK = [
+  /* ---------- BÀI 1 ---------- */
+  { b:1, q:"Thành phố Hồ Chí Minh mang kiểu khí hậu nào?",
+    a:["Nhiệt đới gió mùa cận xích đạo","Ôn đới hải dương","Nhiệt đới gió mùa có mùa đông lạnh","Cận nhiệt đới gió mùa"], c:0,
+    e:"Nằm ở vĩ độ thấp, gần xích đạo nên TP.HCM nóng ẩm quanh năm, không có mùa đông lạnh." },
+  { b:1, q:"Nhiệt độ trung bình năm của TP.HCM khoảng bao nhiêu?",
+    a:["27–28°C","21–22°C","30–32°C","24–25°C"], c:0,
+    e:"Nhiệt độ trung bình năm khoảng 27–28°C và ít biến động giữa các tháng." },
+  { b:1, q:"Chênh lệch nhiệt độ giữa tháng nóng nhất và tháng mát nhất ở TP.HCM chỉ khoảng:",
+    a:["3–4°C","10–12°C","7–8°C","15°C"], c:0,
+    e:"Biên độ nhiệt năm rất nhỏ (3–4°C) — đúng đặc trưng của vùng cận xích đạo." },
+  { b:1, q:"Tháng nóng nhất trong năm ở TP.HCM thường là tháng mấy?",
+    a:["Tháng 4","Tháng 7","Tháng 6","Tháng 10"], c:0,
+    e:"Tháng 4 là cuối mùa khô nên nóng nhất; mát nhất rơi vào khoảng tháng 12–1." },
+  { b:1, q:"Mùa mưa ở TP.HCM kéo dài trong khoảng thời gian nào?",
+    a:["Tháng 5 đến tháng 11","Tháng 3 đến tháng 8","Tháng 12 đến tháng 4","Tháng 6 đến tháng 9"], c:0,
+    e:"Mùa mưa khoảng tháng 5–11, mùa khô khoảng tháng 12–4; ranh giới có thể xê dịch vài tuần." },
+  { b:1, q:"Lượng mưa trung bình năm của TP.HCM vào khoảng:",
+    a:["1.900mm","900mm","3.500mm","600mm"], c:0,
+    e:"Khoảng 1.900mm/năm, riêng mùa mưa đã chiếm tới ~90% tổng lượng mưa cả năm." },
+  { b:1, q:"Mùa mưa chiếm bao nhiêu phần trăm tổng lượng mưa cả năm?",
+    a:["Khoảng 90%","Khoảng 50%","Khoảng 30%","Khoảng 70%"], c:0,
+    e:"Mưa dồn gần như toàn bộ vào mùa mưa — đó là lí do mùa khô rất ít mưa." },
+  { b:1, q:"Độ ẩm không khí trung bình ở TP.HCM khoảng:",
+    a:["78–80%","50–55%","90–95%","60–65%"], c:0,
+    e:"Độ ẩm luôn ở mức cao quanh năm (78–80%), khiến cảm giác oi bức rõ rệt hơn." },
+  { b:1, q:"Số giờ nắng trung bình mỗi ngày ở TP.HCM là:",
+    a:["5–6 giờ","1–2 giờ","9–10 giờ","3–4 giờ"], c:0,
+    e:"Nắng khá dồi dào, trung bình 5–6 giờ/ngày và nhiều hơn vào mùa khô." },
+  { b:1, q:"Loại gió mùa nào hoạt động chính trong mùa mưa ở TP.HCM?",
+    a:["Gió mùa Tây Nam","Gió mùa Đông Bắc","Gió phơn Tây Nam khô nóng","Gió đất thổi từ đất liền ra biển"], c:0,
+    e:"Gió mùa Tây Nam mang hơi ẩm từ biển vào đất liền nên gây mưa nhiều." },
+  { b:1, q:"Mùa khô ở TP.HCM chịu ảnh hưởng của loại gió nào?",
+    a:["Gió mùa Đông Bắc và Tín phong (đã suy yếu)","Gió mùa Tây Nam","Gió biển thổi liên tục từ Cần Giờ","Gió phơn khô nóng từ Lào"], c:0,
+    e:"Khi tới Nam Bộ, gió mùa Đông Bắc và Tín phong đã suy yếu nên chỉ gây thời tiết khô ráo, không lạnh." },
+  { b:1, q:"Vì sao TP.HCM không có mùa đông lạnh như miền Bắc?",
+    a:["Vì nằm ở vĩ độ thấp, gần xích đạo","Vì có nhiều sông ngòi, kênh rạch","Vì địa hình thấp và bằng phẳng","Vì nằm sát Biển Đông"], c:0,
+    e:"Vĩ độ khoảng 10°10′–10°38′B, gần xích đạo nên quanh năm nhận lượng bức xạ lớn." },
+  { b:1, q:"Nhận định nào đúng về bão ở TP.HCM?",
+    a:["Ít khi bão đổ bộ trực tiếp nhưng vẫn chịu ảnh hưởng gián tiếp","Bão đổ bộ trực tiếp mỗi năm vài lần","Hoàn toàn không chịu bất kì ảnh hưởng nào của bão","Bão chỉ ảnh hưởng vào mùa khô"], c:0,
+    e:"Bão hiếm khi đổ bộ thẳng, nhưng mưa lớn, gió mạnh và triều cường kèm theo vẫn tác động tới thành phố." },
+  { b:1, q:"Vì sao những cơn mưa rào buổi chiều mùa mưa dễ gây ngập cục bộ?",
+    a:["Vì mưa ngắn nhưng cường độ rất lớn, dồn nước nhanh vào đường thấp trũng","Vì mưa kéo dài suốt cả ngày","Vì mưa luôn kèm theo bão lớn","Vì mưa rơi vào lúc nước sông xuống thấp nhất"], c:0,
+    e:"Mưa rào chỉ 30–60 phút nhưng cường độ lớn nên nước dồn nhanh, hệ thống thoát nước không kịp." },
+
+  /* ---------- BÀI 2 ---------- */
+  { b:2, q:"Theo kịch bản biến đổi khí hậu cho TP.HCM, đến năm 2030 nhiệt độ tăng khoảng:",
+    a:["0,8°C","0,2°C","2,5°C","4,0°C"], c:0,
+    e:"Đến 2030 tăng khoảng 0,8°C và đến 2050 tăng khoảng 1,2–1,3°C so với thời kỳ cơ sở." },
+  { b:2, q:"Một ngày được tính là “ngày nắng nóng” khi nhiệt độ cao nhất đạt từ:",
+    a:["35°C trở lên","30°C trở lên","40°C trở lên","33°C trở lên"], c:0,
+    e:"Số ngày nắng nóng (từ 35°C trở lên) đang tăng, tập trung vào tháng 3–5." },
+  { b:2, q:"Hiện tượng “đảo nhiệt đô thị” ở TP.HCM biểu hiện như thế nào?",
+    a:["Nội thành bê tông hoá nóng hơn ngoại thành khoảng 1–3°C, rõ nhất về đêm","Ngoại thành luôn nóng hơn nội thành","Nhiệt độ toàn thành phố giống hệt nhau","Chỉ xảy ra vào mùa mưa"], c:0,
+    e:"Bê tông, mái tôn, mặt đường hấp thụ và giữ nhiệt, ban đêm nhả nhiệt ra nên nội thành nóng hơn." },
+  { b:2, q:"Hệ thống cống của thành phố phần lớn chỉ được thiết kế cho lượng mưa khoảng:",
+    a:["85mm trong 3 giờ","200mm trong 1 giờ","300mm trong 2 giờ","20mm trong 3 giờ"], c:0,
+    e:"Trong khi đó ngày càng nhiều trận mưa cực đoan trên 100mm chỉ trong 1–2 giờ nên cống quá tải." },
+  { b:2, q:"Vì sao mưa lớn trùng đỉnh triều lại gây ngập sâu và lâu rút hơn?",
+    a:["Vì nước mưa không thoát ra sông được khi mực nước sông đang cao","Vì mưa lúc triều cường luôn to hơn bình thường","Vì cống bị đóng lại khi có triều","Vì nước biển bốc hơi làm mưa nhiều thêm"], c:0,
+    e:"Triều dâng chặn đường thoát nước, nước mưa bị giữ lại trong nội đô nên ngập sâu và rút chậm." },
+  { b:2, q:"Mực nước Biển Đông đang dâng với tốc độ khoảng:",
+    a:["3mm mỗi năm","3cm mỗi năm","3m mỗi năm","30cm mỗi năm"], c:0,
+    e:"Nước dâng khoảng 3mm/năm, dồn ngược vào các cửa sông Soài Rạp, Lòng Tàu rồi vào sông Sài Gòn – Đồng Nai." },
+  { b:2, q:"Đỉnh triều kỷ lục đo tại trạm Phú An (sông Sài Gòn) tháng 11/2025 là:",
+    a:["1,78m","1,50m","1,68m","2,15m"], c:0,
+    e:"Chuỗi kỷ lục: 1,68m (2013) → 1,77m (9/2019) → 1,78m (11/2025)." },
+  { b:2, q:"Mức báo động 3 tại trạm Phú An là bao nhiêu?",
+    a:["1,50m","1,30m","1,78m","2,00m"], c:0,
+    e:"BĐ1 = 1,30m · BĐ2 = 1,40m · BĐ3 = 1,50m — đỉnh triều 1,78m đã vượt báo động 3 tới 0,28m." },
+  { b:2, q:"Nền đất TP.HCM đang lún trung bình khoảng bao nhiêu mỗi năm?",
+    a:["Khoảng 2cm/năm","Khoảng 2mm/năm","Khoảng 20cm/năm","Khoảng 1m/năm"], c:0,
+    e:"Trung bình ~2cm/năm, có nơi 5–8cm/năm; từ 1990 đến nay đã lún khoảng 1m — nước dâng lên trong khi đất hạ xuống." },
+  { b:2, q:"Nguyên nhân nào sau đây là nguyên nhân CHỦ QUAN (do con người)?",
+    a:["Khai thác nước ngầm quá mức làm lún nền đất","Dao động El Niño – La Niña","Núi lửa phun trào đưa tro bụi vào khí quyển","Nền đất trẻ, yếu nên tự nén lún theo thời gian"], c:0,
+    e:"Khai thác nước ngầm quá mức là hoạt động của con người — thuộc nhóm nguyên nhân chủ quan." },
+  { b:2, q:"Nguyên nhân nào sau đây là nguyên nhân KHÁCH QUAN (tự nhiên)?",
+    a:["Dao động El Niño – La Niña trên Thái Bình Dương","San lấp ao hồ, kênh rạch để xây nhà","Xả rác xuống cống làm tắc dòng chảy","Bê tông hoá, thiếu mảng xanh trong đô thị"], c:0,
+    e:"El Niño – La Niña là biến động tự nhiên của khí hậu Trái Đất, không do con người tạo ra." },
+  { b:2, q:"Vì sao bê tông hoá, mất mảng xanh và mặt nước làm thành phố nóng hơn và ngập hơn?",
+    a:["Vì thành phố hấp thụ – giữ nhiệt nhiều hơn và nước mưa không thấm xuống đất được","Vì bê tông làm tăng lượng mưa","Vì cây xanh sinh ra khí nhà kính","Vì mặt nước làm nước biển dâng nhanh hơn"], c:0,
+    e:"Bề mặt bê tông vừa tích nhiệt vừa chặn nước thấm, nên vừa gây nóng vừa gây ngập." },
+  { b:2, q:"Rừng ngập mặn Cần Giờ có vai trò gì đối với thành phố?",
+    a:["Là “lá phổi xanh” và bức tường chắn sóng, chắn gió","Là nơi cung cấp nước sinh hoạt chính","Là khu vực khai thác nước ngầm lớn nhất","Là nguồn phát thải khí nhà kính lớn"], c:0,
+    e:"Suy giảm rừng ngập mặn Cần Giờ làm thành phố mất đi lớp lá chắn tự nhiên trước gió, sóng và nước dâng." },
+  { b:2, q:"Nhóm nguyên nhân nào khiến biến đổi khí hậu diễn ra NHANH HƠN và con người có thể thay đổi được?",
+    a:["Nguyên nhân chủ quan","Nguyên nhân khách quan","Cả hai đều không thể thay đổi","Vị trí địa lí của thành phố"], c:0,
+    e:"Nguyên nhân khách quan là cái nền; nguyên nhân chủ quan mới là phần con người tác động và có thể thay đổi." },
+  { b:2, q:"Mùa mưa ở TP.HCM hiện nay đang có xu hướng thay đổi thế nào?",
+    a:["Đến muộn và kết thúc muộn hơn, ranh giới hai mùa không còn ổn định","Bắt đầu sớm hơn và ngắn lại rõ rệt","Biến mất hoàn toàn ở khu vực nội thành","Giữ nguyên đúng như trước đây"], c:0,
+    e:"Tổng lượng mưa năm biến động mạnh, mùa mưa dịch chuyển muộn hơn và mưa cực đoan nhiều hơn." },
+  { b:2, q:"Hiện tượng nào sau đây KHÔNG phải là biểu hiện của biến đổi khí hậu ở TP.HCM?",
+    a:["Mùa đông lạnh giá kéo dài nhiều tháng","Xâm nhập mặn tiến sâu hơn vào sông trong mùa khô","Sạt lở bờ sông ở Nhà Bè, Cần Giờ, Thanh Đa","Dông, lốc xoáy, mưa đá xuất hiện bất thường"], c:0,
+    e:"TP.HCM ở vùng cận xích đạo, không có mùa đông lạnh — ba hiện tượng còn lại đều đang gia tăng." },
+  { b:2, q:"Vì sao TP.HCM cùng lúc hứng chịu cả mưa tại chỗ, lũ thượng nguồn và triều từ biển?",
+    a:["Vì nằm ở hạ lưu sông Sài Gòn – Đồng Nai, địa hình thấp và giáp biển","Vì nằm trên vùng núi cao đón gió","Vì có nhiều hồ chứa nước lớn trong nội thành","Vì nằm ở thượng nguồn các con sông"], c:0,
+    e:"Vị trí hạ lưu, địa hình thấp, giáp biển là nguyên nhân khách quan khiến thành phố dễ ngập." },
+  { b:2, q:"Ở trạm Phú An, đỉnh triều 1,78m đã vượt mức báo động 3 bao nhiêu?",
+    a:["0,28m","0,10m","1,28m","0,50m"], c:0,
+    e:"1,78m − 1,50m = 0,28m — mức vượt kỷ lục từng ghi nhận tại trạm này." }
+];
+
+/* ============================================================ */
+const QUESTIONS_PER_ROUND = 12;
+const TIME_LIMIT = 20;
+
+const state = {
+  set: 0,            // 0 = cả hai bài
+  mode: 'relax',
+  sound: true,
+  deck: [],
+  idx: 0,
+  score: 0,
+  correct: 0,
+  streak: 0,
+  bestStreak: 0,
+  locked: false,
+  wrong: [],
+  timeLeft: TIME_LIMIT,
+  ticker: null
+};
+
+const $ = (id) => document.getElementById(id);
+const shuffle = (arr) => {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/* ---------- ÂM THANH ---------- */
+let audioCtx = null;
+function beep(freqs, dur, type) {
+  if (!state.sound) return;
+  dur = dur || 0.12;
+  type = type || 'sine';
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    freqs.forEach((f, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = f;
+      const t0 = audioCtx.currentTime + i * dur;
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(0.16, t0 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(t0);
+      osc.stop(t0 + dur + 0.02);
+    });
+  } catch (e) { /* trình duyệt chặn âm thanh thì bỏ qua */ }
+}
+const sndGood = () => beep([660, 880, 1180], 0.11, 'triangle');
+const sndBad  = () => beep([220, 165], 0.16, 'sawtooth');
+const sndTick = () => beep([440], 0.05, 'square');
+const sndWin  = () => beep([523, 659, 784, 1047], 0.13, 'triangle');
+
+/* ---------- PHÁO GIẤY ---------- */
+const canvas = $('confetti');
+const ctx = canvas.getContext('2d');
+let pieces = [];
+let rafId = null;
+function sizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+sizeCanvas();
+window.addEventListener('resize', sizeCanvas);
+
+function burst(n, originY) {
+  n = n || 60;
+  originY = originY || 0.35;
+  const colors = ['#E4A23B', '#5AA6B4', '#B5533A', '#2F7D5B', '#F5DCA9', '#CDE6E3'];
+  for (let i = 0; i < n; i++) {
+    pieces.push({
+      x: canvas.width / 2 + (Math.random() - 0.5) * canvas.width * 0.5,
+      y: canvas.height * originY,
+      vx: (Math.random() - 0.5) * 9,
+      vy: Math.random() * -9 - 3,
+      g: 0.28 + Math.random() * 0.15,
+      w: 5 + Math.random() * 7,
+      h: 8 + Math.random() * 8,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      life: 90 + Math.random() * 40
+    });
+  }
+  if (!rafId) rafId = requestAnimationFrame(drawConfetti);
+}
+function drawConfetti() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  pieces = pieces.filter(p => p.life > 0 && p.y < canvas.height + 40);
+  pieces.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.vy += p.g; p.rot += p.vr; p.life--;
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = Math.max(0, Math.min(1, p.life / 40));
+    ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+    ctx.restore();
+  });
+  if (pieces.length) {
+    rafId = requestAnimationFrame(drawConfetti);
+  } else {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    rafId = null;
+  }
+}
+
+/* ---------- MÀN HÌNH ---------- */
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  $(id).classList.add('on');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- CHỌN BỘ ĐỀ / CHẾ ĐỘ ---------- */
+$('set-choices').addEventListener('click', (ev) => {
+  const btn = ev.target.closest('.choice');
+  if (!btn) return;
+  $('set-choices').querySelectorAll('.choice').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  state.set = parseInt(btn.dataset.set, 10);
+  beep([520], 0.05, 'square');
+  updateCountNote();
+});
+$('mode-choices').addEventListener('click', (ev) => {
+  const btn = ev.target.closest('.choice');
+  if (!btn) return;
+  $('mode-choices').querySelectorAll('.choice').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  state.mode = btn.dataset.mode;
+  beep([520], 0.05, 'square');
+  updateCountNote();
+});
+
+function poolFor(set) {
+  return set === 0 ? BANK : BANK.filter(q => q.b === set);
+}
+function updateCountNote() {
+  const n = Math.min(QUESTIONS_PER_ROUND, poolFor(state.set).length);
+  $('qcount-note').textContent = n + ' câu · ' + (state.mode === 'rush' ? '20 giây/câu' : 'không giới hạn giờ');
+}
+updateCountNote();
+
+$('btn-sound').addEventListener('click', () => {
+  state.sound = !state.sound;
+  $('btn-sound').textContent = state.sound ? '🔊' : '🔇';
+  if (state.sound) beep([660], 0.08);
+});
+
+/* ---------- BẮT ĐẦU ---------- */
+function startGame() {
+  const pool = poolFor(state.set);
+  state.deck = shuffle(pool).slice(0, Math.min(QUESTIONS_PER_ROUND, pool.length)).map(q => {
+    const correctText = q.a[q.c];
+    const opts = shuffle(q.a);
+    return { b: q.b, q: q.q, e: q.e, opts: opts, ci: opts.indexOf(correctText), correctText: correctText };
+  });
+  state.idx = 0; state.score = 0; state.correct = 0;
+  state.streak = 0; state.bestStreak = 0; state.wrong = [];
+  show('screen-play');
+  renderQuestion();
+}
+$('btn-start').addEventListener('click', startGame);
+$('btn-again').addEventListener('click', startGame);
+$('btn-home').addEventListener('click', () => { stopTimer(); show('screen-start'); });
+$('btn-quit').addEventListener('click', () => { stopTimer(); show('screen-start'); });
+
+/* ---------- ĐỒNG HỒ ---------- */
+function stopTimer() {
+  if (state.ticker) { clearInterval(state.ticker); state.ticker = null; }
+}
+function startTimer() {
+  stopTimer();
+  $('timer').classList.remove('warn');
+  $('timer').style.width = '100%';
+  if (state.mode !== 'rush') return;
+  state.timeLeft = TIME_LIMIT;
+  let lastTick = TIME_LIMIT;
+  state.ticker = setInterval(() => {
+    state.timeLeft -= 0.1;
+    const pct = Math.max(0, state.timeLeft / TIME_LIMIT) * 100;
+    $('timer').style.width = pct + '%';
+    if (state.timeLeft <= 5) {
+      $('timer').classList.add('warn');
+      const sec = Math.ceil(state.timeLeft);
+      if (sec > 0 && sec < lastTick) { lastTick = sec; sndTick(); }
+    }
+    if (state.timeLeft <= 0) { stopTimer(); timeUp(); }
+  }, 100);
+}
+
+/* ---------- HIỂN THỊ CÂU HỎI ---------- */
+function renderQuestion() {
+  const q = state.deck[state.idx];
+  state.locked = false;
+
+  $('chip-lesson').textContent = 'BÀI ' + q.b;
+  $('chip-lesson').className = 'hud-chip' + (q.b === 2 ? ' b2' : '');
+  $('qindex').textContent = 'Câu ' + (state.idx + 1) + ' / ' + state.deck.length;
+  $('progress').style.width = (state.idx / state.deck.length * 100) + '%';
+  $('score').textContent = state.score;
+  updateStreakChip();
+
+  $('qmeta').textContent = q.b === 1 ? 'ĐẶC ĐIỂM KHÍ HẬU TP.HCM' : 'BIỂU HIỆN & NGUYÊN NHÂN BIẾN ĐỔI KHÍ HẬU';
+  $('qtext').textContent = q.q;
+
+  const wrap = $('answers');
+  wrap.innerHTML = '';
+  q.opts.forEach((text, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ans';
+    btn.innerHTML = '<span class="key">' + (i + 1) + '</span><span>' + esc(text) + '</span>';
+    btn.addEventListener('click', () => answer(i));
+    wrap.appendChild(btn);
+  });
+
+  $('feedback').className = 'feedback';
+  $('btn-next').style.display = 'none';
+  startTimer();
+}
+
+function updateStreakChip() {
+  const chip = $('streak');
+  if (state.streak >= 2) {
+    chip.textContent = '🔥 chuỗi ' + state.streak;
+    chip.classList.add('on');
+  } else {
+    chip.classList.remove('on');
+  }
+}
+
+function lockAnswers(pickedIndex) {
+  const q = state.deck[state.idx];
+  Array.prototype.forEach.call($('answers').children, (b, k) => {
+    b.disabled = true;
+    if (k === q.ci) b.classList.add('correct');
+    else if (k === pickedIndex) b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+}
+
+function showNextButton() {
+  const last = state.idx === state.deck.length - 1;
+  $('btn-next').style.display = 'inline-flex';
+  $('btn-next').textContent = last ? 'Xem kết quả →' : 'Câu tiếp theo →';
+}
+
+/* ---------- TRẢ LỜI ---------- */
+const PRAISES = ['Chính xác! 🎉', 'Quá chuẩn! 👏', 'Tuyệt vời! ⭐', 'Đúng rồi đó! 💪', 'Xuất sắc! 🌟'];
+const pickPraise = () => PRAISES[Math.floor(Math.random() * PRAISES.length)];
+
+function answer(i) {
+  if (state.locked) return;
+  state.locked = true;
+  stopTimer();
+
+  const q = state.deck[state.idx];
+  lockAnswers(i);
+
+  if (i === q.ci) {
+    state.correct++;
+    state.streak++;
+    state.bestStreak = Math.max(state.bestStreak, state.streak);
+    const combo = Math.min(100, (state.streak - 1) * 20);
+    const timeBonus = state.mode === 'rush' ? Math.max(0, Math.round(state.timeLeft) * 5) : 0;
+    const gained = 100 + combo + timeBonus;
+    state.score += gained;
+    $('score').textContent = state.score;
+    sndGood();
+    burst(state.streak >= 3 ? 90 : 45, 0.3);
+    const bonusText = (combo ? ' +' + combo + ' combo' : '') + (timeBonus ? ' +' + timeBonus + ' tốc độ' : '');
+    $('feedback').className = 'feedback on ok';
+    $('fb-title').innerHTML = pickPraise() + '<span class="points">+' + gained + ' điểm' + bonusText + '</span>';
+    $('fb-text').textContent = q.e;
+  } else {
+    state.streak = 0;
+    state.wrong.push(q);
+    sndBad();
+    $('feedback').className = 'feedback on no';
+    $('fb-title').textContent = 'Chưa đúng — đáp án là: ' + q.correctText;
+    $('fb-text').textContent = q.e;
+  }
+  updateStreakChip();
+  showNextButton();
+  $('btn-next').focus();
+}
+
+function timeUp() {
+  if (state.locked) return;
+  state.locked = true;
+  const q = state.deck[state.idx];
+  lockAnswers(-1);
+  state.streak = 0;
+  state.wrong.push(q);
+  sndBad();
+  updateStreakChip();
+  $('feedback').className = 'feedback on no';
+  $('fb-title').textContent = '⏰ Hết giờ! Đáp án là: ' + q.correctText;
+  $('fb-text').textContent = q.e;
+  showNextButton();
+}
+
+$('btn-next').addEventListener('click', () => {
+  if (state.idx < state.deck.length - 1) {
+    state.idx++;
+    renderQuestion();
+  } else {
+    finish();
+  }
+});
+
+/* ---------- KẾT THÚC ---------- */
+function finish() {
+  stopTimer();
+  $('progress').style.width = '100%';
+  const total = state.deck.length;
+  const pct = Math.round(state.correct / total * 100);
+
+  let medal = '🌱', rank = 'Tập sự khí tượng', sub = 'Đừng lo, đọc lại phần Ghi nhớ của bài rồi chơi thêm một lượt nữa nhé!';
+  if (pct === 100) { medal = '🏆'; rank = 'Nhà khí hậu học cừ khôi'; sub = 'Trọn vẹn tuyệt đối! Em nắm rất chắc cả hai bài.'; }
+  else if (pct >= 80) { medal = '🥇'; rank = 'Chuyên gia dự báo'; sub = 'Rất tốt! Chỉ cần xem lại vài chi tiết nhỏ là hoàn hảo.'; }
+  else if (pct >= 60) { medal = '🥈'; rank = 'Quan trắc viên'; sub = 'Khá ổn rồi — lướt lại phần câu sai bên dưới là chắc kiến thức.'; }
+  else if (pct >= 40) { medal = '🥉'; rank = 'Học viên trạm đo'; sub = 'Em đã nắm được ý chính, cần ôn thêm các con số quan trọng.'; }
+
+  $('medal').textContent = medal;
+  $('rank').textContent = rank;
+  $('rank-sub').textContent = sub;
+  $('end-title').textContent = pct >= 80 ? 'Quá đỉnh!' : (pct >= 50 ? 'Làm tốt lắm!' : 'Cố lên nào!');
+  $('end-sub').textContent = 'Em trả lời đúng ' + state.correct + '/' + total + ' câu trong bộ đề ' +
+    (state.set === 0 ? 'tổng hợp Bài 1 + Bài 2' : 'Bài ' + state.set) + '.';
+
+  $('r-score').textContent = state.score;
+  $('r-correct').textContent = state.correct + '/' + total;
+  $('r-percent').textContent = pct + '%';
+  $('r-streak').textContent = state.bestStreak;
+
+  const review = $('review');
+  if (state.wrong.length === 0) {
+    review.innerHTML = '<div class="perfect">🎯 Không sai câu nào! Em có thể thử chế độ <b>Tính giờ 20 giây</b> để thử thách bản thân.</div>';
+  } else {
+    review.innerHTML = '<h3>Xem lại ' + state.wrong.length + ' câu chưa đúng</h3>' +
+      state.wrong.map(q =>
+        '<div class="review-item">' +
+          '<p class="q">' + esc(q.q) + '</p>' +
+          '<p class="a">✓ ' + esc(q.correctText) + '</p>' +
+          '<p class="e">' + esc(q.e) + '</p>' +
+        '</div>'
+      ).join('');
+  }
+
+  show('screen-end');
+  if (pct >= 60) { sndWin(); burst(150, 0.25); setTimeout(() => burst(100, 0.3), 400); }
+}
+
+/* ---------- BÀN PHÍM ---------- */
+document.addEventListener('keydown', (ev) => {
+  if (!$('screen-play').classList.contains('on')) return;
+  if (['1', '2', '3', '4'].indexOf(ev.key) !== -1) {
+    const btn = $('answers').children[parseInt(ev.key, 10) - 1];
+    if (btn && !btn.disabled) btn.click();
+  } else if (ev.key === 'Enter' && $('btn-next').style.display !== 'none') {
+    ev.preventDefault();
+    $('btn-next').click();
+  }
+});
+</script>
+
+</body>
+</html>
