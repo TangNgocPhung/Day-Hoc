@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sổ điểm cộng · Góc Học Tập</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #eef2ed;
+    --surface: #fff;
+    --surface-2: #f7f8f4;
+    --ink: #232823;
+    --muted: #687067;
+    --border: #d7ddd1;
+    --blue: #34618f;
+    --blue-soft: #e7eef6;
+    --green: #256f69;
+    --green-soft: #e5f2ef;
+    --orange: #a95b28;
+    --orange-soft: #f8e9de;
+    --red: #a33e3e;
+    --red-soft: #f8e5e5;
+    --shadow: 0 18px 50px -30px rgba(30, 45, 38, .45);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
+  }
+  a { color: inherit; }
+  .topbar {
+    border-top: 5px solid var(--green);
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,.94);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(12px);
+  }
+  .topbar-inner {
+    width: min(1240px, 100%);
+    margin: auto;
+    padding: .9rem clamp(1rem, 4vw, 2rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--orange);
+  }
+  .back-link {
+    text-decoration: none;
+    color: var(--green);
+    font-size: .82rem;
+    font-weight: 700;
+    padding: .55rem .8rem;
+    border: 1px solid var(--green);
+    border-radius: 999px;
+  }
+  .page {
+    width: min(1240px, 100%);
+    margin: auto;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem) 4rem;
+  }
+  .eyebrow {
+    display: block;
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-weight: 600;
+    letter-spacing: .1em;
+    color: var(--green);
+    font-size: .72rem;
+    margin-bottom: .65rem;
+  }
+  h1 {
+    margin: 0 0 .55rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.1rem);
+    line-height: 1.05;
+  }
+  .lede { margin: 0 0 1.6rem; max-width: 70ch; color: var(--muted); line-height: 1.6; }
+
+  .stat-row { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 1.4rem; }
+  .stat-card {
+    flex: 1 1 12rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .stat-card span { display: block; color: var(--muted); font-size: .76rem; font-weight: 600; }
+  .stat-card strong {
+    display: block;
+    margin-top: .2rem;
+    color: var(--orange);
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.75rem;
+  }
+  .stat-card small { display: block; color: var(--muted); font-size: .72rem; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, .95fr) minmax(0, 1.35fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .card {
+    padding: clamp(1rem, 3vw, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .card + .card { margin-top: 1.25rem; }
+  .card h2 {
+    margin: 0 0 .9rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.3rem;
+  }
+  .card h2 small {
+    display: block;
+    margin-top: .25rem;
+    color: var(--muted);
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-size: .78rem;
+    font-weight: 400;
+  }
+
+  .form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.1rem; }
+  .form .field { display: grid; gap: .45rem; }
+  .form .full { grid-column: 1 / -1; }
+  .form label { font-size: .78rem; font-weight: 700; }
+  .form label em { color: var(--muted); font-style: normal; font-weight: 500; }
+  .form input, .form select {
+    min-height: 42px;
+    padding: .55rem .7rem;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: .88rem;
+  }
+  .form input:focus, .form select:focus {
+    outline: 3px solid rgba(52,97,143,.18);
+    border-color: var(--blue);
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .chip {
+    padding: .3rem .7rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font: inherit;
+    font-size: .76rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .chip:hover { border-color: var(--green); color: var(--green); }
+  .chip.active { border-color: var(--green); background: var(--green-soft); color: var(--green); }
+  .submit {
+    min-height: 48px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--green);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .result {
+    display: none;
+    grid-column: 1 / -1;
+    padding: .75rem .9rem;
+    border-radius: 10px;
+    font-size: .84rem;
+    line-height: 1.5;
+  }
+  .result.show { display: block; }
+  .result.ok { border: 1px solid var(--green); background: var(--green-soft); color: var(--green); }
+  .result.fail { border: 1px solid #ddb5b5; background: var(--red-soft); color: #852e2e; }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: .9rem; }
+  .toolbar input, .toolbar select {
+    flex: 1 1 9rem;
+    min-height: 40px;
+    padding: .5rem .7rem;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: .86rem;
+  }
+  .toolbar input:focus, .toolbar select:focus { outline: 3px solid rgba(52,97,143,.18); border-color: var(--blue); }
+
+  .count { margin: 0 0 .9rem; font-size: .8rem; color: var(--muted); }
+  .count strong { color: var(--green); font-size: 1.1rem; }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+  thead th {
+    position: sticky;
+    top: 0;
+    padding: .55rem .6rem;
+    border-bottom: 2px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-size: .72rem;
+    letter-spacing: .05em;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  tbody td { padding: .55rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:hover { background: var(--surface-2); }
+  td.date, td.points, td.total { white-space: nowrap; font-family: "IBM Plex Mono", Consolas, monospace; }
+  td.points, td.total { font-weight: 600; color: var(--orange); text-align: right; }
+  td.name { font-weight: 600; }
+  td.reason { color: var(--muted); }
+  .tag {
+    display: inline-block;
+    padding: .15rem .5rem;
+    border: 1px solid #b8cbe0;
+    border-radius: 999px;
+    background: var(--blue-soft);
+    color: #274d73;
+    font-size: .72rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .delete-btn {
+    padding: .25rem .55rem;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font: inherit;
+    font-size: .74rem;
+    cursor: pointer;
+  }
+  .delete-btn:hover { border-color: var(--red); background: var(--red-soft); color: var(--red); }
+  .empty { padding: 1.5rem .5rem; color: var(--muted); font-size: .85rem; text-align: center; }
+
+  .notice {
+    margin: 0 0 1rem;
+    padding: .9rem 1rem;
+    border: 1px solid #b8cbe0;
+    border-radius: 12px;
+    background: var(--blue-soft);
+    color: #274d73;
+    font-size: .84rem;
+    line-height: 1.55;
+  }
+
+  .data-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .action-btn {
+    padding: .6rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-2);
+    color: var(--ink);
+    font: inherit;
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .action-btn:hover { border-color: var(--green); color: var(--green); }
+  .action-btn.danger:hover { border-color: var(--red); background: var(--red-soft); color: var(--red); }
+
+  .site-footer {
+    border-top: 1px solid var(--border);
+    background: rgba(255,255,255,.7);
+    color: var(--muted);
+    font-size: .78rem;
+  }
+  .site-footer div {
+    width: min(1240px, 100%);
+    margin: auto;
+    padding: 1.2rem clamp(1rem, 4vw, 2rem);
+  }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 520px) {
+    .form { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">Góc Học Tập</a>
+    <a class="back-link" href="index.html">← Về trang môn học</a>
+  </div>
+</header>
+
+<main class="page">
+  <span class="eyebrow">CÔNG CỤ CỦA GIÁO VIÊN</span>
+  <h1>Sổ điểm cộng</h1>
+  <p class="lede">
+    Ghi nhanh điểm cộng cho học sinh: họ tên, lớp, môn học, ngày cộng, số điểm và cột kiểm tra sẽ dùng.
+    Danh sách được lưu ngay trên máy này và có thể xuất ra file Excel/CSV để nhập vào sổ điểm.
+  </p>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <span>Lượt cộng điểm</span>
+      <strong id="stat-entries">0</strong>
+      <small>tổng số lần đã ghi nhận</small>
+    </div>
+    <div class="stat-card">
+      <span>Tổng điểm đã cộng</span>
+      <strong id="stat-points">0</strong>
+      <small>cộng dồn tất cả học sinh</small>
+    </div>
+    <div class="stat-card">
+      <span>Học sinh được cộng</span>
+      <strong id="stat-students">0</strong>
+      <small>tính theo tên và lớp</small>
+    </div>
+    <div class="stat-card">
+      <span>Lần ghi gần nhất</span>
+      <strong id="stat-latest">—</strong>
+      <small id="stat-latest-note">chưa có dữ liệu</small>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card" aria-labelledby="form-title">
+      <h2 id="form-title">Thêm điểm cộng<small>Chọn lớp trước, danh sách học sinh của lớp sẽ hiện ra để chọn nhanh.</small></h2>
+      <form class="form" id="entry-form" autocomplete="off">
+        <div class="field">
+          <label for="class-input">Lớp</label>
+          <select id="class-input" required></select>
+        </div>
+        <div class="field">
+          <label for="subject-input">Môn học</label>
+          <select id="subject-input" required></select>
+        </div>
+        <div class="field full">
+          <label for="name-input">Họ và tên học sinh</label>
+          <input id="name-input" list="student-list" placeholder="Chọn lớp trước để có gợi ý tên" required>
+          <datalist id="student-list"></datalist>
+        </div>
+        <div class="field">
+          <label for="date-input">Ngày cộng điểm</label>
+          <input id="date-input" type="date" required>
+        </div>
+        <div class="field">
+          <label for="column-input">Cột kiểm tra</label>
+          <select id="column-input" required></select>
+        </div>
+        <div class="field full">
+          <label for="points-input">Số điểm cộng <em>(0,25 – 5)</em></label>
+          <input id="points-input" type="number" min="0.25" max="5" step="0.25" value="0.5" required>
+          <div class="chips" id="point-chips">
+            <button class="chip" type="button" data-points="0.25">+0,25</button>
+            <button class="chip" type="button" data-points="0.5">+0,5</button>
+            <button class="chip" type="button" data-points="1">+1</button>
+            <button class="chip" type="button" data-points="2">+2</button>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="reason-input">Lý do cộng điểm <em>(không bắt buộc)</em></label>
+          <input id="reason-input" placeholder="Ví dụ: xung phong lên bảng, làm bài tập về nhà tốt…">
+        </div>
+        <div class="result" id="form-result" role="status"></div>
+        <button class="submit full" id="submit-btn" type="submit">Cộng điểm</button>
+      </form>
+    </section>
+
+    <div>
+      <section class="card" aria-labelledby="list-title">
+        <h2 id="list-title">Danh sách điểm cộng</h2>
+        <div class="toolbar">
+          <input id="search" type="search" placeholder="Tìm theo tên học sinh hoặc lý do">
+          <select id="filter-class"></select>
+          <select id="filter-subject"></select>
+          <select id="filter-column"></select>
+        </div>
+        <p class="count" id="list-count">Danh sách trống.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Ngày</th>
+                <th scope="col">Họ và tên</th>
+                <th scope="col">Lớp</th>
+                <th scope="col">Môn học</th>
+                <th scope="col">Cột kiểm tra</th>
+                <th scope="col">Điểm</th>
+                <th scope="col">Lý do</th>
+                <th scope="col">Xóa</th>
+              </tr>
+            </thead>
+            <tbody id="entry-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="summary-title">
+        <h2 id="summary-title">Tổng hợp theo học sinh<small>Gộp theo học sinh · môn học · cột kiểm tra, dựa trên bộ lọc phía trên.</small></h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Họ và tên</th>
+                <th scope="col">Lớp</th>
+                <th scope="col">Môn học</th>
+                <th scope="col">Cột kiểm tra</th>
+                <th scope="col">Số lượt</th>
+                <th scope="col">Tổng điểm</th>
+              </tr>
+            </thead>
+            <tbody id="summary-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="card" aria-labelledby="data-title">
+    <h2 id="data-title">Lưu trữ và xuất dữ liệu</h2>
+    <p class="notice">
+      Dữ liệu điểm cộng được lưu trong trình duyệt của máy này. Nếu đổi máy, đổi trình duyệt hoặc xóa dữ liệu duyệt web
+      thì danh sách sẽ không còn. Nên bấm <strong>Xuất file Excel (CSV)</strong> sau mỗi buổi dạy để có bản lưu bên ngoài.
+    </p>
+    <div class="data-actions">
+      <button class="action-btn" id="export-csv" type="button">⬇ Xuất file Excel (CSV)</button>
+      <button class="action-btn" id="export-json" type="button">💾 Lưu bản sao (JSON)</button>
+      <button class="action-btn" id="import-json" type="button">📂 Khôi phục từ bản sao</button>
+      <button class="action-btn danger" id="clear-all" type="button">🗑 Xóa toàn bộ dữ liệu</button>
+      <input id="import-file" type="file" accept="application/json,.json" hidden>
+    </div>
+    <p class="count" id="data-result" style="margin-top:.9rem"></p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div>Giáo viên phụ trách: Tăng Ngọc Phụng · Môn Tin học</div>
+</footer>
+
+<script src="data/student-rosters.js?v=1"></script>
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "gocHocTap.diemCong.v1";
+  var COLUMNS = [
+    "Thường xuyên 1",
+    "Thường xuyên 2",
+    "Thường xuyên 3",
+    "Thường xuyên 4",
+    "Giữa kỳ",
+    "Cuối kỳ",
+    "Chưa xếp cột"
+  ];
+  var SUBJECTS = [
+    "Tin học 10",
+    "Tin học 11",
+    "Chuyên đề Tin học 11",
+    "Tự chọn Tin học",
+    "Tin học (MOS)",
+    "Giáo dục địa phương 10"
+  ];
+
+  var rosters = window.STUDENT_ROSTERS || {};
+  var entries = [];
+
+  var classInput = document.getElementById("class-input");
+  var subjectInput = document.getElementById("subject-input");
+  var nameInput = document.getElementById("name-input");
+  var studentList = document.getElementById("student-list");
+  var dateInput = document.getElementById("date-input");
+  var columnInput = document.getElementById("column-input");
+  var pointsInput = document.getElementById("points-input");
+  var reasonInput = document.getElementById("reason-input");
+  var formResult = document.getElementById("form-result");
+  var dataResult = document.getElementById("data-result");
+
+  var search = document.getElementById("search");
+  var filterClass = document.getElementById("filter-class");
+  var filterSubject = document.getElementById("filter-subject");
+  var filterColumn = document.getElementById("filter-column");
+  var listCount = document.getElementById("list-count");
+  var entryBody = document.getElementById("entry-body");
+  var summaryBody = document.getElementById("summary-body");
+
+  /* ---------- Tiện ích ---------- */
+
+  function classLabel(key) {
+    var roster = rosters[key];
+    var label = (roster && roster.label) || key || "";
+    return label.replace(/_/g, " ");
+  }
+
+  // Mỗi khối lớp gắn sẵn môn đang dạy để cô không phải chọn lại mỗi lần.
+  function subjectForClass(key) {
+    if (/^TC_MOS/.test(key)) return "Tin học (MOS)";
+    if (/^TC_TIN/.test(key)) return "Tự chọn Tin học";
+    if (/^11/.test(key)) return "Tin học 11";
+    if (/^10/.test(key)) return "Giáo dục địa phương 10";
+    return SUBJECTS[0];
+  }
+
+  // Bỏ dấu để tìm kiếm và so tên không phụ thuộc cách gõ có dấu.
+  function normalize(text) {
+    return String(text || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function todayISO() {
+    var now = new Date();
+    return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  }
+
+  function formatDate(iso) {
+    var parts = String(iso || "").split("-");
+    if (parts.length !== 3) return iso || "";
+    return parts[2] + "/" + parts[1] + "/" + parts[0];
+  }
+
+  function formatPoints(value) {
+    var number = Math.round(Number(value) * 100) / 100;
+    return String(number).replace(".", ",");
+  }
+
+  function option(value, text) {
+    var element = document.createElement("option");
+    element.value = value;
+    element.textContent = text;
+    return element;
+  }
+
+  function newId() {
+    return "dc-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+  }
+
+  /* ---------- Lưu trữ ---------- */
+
+  function load() {
+    try {
+      var parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      entries = Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      entries = [];
+    }
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    } catch (error) {
+      showResult("Trình duyệt không cho phép lưu dữ liệu nên danh sách sẽ mất khi tải lại trang.", false);
+    }
+  }
+
+  /* ---------- Khởi tạo các ô chọn ---------- */
+
+  function fillSelects() {
+    classInput.appendChild(option("", "— Chọn lớp —"));
+    filterClass.appendChild(option("", "Tất cả lớp"));
+    Object.keys(rosters).sort().forEach(function (key) {
+      classInput.appendChild(option(key, classLabel(key)));
+      filterClass.appendChild(option(key, classLabel(key)));
+    });
+
+    filterSubject.appendChild(option("", "Tất cả môn học"));
+    SUBJECTS.forEach(function (subject) {
+      subjectInput.appendChild(option(subject, subject));
+      filterSubject.appendChild(option(subject, subject));
+    });
+
+    filterColumn.appendChild(option("", "Tất cả cột kiểm tra"));
+    COLUMNS.forEach(function (column) {
+      columnInput.appendChild(option(column, column));
+      filterColumn.appendChild(option(column, column));
+    });
+    columnInput.value = COLUMNS[0];
+  }
+
+  function fillStudentList() {
+    var roster = rosters[classInput.value];
+    var students = (roster && roster.students) || [];
+    studentList.innerHTML = "";
+    students.forEach(function (student) {
+      studentList.appendChild(option(student.name, "STT " + student.stt));
+    });
+    nameInput.placeholder = students.length
+      ? "Gõ vài chữ để tìm trong " + students.length + " học sinh của lớp"
+      : "Chọn lớp trước để có gợi ý tên";
+  }
+
+  /* ---------- Hiển thị ---------- */
+
+  function matchesFilter(entry) {
+    if (filterClass.value && entry.className !== filterClass.value) return false;
+    if (filterSubject.value && entry.subject !== filterSubject.value) return false;
+    if (filterColumn.value && entry.column !== filterColumn.value) return false;
+    var keyword = normalize(search.value);
+    if (!keyword) return true;
+    return normalize(entry.name).indexOf(keyword) !== -1
+      || normalize(entry.reason).indexOf(keyword) !== -1;
+  }
+
+  function sortedEntries() {
+    return entries.slice().sort(function (a, b) {
+      if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+      return (b.createdAt || 0) - (a.createdAt || 0);
+    });
+  }
+
+  function renderStats() {
+    var totalPoints = 0;
+    var students = {};
+    entries.forEach(function (entry) {
+      totalPoints += Number(entry.points) || 0;
+      students[entry.className + "|" + normalize(entry.name)] = true;
+    });
+
+    document.getElementById("stat-entries").textContent = entries.length;
+    document.getElementById("stat-points").textContent = formatPoints(totalPoints);
+    document.getElementById("stat-students").textContent = Object.keys(students).length;
+
+    var latest = entries.slice().sort(function (a, b) {
+      return (b.createdAt || 0) - (a.createdAt || 0);
+    })[0];
+    document.getElementById("stat-latest").textContent = latest ? formatDate(latest.date) : "—";
+    document.getElementById("stat-latest-note").textContent = latest
+      ? latest.name + " · " + classLabel(latest.className)
+      : "chưa có dữ liệu";
+  }
+
+  function emptyRow(columns, message) {
+    var row = document.createElement("tr");
+    var cell = document.createElement("td");
+    cell.className = "empty";
+    cell.colSpan = columns;
+    cell.textContent = message;
+    row.appendChild(cell);
+    return row;
+  }
+
+  function cell(text, className) {
+    var td = document.createElement("td");
+    if (className) td.className = className;
+    td.textContent = text;
+    return td;
+  }
+
+  function columnCell(text) {
+    var td = document.createElement("td");
+    var tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = text;
+    td.appendChild(tag);
+    return td;
+  }
+
+  function renderTable(rows) {
+    entryBody.innerHTML = "";
+    if (rows.length === 0) {
+      entryBody.appendChild(emptyRow(8, entries.length === 0
+        ? "Chưa có điểm cộng nào. Dùng khung bên trái để thêm học sinh đầu tiên."
+        : "Không tìm thấy điểm cộng phù hợp với bộ lọc."));
+      return;
+    }
+
+    rows.forEach(function (entry) {
+      var tr = document.createElement("tr");
+      tr.appendChild(cell(formatDate(entry.date), "date"));
+      tr.appendChild(cell(entry.name, "name"));
+      tr.appendChild(cell(classLabel(entry.className)));
+      tr.appendChild(cell(entry.subject));
+      tr.appendChild(columnCell(entry.column));
+      tr.appendChild(cell("+" + formatPoints(entry.points), "points"));
+      tr.appendChild(cell(entry.reason || "—", "reason"));
+
+      var actions = document.createElement("td");
+      var remove = document.createElement("button");
+      remove.className = "delete-btn";
+      remove.type = "button";
+      remove.textContent = "Xóa";
+      remove.addEventListener("click", function () {
+        if (!window.confirm("Xóa điểm cộng của " + entry.name + " ngày " + formatDate(entry.date) + "?")) return;
+        entries = entries.filter(function (item) { return item.id !== entry.id; });
+        save();
+        render();
+      });
+      actions.appendChild(remove);
+      tr.appendChild(actions);
+
+      entryBody.appendChild(tr);
+    });
+  }
+
+  function renderSummary(rows) {
+    var groups = [];
+    var index = {};
+    rows.forEach(function (entry) {
+      var key = [entry.className, normalize(entry.name), entry.subject, entry.column].join("|");
+      if (!index[key]) {
+        index[key] = {
+          name: entry.name,
+          className: entry.className,
+          subject: entry.subject,
+          column: entry.column,
+          times: 0,
+          total: 0
+        };
+        groups.push(index[key]);
+      }
+      index[key].times += 1;
+      index[key].total += Number(entry.points) || 0;
+    });
+
+    groups.sort(function (a, b) {
+      if (b.total !== a.total) return b.total - a.total;
+      return normalize(a.name) < normalize(b.name) ? -1 : 1;
+    });
+
+    summaryBody.innerHTML = "";
+    if (groups.length === 0) {
+      summaryBody.appendChild(emptyRow(6, "Chưa có dữ liệu để tổng hợp."));
+      return;
+    }
+
+    groups.forEach(function (group) {
+      var tr = document.createElement("tr");
+      tr.appendChild(cell(group.name, "name"));
+      tr.appendChild(cell(classLabel(group.className)));
+      tr.appendChild(cell(group.subject));
+      tr.appendChild(columnCell(group.column));
+      tr.appendChild(cell(group.times + " lượt"));
+      tr.appendChild(cell("+" + formatPoints(group.total), "total"));
+      summaryBody.appendChild(tr);
+    });
+  }
+
+  function visibleRows() {
+    return sortedEntries().filter(matchesFilter);
+  }
+
+  function render() {
+    var rows = visibleRows();
+    var shownPoints = rows.reduce(function (sum, entry) { return sum + (Number(entry.points) || 0); }, 0);
+
+    listCount.innerHTML = entries.length === 0
+      ? "Danh sách trống."
+      : "Đang hiển thị <strong>" + rows.length + "</strong> / " + entries.length
+        + " lượt cộng điểm · tổng <strong>+" + formatPoints(shownPoints) + "</strong> điểm.";
+
+    renderTable(rows);
+    renderSummary(rows);
+    renderStats();
+  }
+
+  function showResult(message, ok) {
+    formResult.textContent = message;
+    formResult.className = "result show " + (ok ? "ok" : "fail");
+  }
+
+  /* ---------- Thêm điểm cộng ---------- */
+
+  function syncPointChips() {
+    var current = String(Number(pointsInput.value));
+    Array.prototype.forEach.call(document.querySelectorAll("#point-chips .chip"), function (chip) {
+      chip.classList.toggle("active", String(Number(chip.getAttribute("data-points"))) === current);
+    });
+  }
+
+  document.getElementById("point-chips").addEventListener("click", function (event) {
+    var chip = event.target.closest(".chip");
+    if (!chip) return;
+    pointsInput.value = chip.getAttribute("data-points");
+    syncPointChips();
+  });
+  pointsInput.addEventListener("input", syncPointChips);
+
+  classInput.addEventListener("change", function () {
+    fillStudentList();
+    if (classInput.value) subjectInput.value = subjectForClass(classInput.value);
+  });
+
+  document.getElementById("entry-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    var name = nameInput.value.trim().replace(/\s+/g, " ");
+    var points = Number(pointsInput.value);
+
+    if (!classInput.value) { showResult("Hãy chọn lớp của học sinh.", false); classInput.focus(); return; }
+    if (name.length < 2) { showResult("Hãy nhập họ và tên học sinh.", false); nameInput.focus(); return; }
+    if (!dateInput.value) { showResult("Hãy chọn ngày cộng điểm.", false); dateInput.focus(); return; }
+    if (!(points > 0)) { showResult("Số điểm cộng phải lớn hơn 0.", false); pointsInput.focus(); return; }
+
+    // Nếu tên trùng danh sách lớp thì lấy đúng cách viết trong danh sách để bảng không bị lệch nhau.
+    var students = (rosters[classInput.value] && rosters[classInput.value].students) || [];
+    var matched = students.filter(function (student) {
+      return normalize(student.name) === normalize(name);
+    })[0];
+    if (matched) name = matched.name;
+
+    entries.push({
+      id: newId(),
+      date: dateInput.value,
+      name: name,
+      className: classInput.value,
+      subject: subjectInput.value,
+      column: columnInput.value,
+      points: points,
+      reason: reasonInput.value.trim(),
+      createdAt: Date.now()
+    });
+    save();
+    render();
+
+    showResult("Đã cộng +" + formatPoints(points) + " cho " + name + " · " + classLabel(classInput.value)
+      + " · " + subjectInput.value + " · " + columnInput.value
+      + (matched ? "." : ". (Tên này không có trong danh sách lớp, cô kiểm tra lại giúp.)"), true);
+
+    // Giữ nguyên lớp, môn, ngày, điểm và cột để cộng tiếp cho học sinh khác trong cùng buổi.
+    nameInput.value = "";
+    reasonInput.value = "";
+    nameInput.focus();
+  });
+
+  /* ---------- Xuất và sao lưu ---------- */
+
+  function showDataResult(message) {
+    dataResult.textContent = message;
+  }
+
+  function download(filename, content, mime) {
+    var blob = new Blob([content], { type: mime });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function csvCell(value) {
+    return '"' + String(value === undefined || value === null ? "" : value).replace(/"/g, '""') + '"';
+  }
+
+  document.getElementById("export-csv").addEventListener("click", function () {
+    var rows = visibleRows();
+    if (rows.length === 0) {
+      showDataResult("Chưa có dữ liệu để xuất.");
+      return;
+    }
+
+    var lines = [["Ngày", "Họ và tên", "Lớp", "Môn học", "Cột kiểm tra", "Điểm cộng", "Lý do"].map(csvCell).join(",")];
+    rows.forEach(function (entry) {
+      lines.push([
+        formatDate(entry.date),
+        entry.name,
+        classLabel(entry.className),
+        entry.subject,
+        entry.column,
+        formatPoints(entry.points),
+        entry.reason || ""
+      ].map(csvCell).join(","));
+    });
+
+    // Thêm BOM để Excel mở file hiển thị đúng tiếng Việt có dấu.
+    download("diem-cong-" + todayISO() + ".csv", "﻿" + lines.join("\r\n"), "text/csv;charset=utf-8");
+    showDataResult("Đã xuất " + rows.length + " dòng đang hiển thị ra file CSV.");
+  });
+
+  document.getElementById("export-json").addEventListener("click", function () {
+    if (entries.length === 0) {
+      showDataResult("Chưa có dữ liệu để sao lưu.");
+      return;
+    }
+    download("diem-cong-backup-" + todayISO() + ".json", JSON.stringify(entries, null, 2), "application/json");
+    showDataResult("Đã lưu bản sao gồm " + entries.length + " lượt cộng điểm.");
+  });
+
+  var importFile = document.getElementById("import-file");
+  document.getElementById("import-json").addEventListener("click", function () {
+    importFile.click();
+  });
+
+  importFile.addEventListener("change", function () {
+    var file = importFile.files && importFile.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var parsed = JSON.parse(String(reader.result));
+        if (!Array.isArray(parsed)) throw new Error("Sai định dạng.");
+
+        var existing = {};
+        entries.forEach(function (entry) { existing[entry.id] = true; });
+
+        var added = 0;
+        parsed.forEach(function (entry) {
+          if (!entry || !entry.name || !entry.date) return;
+          if (entry.id && existing[entry.id]) return;
+          entries.push({
+            id: entry.id || newId(),
+            date: entry.date,
+            name: entry.name,
+            className: entry.className || "",
+            subject: entry.subject || SUBJECTS[0],
+            column: entry.column || COLUMNS[COLUMNS.length - 1],
+            points: Number(entry.points) || 0,
+            reason: entry.reason || "",
+            createdAt: entry.createdAt || Date.now()
+          });
+          added += 1;
+        });
+
+        save();
+        render();
+        showDataResult("Đã khôi phục thêm " + added + " lượt cộng điểm từ bản sao.");
+      } catch (error) {
+        showDataResult("File sao lưu không đọc được. Hãy chọn đúng file JSON đã lưu từ trang này.");
+      }
+      importFile.value = "";
+    };
+    reader.readAsText(file);
+  });
+
+  document.getElementById("clear-all").addEventListener("click", function () {
+    if (entries.length === 0) return;
+    if (!window.confirm("Xóa toàn bộ " + entries.length + " lượt cộng điểm? Thao tác này không thể hoàn tác.")) return;
+    entries = [];
+    save();
+    render();
+    showDataResult("Đã xóa toàn bộ dữ liệu điểm cộng.");
+  });
+
+  /* ---------- Chạy ---------- */
+
+  search.addEventListener("input", render);
+  filterClass.addEventListener("change", render);
+  filterSubject.addEventListener("change", render);
+  filterColumn.addEventListener("change", render);
+
+  fillSelects();
+  fillStudentList();
+  dateInput.value = todayISO();
+  syncPointChips();
+  load();
+  render();
+})();
+</script>
+</body>
+</html>
