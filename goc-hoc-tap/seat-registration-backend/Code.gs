@@ -13,7 +13,7 @@ var SETTINGS = {
   courses: ["TC_TIN_13", "TC_TIN_14", "TC_TIN_15", "TC_MOS_13", "TC_MOS_14", "TC_MOS_15"],
   rooms: {
     PM1: { name: "Phòng máy 1", rowCount: 4, seatsPerRow: 10, sharedSeats: true },
-    PM2: { name: "Phòng máy 2", rowCount: 4, seatsPerRow: 10, sharedSeats: true },
+    PM2: { name: "Phòng máy 2", rowCount: 5, seatsPerRow: 10, sharedSeats: true },
     PM3: { name: "Phòng máy 3", rowCount: 4, seatsPerRow: 10, sharedSeats: true },
     PM4: { name: "Phòng máy 4", rowCount: 4, seatsPerRow: 10, sharedSeats: true },
     PM5: { name: "Phòng máy 5 - Phòng LAB", rowCount: 6, seatsPerRow: 8, sharedSeats: false }

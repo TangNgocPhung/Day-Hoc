@@ -46,11 +46,11 @@ window.PHONG_MAY = {
       name: "Phòng máy 2",
       location: "Tầng 2 khu B",
       layout: "vertical",
-      columns: [4, 3, 2, 1],
+      columns: [5, 4, 3, 2, 1],
       numberFrom: "bottom",
       wall: { side: "left", label: "CỬA RA VÀO", kind: "door" },
-      deskRow: [{ label: "BÀN GV", column: 2, span: 2, kind: "desk" }],
-      note: "Bốn dãy máy xếp dọc, đánh số từ phải sang trái: dãy 1 sát bên phải, dãy 4 sát bên trái. Trong mỗi dãy, máy số 1 nằm ở cuối phòng, đếm ngược lên trên đến máy số 10. Bàn giáo viên ở cuối phòng, giữa dãy 2 và dãy 3. Cửa ra vào ở tường bên trái."
+      deskRow: [{ label: "BÀN GV", column: 3, span: 2, kind: "desk" }],
+      note: "Năm dãy máy xếp dọc, đánh số từ phải sang trái: dãy 1 sát bên phải, dãy 5 sát bên trái. Trong mỗi dãy, máy số 1 nằm ở cuối phòng, đếm ngược lên trên đến máy số 10. Bàn giáo viên ở cuối phòng, giữa dãy 2 và dãy 3. Cửa ra vào ở tường bên trái."
     },
     {
       id: "PM3",
@@ -61,7 +61,7 @@ window.PHONG_MAY = {
       numberFrom: "bottom",
       wall: { side: "left", label: "CỬA RA VÀO", kind: "door" },
       deskRow: [{ label: "BÀN GV", column: 2, span: 2, kind: "desk" }],
-      note: "Bố trí giống Phòng máy 2: dãy 1 sát bên phải, máy số 1 ở cuối phòng đếm ngược lên, bàn giáo viên giữa dãy 2 và dãy 3, cửa ra vào ở tường bên trái."
+      note: "Bốn dãy máy xếp dọc: dãy 1 sát bên phải, dãy 4 sát bên trái. Máy số 1 nằm ở cuối phòng, đếm ngược lên trên đến máy số 10. Bàn giáo viên ở cuối phòng, giữa dãy 2 và dãy 3, cửa ra vào ở tường bên trái."
     },
     {
       id: "PM4",
