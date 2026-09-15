@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sổ điểm cộng · Góc Học Tập</title>
+<title>Sổ điểm cộng · điểm trừ · Góc Học Tập</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
@@ -107,6 +107,8 @@
     font-family: "Fraunces", Georgia, serif;
     font-size: 1.75rem;
   }
+  .stat-card.plus strong { color: var(--green); }
+  .stat-card.minus strong { color: var(--red); }
   .stat-card small { display: block; color: var(--muted); font-size: .72rem; }
 
   .grid {
@@ -227,7 +229,9 @@
   tbody td { padding: .55rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
   tbody tr:hover { background: var(--surface-2); }
   td.date, td.points, td.total { white-space: nowrap; font-family: "IBM Plex Mono", Consolas, monospace; }
-  td.points, td.total { font-weight: 600; color: var(--orange); text-align: right; }
+  td.points, td.total { font-weight: 600; color: var(--green); text-align: right; }
+  td.points.minus, td.total.minus { color: var(--red); }
+  td.total.net { color: var(--orange); }
   td.name { font-weight: 600; }
   td.reason { color: var(--muted); }
   .tag {
@@ -311,27 +315,32 @@
 
 <main class="page">
   <span class="eyebrow">CÔNG CỤ CỦA GIÁO VIÊN</span>
-  <h1>Sổ điểm cộng</h1>
+  <h1>Sổ điểm cộng · điểm trừ</h1>
   <p class="lede">
-    Ghi nhanh điểm cộng cho học sinh: họ tên, lớp, môn học, ngày cộng, số điểm và cột kiểm tra sẽ dùng.
+    Ghi nhanh điểm cộng và điểm trừ cho học sinh: họ tên, lớp, môn học, ngày ghi nhận, số điểm và cột kiểm tra sẽ dùng.
     Danh sách được lưu ngay trên máy này và có thể xuất ra file Excel/CSV để nhập vào sổ điểm.
   </p>
 
   <div class="stat-row">
     <div class="stat-card">
-      <span>Lượt cộng điểm</span>
+      <span>Lượt ghi nhận</span>
       <strong id="stat-entries">0</strong>
-      <small>tổng số lần đã ghi nhận</small>
+      <small>cả điểm cộng và điểm trừ</small>
     </div>
-    <div class="stat-card">
-      <span>Tổng điểm đã cộng</span>
-      <strong id="stat-points">0</strong>
+    <div class="stat-card plus">
+      <span>Tổng điểm cộng</span>
+      <strong id="stat-plus">0</strong>
+      <small>cộng dồn tất cả học sinh</small>
+    </div>
+    <div class="stat-card minus">
+      <span>Tổng điểm trừ</span>
+      <strong id="stat-minus">0</strong>
       <small>cộng dồn tất cả học sinh</small>
     </div>
     <div class="stat-card">
-      <span>Học sinh được cộng</span>
-      <strong id="stat-students">0</strong>
-      <small>tính theo tên và lớp</small>
+      <span>Điểm thực nhận</span>
+      <strong id="stat-net">0</strong>
+      <small>điểm cộng trừ đi điểm trừ</small>
     </div>
     <div class="stat-card">
       <span>Lần ghi gần nhất</span>
@@ -342,7 +351,7 @@
 
   <div class="grid">
     <section class="card" aria-labelledby="form-title">
-      <h2 id="form-title">Thêm điểm cộng<small>Chọn lớp trước, danh sách học sinh của lớp sẽ hiện ra để chọn nhanh.</small></h2>
+      <h2 id="form-title">Thêm điểm cộng / điểm trừ<small>Chọn lớp trước, danh sách học sinh của lớp sẽ hiện ra để chọn nhanh.</small></h2>
       <form class="form" id="entry-form" autocomplete="off">
         <div class="field">
           <label for="class-input">Lớp</label>
@@ -365,30 +374,45 @@
           <label for="column-input">Cột kiểm tra</label>
           <select id="column-input" required></select>
         </div>
-        <div class="field full">
-          <label for="points-input">Số điểm cộng <em>(0,25 – 5)</em></label>
+        <div class="field">
+          <label for="type-input">Loại ghi nhận</label>
+          <select id="type-input" required>
+            <option value="cong">Điểm cộng (+)</option>
+            <option value="tru">Điểm trừ (−)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="points-input">Số điểm <em>(0,25 – 5)</em></label>
           <input id="points-input" type="number" min="0.25" max="5" step="0.25" value="0.5" required>
+        </div>
+        <div class="field full">
+          <label for="point-chips">Chọn nhanh số điểm</label>
           <div class="chips" id="point-chips">
-            <button class="chip" type="button" data-points="0.25">+0,25</button>
-            <button class="chip" type="button" data-points="0.5">+0,5</button>
-            <button class="chip" type="button" data-points="1">+1</button>
-            <button class="chip" type="button" data-points="2">+2</button>
+            <button class="chip" type="button" data-points="0.25">0,25</button>
+            <button class="chip" type="button" data-points="0.5">0,5</button>
+            <button class="chip" type="button" data-points="1">1</button>
+            <button class="chip" type="button" data-points="2">2</button>
           </div>
         </div>
         <div class="field full">
-          <label for="reason-input">Lý do cộng điểm <em>(không bắt buộc)</em></label>
+          <label for="reason-input">Lý do <em>(không bắt buộc)</em></label>
           <input id="reason-input" placeholder="Ví dụ: xung phong lên bảng, làm bài tập về nhà tốt…">
         </div>
         <div class="result" id="form-result" role="status"></div>
-        <button class="submit full" id="submit-btn" type="submit">Cộng điểm</button>
+        <button class="submit full" id="submit-btn" type="submit">Ghi nhận điểm cộng</button>
       </form>
     </section>
 
     <div>
       <section class="card" aria-labelledby="list-title">
-        <h2 id="list-title">Danh sách điểm cộng</h2>
+        <h2 id="list-title">Danh sách điểm cộng · điểm trừ</h2>
         <div class="toolbar">
           <input id="search" type="search" placeholder="Tìm theo tên học sinh hoặc lý do">
+          <select id="filter-type">
+            <option value="">Cộng và trừ</option>
+            <option value="cong">Chỉ điểm cộng</option>
+            <option value="tru">Chỉ điểm trừ</option>
+          </select>
           <select id="filter-class"></select>
           <select id="filter-subject"></select>
           <select id="filter-column"></select>
@@ -424,7 +448,9 @@
                 <th scope="col">Môn học</th>
                 <th scope="col">Cột kiểm tra</th>
                 <th scope="col">Số lượt</th>
-                <th scope="col">Tổng điểm</th>
+                <th scope="col">Cộng</th>
+                <th scope="col">Trừ</th>
+                <th scope="col">Thực nhận</th>
               </tr>
             </thead>
             <tbody id="summary-body"></tbody>
@@ -437,8 +463,8 @@
   <section class="card" aria-labelledby="data-title">
     <h2 id="data-title">Lưu trữ và xuất dữ liệu</h2>
     <p class="notice">
-      Dữ liệu điểm cộng được lưu trong trình duyệt của máy này. Nếu đổi máy, đổi trình duyệt hoặc xóa dữ liệu duyệt web
-      thì danh sách sẽ không còn. Nên bấm <strong>Xuất file Excel (CSV)</strong> sau mỗi buổi dạy để có bản lưu bên ngoài.
+      Dữ liệu điểm cộng và điểm trừ được lưu trong trình duyệt của máy này. Nếu đổi máy, đổi trình duyệt hoặc xóa dữ liệu
+      duyệt web thì danh sách sẽ không còn. Nên bấm <strong>Xuất file Excel (CSV)</strong> sau mỗi buổi dạy để có bản lưu bên ngoài.
     </p>
     <div class="data-actions">
       <button class="action-btn" id="export-csv" type="button">⬇ Xuất file Excel (CSV)</button>
@@ -483,6 +509,7 @@
   var entries = [];
 
   var classInput = document.getElementById("class-input");
+  var typeInput = document.getElementById("type-input");
   var subjectInput = document.getElementById("subject-input");
   var nameInput = document.getElementById("name-input");
   var studentList = document.getElementById("student-list");
@@ -491,9 +518,11 @@
   var pointsInput = document.getElementById("points-input");
   var reasonInput = document.getElementById("reason-input");
   var formResult = document.getElementById("form-result");
+  var submitBtn = document.getElementById("submit-btn");
   var dataResult = document.getElementById("data-result");
 
   var search = document.getElementById("search");
+  var filterType = document.getElementById("filter-type");
   var filterClass = document.getElementById("filter-class");
   var filterSubject = document.getElementById("filter-subject");
   var filterColumn = document.getElementById("filter-column");
@@ -543,6 +572,27 @@
   function formatPoints(value) {
     var number = Math.round(Number(value) * 100) / 100;
     return String(number).replace(".", ",");
+  }
+
+  // Dấu "−" (U+2212) nhìn rõ hơn dấu gạch nối khi đứng trước con số.
+  function formatSigned(value) {
+    var number = Math.round(Number(value) * 100) / 100;
+    if (number < 0) return "−" + formatPoints(-number);
+    return "+" + formatPoints(number);
+  }
+
+  // Bản ghi cũ chưa có trường type thì mặc định là điểm cộng.
+  function isMinus(entry) {
+    return entry.type === "tru";
+  }
+
+  function signedPoints(entry) {
+    var points = Number(entry.points) || 0;
+    return isMinus(entry) ? -points : points;
+  }
+
+  function typeLabel(type) {
+    return type === "tru" ? "Điểm trừ" : "Điểm cộng";
   }
 
   function option(value, text) {
@@ -614,6 +664,8 @@
   /* ---------- Hiển thị ---------- */
 
   function matchesFilter(entry) {
+    if (filterType.value === "tru" && !isMinus(entry)) return false;
+    if (filterType.value === "cong" && isMinus(entry)) return false;
     if (filterClass.value && entry.className !== filterClass.value) return false;
     if (filterSubject.value && entry.subject !== filterSubject.value) return false;
     if (filterColumn.value && entry.column !== filterColumn.value) return false;
@@ -631,23 +683,24 @@
   }
 
   function renderStats() {
-    var totalPoints = 0;
-    var students = {};
+    var plus = 0;
+    var minus = 0;
     entries.forEach(function (entry) {
-      totalPoints += Number(entry.points) || 0;
-      students[entry.className + "|" + normalize(entry.name)] = true;
+      if (isMinus(entry)) minus += Number(entry.points) || 0;
+      else plus += Number(entry.points) || 0;
     });
 
     document.getElementById("stat-entries").textContent = entries.length;
-    document.getElementById("stat-points").textContent = formatPoints(totalPoints);
-    document.getElementById("stat-students").textContent = Object.keys(students).length;
+    document.getElementById("stat-plus").textContent = "+" + formatPoints(plus);
+    document.getElementById("stat-minus").textContent = "−" + formatPoints(minus);
+    document.getElementById("stat-net").textContent = formatSigned(plus - minus);
 
     var latest = entries.slice().sort(function (a, b) {
       return (b.createdAt || 0) - (a.createdAt || 0);
     })[0];
     document.getElementById("stat-latest").textContent = latest ? formatDate(latest.date) : "—";
     document.getElementById("stat-latest-note").textContent = latest
-      ? latest.name + " · " + classLabel(latest.className)
+      ? latest.name + " · " + classLabel(latest.className) + " · " + formatSigned(signedPoints(latest))
       : "chưa có dữ liệu";
   }
 
@@ -681,8 +734,8 @@
     entryBody.innerHTML = "";
     if (rows.length === 0) {
       entryBody.appendChild(emptyRow(8, entries.length === 0
-        ? "Chưa có điểm cộng nào. Dùng khung bên trái để thêm học sinh đầu tiên."
-        : "Không tìm thấy điểm cộng phù hợp với bộ lọc."));
+        ? "Chưa có ghi nhận nào. Dùng khung bên trái để thêm học sinh đầu tiên."
+        : "Không tìm thấy ghi nhận nào phù hợp với bộ lọc."));
       return;
     }
 
@@ -693,7 +746,7 @@
       tr.appendChild(cell(classLabel(entry.className)));
       tr.appendChild(cell(entry.subject));
       tr.appendChild(columnCell(entry.column));
-      tr.appendChild(cell("+" + formatPoints(entry.points), "points"));
+      tr.appendChild(cell(formatSigned(signedPoints(entry)), isMinus(entry) ? "points minus" : "points"));
       tr.appendChild(cell(entry.reason || "—", "reason"));
 
       var actions = document.createElement("td");
@@ -702,7 +755,8 @@
       remove.type = "button";
       remove.textContent = "Xóa";
       remove.addEventListener("click", function () {
-        if (!window.confirm("Xóa điểm cộng của " + entry.name + " ngày " + formatDate(entry.date) + "?")) return;
+        if (!window.confirm("Xóa " + typeLabel(entry.type).toLowerCase() + " " + formatSigned(signedPoints(entry))
+          + " của " + entry.name + " ngày " + formatDate(entry.date) + "?")) return;
         entries = entries.filter(function (item) { return item.id !== entry.id; });
         save();
         render();
@@ -726,22 +780,25 @@
           subject: entry.subject,
           column: entry.column,
           times: 0,
-          total: 0
+          plus: 0,
+          minus: 0
         };
         groups.push(index[key]);
       }
       index[key].times += 1;
-      index[key].total += Number(entry.points) || 0;
+      if (isMinus(entry)) index[key].minus += Number(entry.points) || 0;
+      else index[key].plus += Number(entry.points) || 0;
     });
 
     groups.sort(function (a, b) {
-      if (b.total !== a.total) return b.total - a.total;
+      var net = (b.plus - b.minus) - (a.plus - a.minus);
+      if (net !== 0) return net;
       return normalize(a.name) < normalize(b.name) ? -1 : 1;
     });
 
     summaryBody.innerHTML = "";
     if (groups.length === 0) {
-      summaryBody.appendChild(emptyRow(6, "Chưa có dữ liệu để tổng hợp."));
+      summaryBody.appendChild(emptyRow(8, "Chưa có dữ liệu để tổng hợp."));
       return;
     }
 
@@ -752,7 +809,9 @@
       tr.appendChild(cell(group.subject));
       tr.appendChild(columnCell(group.column));
       tr.appendChild(cell(group.times + " lượt"));
-      tr.appendChild(cell("+" + formatPoints(group.total), "total"));
+      tr.appendChild(cell(group.plus ? "+" + formatPoints(group.plus) : "—", "total"));
+      tr.appendChild(cell(group.minus ? "−" + formatPoints(group.minus) : "—", "total minus"));
+      tr.appendChild(cell(formatSigned(group.plus - group.minus), "total net"));
       summaryBody.appendChild(tr);
     });
   }
@@ -763,12 +822,12 @@
 
   function render() {
     var rows = visibleRows();
-    var shownPoints = rows.reduce(function (sum, entry) { return sum + (Number(entry.points) || 0); }, 0);
+    var shownPoints = rows.reduce(function (sum, entry) { return sum + signedPoints(entry); }, 0);
 
     listCount.innerHTML = entries.length === 0
       ? "Danh sách trống."
       : "Đang hiển thị <strong>" + rows.length + "</strong> / " + entries.length
-        + " lượt cộng điểm · tổng <strong>+" + formatPoints(shownPoints) + "</strong> điểm.";
+        + " lượt ghi nhận · cộng lại <strong>" + formatSigned(shownPoints) + "</strong> điểm.";
 
     renderTable(rows);
     renderSummary(rows);
@@ -788,6 +847,18 @@
       chip.classList.toggle("active", String(Number(chip.getAttribute("data-points"))) === current);
     });
   }
+
+  // Nút gửi và ô lý do đổi chữ theo loại đang chọn để cô không bấm nhầm cộng thành trừ.
+  function syncType() {
+    var minus = typeInput.value === "tru";
+    submitBtn.textContent = minus ? "Ghi nhận điểm trừ" : "Ghi nhận điểm cộng";
+    submitBtn.style.background = minus ? "var(--red)" : "var(--green)";
+    reasonInput.placeholder = minus
+      ? "Ví dụ: không làm bài tập, mất trật tự trong giờ…"
+      : "Ví dụ: xung phong lên bảng, làm bài tập về nhà tốt…";
+  }
+
+  typeInput.addEventListener("change", syncType);
 
   document.getElementById("point-chips").addEventListener("click", function (event) {
     var chip = event.target.closest(".chip");
@@ -810,8 +881,8 @@
 
     if (!classInput.value) { showResult("Hãy chọn lớp của học sinh.", false); classInput.focus(); return; }
     if (name.length < 2) { showResult("Hãy nhập họ và tên học sinh.", false); nameInput.focus(); return; }
-    if (!dateInput.value) { showResult("Hãy chọn ngày cộng điểm.", false); dateInput.focus(); return; }
-    if (!(points > 0)) { showResult("Số điểm cộng phải lớn hơn 0.", false); pointsInput.focus(); return; }
+    if (!dateInput.value) { showResult("Hãy chọn ngày ghi nhận.", false); dateInput.focus(); return; }
+    if (!(points > 0)) { showResult("Số điểm phải lớn hơn 0.", false); pointsInput.focus(); return; }
 
     // Nếu tên trùng danh sách lớp thì lấy đúng cách viết trong danh sách để bảng không bị lệch nhau.
     var students = (rosters[classInput.value] && rosters[classInput.value].students) || [];
@@ -820,6 +891,8 @@
     })[0];
     if (matched) name = matched.name;
 
+    var type = typeInput.value === "tru" ? "tru" : "cong";
+
     entries.push({
       id: newId(),
       date: dateInput.value,
@@ -827,6 +900,7 @@
       className: classInput.value,
       subject: subjectInput.value,
       column: columnInput.value,
+      type: type,
       points: points,
       reason: reasonInput.value.trim(),
       createdAt: Date.now()
@@ -834,11 +908,12 @@
     save();
     render();
 
-    showResult("Đã cộng +" + formatPoints(points) + " cho " + name + " · " + classLabel(classInput.value)
+    showResult("Đã " + (type === "tru" ? "trừ " : "cộng ") + formatSigned(type === "tru" ? -points : points)
+      + " cho " + name + " · " + classLabel(classInput.value)
       + " · " + subjectInput.value + " · " + columnInput.value
       + (matched ? "." : ". (Tên này không có trong danh sách lớp, cô kiểm tra lại giúp.)"), true);
 
-    // Giữ nguyên lớp, môn, ngày, điểm và cột để cộng tiếp cho học sinh khác trong cùng buổi.
+    // Giữ nguyên lớp, môn, ngày, loại, điểm và cột để ghi tiếp cho học sinh khác trong cùng buổi.
     nameInput.value = "";
     reasonInput.value = "";
     nameInput.focus();
@@ -873,7 +948,7 @@
       return;
     }
 
-    var lines = [["Ngày", "Họ và tên", "Lớp", "Môn học", "Cột kiểm tra", "Điểm cộng", "Lý do"].map(csvCell).join(",")];
+    var lines = [["Ngày", "Họ và tên", "Lớp", "Môn học", "Cột kiểm tra", "Loại", "Điểm", "Lý do"].map(csvCell).join(",")];
     rows.forEach(function (entry) {
       lines.push([
         formatDate(entry.date),
@@ -881,13 +956,15 @@
         classLabel(entry.className),
         entry.subject,
         entry.column,
-        formatPoints(entry.points),
+        typeLabel(entry.type),
+        // Excel hiểu dấu trừ thường, còn "−" chỉ dùng để hiển thị trên trang.
+        (isMinus(entry) ? "-" : "") + formatPoints(entry.points),
         entry.reason || ""
       ].map(csvCell).join(","));
     });
 
     // Thêm BOM để Excel mở file hiển thị đúng tiếng Việt có dấu.
-    download("diem-cong-" + todayISO() + ".csv", "﻿" + lines.join("\r\n"), "text/csv;charset=utf-8");
+    download("diem-cong-tru-" + todayISO() + ".csv", "﻿" + lines.join("\r\n"), "text/csv;charset=utf-8");
     showDataResult("Đã xuất " + rows.length + " dòng đang hiển thị ra file CSV.");
   });
 
@@ -896,8 +973,8 @@
       showDataResult("Chưa có dữ liệu để sao lưu.");
       return;
     }
-    download("diem-cong-backup-" + todayISO() + ".json", JSON.stringify(entries, null, 2), "application/json");
-    showDataResult("Đã lưu bản sao gồm " + entries.length + " lượt cộng điểm.");
+    download("diem-cong-tru-backup-" + todayISO() + ".json", JSON.stringify(entries, null, 2), "application/json");
+    showDataResult("Đã lưu bản sao gồm " + entries.length + " lượt ghi nhận.");
   });
 
   var importFile = document.getElementById("import-file");
@@ -928,7 +1005,8 @@
             className: entry.className || "",
             subject: entry.subject || SUBJECTS[0],
             column: entry.column || COLUMNS[COLUMNS.length - 1],
-            points: Number(entry.points) || 0,
+            type: entry.type === "tru" ? "tru" : "cong",
+            points: Math.abs(Number(entry.points)) || 0,
             reason: entry.reason || "",
             createdAt: entry.createdAt || Date.now()
           });
@@ -937,7 +1015,7 @@
 
         save();
         render();
-        showDataResult("Đã khôi phục thêm " + added + " lượt cộng điểm từ bản sao.");
+        showDataResult("Đã khôi phục thêm " + added + " lượt ghi nhận từ bản sao.");
       } catch (error) {
         showDataResult("File sao lưu không đọc được. Hãy chọn đúng file JSON đã lưu từ trang này.");
       }
@@ -948,16 +1026,17 @@
 
   document.getElementById("clear-all").addEventListener("click", function () {
     if (entries.length === 0) return;
-    if (!window.confirm("Xóa toàn bộ " + entries.length + " lượt cộng điểm? Thao tác này không thể hoàn tác.")) return;
+    if (!window.confirm("Xóa toàn bộ " + entries.length + " lượt ghi nhận? Thao tác này không thể hoàn tác.")) return;
     entries = [];
     save();
     render();
-    showDataResult("Đã xóa toàn bộ dữ liệu điểm cộng.");
+    showDataResult("Đã xóa toàn bộ dữ liệu điểm cộng và điểm trừ.");
   });
 
   /* ---------- Chạy ---------- */
 
   search.addEventListener("input", render);
+  filterType.addEventListener("change", render);
   filterClass.addEventListener("change", render);
   filterSubject.addEventListener("change", render);
   filterColumn.addEventListener("change", render);
@@ -965,6 +1044,7 @@
   fillSelects();
   fillStudentList();
   dateInput.value = todayISO();
+  syncType();
   syncPointChips();
   load();
   render();
