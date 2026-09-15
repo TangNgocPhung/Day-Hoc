@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trò chơi ôn tập · Định hướng phát triển du lịch TP.HCM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="tro-choi-engine.css">
+<script>
+window.GAME = {
+  cd: 1,
+  chip: "CĐ1 · ND4",
+  topic: "CHỦ ĐỀ 1 · ĐỊNH HƯỚNG PHÁT TRIỂN DU LỊCH",
+  title: "Bàn tròn |quy hoạch| du lịch",
+  sub: "Ôn lại Nội dung 4: bản đồ du lịch mới của TP.HCM sau hợp nhất, bốn định hướng phát triển và vai trò của học sinh trong việc quảng bá hình ảnh Thành phố.",
+  back: "cd1-nd4-dinh-huong-du-lich.html",
+  bank: [
+    { q: "Từ ngày nào TP.HCM chính thức hợp nhất với Bình Dương và Bà Rịa – Vũng Tàu?",
+      a: ["01/7/2025", "01/1/2025", "01/7/2024", "02/9/2025"], c: 0,
+      e: "Việc hợp nhất có hiệu lực từ 01/7/2025, làm thay đổi hẳn bản đồ du lịch của Thành phố." },
+    { q: "Sau hợp nhất, diện tích Thành phố khoảng bao nhiêu?",
+      a: ["Khoảng 6.770 km²", "Khoảng 2.095 km²", "Khoảng 10.500 km²", "Khoảng 1.200 km²"], c: 0,
+      e: "Diện tích Thành phố sau hợp nhất khoảng 6.770 km²." },
+    { q: "Nhóm địa danh nào thuộc vùng du lịch BIỂN – ĐẢO của Thành phố?",
+      a: ["Vũng Tàu, Long Hải, Hồ Tràm, Côn Đảo", "Củ Chi, Cần Giờ, Bến Thành", "Lái Thiêu, Tương Bình Hiệp, Đại Nam", "Nguyễn Huệ, Bùi Viện, Chợ Lớn"], c: 0,
+      e: "Vũng Tàu, Long Hải, Hồ Tràm và Côn Đảo tạo nên vùng du lịch biển – đảo mới." },
+    { q: "Ở Côn Đảo có những tài nguyên du lịch nào?",
+      a: ["Vườn quốc gia và khu di tích nhà tù Côn Đảo", "Làng nghề sơn mài và gốm", "Địa đạo và rừng ngập mặn", "Trung tâm hội nghị và phố đi bộ"], c: 0,
+      e: "Côn Đảo kết hợp giá trị thiên nhiên (Vườn quốc gia) và lịch sử (khu di tích nhà tù)." },
+    { q: "Vùng Bình Dương (cũ) và ven đô nổi bật với tài nguyên du lịch nào?",
+      a: ["Làng nghề sơn mài, gốm, vườn trái cây Lái Thiêu, khu du lịch Đại Nam, di tích kháng chiến", "Bãi biển dài và các đảo ngoài khơi", "Trung tâm hội nghị và khách sạn 5 sao", "Hệ thống metro và buýt đường sông"], c: 0,
+      e: "Đây là vùng của làng nghề, vườn trái cây và di tích kháng chiến." },
+    { q: "Du lịch MICE thuộc nhóm sản phẩm nào của Thành phố?",
+      a: ["Du lịch hội nghị – sự kiện", "Du lịch nghỉ dưỡng biển", "Du lịch làng nghề", "Du lịch tâm linh"], c: 0,
+      e: "MICE là du lịch kết hợp hội họp, khen thưởng, hội nghị và triển lãm." },
+    { q: "Khi đa dạng hoá sản phẩm du lịch, Thành phố cần tránh điều gì?",
+      a: ["Sản phẩm trùng lặp giữa các điểm đến", "Phát triển du lịch đường thuỷ", "Khai thác du lịch làng nghề", "Bổ sung du lịch biển – đảo"], c: 0,
+      e: "Sản phẩm trùng lặp làm giảm sức hấp dẫn và gây cạnh tranh nội bộ không cần thiết." },
+    { q: "Vì sao phải kiểm soát sức chứa ở Côn Đảo và rừng ngập mặn Cần Giờ?",
+      a: ["Vì đây là nơi nhạy cảm, quá tải khách sẽ làm tổn hại hệ sinh thái", "Vì hai nơi này không có đường giao thông", "Vì chỉ người dân địa phương được vào", "Vì chi phí vé tham quan quá cao"], c: 0,
+      e: "Hệ sinh thái ở những nơi này dễ bị tổn hại nếu lượng khách vượt quá sức chịu tải." },
+    { q: "Với di tích lịch sử, định hướng phát triển du lịch yêu cầu điều gì?",
+      a: ["Tôn trọng giá trị thiêng liêng của di tích và chia sẻ lợi ích với cộng đồng", "Cải tạo thành khu vui chơi giải trí hiện đại", "Chỉ mở cửa cho khách quốc tế", "Hạn chế tối đa việc giới thiệu cho du khách"], c: 0,
+      e: "Di tích lịch sử cần được ứng xử tôn trọng, đồng thời lợi ích phải chia sẻ với cộng đồng." },
+    { q: "Nội dung nào thuộc về “chuyển đổi số” trong du lịch thông minh?",
+      a: ["Bản đồ số, vé điện tử, thuyết minh tự động, dữ liệu dự báo lượng khách", "Xây thêm nhiều khách sạn ở trung tâm", "Mở rộng diện tích rừng ngập mặn", "Tăng số lượng hướng dẫn viên truyền thống"], c: 0,
+      e: "Đó là các ứng dụng công nghệ số giúp du khách và nhà quản lí điểm đến." },
+    { q: "Tuyến metro số 1 của Thành phố nối hai điểm nào và bắt đầu chạy từ khi nào?",
+      a: ["Bến Thành – Suối Tiên, chạy từ 12/2024", "Bến Thành – Cần Giờ, chạy từ 12/2024", "Suối Tiên – Vũng Tàu, chạy từ 7/2025", "Bến Thành – Củ Chi, chạy từ 1/2025"], c: 0,
+      e: "Metro số 1 Bến Thành – Suối Tiên vận hành từ tháng 12/2024, góp phần kết nối các điểm du lịch." },
+    { q: "Liên kết vùng trong phát triển du lịch nghĩa là gì?",
+      a: ["Liên kết với các tỉnh Đông Nam Bộ, Đồng bằng sông Cửu Long và cả nước để tạo tuyến du lịch dài ngày", "Chỉ phát triển du lịch trong phạm vi quận trung tâm", "Tách riêng từng vùng để cạnh tranh với nhau", "Chỉ hợp tác với các nước trong khu vực"], c: 0,
+      e: "Liên kết vùng giúp hình thành các tuyến du lịch dài ngày, giữ khách lưu trú lâu hơn." },
+    { q: "Nâng cao chất lượng nguồn nhân lực du lịch bao gồm những yêu cầu nào?",
+      a: ["Ngoại ngữ, kĩ năng số và văn hoá ứng xử với du khách", "Chỉ cần thành thạo một ngoại ngữ duy nhất", "Chỉ cần biết sử dụng mạng xã hội", "Chỉ cần có sức khoẻ tốt"], c: 0,
+      e: "Nhân lực du lịch cần cả ngoại ngữ, kĩ năng số và văn hoá ứng xử." },
+    { q: "Hình ảnh Thành phố được định hướng quảng bá như thế nào?",
+      a: ["Năng động, thân thiện, an toàn", "Yên tĩnh, khép kín, cổ kính", "Chỉ tập trung vào mua sắm giá rẻ", "Chỉ dành cho khách doanh nhân"], c: 0,
+      e: "Thành phố hướng tới hình ảnh năng động, thân thiện và an toàn trên nền tảng số." },
+    { q: "Học sinh có thể góp phần vào định hướng phát triển du lịch bằng cách nào?",
+      a: ["Giới thiệu đúng và đẹp về địa phương, giữ vệ sinh, ứng xử văn minh và đề xuất ý tưởng sáng tạo", "Chỉ cần học thuộc tên các điểm du lịch", "Chờ đến khi đi làm mới tham gia", "Hạn chế nói về địa phương với người ngoài"], c: 0,
+      e: "Học sinh vừa là người quảng bá, vừa là người ứng xử văn minh tại điểm đến." },
+    { q: "Ý tưởng tuyến “Một ngày xanh ở TP.HCM” trong bài gợi ý kết hợp những gì?",
+      a: ["Buýt đường sông – bảo tàng – ẩm thực địa phương, kèm bản đồ số và ghi nguồn tư liệu", "Máy bay – khách sạn 5 sao – trung tâm thương mại", "Xe riêng từng nhóm – khu vui chơi – quán ăn nhanh", "Tàu cao tốc – casino – phố đi bộ"], c: 0,
+      e: "Tuyến mẫu dùng phương tiện ít phát thải, gắn với văn hoá và ẩm thực địa phương." }
+  ]
+};
+</script>
+<script src="tro-choi-engine.js" defer></script>
+</head>
+<body></body>
+</html>

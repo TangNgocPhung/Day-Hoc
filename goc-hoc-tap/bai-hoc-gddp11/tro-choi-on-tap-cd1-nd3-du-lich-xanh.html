@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trò chơi ôn tập · Du lịch xanh TP.HCM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="tro-choi-engine.css">
+<script>
+window.GAME = {
+  cd: 1,
+  chip: "CĐ1 · ND3",
+  topic: "CHỦ ĐỀ 1 · VAI TRÒ CỦA DU LỊCH XANH",
+  title: "Săn điểm |du lịch xanh|",
+  sub: "Ôn lại Nội dung 3: du lịch xanh là gì, khác du lịch truyền thống ra sao, và vì sao một siêu đô thị như TP.HCM cần phát triển du lịch hài hoà giữa kinh tế, môi trường và cộng đồng.",
+  back: "cd1-nd3-du-lich-xanh.html",
+  bank: [
+    { q: "Du lịch xanh được hiểu là hình thức du lịch như thế nào?",
+      a: ["Giảm tối đa tác động tiêu cực tới môi trường, tiết kiệm tài nguyên và tôn trọng văn hoá địa phương", "Chỉ tổ chức tham quan ở những nơi có nhiều cây xanh", "Du lịch dành riêng cho khách quốc tế yêu thiên nhiên", "Du lịch không sử dụng bất kì phương tiện giao thông nào"], c: 0,
+      e: "Cốt lõi của du lịch xanh là giảm tác động xấu tới môi trường, tiết kiệm tài nguyên và tôn trọng văn hoá nơi đến." },
+    { q: "Du lịch xanh dựa trên ba trụ cột nào?",
+      a: ["Môi trường – kinh tế – xã hội, văn hoá", "Nhà nước – doanh nghiệp – du khách", "Đất – nước – không khí", "Khách sạn – nhà hàng – phương tiện"], c: 0,
+      e: "Ba trụ cột của du lịch xanh là môi trường, kinh tế và xã hội – văn hoá." },
+    { q: "Du lịch xanh gắn với mục tiêu phát triển bền vững vì:",
+      a: ["Đáp ứng nhu cầu hôm nay mà không làm tổn hại khả năng đáp ứng nhu cầu của thế hệ sau", "Giúp doanh thu du lịch tăng nhanh nhất trong thời gian ngắn", "Chỉ phục vụ số lượng khách rất ít mỗi năm", "Không cần đầu tư thêm cơ sở hạ tầng nào"], c: 0,
+      e: "Đó chính là định nghĩa của phát triển bền vững — cân bằng giữa hiện tại và tương lai." },
+    { q: "Loại hình nào dưới đây KHÔNG được nêu là một dạng của du lịch xanh?",
+      a: ["Du lịch mua sắm tại trung tâm thương mại lớn", "Du lịch sinh thái", "Du lịch nông nghiệp", "Du lịch cộng đồng"], c: 0,
+      e: "Du lịch xanh gồm sinh thái, nông nghiệp, cộng đồng, đường thuỷ ít phát thải… Mua sắm là loại hình khác." },
+    { q: "Đặc điểm nào thuộc về du lịch TRUYỀN THỐNG?",
+      a: ["Chú trọng số lượng khách và doanh thu nhanh, dễ gây rác thải và quá tải điểm đến", "Chú trọng chất lượng trải nghiệm và bảo tồn tự nhiên", "Luôn chia sẻ lợi ích với người dân địa phương", "Ưu tiên phương tiện ít phát thải"], c: 0,
+      e: "Du lịch truyền thống đặt nặng số lượng và doanh thu nhanh nên dễ gây quá tải, rác thải." },
+    { q: "Nhận định nào ĐÚNG về quan hệ giữa du lịch truyền thống và du lịch xanh?",
+      a: ["Hai hình thức không loại trừ nhau; xu hướng là “xanh hoá” dần các sản phẩm du lịch hiện có", "Phải xoá bỏ hoàn toàn du lịch truyền thống ngay lập tức", "Du lịch xanh chỉ áp dụng được ở nông thôn", "Hai hình thức hoàn toàn giống nhau, chỉ khác tên gọi"], c: 0,
+      e: "Thực tế là “xanh hoá” dần các sản phẩm du lịch sẵn có, không loại bỏ nhau." },
+    { q: "Vì sao tour tham quan bằng xe buýt điện hoặc buýt đường sông được xem là xanh hơn?",
+      a: ["Vì chở chung nhiều khách nên giảm khí thải so với mỗi nhóm thuê riêng một xe ô tô", "Vì giá vé luôn rẻ hơn mọi phương tiện khác", "Vì có thể chạy suốt ngày đêm không cần nghỉ", "Vì không cần hướng dẫn viên đi kèm"], c: 0,
+      e: "Dùng chung phương tiện công cộng ít phát thải giúp giảm khí thải trên mỗi lượt khách." },
+    { q: "Du lịch xanh có vai trò gì đối với môi trường?",
+      a: ["Tạo nguồn lực và động lực để bảo tồn hệ sinh thái như rừng ngập mặn Cần Giờ, Vườn quốc gia Côn Đảo", "Làm tăng lượng rác thải nhựa tại điểm đến", "Khiến du khách không còn quan tâm tới thiên nhiên", "Thay thế hoàn toàn công tác kiểm lâm"], c: 0,
+      e: "Doanh thu và sự quan tâm từ du lịch xanh trở thành nguồn lực cho công tác bảo tồn." },
+    { q: "Ở Khu dự trữ sinh quyển Cần Giờ, du khách được hướng dẫn ứng xử thế nào?",
+      a: ["Quan sát hệ sinh thái và động vật mà không cho ăn, không xả rác", "Cho khỉ ăn để chúng đến gần chụp ảnh", "Tự do hái cây rừng làm quà lưu niệm", "Mang loa phát nhạc lớn để tạo không khí"], c: 0,
+      e: "Không cho ăn, không xả rác — vừa trải nghiệm vừa góp phần bảo tồn." },
+    { q: "Vai trò của du lịch xanh đối với kinh tế – xã hội là:",
+      a: ["Tạo việc làm và sinh kế cho người dân vùng ven qua homestay, hướng dẫn viên địa phương, đặc sản", "Giảm số lượng việc làm trong ngành du lịch", "Chỉ mang lại lợi ích cho doanh nghiệp lớn ở trung tâm", "Làm mất đi các làng nghề truyền thống"], c: 0,
+      e: "Du lịch xanh mở ra sinh kế cho người dân vùng ven và nông thôn." },
+    { q: "Du lịch xanh góp phần giữ gìn văn hoá bằng cách nào?",
+      a: ["Khai thác có chọn lọc làng nghề, ẩm thực, lễ hội truyền thống", "Thay thế lễ hội truyền thống bằng sự kiện hiện đại", "Chỉ giới thiệu văn hoá nước ngoài cho du khách", "Hạn chế người dân địa phương tham gia hoạt động du lịch"], c: 0,
+      e: "Khai thác có chọn lọc giúp văn hoá được giới thiệu mà không bị biến dạng." },
+    { q: "Đâu là THUẬN LỢI của TP.HCM khi phát triển du lịch xanh?",
+      a: ["Hệ thống sông – kênh rạch, rừng ngập mặn, biển đảo, nông nghiệp ven đô và lượng khách lớn", "Chi phí đầu tư công nghệ xanh rất thấp", "Không khí và nguồn nước hoàn toàn trong sạch", "Hoàn toàn không có tình trạng ùn tắc giao thông"], c: 0,
+      e: "Tài nguyên sông nước, rừng ngập mặn, biển đảo cùng lượng khách lớn là lợi thế lớn của Thành phố." },
+    { q: "Đâu là THÁCH THỨC của TP.HCM khi phát triển du lịch xanh?",
+      a: ["Ô nhiễm không khí – nguồn nước, ùn tắc, rác thải và chi phí đầu tư công nghệ xanh cao", "Thiếu hoàn toàn tài nguyên sông nước", "Không có khách du lịch quốc tế", "Không có rừng ngập mặn hay biển đảo"], c: 0,
+      e: "Ô nhiễm, ùn tắc, rác thải và chi phí công nghệ xanh là những rào cản chính." },
+    { q: "Để phát triển du lịch xanh, cần sự phối hợp giữa những chủ thể nào?",
+      a: ["Chính quyền – doanh nghiệp – cộng đồng – du khách", "Chỉ riêng chính quyền Thành phố", "Chỉ riêng các công ty du lịch", "Chỉ riêng du khách quốc tế"], c: 0,
+      e: "Không một chủ thể nào làm được một mình — cần cả bốn bên cùng tham gia." },
+    { q: "Việc làm nào của học sinh KHÔNG góp phần cho du lịch xanh?",
+      a: ["Mỗi bạn tự thuê một xe riêng để đi tham quan cho tiện", "Đi chung hoặc dùng giao thông công cộng", "Hạn chế đồ nhựa dùng một lần", "Tôn trọng văn hoá nơi đến và không xả rác"], c: 0,
+      e: "Mỗi người một xe riêng làm tăng khí thải — trái với tinh thần du lịch xanh." },
+    { q: "Khu dự trữ sinh quyển Cần Giờ được UNESCO công nhận vào năm nào?",
+      a: ["Năm 2000", "Năm 1990", "Năm 2013", "Năm 2018"], c: 0,
+      e: "Cần Giờ được UNESCO công nhận là Khu dự trữ sinh quyển thế giới năm 2000." }
+  ]
+};
+</script>
+<script src="tro-choi-engine.js" defer></script>
+</head>
+<body></body>
+</html>

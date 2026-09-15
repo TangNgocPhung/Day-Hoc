@@ -22,9 +22,10 @@
     --accent-2: #5E4F96; /* Tin học 11 */
     --accent-3: #256F69; /* Mos 10 - Word */
     --accent-4: #3D7A34; /* Mos 11 - Excel */
-    --accent-5: #9C5426; /* Giáo dục địa phương */
+    --accent-5: #9C5426; /* Giáo dục địa phương 10 */
     --accent-6: #A53F2B; /* Điểm danh */
     --accent-7: #A26A12; /* Vòng quay may mắn */
+    --accent-8: #8E4472; /* Giáo dục địa phương 11 */
 
     --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
     --font-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -52,6 +53,7 @@
       --accent-5: #E39C61;
       --accent-6: #F08A72;
       --accent-7: #E8B85C;
+      --accent-8: #E092C0;
 
       --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
     }
@@ -75,6 +77,7 @@
     --accent-5: #E39C61;
     --accent-6: #F08A72;
     --accent-7: #E8B85C;
+    --accent-8: #E092C0;
 
     --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
   }
@@ -804,6 +807,7 @@
         <button class="tab" style="--accent:var(--accent-3)" role="tab" id="tab-mosword" aria-controls="panel-mosword" aria-selected="false" tabindex="-1" data-panel="panel-mosword">Mos 10 - MS Word</button>
         <button class="tab" style="--accent:var(--accent-4)" role="tab" id="tab-mosexcel" aria-controls="panel-mosexcel" aria-selected="false" tabindex="-1" data-panel="panel-mosexcel">Mos 11 - MS Excel</button>
         <button class="tab" style="--accent:var(--accent-5)" role="tab" id="tab-diaphuong10" aria-controls="panel-diaphuong10" aria-selected="false" tabindex="-1" data-panel="panel-diaphuong10">Giáo dục địa phương 10</button>
+        <button class="tab" style="--accent:var(--accent-8)" role="tab" id="tab-diaphuong11" aria-controls="panel-diaphuong11" aria-selected="false" tabindex="-1" data-panel="panel-diaphuong11">Giáo dục địa phương 11</button>
       </div>
       <nav class="topbar-shortcuts" aria-label="Tiện ích lớp học">
         <a class="topbar-link" style="--accent:var(--accent-6)" href="https://script.google.com/macros/s/AKfycbxmonuJWcOM0qugroucAXmYkqL045sBamfu9KYUTmHbNFzyNW3lwhoB0Bo7-nnW7dwWjA/exec" target="_blank" rel="noopener" aria-label="Mở trang điểm danh trực tuyến">Điểm danh</a>
@@ -1230,6 +1234,62 @@
         <article class="card">
           <span class="card-icon"><svg><use href="#icon-pencil"></use></svg></span>
           <h3>Hoạt động trải nghiệm</h3>
+          <p>Nội dung sẽ được cập nhật.</p>
+        </article>
+        <article class="card card--resource">
+          <span class="card-icon"><svg><use href="#icon-check"></use></svg></span>
+          <span class="card-meta">QUY ĐỊNH TRƯỜNG · HK1 2026–2027</span>
+          <h3>Số cột điểm – Học kỳ I</h3>
+          <p>Số cột điểm thường xuyên (TX), giữa kỳ (GK) và cuối kỳ (CK) môn Giáo dục địa phương theo quy định của trường.</p>
+          <ul class="resource-list">
+            <li class="resource-item">
+              <div>
+                <span class="resource-item-title">Nhóm lớp: 10 + 11 + 12</span>
+                <span class="resource-item-meta">T9–10: 1 TX &nbsp;·&nbsp; T11: 1 TX + 1 GK &nbsp;·&nbsp; T12: 1 CK &nbsp;·&nbsp; Tổng cả kỳ: 4 cột</span>
+              </div>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" style="--accent:var(--accent-8)" id="panel-diaphuong11" role="tabpanel" aria-labelledby="tab-diaphuong11" tabindex="0">
+      <div class="panel-head">
+        <span class="panel-eyebrow">MÔN HỌC · LỚP 11</span>
+        <h2>Giáo dục địa phương 11</h2>
+        <p>Du lịch, danh nhân, văn học, âm nhạc, kiến trúc, kinh tế – môi trường, STEM và phong tục – pháp luật của Thành phố Hồ Chí Minh.</p>
+      </div>
+      <div class="shelf">
+        <article class="card card--resource">
+          <span class="card-icon"><svg><use href="#icon-play"></use></svg></span>
+          <span class="card-meta">8 CHỦ ĐỀ &nbsp;·&nbsp; 28 BÀI GIẢNG</span>
+          <h3>Bài giảng &amp; Chủ đề</h3>
+          <p>Toàn bộ bài giảng tương tác của 8 chủ đề Giáo dục địa phương 11, sắp theo tuần và tiết trong phân phối chương trình.</p>
+          <div class="card-actions">
+            <a class="resource-link" href="bai-hoc-gddp11/index.html" target="_blank" rel="noopener">Xem danh sách bài giảng</a>
+          </div>
+        </article>
+        <article class="card card--resource">
+          <span class="card-icon"><svg><use href="#icon-doc"></use></svg></span>
+          <span class="card-meta">CHỦ ĐỀ 1 · NỘI DUNG 1 – 2</span>
+          <h3>Bộ tài liệu: Phát triển du lịch ở TP.HCM</h3>
+          <p>Tài nguyên du lịch và một số loại hình du lịch tiêu biểu — gồm bài giảng PowerPoint, poster khổ A2, phiếu học tập và bản tóm tắt bài học.</p>
+          <div class="card-actions">
+            <a class="resource-link" href="bai-hoc-gddp11/cd1-nd12-tai-nguyen-loai-hinh-du-lich.html" target="_blank" rel="noopener">Mở bộ tài liệu</a>
+          </div>
+        </article>
+        <article class="card card--resource">
+          <span class="card-icon"><svg><use href="#icon-map"></use></svg></span>
+          <span class="card-meta">SƠ ĐỒ TƯ DUY · 8 CHỦ ĐỀ</span>
+          <h3>Sơ đồ tư duy nội dung Giáo dục địa phương 11</h3>
+          <p>Tóm tắt kiến thức cốt lõi của cả quyển theo dạng sơ đồ tư duy, gom từ phần Ghi nhớ của từng bài. Có ô tìm kiếm từ khoá trong toàn bộ nội dung và in được ra giấy.</p>
+          <div class="card-actions">
+            <a class="resource-link" href="../so-do-tu-duy-giao-duc-dia-phuong-11.html" target="_blank" rel="noopener">Xem sơ đồ tư duy</a>
+          </div>
+        </article>
+        <article class="card">
+          <span class="card-icon"><svg><use href="#icon-doc"></use></svg></span>
+          <h3>Sách Giáo dục địa phương 11</h3>
           <p>Nội dung sẽ được cập nhật.</p>
         </article>
         <article class="card card--resource">

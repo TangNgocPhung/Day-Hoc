@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kinh Tế Siêu Đô Thị</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=IBM+Plex+Mono:wght@400;600;700&display=swap">
+<style>
+  :root{
+    --ink:#1E2A27;
+    --ink-soft:#48584F;
+    --paper:#ECEFE1;
+    --paper-2:#F7F8EF;
+    --line:#D6D9C4;
+    --dusk:#12262C;
+    --dusk-2:#1D4750;
+    --dusk-3:#265861;
+    --rain:#5AA6B4;
+    --rain-soft:#CDE6E3;
+    --rain-ink:#0E3A40;
+    --sun:#E4A23B;
+    --sun-soft:#F5DCA9;
+    --sun-ink:#5A3B0E;
+    --ember:#B5533A;
+    --backdrop:#D6DAC6;
+    --shadow: 0 40px 70px -30px rgba(8,18,16,0.5);
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    padding:clamp(1.5rem,5vw,3.5rem) 1rem;
+    background:var(--backdrop);
+    color:var(--ink);
+    font-family:'Be Vietnam Pro','Segoe UI',system-ui,sans-serif;
+    display:flex;
+    justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .sheet{
+    width:100%;
+    max-width:760px;
+    background:var(--paper);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:
+      radial-gradient(120% 140% at 82% 8%, color-mix(in srgb, var(--sun) 30%, transparent), transparent 55%),
+      linear-gradient(160deg, var(--dusk) 0%, var(--dusk-2) 62%, var(--dusk-3) 100%);
+    color:var(--paper-2);
+    padding:clamp(1.6rem,4vw,2.6rem) clamp(1.6rem,4vw,2.6rem) 1.4rem;
+    position:relative;
+  }
+  .hero-top{
+    display:flex;
+    flex-wrap:wrap;
+    gap:1.5rem 2rem;
+    align-items:flex-start;
+  }
+  .hero-copy{ flex:1 1 300px; min-width:0; }
+  .kicker{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.7rem;
+    font-weight:600;
+    letter-spacing:0.16em;
+    color:var(--rain-soft);
+    margin-bottom:0.65rem;
+  }
+  .eyebrow{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.68rem;
+    font-weight:600;
+    letter-spacing:0.1em;
+    color:color-mix(in srgb, var(--paper-2) 62%, transparent);
+    margin-bottom:0.9rem;
+  }
+  .hero h1{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:clamp(1.7rem,4.6vw,2.5rem);
+    line-height:1.08;
+    margin:0 0 0.7rem;
+    text-wrap:balance;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--sun-soft);
+  }
+  .hero-sub{
+    margin:0;
+    max-width:38ch;
+    font-size:0.92rem;
+    line-height:1.55;
+    color:color-mix(in srgb, var(--paper-2) 78%, transparent);
+  }
+
+  .hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.6rem;
+    margin-top:1.1rem;
+  }
+  .hero-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:0.4rem;
+    padding:0.55rem 0.9rem;
+    border-radius:999px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.7rem;
+    font-weight:600;
+    letter-spacing:0.01em;
+    text-decoration:none;
+    border:1px solid transparent;
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .hero-btn svg{ width:0.85rem; height:0.85rem; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .hero-btn:hover{ transform:translateY(-1px); }
+  .hero-btn--primary{ background:var(--sun); color:var(--dusk); }
+  .hero-btn--primary:hover{ background:color-mix(in srgb, var(--sun) 88%, white); }
+  .hero-btn--ghost{
+    background:color-mix(in srgb, var(--paper-2) 10%, transparent);
+    border-color:color-mix(in srgb, var(--paper-2) 35%, transparent);
+    color:var(--paper-2);
+  }
+  .hero-btn--ghost:hover{ background:color-mix(in srgb, var(--paper-2) 18%, transparent); }
+
+  .dial-wrap{
+    flex:0 0 auto;
+    width:min(280px,100%);
+    margin:0 auto;
+  }
+  .dial-wrap svg{ width:100%; height:auto; display:block; }
+  .dial-legend{
+    display:flex;
+    justify-content:center;
+    gap:1.1rem;
+    margin-top:0.4rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    letter-spacing:0.04em;
+  }
+  .dial-legend span{ display:flex; align-items:center; gap:0.35rem; color:color-mix(in srgb, var(--paper-2) 80%, transparent); }
+  .dial-legend i{ width:0.55rem; height:0.55rem; border-radius:50%; display:inline-block; }
+
+  /* ---------- STAT STRIP ---------- */
+  .stat-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    margin:0 clamp(1.2rem,3.5vw,2rem);
+    transform:translateY(-1.1rem);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 14px 30px -18px rgba(10,25,22,0.35);
+  }
+  .stat{
+    background:var(--paper-2);
+    padding:0.85rem 0.6rem;
+    text-align:center;
+  }
+  .stat b{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-variant-numeric:tabular-nums;
+    font-size:clamp(1.05rem,3vw,1.35rem);
+    font-weight:700;
+    color:var(--rain-ink);
+    line-height:1.1;
+  }
+  .stat span{
+    display:block;
+    margin-top:0.3rem;
+    font-size:0.66rem;
+    line-height:1.35;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- SECTIONS ---------- */
+  .sections{
+    padding:0.3rem clamp(1.2rem,3.5vw,2rem) 0.5rem;
+    display:flex;
+    flex-direction:column;
+  }
+  .topic{
+    display:grid;
+    grid-template-columns:2.7rem 1fr;
+    column-gap:1rem;
+    padding:1.15rem 0;
+    border-top:1px solid var(--line);
+  }
+  .topic:first-child{ border-top:none; }
+  .topic-badge{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0.35rem;
+    padding-top:0.15rem;
+  }
+  .topic-badge .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.62rem;
+    font-weight:600;
+    letter-spacing:0.05em;
+    color:var(--ink-soft);
+  }
+  .topic-badge .icon-ring{
+    width:2.7rem; height:2.7rem;
+    border-radius:50%;
+    background:var(--rain-soft);
+    display:flex; align-items:center; justify-content:center;
+    flex:0 0 auto;
+  }
+  .topic-badge .icon-ring svg{ width:1.35rem; height:1.35rem; stroke:var(--rain-ink); fill:none; }
+  .topic h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.12rem;
+    margin:0.05rem 0 0.55rem;
+    color:var(--ink);
+  }
+  .topic ul{
+    margin:0; padding:0; list-style:none;
+    display:flex; flex-direction:column; gap:0.4rem;
+  }
+  .topic li{
+    position:relative;
+    padding-left:0.95rem;
+    font-size:0.87rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+  }
+  .topic li::before{
+    content:"";
+    position:absolute; left:0; top:0.55em;
+    width:0.4rem; height:0.4rem;
+    border-radius:50%;
+    background:var(--rain);
+  }
+  .topic b{ color:var(--ink); font-weight:700; }
+
+  .example{
+    margin-top:0.7rem;
+    padding:0.6rem 0.8rem;
+    background:var(--paper-2);
+    border:1px dashed color-mix(in srgb, var(--rain-ink) 35%, var(--line));
+    border-radius:10px;
+    display:flex;
+    gap:0.55rem;
+    align-items:flex-start;
+  }
+  .example .tag{
+    flex:0 0 auto;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.6rem;
+    font-weight:700;
+    letter-spacing:0.06em;
+    color:var(--sun-ink);
+    background:var(--sun-soft);
+    padding:0.15rem 0.4rem;
+    border-radius:5px;
+    margin-top:0.1rem;
+  }
+  .example p{ margin:0; font-size:0.82rem; line-height:1.55; color:var(--ink-soft); }
+
+  /* ---------- SIMULATION ---------- */
+  .simulate{
+    margin:0.4rem clamp(1.2rem,3.5vw,2rem) 1.6rem;
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:1.2rem clamp(1rem,3vw,1.5rem) 1.4rem;
+  }
+  .sim-head{ margin-bottom:0.9rem; }
+  .sim-head .kicker{ color:var(--rain-ink); margin-bottom:0.4rem; }
+  .sim-head h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.12rem;
+    margin:0 0 0.3rem;
+    color:var(--ink);
+  }
+  .sim-head p{ margin:0; font-size:0.82rem; color:var(--ink-soft); line-height:1.5; max-width:52ch; }
+
+  .sim-legend{
+    display:flex; flex-wrap:wrap; gap:0.9rem;
+    margin:0.7rem 0 0.2rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    color:var(--ink-soft);
+  }
+  .sim-legend span{ display:flex; align-items:center; gap:0.35rem; }
+  .sim-legend i{ width:0.7rem; height:0.7rem; border-radius:3px; display:inline-block; }
+  .sim-legend i.dot{ border-radius:50%; }
+
+  .sim-chart{ width:100%; overflow:visible; margin-top:0.3rem; }
+  .sim-chart .bar{ cursor:pointer; transition:opacity .15s ease; }
+  .sim-chart .bar:hover, .sim-chart .bar.active{ opacity:1; }
+  .sim-chart .bar{ opacity:0.62; }
+  .sim-chart .hit{ fill:transparent; cursor:pointer; }
+  .sim-chart .mlabel{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; fill:var(--ink-soft); }
+  .sim-chart .mlabel.active{ fill:var(--ink); font-weight:700; }
+  .sim-chart .glabel{ font-family:'IBM Plex Mono',monospace; font-size:9px; fill:var(--ink-soft); }
+  .sim-chart .gridline{ stroke:var(--line); stroke-width:1; }
+  .sim-chart .templine{ fill:none; stroke:var(--ember); stroke-width:2; }
+  .sim-chart .tempdot{ fill:var(--ember); stroke:var(--paper-2); stroke-width:1.5; cursor:pointer; }
+  .sim-chart .tempdot.active{ r:5.5; }
+
+  .sim-readout{
+    display:flex; flex-wrap:wrap; gap:1rem 1.4rem; align-items:center;
+    margin-top:1rem;
+    padding-top:0.9rem;
+    border-top:1px dashed var(--line);
+  }
+  .sim-readout .month-big{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.5rem;
+    color:var(--ink);
+    min-width:5.5rem;
+  }
+  .sim-pill{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.66rem;
+    font-weight:700;
+    letter-spacing:0.04em;
+    padding:0.3rem 0.6rem;
+    border-radius:999px;
+    color:#fff;
+  }
+  .sim-metrics{ display:flex; gap:1.4rem; }
+  .sim-metrics div b{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-variant-numeric:tabular-nums;
+    font-size:1.05rem;
+    color:var(--rain-ink);
+  }
+  .sim-metrics div span{ font-size:0.68rem; color:var(--ink-soft); }
+  .sim-note{ flex-basis:100%; font-size:0.85rem; line-height:1.55; color:var(--ink-soft); }
+  .sim-caption{
+    margin-top:0.9rem;
+    font-size:0.68rem;
+    color:var(--ink-soft);
+    opacity:0.8;
+  }
+
+  /* ---------- GHI NHỚ ---------- */
+  .ghinho{
+    position:relative;
+    margin:0 clamp(1.2rem,3.5vw,2rem) 1.7rem;
+    background-color:var(--paper-2);
+    background-image:repeating-linear-gradient(
+      to bottom,
+      transparent 0, transparent 27px,
+      color-mix(in srgb, var(--rain) 32%, transparent) 27px,
+      color-mix(in srgb, var(--rain) 32%, transparent) 28px
+    );
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:1.3rem clamp(1.1rem,3vw,1.6rem) 1.4rem clamp(2.5rem,7vw,3.1rem);
+    overflow:hidden;
+  }
+  .ghinho::before{
+    content:"";
+    position:absolute;
+    left:clamp(1.7rem,5vw,2.2rem);
+    top:0; bottom:0;
+    width:1.5px;
+    background:color-mix(in srgb, var(--ember) 65%, transparent);
+  }
+  .ghinho-head{ display:flex; align-items:baseline; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.2rem; }
+  .ghinho-head h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.2rem;
+    margin:0;
+    color:var(--ink);
+  }
+  .ghinho-head .pencil{ font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--ink-soft); letter-spacing:0.02em; }
+  .ghinho ol{
+    margin:0.7rem 0 0;
+    padding:0;
+    list-style:none;
+    counter-reset:ghinho-counter;
+    display:flex;
+    flex-direction:column;
+    gap:0.35rem;
+  }
+  .ghinho li{
+    counter-increment:ghinho-counter;
+    position:relative;
+    padding-left:1.6rem;
+    font-size:0.9rem;
+    line-height:1.95;
+    color:var(--ink);
+  }
+  .ghinho li::before{
+    content:counter(ghinho-counter) ".";
+    position:absolute; left:0; top:0;
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    color:var(--rain-ink);
+  }
+  .ghinho li b{ color:var(--ink); }
+  .ghinho li .mua{ color:var(--rain-ink); font-weight:700; }
+  .ghinho li .kho{ color:var(--sun-ink); font-weight:700; }
+
+  /* ---------- FOOTER ---------- */
+  .colophon{
+    background:var(--dusk);
+    color:color-mix(in srgb, var(--paper-2) 72%, transparent);
+    padding:1.1rem clamp(1.2rem,3.5vw,2rem) 1.3rem;
+  }
+  .rain-rule{
+    display:flex;
+    gap:0.5rem;
+    margin-bottom:0.75rem;
+    overflow:hidden;
+  }
+  .rain-rule span{
+    flex:1;
+    height:2px;
+    background:linear-gradient(90deg,transparent,var(--rain),transparent);
+    opacity:0.55;
+  }
+  .colophon-row{
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.4rem 1rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    letter-spacing:0.03em;
+  }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+
+  :root{ --moss:#6F8A5B; --slate:#5F7285; }
+  .stat b{ font-size:clamp(0.95rem,2.6vw,1.2rem); }
+  @media (max-width:560px){ .stat-strip{ grid-template-columns:repeat(2,1fr); } }
+  .dial-legend{ flex-wrap:wrap; gap:0.35rem 0.9rem; max-width:280px; margin-inline:auto; }
+  .hero-week{ display:inline-block; margin-top:0.2rem; font-family:'IBM Plex Mono',monospace; font-size:0.66rem; color:var(--sun-soft); letter-spacing:0.05em; }
+
+  /* ---------- WIDGETS (chung) ---------- */
+  .w-btn{
+    font-family:'Be Vietnam Pro',system-ui,sans-serif; font-size:0.8rem; font-weight:600;
+    padding:0.5rem 0.8rem; border-radius:10px; cursor:pointer;
+    background:var(--paper); color:var(--ink); border:1px solid var(--line);
+    transition:background .15s ease, border-color .15s ease, transform .15s ease; text-align:left; line-height:1.4;
+  }
+  .w-btn:hover{ border-color:var(--rain); transform:translateY(-1px); }
+  .w-btn.active{ background:var(--rain-soft); border-color:var(--rain); color:var(--rain-ink); }
+  .w-btn.ok{ background:#DCEFD8; border-color:#5E9B57; color:#24501F; }
+  .w-btn.bad{ background:#F6DAD2; border-color:var(--ember); color:#6E2A18; }
+  .w-btn:disabled{ cursor:default; transform:none; }
+  .w-row{ display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.7rem; }
+  .w-card{
+    margin-top:0.8rem; padding:0.9rem 1rem; background:var(--paper); border:1px solid var(--line);
+    border-radius:12px; font-size:0.9rem; line-height:1.55; color:var(--ink);
+  }
+  .w-small{ font-family:'IBM Plex Mono',monospace; font-size:0.66rem; color:var(--ink-soft); letter-spacing:0.04em; }
+  .w-feedback{ margin-top:0.6rem; font-size:0.85rem; line-height:1.55; color:var(--ink-soft); min-height:1.4em; }
+  .w-feedback b{ color:var(--ink); }
+  .w-meter{ height:10px; background:var(--line); border-radius:999px; overflow:hidden; margin-top:0.5rem; }
+  .w-meter i{ display:block; height:100%; width:0; background:var(--rain); border-radius:999px; transition:width .3s ease, background .3s ease; }
+  .w-group{ margin-top:0.9rem; }
+  .w-group > .w-small{ display:block; margin-bottom:0.1rem; }
+  .cmp-grid{ display:grid; gap:0.6rem; margin-top:0.8rem; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); }
+  .cmp-col{ background:var(--paper); border-radius:12px; padding:0.75rem 0.85rem; border-top:4px solid var(--rain); font-size:0.86rem; line-height:1.55; color:var(--ink-soft); }
+  .cmp-col h3{ margin:0 0 0.35rem; font-family:'IBM Plex Mono',monospace; font-size:0.68rem; letter-spacing:0.06em; color:var(--ink); }
+  .tl-scroll{ overflow-x:auto; }
+
+  /* ---------- NHIỆM VỤ ---------- */
+  .mission{
+    margin:0 clamp(1.2rem,3.5vw,2rem) 1.7rem; display:grid; gap:0.6rem;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  }
+  .mission div{ background:var(--paper-2); border:1px solid var(--line); border-radius:14px; padding:0.8rem 0.95rem; }
+  .mission .tag{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:0.6rem; font-weight:700; letter-spacing:0.06em;
+    color:var(--sun-ink); background:var(--sun-soft); padding:0.15rem 0.45rem; border-radius:5px; margin-bottom:0.4rem;
+  }
+  .mission p{ margin:0; font-size:0.82rem; line-height:1.55; color:var(--ink-soft); }
+  .ghinho li .c1{ color:var(--rain-ink); font-weight:700; }
+  .ghinho li .c2{ color:var(--sun-ink); font-weight:700; }
+
+:root{--dusk:#13261A;--dusk-2:#1F4A2C;--dusk-3:#2A5E38;--rain:#4E9A5E;--rain-soft:#D3EAD6;--rain-ink:#1B4A26;}
+</style>
+</head><body><div class="sheet">
+
+  <header class="hero">
+    <div class="hero-top">
+      <div class="hero-copy">
+        <span class="kicker">BÀI HỌC ĐỊA PHƯƠNG · CÁC NGÀNH KINH TẾ</span>
+        <span class="eyebrow">GIÁO DỤC ĐỊA PHƯƠNG 11 · CHỦ ĐỀ 6 · NỘI DUNG 2</span>
+        <h1>Tình hình phát triển<br>các ngành kinh tế ở <em>TP. Hồ Chí Minh</em></h1>
+        <p class="hero-sub">Gần một phần tư GDP cả nước đến từ một thành phố. Ngành nào đang “kéo” kinh tế TP.HCM đi lên — và mỗi ngành đặt lên môi trường sức ép gì?</p>
+        <span class="hero-week">TUẦN 25 · 22/02 – 28/02 · TIẾT 23</span>
+        <div class="hero-actions">
+          <a class="hero-btn hero-btn--primary" href="https://tangngocphung.github.io/Day-Hoc/goc-hoc-tap/bai-hoc-gddp11/cd6-nd2-tinh-hinh-kinh-te.pptx" target="_blank" rel="noopener"><svg aria-hidden="true" viewBox="0 0 20 20"><polygon points="6,4 15,10 6,16"></polygon></svg>Mở slide bài giảng (PPTX)</a>
+          <a class="hero-btn hero-btn--ghost" href="https://tangngocphung.github.io/Day-Hoc/goc-hoc-tap/bai-hoc-gddp11/cd6-nd2-tinh-hinh-kinh-te.pptx" download=""><svg aria-hidden="true" viewBox="0 0 20 20"><path d="M10 3v10M6 9l4 4 4-4M4 17h12"></path></svg>Tải PPTX</a>
+          <a class="hero-btn hero-btn--ghost" href="https://tangngocphung.github.io/Day-Hoc/goc-hoc-tap/bai-hoc-gddp11/phieu-hoc-tap-cd6-nd2-tinh-hinh-kinh-te.docx" download=""><svg aria-hidden="true" viewBox="0 0 20 20"><path d="M5 2h7l3 3v13H5z"></path><path d="M12 2v3h3"></path><path d="M7.5 11h5M7.5 13.5h5M7.5 8.5h3"></path></svg>Tải phiếu học tập (Word)</a>
+          <a class="hero-btn hero-btn--ghost" href="https://tangngocphung.github.io/Day-Hoc/goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd6-nd2-tinh-hinh-kinh-te.html" target="_blank" rel="noopener"><svg aria-hidden="true" viewBox="0 0 20 20"><rect x="3" y="6" width="14" height="10" rx="4"></rect><path d="M7 9v4M5 11h4M13.5 10.5h.01M15 12.5h.01"></path></svg>Chơi trò chơi ôn tập</a>
+        </div>
+      </div>
+      <div class="dial-wrap">
+        <svg id="dial" viewBox="0 0 300 300" role="img" aria-label="Cơ cấu GRDP TP.HCM năm 2025: dịch vụ 52,2%, công nghiệp và xây dựng 35,2%, thuế sản phẩm trừ trợ cấp 10,9%, nông lâm thuỷ sản 1,7%">
+          <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(247,248,239,0.18)" stroke-width="1"></circle>
+        </svg>
+        <div class="dial-legend" id="dialLegend"></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="stat-strip">
+    <div class="stat"><b>~23,5%</b><span>Tỉ trọng GRDP so với GDP cả nước 2025</span></div>
+    <div class="stat"><b>+7,5%</b><span>Tăng trưởng GRDP năm 2025</span></div>
+    <div class="stat"><b>~91 tỷ USD</b><span>Kim ngạch xuất khẩu năm 2025</span></div>
+    <div class="stat"><b>66 KCN, KCX</b><span>Sau hợp nhất, tổng hơn 27.000 ha</span></div>
+  </section>
+
+  <main class="sections">
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"/><rect x="7" y="11" width="3" height="6"/><rect x="12" y="7" width="3" height="10"/><rect x="17" y="13" width="3" height="4"/></svg></span>
+        <span class="num">01</span>
+      </div>
+      <div>
+        <h2>Bức tranh chung năm 2025</h2>
+        <ul>
+          <li>Sau hợp nhất, TP.HCM có quy mô GRDP khoảng <b>2,97 triệu tỷ đồng</b>, chiếm khoảng <b>23,5% GDP cả nước</b>.</li>
+          <li>GRDP tăng <b>7,53%</b> (không tính dầu khí tăng 8,03%); quý IV tăng hơn 9%.</li>
+          <li>Cơ cấu: <b>dịch vụ ~52%</b>, công nghiệp – xây dựng ~35%, nông – lâm – thuỷ sản chưa tới 2%, thuế sản phẩm ~11%.</li>
+        </ul>
+      </div>
+    </article>
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+        <span class="num">02</span>
+      </div>
+      <div>
+        <h2>Dịch vụ — “đầu tàu” lớn nhất</h2>
+        <ul>
+          <li>Tăng khoảng <b>8,8%</b>; tổng bán lẻ hàng hoá và doanh thu dịch vụ tiêu dùng gần <b>1,95 triệu tỷ đồng</b> (tăng 15,5%).</li>
+          <li>Là trung tâm <b>tài chính – ngân hàng, thương mại, logistics</b> với cảng Cát Lái, Cái Mép – Thị Vải, sân bay Tân Sơn Nhất.</li>
+          <li>Du lịch phục hồi mạnh: dịch vụ lưu trú, ăn uống tăng gần 25%, lữ hành tăng gần 24%.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">VÍ DỤ</span>
+          <p>Sức ép môi trường: lượng xe tải ra vào cảng, rác thải từ chợ, siêu thị, nhà hàng và bao bì nhựa tăng theo đà tiêu dùng.</p>
+        </div>
+      </div>
+    </article>
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V10l6 4V10l6 4V6l6 3v12H3Z"/><path d="M7 17h2M12 17h2M17 17h1"/></svg></span>
+        <span class="num">03</span>
+      </div>
+      <div>
+        <h2>Công nghiệp — nền tảng sản xuất</h2>
+        <ul>
+          <li>Công nghiệp – xây dựng tăng <b>6,1%</b>; công nghiệp chế biến, chế tạo tăng 7,8%; chỉ số sản xuất công nghiệp tăng 8,9%.</li>
+          <li>Ngành nổi bật: <b>điện tử</b> (Khu Công nghệ cao), cơ khí, hoá chất, dệt may, đồ gỗ, thép, điện – đạm – dầu khí vùng Phú Mỹ.</li>
+          <li>Có <b>66 khu công nghiệp, khu chế xuất</b>; vốn FDI đăng kí năm 2025 khoảng 8,2 tỷ USD (tăng gần 22%).</li>
+        </ul>
+        <div class="example">
+          <span class="tag">VÍ DỤ</span>
+          <p>Sức ép môi trường: nước thải, khí thải, chất thải rắn công nghiệp; nếu hệ thống xử lí không đạt chuẩn sẽ gây ô nhiễm sông Sài Gòn, Đồng Nai, Thị Vải.</p>
+        </div>
+      </div>
+    </article>
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19 13 11"/></svg></span>
+        <span class="num">04</span>
+      </div>
+      <div>
+        <h2>Nông – lâm – thuỷ sản</h2>
+        <ul>
+          <li>Tỉ trọng nhỏ (~1,7%), tăng khoảng <b>2,4%</b>, nhưng giữ vai trò <b>an ninh lương thực, mảng xanh</b> cho đô thị.</li>
+          <li>Hướng tới <b>nông nghiệp đô thị, công nghệ cao</b>: rau, hoa lan, cá cảnh, bò sữa ở Củ Chi; cao su, hồ tiêu, cây ăn quả vùng đất đỏ.</li>
+          <li>Thuỷ sản ven biển Cần Giờ, Vũng Tàu, Côn Đảo: nuôi tôm, đánh bắt xa bờ, chế biến hải sản.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">VÍ DỤ</span>
+          <p>Sức ép môi trường: dư lượng phân bón, thuốc bảo vệ thực vật, chất thải chăn nuôi; phá rừng ngập mặn để mở ao nuôi tôm.</p>
+        </div>
+      </div>
+    </article>
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></span>
+        <span class="num">05</span>
+      </div>
+      <div>
+        <h2>Góc AI: máy tính “gom nhóm” dữ liệu</h2>
+        <ul>
+          <li><b>Phân lớp</b>: cho máy học từ những ví dụ <b>đã có nhãn</b> sẵn, rồi tự gắn nhãn cho dữ liệu mới. Giống thầy cô đưa đáp án mẫu, em luyện rồi tự làm bài mới.</li>
+          <li><b>Phân cụm</b>: dữ liệu <b>chưa có nhãn</b>, máy tự tìm những điểm “giống nhau” và gom thành cụm. Giống xếp đồ trong phòng khi không ai dặn trước.</li>
+          <li>Trong kinh tế – môi trường: phân lớp giúp nhận biết <b>nhà máy có nguy cơ xả thải vượt chuẩn</b>; phân cụm giúp tìm <b>nhóm KCN có đặc điểm giống nhau</b> để có chính sách phù hợp.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">HÌNH DUNG</span>
+          <p>Cho AI số liệu của nhiều KCN (số lao động, lượng nước thải, ngành chủ yếu). Thuật toán phân cụm có thể tự chia thành các nhóm như “KCN điện tử ít nước thải” và “KCN dệt nhuộm, hoá chất nhiều nước thải” — dù không ai đặt tên nhóm trước.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <section class="simulate">
+    <div class="sim-head">
+      <span class="kicker">BIỂU ĐỒ TĂNG TRƯỞNG · BẤM VÀO TỪNG CỘT</span>
+      <h2>Năm 2025, lĩnh vực nào của TP.HCM tăng nhanh nhất?</h2>
+      <p>Mỗi cột là tốc độ tăng so với năm 2024. Bấm vào từng cột để xem ý nghĩa và sức ép môi trường đi kèm.</p>
+    </div>
+    <div id="simBody"></div>
+    <p class="sim-caption">*Nguồn: Cục Thống kê TP.HCM, số liệu kinh tế – xã hội năm 2025 (TP.HCM sau hợp nhất; EPMA về số KCN, KCX). Số liệu đã làm tròn; FDI là tốc độ tăng vốn đăng kí.</p>
+  </section>
+
+  <section class="ghinho">
+    <div class="ghinho-head">
+      <h2>Ghi nhớ</h2>
+      <span class="pencil">✎ Chép nội dung dưới đây vào vở</span>
+    </div>
+    <ol>
+      <li>Năm 2025, TP.HCM (sau hợp nhất) có GRDP khoảng <b>2,97 triệu tỷ đồng</b>, tăng <b>7,53%</b>, chiếm khoảng 23,5% GDP cả nước.</li>
+      <li>Cơ cấu kinh tế: <span class="c1">dịch vụ ~52%</span> – <span class="c2">công nghiệp, xây dựng ~35%</span> – nông, lâm, thuỷ sản ~1,7%.</li>
+      <li><b>Dịch vụ</b> dẫn đầu (thương mại, tài chính, logistics, du lịch); <b>công nghiệp</b> có 66 KCN, KCX, mạnh về điện tử, cơ khí, hoá chất, dầu khí.</li>
+      <li>Mỗi ngành phát triển đều tạo <b>sức ép môi trường</b>: rác thải, nước thải, khí thải, bụi, mất rừng ngập mặn, hoá chất nông nghiệp.</li>
+      <li><b>Phân lớp</b> = học từ dữ liệu có nhãn rồi gắn nhãn dữ liệu mới; <b>phân cụm</b> = tự gom dữ liệu chưa có nhãn thành các nhóm giống nhau.</li>
+    </ol>
+  </section>
+
+  <section class="mission">
+    <div><span class="tag">SẢN PHẨM</span><p>Phiếu phân tích nguyên nhân – biểu hiện vấn đề môi trường kèm số liệu có nguồn.</p></div>
+    <div><span class="tag">NĂNG LỰC SỐ</span><p>Xử lí dữ liệu số, tạo biểu đồ và trình bày tình hình phát triển các ngành kinh tế địa phương (1.2.NC1b, 3.1.NC1a).</p></div>
+    <div><span class="tag">GÓC AI</span><p>Nhóm lập bảng 8–10 hoạt động kinh tế ở TP.HCM (ngành, loại chất thải chính, mức độ). Tự “phân cụm” thành các nhóm có tác động giống nhau, rồi so sánh với cách một công cụ AI gom nhóm; chỉ ra đâu là bài toán phân cụm, đâu là phân lớp trong phân tích dữ liệu kinh tế – môi trường (11.C5.2, 11.C5.MR2).</p></div>
+  </section>
+
+  <footer class="colophon">
+    <div class="rain-rule"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="colophon-row">
+      <span>GIÁO DỤC ĐỊA PHƯƠNG 11 · CHỦ ĐỀ 6: HOẠT ĐỘNG KINH TẾ &amp; MÔI TRƯỜNG TP.HCM</span>
+      <span>GV: TĂNG NGỌC PHỤNG · THPT NGUYỄN KHUYẾN</span>
+    </div>
+  </footer>
+
+</div>
+<script>window.LESSON = {"ring": {"aria": "Cơ cấu GRDP TP.HCM năm 2025: dịch vụ 52,2%, công nghiệp và xây dựng 35,2%, thuế sản phẩm trừ trợ cấp 10,9%, nông lâm thuỷ sản 1,7%", "centerTop": "GRDP 2025", "centerBig": "+7,5%", "segments": [{"label": "Dịch vụ ~52%", "short": "DV", "color": "c1", "weight": 52.2}, {"label": "CN – xây dựng ~35%", "short": "CN", "color": "c2", "weight": 35.2}, {"label": "Thuế SP ~11%", "short": "T", "color": "c5", "weight": 10.9}, {"label": "Nông – lâm – TS ~2%", "short": "NN", "color": "c4", "weight": 1.7}]}, "sim": {"type": "bars", "kicker": "BIỂU ĐỒ TĂNG TRƯỞNG · BẤM VÀO TỪNG CỘT", "title": "Năm 2025, lĩnh vực nào của TP.HCM tăng nhanh nhất?", "desc": "Mỗi cột là tốc độ tăng so với năm 2024. Bấm vào từng cột để xem ý nghĩa và sức ép môi trường đi kèm.", "unit": "%", "max": 24, "legend": [{"color": "c5", "label": "Toàn nền kinh tế"}, {"color": "c1", "label": "Dịch vụ"}, {"color": "c2", "label": "Công nghiệp – xây dựng"}, {"color": "c4", "label": "Nông – lâm – thuỷ sản"}, {"color": "c3", "label": "Chỉ tiêu khác"}], "default": 0, "items": [{"label": "GRDP", "name": "Tổng sản phẩm trên địa bàn (GRDP)", "value": 7.5, "valueLabel": "7,5", "color": "c5", "pill": "Toàn nền kinh tế", "metrics": [{"v": "~2,97 triệu tỷ", "k": "Quy mô (đồng)"}, {"v": "8,0%", "k": "Nếu không tính dầu khí"}], "note": "Tốc độ tăng khá cao với một nền kinh tế quy mô lớn nhất cả nước. Mức 8,0% khi không tính dầu khí cho thấy khai thác dầu khí tăng thấp đã kéo tăng trưởng chung xuống."}, {"label": "DV", "name": "Khu vực dịch vụ", "value": 8.8, "valueLabel": "8,8", "color": "c1", "pill": "Đóng góp lớn nhất", "metrics": [{"v": "~52%", "k": "Tỉ trọng GRDP"}], "note": "Thương mại, tài chính, logistics, du lịch tăng mạnh. Đi kèm là áp lực về rác thải sinh hoạt, bao bì nhựa và khí thải giao thông."}, {"label": "CN-XD", "name": "Công nghiệp và xây dựng", "value": 6.1, "valueLabel": "6,1", "color": "c2", "pill": "Nền tảng sản xuất", "metrics": [{"v": "~35%", "k": "Tỉ trọng GRDP"}], "note": "Tăng chậm hơn dịch vụ, một phần do khai thác dầu khí kém khả quan. Là nguồn phát sinh chính của nước thải, khí thải công nghiệp."}, {"label": "CBCT", "name": "Công nghiệp chế biến, chế tạo", "value": 7.8, "valueLabel": "7,8", "color": "c2", "pill": "Động lực công nghiệp", "metrics": [{"v": "66", "k": "KCN, KCX sau hợp nhất"}], "note": "Điện tử, cơ khí, hoá chất, đồ gỗ, dệt may… Cần xử lí nước thải tập trung và chuyển dần sang công nghệ sạch."}, {"label": "XD", "name": "Ngành xây dựng", "value": 9.0, "valueLabel": "9,0", "color": "c2", "pill": "Hạ tầng tăng tốc", "metrics": [{"v": "~685 nghìn tỷ", "k": "Vốn đầu tư toàn xã hội"}], "note": "Nhiều công trình giao thông, đô thị được đẩy nhanh. Công trường phát sinh bụi, tiếng ồn, phế thải xây dựng và nhu cầu lớn về cát, đá."}, {"label": "NLTS", "name": "Nông, lâm nghiệp và thuỷ sản", "value": 2.4, "valueLabel": "2,4", "color": "c4", "pill": "Tăng chậm, ổn định", "metrics": [{"v": "~1,7%", "k": "Tỉ trọng GRDP"}], "note": "Diện tích đất nông nghiệp thu hẹp do đô thị hoá; hướng đi là nông nghiệp công nghệ cao, giảm hoá chất."}, {"label": "Bán lẻ", "name": "Tổng bán lẻ hàng hoá và doanh thu dịch vụ tiêu dùng", "value": 15.5, "valueLabel": "15,5", "color": "c3", "pill": "Tiêu dùng sôi động", "metrics": [{"v": "~1,95 triệu tỷ", "k": "Doanh thu (đồng)"}], "note": "Sức mua tăng mạnh. Mặt trái: lượng rác thải, túi nilon và hộp nhựa dùng một lần tăng theo."}, {"label": "FDI", "name": "Vốn đầu tư trực tiếp nước ngoài đăng kí", "value": 21.8, "valueLabel": "21,8", "color": "c3", "pill": "Hút vốn ngoại", "metrics": [{"v": "~8,2 tỷ USD", "k": "Vốn đăng kí"}], "note": "Nhà đầu tư nước ngoài tiếp tục chọn TP.HCM. Thành phố có cơ hội ưu tiên dự án công nghệ cao, ít ô nhiễm, từ chối công nghệ lạc hậu."}], "caption": "*Nguồn: Cục Thống kê TP.HCM, số liệu kinh tế – xã hội năm 2025 (TP.HCM sau hợp nhất; EPMA về số KCN, KCX). Số liệu đã làm tròn; FDI là tốc độ tăng vốn đăng kí."}};</script>
+<script>
+(function(){
+  'use strict';
+  const L = window.LESSON;
+  const NS = 'http://www.w3.org/2000/svg';
+  const COLOR = { c1:'var(--rain)', c2:'var(--sun)', c3:'var(--ember)', c4:'var(--moss)', c5:'var(--slate)' };
+  const INK   = { c1:'var(--rain-ink)', c2:'var(--sun-ink)', c3:'#7A3321', c4:'#3F5530', c5:'#34414F' };
+  const col = k => COLOR[k] || COLOR.c1;
+  const ink = k => INK[k] || INK.c1;
+  function mk(tag, attrs, text){
+    const e = document.createElementNS(NS, tag);
+    for (const k in (attrs||{})) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function el(tag, cls, html){
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html;
+    return e;
+  }
+
+  /* ---------- VÒNG TRÒN HERO ---------- */
+  (function dial(){
+    const svg = document.getElementById('dial');
+    const cx = 150, cy = 150;
+    const polar = (r, deg) => { const a = deg*Math.PI/180; return { x: cx + r*Math.sin(a), y: cy - r*Math.cos(a) }; };
+    const segs = L.ring.segments;
+    const total = segs.reduce((s, x) => s + (x.weight || 1), 0);
+    const gap = segs.length > 1 ? 8 : 0;
+    let start = 0;
+    segs.forEach((s, i) => {
+      const span = 360 * (s.weight || 1) / total;
+      const g2 = Math.min(gap, span*0.35); const a0 = start + g2/2, a1 = start + span - g2/2;
+      const p0 = polar(102, a0), p1 = polar(102, a1);
+      const large = (a1 - a0) > 180 ? 1 : 0;
+      const d = (segs.length === 1)
+        ? 'M 150,48 A 102,102 0 1,1 149.99,48'
+        : 'M ' + p0.x.toFixed(2) + ',' + p0.y.toFixed(2) + ' A 102,102 0 ' + large + ',1 ' + p1.x.toFixed(2) + ',' + p1.y.toFixed(2);
+      svg.appendChild(mk('path', { d, fill:'none', stroke:col(s.color), 'stroke-width':14, 'stroke-linecap':'round' }));
+      const mid = start + span/2;
+      const np = polar(130, mid);
+      const g = mk('g', { transform:'translate(' + np.x.toFixed(2) + ',' + np.y.toFixed(2) + ')' });
+      g.appendChild(mk('circle', { r:11, fill:col(s.color) }));
+      g.appendChild(mk('text', { 'text-anchor':'middle', y:3.5, 'font-family':'IBM Plex Mono, monospace', 'font-size':10, 'font-weight':700, fill:'#fff' }, String(i+1)));
+      svg.appendChild(g);
+      const tp = polar(78, mid);
+      if (s.short && span >= 24) svg.appendChild(mk('text', { x:tp.x.toFixed(2), y:(tp.y+3).toFixed(2), 'text-anchor':'middle', 'font-family':'IBM Plex Mono, monospace', 'font-size':9, fill:'rgba(247,248,239,0.75)' }, s.short));
+      start += span;
+    });
+    const bigLen = (L.ring.centerBig || '').length;
+    svg.appendChild(mk('text', { x:150, y:140, 'text-anchor':'middle', 'font-family':'IBM Plex Mono, monospace', 'font-size':10, fill:'rgba(247,248,239,0.7)', 'letter-spacing':1 }, L.ring.centerTop));
+    svg.appendChild(mk('text', { x:150, y:168, 'text-anchor':'middle', 'font-family':'Fraunces, serif', 'font-weight':700, 'font-size': bigLen > 9 ? 22 : 30, fill:'#F7F8EF' }, L.ring.centerBig));
+    const lg = document.getElementById('dialLegend');
+    segs.forEach((s, i) => {
+      const sp = el('span', null, '<i></i>' + (i+1) + ' · ' + s.label);
+      sp.querySelector('i').style.background = col(s.color);
+      lg.appendChild(sp);
+    });
+  })();
+
+  /* ---------- MÔ PHỎNG ---------- */
+  const S = L.sim;
+  const root = document.getElementById('simBody');
+
+  function legend(items){
+    if (!items || !items.length) return;
+    const lg = el('div', 'sim-legend');
+    items.forEach(it => {
+      const sp = el('span', null, '<i></i>' + it.label);
+      sp.querySelector('i').style.background = col(it.color);
+      lg.appendChild(sp);
+    });
+    root.appendChild(lg);
+  }
+  function readout(){
+    const r = el('div', 'sim-readout');
+    r.innerHTML = '<span class="month-big"></span><span class="sim-pill"></span><div class="sim-metrics"></div><p class="sim-note"></p>';
+    root.appendChild(r);
+    return function(item){
+      r.querySelector('.month-big').textContent = item.name;
+      const pill = r.querySelector('.sim-pill');
+      pill.textContent = item.pill || '';
+      pill.hidden = !item.pill;
+      pill.style.background = ink(item.color);
+      const m = r.querySelector('.sim-metrics');
+      m.innerHTML = '';
+      (item.metrics || []).forEach(x => {
+        const d = el('div'); const b = el('b'); b.textContent = x.v; const s = el('span'); s.textContent = x.k;
+        d.appendChild(b); d.appendChild(s); m.appendChild(d);
+      });
+      r.querySelector('.sim-note').innerHTML = item.note || '';
+    };
+  }
+
+  const renderers = {
+    /* Biểu đồ cột có thể bấm chọn */
+    bars(){
+      legend(S.legend);
+      const items = S.items, n = items.length;
+      const left = 44, right = 650, top = 20, base = 196;
+      const plotW = right - left, plotH = base - top, slot = plotW / n;
+      const max = S.max || Math.max(...items.map(i => i.value)) * 1.1;
+      const svg = mk('svg', { class:'sim-chart', viewBox:'0 0 680 240', role:'img', 'aria-label':S.title });
+      root.appendChild(svg);
+      const y = v => base - (v / max) * plotH;
+      [0, max/2, max].forEach(v => {
+        svg.appendChild(mk('line', { class:'gridline', x1:left, x2:right, y1:y(v), y2:y(v) }));
+        svg.appendChild(mk('text', { class:'glabel', x:left-8, y:y(v)+3, 'text-anchor':'end' }, (Math.round(v*10)/10) + ''));
+      });
+      if (S.unit) svg.appendChild(mk('text', { class:'glabel', x:left-8, y:top-8, 'text-anchor':'end' }, S.unit));
+      const bars = [], labels = [], vals = [];
+      items.forEach((it, i) => {
+        const cx = left + slot*i + slot/2, bw = Math.min(slot*0.56, 60);
+        const b = mk('rect', { class:'bar', x:(cx-bw/2).toFixed(1), y:y(it.value).toFixed(1), width:bw.toFixed(1), height:(base-y(it.value)).toFixed(1), rx:3, fill:col(it.color) });
+        svg.appendChild(b); bars.push(b);
+        const vt = mk('text', { class:'glabel', x:cx, y:(y(it.value)-5).toFixed(1), 'text-anchor':'middle' }, it.valueLabel || String(it.value));
+        svg.appendChild(vt); vals.push(vt);
+        const lb = mk('text', { class:'mlabel', x:cx, y:base+16, 'text-anchor':'middle' }, it.label);
+        svg.appendChild(lb); labels.push(lb);
+        const hit = mk('rect', { class:'hit', x:(cx-slot/2).toFixed(1), y:top, width:slot.toFixed(1), height:base-top+24 });
+        hit.addEventListener('click', () => select(i));
+        svg.appendChild(hit);
+      });
+      const show = readout();
+      function select(i){
+        bars.forEach((b,j) => b.classList.toggle('active', j===i));
+        labels.forEach((b,j) => b.classList.toggle('active', j===i));
+        show(items[i]);
+      }
+      select(S.default || 0);
+    },
+
+    /* Dòng thời gian */
+    timeline(){
+      legend(S.legend);
+      const items = S.items, n = items.length;
+      const W = Math.max(680, n*96), left = 64, right = W-64;
+      const wrap = el('div', 'tl-scroll'); root.appendChild(wrap);
+      const svg = mk('svg', { class:'sim-chart', viewBox:'0 0 ' + W + ' 130', role:'img', 'aria-label':S.title, style: W > 680 ? 'min-width:' + W + 'px' : '' });
+      wrap.appendChild(svg);
+      svg.appendChild(mk('line', { x1:left, x2:right, y1:62, y2:62, stroke:'var(--line)', 'stroke-width':3, 'stroke-linecap':'round' }));
+      const dots = [], names = [];
+      items.forEach((it, i) => {
+        const x = n === 1 ? W/2 : left + (right-left)*i/(n-1);
+        const up = i % 2 === 0;
+        svg.appendChild(mk('text', { class:'mlabel', x, y: up ? 40 : 94, 'text-anchor':'middle', style:'font-weight:700;fill:var(--ink)' }, it.year));
+        const nm = mk('text', { class:'glabel', x, y: up ? 26 : 108, 'text-anchor':'middle' }, it.label || '');
+        svg.appendChild(nm); names.push(nm);
+        const d = mk('circle', { cx:x, cy:62, r:8, fill:col(it.color), stroke:'var(--paper-2)', 'stroke-width':3, style:'cursor:pointer;transition:r .15s' });
+        svg.appendChild(d); dots.push(d);
+        const hit = mk('rect', { class:'hit', x:x-40, y:10, width:80, height:110 });
+        hit.addEventListener('click', () => select(i));
+        svg.appendChild(hit);
+      });
+      const show = readout();
+      function select(i){
+        dots.forEach((d,j) => d.setAttribute('r', j===i ? 12 : 8));
+        names.forEach((t,j) => t.style.fontWeight = j===i ? '700' : '400');
+        show(items[i]);
+      }
+      select(S.default || 0);
+    },
+
+    /* Trò chơi phân loại */
+    sort(){
+      const items = S.items.slice();
+      let idx = 0, score = 0, answered = false;
+      const card = el('div', 'w-card'); root.appendChild(card);
+      const row = el('div', 'w-row'); root.appendChild(row);
+      const fb = el('p', 'w-feedback'); root.appendChild(fb);
+      const meter = el('div', 'w-meter', '<i></i>'); root.appendChild(meter);
+      const ctrl = el('div', 'w-row'); root.appendChild(ctrl);
+      const next = el('button', 'w-btn', 'Câu tiếp theo →'); next.type = 'button';
+      const reset = el('button', 'w-btn', '↺ Làm lại'); reset.type = 'button';
+      ctrl.appendChild(next); ctrl.appendChild(reset);
+      const btns = S.categories.map(c => {
+        const b = el('button', 'w-btn'); b.type = 'button'; b.textContent = c.label;
+        b.addEventListener('click', () => answer(c.key, b));
+        row.appendChild(b); return b;
+      });
+      function render(){
+        answered = false;
+        btns.forEach(b => { b.className = 'w-btn'; b.disabled = false; });
+        if (idx >= items.length){
+          card.innerHTML = '<span class="w-small">HOÀN THÀNH</span><br><b>Em đúng ' + score + '/' + items.length + ' thẻ.</b> ' + (score === items.length ? 'Xuất sắc!' : 'Bấm “Làm lại” để luyện thêm.');
+          btns.forEach(b => b.disabled = true); fb.innerHTML = ''; next.hidden = true; return;
+        }
+        next.hidden = false; next.disabled = true;
+        card.innerHTML = '<span class="w-small">THẺ ' + (idx+1) + '/' + items.length + ' · CHỌN NHÓM PHÙ HỢP</span><br>' + items[idx].text;
+        fb.innerHTML = '';
+      }
+      function answer(key, btn){
+        if (answered) return; answered = true;
+        const it = items[idx], ok = key === it.answer;
+        if (ok) score++;
+        btn.classList.add(ok ? 'ok' : 'bad');
+        if (!ok) btns[S.categories.findIndex(c => c.key === it.answer)].classList.add('ok');
+        btns.forEach(b => b.disabled = true);
+        fb.innerHTML = (ok ? '<b>Chính xác.</b> ' : '<b>Chưa đúng.</b> ') + (it.why || '');
+        meter.firstChild.style.width = (100*score/items.length) + '%';
+        next.disabled = false;
+      }
+      next.addEventListener('click', () => { idx++; render(); });
+      reset.addEventListener('click', () => { idx = 0; score = 0; meter.firstChild.style.width = '0'; render(); });
+      render();
+    },
+
+    /* Xử lí tình huống */
+    scenario(){
+      const tabs = el('div', 'w-row'); root.appendChild(tabs);
+      const card = el('div', 'w-card'); root.appendChild(card);
+      const opts = el('div', 'w-row'); opts.style.flexDirection = 'column'; root.appendChild(opts);
+      const fb = el('p', 'w-feedback'); root.appendChild(fb);
+      const tb = S.items.map((it, i) => {
+        const b = el('button', 'w-btn'); b.type = 'button'; b.textContent = 'Tình huống ' + (i+1);
+        b.addEventListener('click', () => select(i)); tabs.appendChild(b); return b;
+      });
+      function select(i){
+        tb.forEach((b,j) => b.classList.toggle('active', j===i));
+        const it = S.items[i];
+        card.innerHTML = '<span class="w-small">' + (it.tag || 'TÌNH HUỐNG') + '</span><br>' + it.situation;
+        opts.innerHTML = ''; fb.innerHTML = '';
+        it.options.forEach(o => {
+          const b = el('button', 'w-btn'); b.type = 'button'; b.textContent = o.text;
+          b.addEventListener('click', () => {
+            opts.querySelectorAll('.w-btn').forEach(x => x.classList.remove('ok','bad'));
+            b.classList.add(o.ok ? 'ok' : 'bad');
+            fb.innerHTML = (o.ok ? '<b>Phù hợp.</b> ' : '<b>Chưa phù hợp.</b> ') + o.feedback;
+          });
+          opts.appendChild(b);
+        });
+      }
+      select(0);
+    },
+
+    /* Máy tính điểm theo lựa chọn */
+    calc(){
+      const choice = S.groups.map(() => null);
+      const maxScore = S.groups.reduce((s, g) => s + Math.max(...g.options.map(o => o.score)), 0);
+      S.groups.forEach((g, gi) => {
+        const box = el('div', 'w-group'); root.appendChild(box);
+        const lab = el('span', 'w-small'); lab.textContent = (gi+1) + '. ' + g.label.toUpperCase(); box.appendChild(lab);
+        const row = el('div', 'w-row'); row.style.marginTop = '0.35rem'; box.appendChild(row);
+        g.options.forEach((o, oi) => {
+          const b = el('button', 'w-btn'); b.type = 'button'; b.textContent = o.text;
+          b.addEventListener('click', () => {
+            choice[gi] = oi;
+            row.querySelectorAll('.w-btn').forEach((x, xi) => x.classList.toggle('active', xi === oi));
+            update();
+          });
+          row.appendChild(b);
+        });
+      });
+      const meter = el('div', 'w-meter', '<i></i>'); meter.style.marginTop = '1rem'; root.appendChild(meter);
+      const show = readout();
+      function update(){
+        const done = choice.filter(c => c !== null).length;
+        const score = choice.reduce((s, c, gi) => s + (c === null ? 0 : S.groups[gi].options[c].score), 0);
+        const pct = Math.round(100 * score / maxScore);
+        meter.firstChild.style.width = pct + '%';
+        let band = S.bands[0];
+        S.bands.forEach(b => { if (pct >= b.min) band = b; });
+        meter.firstChild.style.background = col(band.color);
+        const last = choice.reduce((a, c, gi) => c === null ? a : S.groups[gi].options[c], null);
+        show({
+          name: done ? pct + '/100' : 'Chưa chọn',
+          pill: done === S.groups.length ? band.label : 'Đã chọn ' + done + '/' + S.groups.length,
+          color: band.color,
+          metrics: [{ v: score + '/' + maxScore, k: S.scoreLabel || 'Điểm' }],
+          note: done === S.groups.length ? band.note : (last && last.hint ? last.hint : (S.hint || 'Hãy chọn một phương án ở mỗi nhóm.'))
+        });
+      }
+      update();
+    },
+
+    /* So sánh theo tiêu chí */
+    compare(){
+      const tabs = el('div', 'w-row'); root.appendChild(tabs);
+      const grid = el('div', 'cmp-grid'); root.appendChild(grid);
+      const fb = el('p', 'w-feedback'); root.appendChild(fb);
+      const tb = S.rows.map((r, i) => {
+        const b = el('button', 'w-btn'); b.type = 'button'; b.textContent = r.label;
+        b.addEventListener('click', () => select(i)); tabs.appendChild(b); return b;
+      });
+      function select(i){
+        tb.forEach((b,j) => b.classList.toggle('active', j===i));
+        const r = S.rows[i];
+        grid.innerHTML = '';
+        S.columns.forEach((c, ci) => {
+          const d = el('div', 'cmp-col'); d.style.borderTopColor = col(c.color);
+          const h = el('h3'); h.textContent = c.label.toUpperCase(); d.appendChild(h);
+          const p = el('div', null, r.cells[ci] || ''); d.appendChild(p);
+          grid.appendChild(d);
+        });
+        fb.innerHTML = r.note ? '<b>Nhận xét:</b> ' + r.note : '';
+      }
+      select(S.default || 0);
+    }
+  };
+
+  (renderers[S.type] || renderers.bars)();
+})();
+
+</script>
+</body></html>

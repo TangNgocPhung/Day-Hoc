@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sơ Đồ Tư Duy Giáo Dục Địa Phương 11</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #EFF1EC;
+    --surface: #FFFFFF;
+    --surface-2: #F6F7F1;
+    --ink: #232823;
+    --ink-muted: #5B6259;
+    --ink-faint: #8B9186;
+    --border: #D6DACC;
+    --on-accent: #FFFFFF;
+    --root: #8E4472;
+
+    --c1: #2F8F7D;
+    --c2: #A33F45;
+    --c3: #4E5BA6;
+    --c4: #7A4B9E;
+    --c5: #3D6E8E;
+    --c6: #3F7D46;
+    --c7: #2F6FA8;
+    --c8: #8A5A2B;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+    --shadow: 0 10px 30px -14px rgba(35, 40, 35, 0.28);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1B1D18;
+      --surface: #232620;
+      --surface-2: #292C24;
+      --ink: #ECEEE5;
+      --ink-muted: #ABB2A0;
+      --ink-faint: #767C6B;
+      --border: #383C31;
+      --on-accent: #15160F;
+      --root: #E092C0;
+      --c1: #6FD1BE; --c2: #E38E93; --c3: #9AA6E8; --c4: #C295E0;
+      --c5: #86B6D6; --c6: #86C78D; --c7: #79AEE0; --c8: #D9A971;
+      --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1B1D18;
+    --surface: #232620;
+    --surface-2: #292C24;
+    --ink: #ECEEE5;
+    --ink-muted: #ABB2A0;
+    --ink-faint: #767C6B;
+    --border: #383C31;
+    --on-accent: #15160F;
+    --root: #E092C0;
+    --c1: #6FD1BE; --c2: #E38E93; --c3: #9AA6E8; --c4: #C295E0;
+    --c5: #86B6D6; --c6: #86C78D; --c7: #79AEE0; --c8: #D9A971;
+    --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    border-bottom: 1px solid var(--border);
+    border-top: 4px solid var(--root);
+    backdrop-filter: blur(10px);
+  }
+  .topbar-inner {
+    max-width: 1000px; margin: 0 auto;
+    padding: 0.8rem clamp(1rem, 4vw, 2rem);
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.84rem; font-weight: 600; text-decoration: none; color: var(--ink-muted);
+  }
+  .back-link:hover { color: var(--root); }
+  .tag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; color: var(--root); }
+
+  .page { max-width: 1000px; margin: 0 auto; padding: clamp(1.75rem, 4vw, 3rem) clamp(1.25rem, 4vw, 2rem) 4rem; }
+
+  .masthead { max-width: 680px; }
+  .masthead-eyebrow {
+    display: block; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.12em; color: var(--ink-faint); margin-bottom: 0.75rem;
+  }
+  .masthead-title {
+    font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem, 4.4vw, 2.6rem);
+    line-height: 1.08; margin: 0 0 0.6rem; text-wrap: balance;
+  }
+  .masthead-sub { font-size: 1rem; color: var(--ink-muted); margin: 0; max-width: 62ch; }
+
+  /* ---------- Thanh công cụ ---------- */
+  .toolbar {
+    display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center;
+    margin: 1.5rem 0 0.4rem;
+    padding: 0.8rem 0.9rem;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px;
+  }
+  .search-box { position: relative; flex: 1 1 240px; min-width: 0; }
+  .search-box input {
+    width: 100%; padding: 0.6rem 0.8rem 0.6rem 2.1rem;
+    border: 1px solid var(--border); border-radius: 999px;
+    background: var(--surface); color: var(--ink);
+    font-family: inherit; font-size: 0.88rem;
+  }
+  .search-box input:focus-visible { outline: 2px solid var(--root); outline-offset: 1px; }
+  .search-box svg {
+    position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
+    width: 0.95rem; height: 0.95rem; fill: none; stroke: var(--ink-faint);
+    stroke-width: 2; stroke-linecap: round;
+  }
+  .ctrl-btn {
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink-muted);
+    font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600;
+    padding: 0.55rem 0.85rem; border-radius: 999px; cursor: pointer; white-space: nowrap;
+  }
+  .ctrl-btn:hover { color: var(--ink); border-color: color-mix(in srgb, var(--ink) 30%, var(--border)); }
+  .ctrl-btn:focus-visible { outline: 2px solid var(--root); outline-offset: 2px; }
+  .hit-note { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); }
+
+  /* ---------- Nút gốc ---------- */
+  .root-card {
+    margin-top: 1.2rem;
+    background: var(--root); color: var(--on-accent);
+    border-radius: 18px; padding: 1.1rem 1.3rem;
+    box-shadow: var(--shadow);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.2rem; justify-content: space-between;
+  }
+  .root-card h2 { font-family: var(--font-display); font-size: 1.3rem; margin: 0; font-weight: 600; }
+  .root-meta { font-family: var(--font-mono); font-size: 0.72rem; opacity: 0.85; }
+
+  /* ---------- Nhánh chủ đề ---------- */
+  .branches { margin: 0; padding: 0; list-style: none; }
+  .branch {
+    position: relative;
+    margin-left: clamp(0.5rem, 3vw, 1.6rem);
+    padding-left: clamp(1rem, 3.5vw, 1.9rem);
+    border-left: 2px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  }
+  .branch:last-child { border-left-color: transparent; }
+  .branch::before {
+    content: ''; position: absolute; left: 0; top: 2.05rem;
+    width: clamp(1rem, 3.5vw, 1.9rem); height: 2px;
+    background: color-mix(in srgb, var(--accent) 45%, var(--border));
+  }
+  .branch:last-child::after {
+    content: ''; position: absolute; left: -2px; top: 0; height: 2.05rem; width: 2px;
+    background: color-mix(in srgb, var(--accent) 45%, var(--border));
+  }
+
+  .branch-card {
+    width: 100%; text-align: left; cursor: pointer;
+    display: flex; align-items: flex-start; gap: 0.8rem;
+    margin-top: 1.1rem;
+    background: var(--surface); color: var(--ink);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 14px; padding: 0.85rem 1rem;
+    font-family: inherit;
+    transition: border-color 0.15s ease, transform 0.12s ease;
+  }
+  .branch-card:hover { transform: translateX(2px); border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+  .branch-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .branch-num {
+    flex: 0 0 auto; width: 2.2rem; height: 2.2rem; border-radius: 9px;
+    background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+    color: var(--accent); font-family: var(--font-mono); font-weight: 700; font-size: 0.78rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .branch-body { min-width: 0; flex: 1 1 auto; }
+  .branch-kicker {
+    display: block; font-family: var(--font-mono); font-size: 0.62rem; font-weight: 600;
+    letter-spacing: 0.07em; color: var(--accent); margin-bottom: 0.15rem;
+  }
+  .branch-title { font-family: var(--font-display); font-size: 1.02rem; font-weight: 600; line-height: 1.3; }
+  .branch-meta { font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-faint); margin-top: 0.2rem; }
+  .chev {
+    flex: 0 0 auto; width: 1rem; height: 1rem; margin-top: 0.55rem;
+    fill: none; stroke: var(--ink-faint); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    transition: transform 0.2s ease;
+  }
+  .branch-card[aria-expanded="true"] .chev { transform: rotate(90deg); }
+
+  /* ---------- Lá: bài học ---------- */
+  .leaves { list-style: none; margin: 0; padding: 0; display: none; }
+  .leaves.open { display: block; }
+  .leaf {
+    position: relative;
+    margin-left: clamp(0.6rem, 2.5vw, 1.3rem);
+    padding-left: clamp(0.9rem, 3vw, 1.6rem);
+    border-left: 2px dotted color-mix(in srgb, var(--accent) 40%, var(--border));
+  }
+  .leaf:last-child { border-left-color: transparent; }
+  .leaf::before {
+    content: ''; position: absolute; left: 0; top: 1.55rem;
+    width: clamp(0.9rem, 3vw, 1.6rem); height: 0;
+    border-top: 2px dotted color-mix(in srgb, var(--accent) 40%, var(--border));
+  }
+  .leaf:last-child::after {
+    content: ''; position: absolute; left: -2px; top: 0; height: 1.55rem;
+    border-left: 2px dotted color-mix(in srgb, var(--accent) 40%, var(--border));
+  }
+
+  .leaf-card {
+    margin-top: 0.7rem;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
+    padding: 0.75rem 0.9rem;
+  }
+  .leaf-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.6rem; }
+  .leaf-code {
+    font-family: var(--font-mono); font-size: 0.64rem; font-weight: 700; letter-spacing: 0.05em;
+    color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+    padding: 0.15rem 0.4rem; border-radius: 5px;
+  }
+  .leaf-title { font-weight: 700; font-size: 0.93rem; line-height: 1.4; }
+  .leaf-meta { font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-faint); }
+  .points { margin: 0.55rem 0 0; padding-left: 1.05rem; }
+  .points li { font-size: 0.85rem; line-height: 1.6; color: var(--ink-muted); margin-bottom: 0.2rem; }
+  .points li b, .points li strong { color: var(--ink); font-weight: 600; }
+  .points mark {
+    background: color-mix(in srgb, var(--accent) 30%, transparent);
+    color: var(--ink); border-radius: 3px; padding: 0 0.1rem;
+  }
+  .leaf-links { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+  .leaf-link {
+    font-family: var(--font-mono); font-size: 0.66rem; font-weight: 600;
+    text-decoration: none; padding: 0.35rem 0.6rem; border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+    color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+  }
+  .leaf-link:hover { background: color-mix(in srgb, var(--accent) 18%, var(--surface)); }
+
+  .hidden { display: none !important; }
+  .empty-note {
+    margin-top: 1.5rem; padding: 1.1rem;
+    border: 1px dashed var(--border); border-radius: 14px;
+    text-align: center; color: var(--ink-faint); font-size: 0.9rem;
+  }
+
+  .site-footer { border-top: 1px solid var(--border); background: var(--surface-2); margin-top: 3rem; }
+  .footer-inner {
+    max-width: 1000px; margin: 0 auto; padding: 1.4rem clamp(1.25rem, 4vw, 2rem);
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .footer-text { font-size: 0.82rem; color: var(--ink-muted); }
+  .footer-text strong { color: var(--ink); }
+
+  @media print {
+    .topbar, .toolbar, .site-footer { display: none; }
+    .leaves { display: block !important; }
+    .leaf-card, .branch-card { break-inside: avoid; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="back-link" href="goc-hoc-tap/index.html">← Về Góc Học Tập</a>
+    <span class="tag">GIÁO DỤC ĐỊA PHƯƠNG 11 · SƠ ĐỒ TƯ DUY CẢ QUYỂN</span>
+  </div>
+</header>
+
+<div class="page">
+  <header class="masthead">
+    <span class="masthead-eyebrow">TÓM TẮT NỘI DUNG</span>
+    <h1 class="masthead-title">Sơ đồ tư duy Giáo dục địa phương 11</h1>
+    <p class="masthead-sub">Toàn bộ kiến thức cốt lõi của 8 chủ đề, gom từ phần <strong>Ghi nhớ</strong> của từng bài. Bấm vào một chủ đề để mở các bài bên trong; dùng ô tìm kiếm để tra nhanh một từ khoá trong cả quyển.</p>
+  </header>
+
+  <div class="toolbar">
+    <label class="search-box">
+      <svg aria-hidden="true" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6"></circle><path d="M13.5 13.5 17 17"></path></svg>
+      <input type="search" id="search" placeholder="Tìm từ khoá: Cần Giờ, đờn ca tài tử, STEM, luật tục…" aria-label="Tìm từ khoá trong toàn bộ nội dung">
+    </label>
+    <button class="ctrl-btn" id="btn-expand" type="button">Mở tất cả</button>
+    <button class="ctrl-btn" id="btn-collapse" type="button">Thu tất cả</button>
+    <button class="ctrl-btn" id="btn-print" type="button">🖨 In</button>
+    <span class="hit-note" id="hit-note"></span>
+  </div>
+
+  <div class="root-card">
+    <h2>Giáo dục địa phương 11 · TP. Hồ Chí Minh</h2>
+    <span class="root-meta">8 CHỦ ĐỀ · 28 BÀI · NĂM HỌC 2026–2027</span>
+  </div>
+
+  <ul class="branches" id="tree"></ul>
+  <div class="empty-note hidden" id="empty">Không tìm thấy nội dung nào khớp với từ khoá này.</div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-text"><strong>Trường THPT Nguyễn Khuyến</strong> · Góc học tập môn Giáo dục địa phương · GV: Tăng Ngọc Phụng</p>
+  </div>
+</footer>
+
+<script>
+const TOPICS = [
+  {
+    n: 1, color: 'var(--c1)', title: 'Phát triển du lịch ở Thành phố Hồ Chí Minh',
+    weeks: 'Tuần 1 – 4 · Tiết 1 – 4',
+    lessons: [
+      { code: 'ND 1–2', title: 'Tài nguyên du lịch & một số loại hình du lịch tiêu biểu',
+        meta: 'Bộ tài liệu: PPT · Poster · Phiếu học tập',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd1-nd12-tai-nguyen-loai-hinh-du-lich.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd1-nd12-tai-nguyen-loai-hinh-du-lich.html',
+        points: [
+          '<b>Tài nguyên tự nhiên:</b> sông Sài Gòn, rừng ngập mặn Cần Giờ (Khu dự trữ sinh quyển thế giới), bờ biển Cần Giờ ~15 km.',
+          '<b>Tài nguyên văn hoá:</b> di tích (Dinh Độc Lập, Địa đạo Củ Chi), kiến trúc Sài Gòn xưa, văn hoá Chợ Lớn, đờn ca tài tử – múa rối nước.',
+          '<b>5 loại hình tiêu biểu:</b> sinh thái, ẩm thực, MICE, mua sắm, đường thuỷ.',
+          '<b>MICE</b> = Meeting – Incentive – Convention – Exhibition; TP.HCM 4 lần được vinh danh “Điểm đến du lịch MICE hàng đầu châu Á”.',
+          '<b>Đường thuỷ:</b> buýt đường sông, du thuyền – tàu nhà hàng, taxi sông trên sông Sài Gòn và kênh Nhiêu Lộc – Thị Nghè.'
+        ] },
+      { code: 'ND 3', title: 'Vai trò của du lịch xanh ở Thành phố Hồ Chí Minh',
+        meta: 'Tuần 3 · 21/09 – 27/09 · Tiết 3',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd1-nd3-du-lich-xanh.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd1-nd3-du-lich-xanh.html',
+        points: [
+          '<b>Du lịch xanh</b> là du lịch giảm thiểu tác động tiêu cực tới môi trường, tiết kiệm tài nguyên, tôn trọng văn hoá và mang lợi ích cho cộng đồng địa phương.',
+          'Dựa trên <b>3 trụ cột</b>: môi trường – kinh tế – xã hội, văn hoá.',
+          '<b>Vai trò:</b> bảo tồn hệ sinh thái (Cần Giờ, Côn Đảo…), tạo sinh kế cho người dân, nâng cao hình ảnh và sức cạnh tranh của Thành phố.',
+          '<b>Thuận lợi:</b> sông nước, rừng ngập mặn, biển đảo, nông nghiệp ven đô. <b>Thách thức:</b> ô nhiễm, ùn tắc, rác thải, chi phí đầu tư.',
+          '<b>Học sinh góp phần:</b> đi chung hoặc dùng giao thông công cộng, hạn chế nhựa dùng một lần, không xả rác, tôn trọng văn hoá nơi đến.'
+        ] },
+      { code: 'ND 4', title: 'Định hướng phát triển du lịch ở Thành phố Hồ Chí Minh',
+        meta: 'Tuần 4 · 28/09 – 04/10 · Tiết 4',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd1-nd4-dinh-huong-du-lich.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd1-nd4-dinh-huong-du-lich.html',
+        points: [
+          'Sau <b>01/7/2025</b>, TP.HCM hợp nhất với Bình Dương và Bà Rịa – Vũng Tàu, có thêm tài nguyên <b>biển – đảo</b>, làng nghề và sinh thái.',
+          '<b>Đa dạng hoá sản phẩm:</b> văn hoá – lịch sử, ẩm thực, hội nghị – sự kiện, đường thuỷ, biển – đảo, làng nghề, sinh thái.',
+          '<b>Phát triển xanh, bền vững:</b> bảo vệ hệ sinh thái và di tích, kiểm soát sức chứa, chia sẻ lợi ích với cộng đồng.',
+          '<b>Du lịch thông minh & liên kết vùng:</b> công nghệ số, giao thông kết nối (metro, buýt đường sông, tàu cao tốc), liên kết các tỉnh.',
+          '<b>Con người là trung tâm:</b> nâng cao nhân lực, quảng bá hình ảnh; học sinh giới thiệu đúng về địa phương và ứng xử văn minh.'
+        ] }
+    ]
+  },
+  {
+    n: 2, color: 'var(--c2)', title: 'Danh nhân lịch sử của Thành phố Hồ Chí Minh',
+    weeks: 'Tuần 5 – 9 · Tiết 5 – 9',
+    lessons: [
+      { code: 'ND 1', title: 'Khái quát về danh nhân lịch sử ở Thành phố Hồ Chí Minh',
+        meta: 'Tuần 5 · 05/10 – 11/10 · Tiết 5',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd2-nd1-khai-quat-danh-nhan.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd2-nd1-khai-quat-danh-nhan.html',
+        points: [
+          '<b>Danh nhân lịch sử</b> ở TP.HCM là những người có đóng góp nổi bật cho quá trình hình thành, bảo vệ và phát triển Thành phố.',
+          '<b>Khai phá – xác lập:</b> Nguyễn Hữu Cảnh lập phủ Gia Định năm <b>1698</b>; thời Nguyễn có Lê Văn Duyệt – Tổng trấn Gia Định thành.',
+          '<b>Chống Pháp thế kỉ XIX:</b> Nguyễn Đình Chiểu (1822–1888) với <i>Văn tế nghĩa sĩ Cần Giuộc</i>.',
+          '<b>Cách mạng thế kỉ XX:</b> Nguyễn Tất Thành rời Bến Nhà Rồng (<b>5/6/1911</b>); Nguyễn Thị Minh Khai, Trần Văn Giàu, Nguyễn Văn Trỗi…',
+          'Tra cứu danh nhân phải dùng <b>nguồn tin cậy</b>, đối chiếu nhiều nguồn, ghi nguồn; AI chỉ là công cụ hỗ trợ và cần kiểm chứng.'
+        ] },
+      { code: 'ND 2', title: 'Một số danh nhân tiêu biểu ở Thành phố Hồ Chí Minh',
+        meta: 'Tuần 6, 7, 9 · Tiết 6, 7, 9',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd2-nd2-danh-nhan-tieu-bieu.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd2-nd2-danh-nhan-tieu-bieu.html',
+        points: [
+          '<b>Trịnh Hoài Đức</b> (1765–1825): tác giả <i>Gia Định thành thông chí</i>, một trong “Gia Định tam gia”.',
+          '<b>Trương Vĩnh Ký</b> (1837–1898) – chủ bút <i>Gia Định báo</i>; <b>Huỳnh Tịnh Của</b> (1834–1907) – <i>Đại Nam quấc âm tự vị</i>: góp phần phổ biến chữ quốc ngữ.',
+          '<b>Nguyễn An Ninh</b> (1900–1943): ra báo <i>Chuông rè</i> (1923), thức tỉnh lòng yêu nước; mất ở Côn Đảo.',
+          '<b>Lý Tự Trọng</b> (1914–1931), <b>Võ Thị Sáu</b> (1933–1952): tấm gương tuổi trẻ anh hùng.',
+          'Sản phẩm về danh nhân phải chính xác, <b>có trích dẫn nguồn</b>, tôn trọng bản quyền và quyền riêng tư.'
+        ] }
+    ]
+  },
+  {
+    n: 3, color: 'var(--c3)', title: 'Văn học Thành phố Hồ Chí Minh trước năm 1975',
+    weeks: 'Tuần 10 – 13 · Tiết 10 – 13',
+    lessons: [
+      { code: 'BÀI 1', title: 'Phác thảo về văn học Thành phố Hồ Chí Minh trước năm 1975',
+        meta: 'Tuần 10 · 09/11 – 15/11 · Tiết 10',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd3-bai1-phac-thao-van-hoc.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd3-bai1-phac-thao-van-hoc.html',
+        points: [
+          'Phát triển qua <b>3 chặng</b>: trung đại Hán – Nôm, buổi đầu quốc ngữ, hiện đại 1930–1975.',
+          '<b>Trung đại:</b> “Gia Định tam gia” (thơ chữ Hán); Nguyễn Đình Chiểu với <i>Lục Vân Tiên</i>, <i>Văn tế nghĩa sĩ Cần Giuộc</i>.',
+          '<b>Quốc ngữ buổi đầu:</b> <i>Gia Định báo</i> (1865); Trương Vĩnh Ký, Huỳnh Tịnh Của; tiểu thuyết Hồ Biểu Chánh.',
+          '<b>Hiện đại:</b> <i>Tình già</i> (Phan Khôi, 1932); văn học yêu nước, tiến bộ với Sơn Nam, Lê Anh Xuân…',
+          '<b>Đặc điểm:</b> đa dạng chữ viết – thể loại, giàu tinh thần yêu nước và tính nhân dân, ngôn ngữ đậm chất Nam Bộ; Sài Gòn tiên phong về báo chí và văn xuôi quốc ngữ.'
+        ] },
+      { code: 'BÀI 2', title: 'Văn bản văn học Thành phố Hồ Chí Minh trước năm 1975',
+        meta: 'Tuần 11 · 16/11 – 22/11 · Tiết 11',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd3-bai2-van-ban-van-hoc-truoc-1975.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd3-bai2-van-ban-van-hoc-truoc-1975.html',
+        points: [
+          'Trải qua <b>3 chặng</b>: nửa sau thế kỉ XIX – đầu, giữa thế kỉ XX – giai đoạn 1945–1975.',
+          '<b>Nguyễn Đình Chiểu</b> (1822–1888), quê Tân Thới, Gia Định: <i>Truyện Lục Vân Tiên</i> đề cao nhân nghĩa; <i>Văn tế nghĩa sĩ Cần Giuộc</i> lần đầu dựng tượng đài người nông dân – nghĩa sĩ.',
+          'Sài Gòn là nơi khởi đầu của <b>báo chí và văn xuôi chữ quốc ngữ</b> (<i>Gia Định báo</i> 1865); Hồ Biểu Chánh là cây bút tiểu thuyết quốc ngữ tiêu biểu.',
+          '<b>Bình Nguyên Lộc</b> (<i>Đò dọc</i>, <i>Rừng mắm</i>) và <b>Sơn Nam</b> (<i>Hương rừng Cà Mau</i>) viết về đất và người phương Nam.',
+          'Đọc tác phẩm cần liên hệ <b>bối cảnh lịch sử – xã hội</b>, chỉ ra giá trị nội dung và nghệ thuật; trích dẫn ngắn, ghi rõ nguồn.'
+        ] },
+      { code: 'BÀI 3', title: 'Viết bài giới thiệu về một tác giả văn học của TP.HCM',
+        meta: 'Tuần 12 · 23/11 – 29/11 · Tiết 12',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd3-bai3-viet-bai-gioi-thieu-tac-gia.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd3-bai3-viet-bai-gioi-thieu-tac-gia.html',
+        points: [
+          '<b>Quy trình viết:</b> Chuẩn bị – Lập dàn ý – Viết – Kiểm tra, chỉnh sửa.',
+          '<b>Bố cục:</b> Mở bài giới thiệu tác giả · Thân bài (cuộc đời, sự nghiệp, đặc điểm sáng tác, đóng góp) · Kết bài đánh giá và cảm nhận.',
+          'Mỗi nhận xét cần <b>căn cứ</b>: tác phẩm, chi tiết cụ thể, ý kiến có nguồn; thông tin quan trọng đối chiếu ≥ 2 nguồn tin cậy.',
+          '<b>Trích dẫn hợp lệ:</b> trích ngắn, đúng nguyên văn trong ngoặc kép hoặc diễn đạt lại đúng ý; luôn ghi tác giả, tác phẩm, nguồn.',
+          'Dùng AI có trách nhiệm: kiểm chứng thông tin, không đưa dữ liệu cá nhân của người khác khi chưa được đồng ý.'
+        ] },
+      { code: 'BÀI 4', title: 'Giới thiệu về một tác giả văn học của TP.HCM',
+        meta: 'Tuần 13 · 30/11 – 06/12 · Tiết 13',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd3-bai4-gioi-thieu-tac-gia.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd3-bai4-gioi-thieu-tac-gia.html',
+        points: [
+          'Sản phẩm có thể là <b>bài thuyết trình hoặc clip</b>; kịch bản gồm mở – 3 ý chính có minh chứng – kết và danh mục tư liệu.',
+          '<b>Đánh giá nguồn qua 5 câu hỏi:</b> Ai đăng? Khi nào? Căn cứ? Mục đích? Nguồn khác nói gì?',
+          'Thông tin về tác giả (năm sinh, quê quán, tác phẩm) phải đối chiếu <b>ít nhất 2 nguồn tin cậy</b>.',
+          'Hình ảnh, âm nhạc, video trên mạng đều có <b>bản quyền</b>: ưu tiên tư liệu tự tạo hoặc có giấy phép, trích ngắn và ghi nguồn.',
+          'Prompt AI cần <b>ràng buộc đầu ra</b> (đối tượng, độ dài, định dạng, không bịa số liệu); kết quả phải được kiểm chứng và biên tập lại.'
+        ] }
+    ]
+  },
+  {
+    n: 4, color: 'var(--c4)', title: 'Âm nhạc trong đời sống Thành phố Hồ Chí Minh',
+    weeks: 'Tuần 14 – 17 · Tiết 14 – 17',
+    lessons: [
+      { code: 'ND 1', title: 'Các hoạt động âm nhạc hiện nay ở Thành phố Hồ Chí Minh',
+        meta: 'Tuần 14 · 07/12 – 13/12 · Tiết 14',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd4-nd1-hoat-dong-am-nhac.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd4-nd1-hoat-dong-am-nhac.html',
+        points: [
+          'Gồm <b>4 nhóm</b>: truyền thống dân tộc – hàn lâm, cổ điển – đại chúng, giải trí – âm nhạc trên nền tảng số.',
+          '<b>Đờn ca tài tử Nam Bộ</b> được UNESCO ghi danh là Di sản văn hoá phi vật thể đại diện của nhân loại năm <b>2013</b>.',
+          '<b>Hàn lâm:</b> HBSO, Nhạc viện TP.HCM, Nhà hát Thành phố. <b>Đại chúng:</b> concert, phòng trà, phố đi bộ Nguyễn Huệ…',
+          '<b>Đặc điểm:</b> đa dạng, giao thoa, cởi mở, năng động; Thành phố là một trung tâm công nghiệp âm nhạc của cả nước.',
+          'AI liên quan âm thanh: nhận dạng giọng nói, nhận diện bài hát, tách lời – nhạc, gợi ý và tạo nhạc — cần dùng có trách nhiệm.'
+        ] },
+      { code: 'ND 2', title: 'Vai trò và ý nghĩa của hoạt động âm nhạc ở TP.HCM',
+        meta: 'Tuần 15 · 14/12 – 20/12 · Tiết 15',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd4-nd2-vai-tro-am-nhac.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd4-nd2-vai-tro-am-nhac.html',
+        points: [
+          '<b>5 vai trò:</b> làm phong phú đời sống tinh thần – giáo dục thẩm mĩ – gắn kết cộng đồng – giữ gìn bản sắc – đóng góp kinh tế, du lịch.',
+          'Âm nhạc truyền thống (đờn ca tài tử, cải lương, hát bội) lưu giữ tâm hồn, tính cách người Nam Bộ.',
+          'Chương trình nghệ thuật dịp lễ, Tết và các câu lạc bộ âm nhạc giúp kết nối nhiều thế hệ, nhiều cộng đồng dân cư.',
+          'Âm nhạc là <b>ngành công nghiệp văn hoá</b>: tạo việc làm, quảng bá hình ảnh Thành phố, thu hút du khách.',
+          'AI có thể hỗ trợ tìm hiểu âm nhạc, nhưng <b>cảm thụ và đánh giá phải là của con người</b>; chia sẻ tư liệu phải tôn trọng bản quyền.'
+        ] },
+      { code: 'ND 3', title: 'Giới thiệu một số tác phẩm âm nhạc gắn với TP.HCM',
+        meta: 'Tuần 17 · 28/12 – 03/01 · Tiết 17',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd4-nd3-tac-pham-am-nhac.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd4-nd3-tac-pham-am-nhac.html',
+        points: [
+          'Giới thiệu một tác phẩm gồm: tên bài, tác giả – hoàn cảnh ra đời – nội dung, nghệ thuật – giá trị hôm nay.',
+          '<i>Dạ cổ hoài lang</i> (<b>Cao Văn Lầu</b>) là nền tảng của bài vọng cổ – “linh hồn” của đờn ca tài tử, cải lương Nam Bộ.',
+          '<i>Tiến về Sài Gòn</i> (Lưu Hữu Phước, 1966), <i>Như có Bác trong ngày đại thắng</i> (Phạm Tuyên, 4/1975) gắn với kháng chiến và ngày thống nhất.',
+          '<i>Sài Gòn đẹp lắm</i> (Y Vân), <i>Mùa xuân trên Thành phố Hồ Chí Minh</i> (Xuân Hồng) thể hiện tình yêu và niềm tự hào về Thành phố.',
+          'Thời đại số giúp lan toả rộng nhưng đặt ra vấn đề <b>bản quyền và nội dung AI giả mạo</b>: dùng trích đoạn ngắn, ghi nguồn, kiểm tra trước khi công bố.'
+        ] }
+    ]
+  },
+  {
+    n: 5, color: 'var(--c5)', title: 'Kiến trúc Thành phố Hồ Chí Minh',
+    weeks: 'Tuần 18 – 21 · Tiết 18 – 21',
+    lessons: [
+      { code: 'ND 1', title: 'Những yếu tố ảnh hưởng đến kiến trúc Thành phố',
+        meta: 'Tuần 18 · 04/01 – 10/01 · Tiết 18',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd5-nd1-yeu-to-anh-huong-kien-truc.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd5-nd1-yeu-to-anh-huong-kien-truc.html',
+        points: [
+          'Chịu ảnh hưởng của <b>5 nhóm yếu tố</b>: tự nhiên – khí hậu, lịch sử – chính trị, văn hoá – tộc người, kinh tế – xã hội, khoa học – kĩ thuật.',
+          '<b>Tự nhiên:</b> khí hậu nhiệt đới gió mùa, sông nước, nền đất yếu → mái dốc, hiên rộng, thông gió, công trình hướng ra sông.',
+          '<b>Lịch sử:</b> từ phủ Gia Định (1698), thành Bát Quái (1790), thời Pháp thuộc đến nay — mỗi giai đoạn để lại một lớp kiến trúc.',
+          '<b>Văn hoá:</b> vùng đất di dân, đa tộc người, đa tôn giáo → kiến trúc đa dạng, giao thoa Đông – Tây.',
+          '<b>Kinh tế – kĩ thuật:</b> đô thị cảng, thương mại, dân số đông; vật liệu và công nghệ mới → nhà ống, chung cư, cao ốc, kiến trúc xanh.'
+        ] },
+      { code: 'ND 2', title: 'Đình, chùa, hội quán, nhà cổ — dấu xưa Sài Gòn – Gia Định',
+        meta: 'Tuần 19 · 11/01 – 17/01 · Tiết 19',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd5-nd2-kien-truc-sai-gon-gia-dinh.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd5-nd2-kien-truc-sai-gon-gia-dinh.html',
+        points: [
+          'Kiến trúc truyền thống gồm <b>đình, chùa, hội quán – miếu, nhà cổ, lăng mộ</b>, chủ yếu có niên đại thế kỉ XVIII – XIX.',
+          '<b>Đình</b> thờ Thành hoàng, là trung tâm sinh hoạt làng xã; <b>chùa</b> như Giác Lâm (1744), Hội Khánh (1741) dùng khung gỗ, mái ngói, chạm khắc tinh xảo.',
+          '<b>Hội quán người Hoa</b> (Tuệ Thành…) có bố cục chữ Khẩu quanh giếng trời, mái trang trí tượng gốm rực rỡ.',
+          '<b>Nhà cổ</b> (Trần Văn Hổ, 1890) kiểu chữ Đinh, gỗ quý chạm trổ; <b>Lăng Ông Bà Chiểu</b> gắn với Tả quân Lê Văn Duyệt.',
+          'Mỗi công trình là sự kết hợp giữa kiến trúc – lịch sử – văn hoá – không gian đô thị, cần được bảo tồn và phát huy giá trị.'
+        ] },
+      { code: 'ND 3–4', title: 'Kiến trúc Pháp, Đông Dương và hiện đại Sài Gòn',
+        meta: 'Tuần 20 · 18/01 – 24/01 · Tiết 20',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd5-nd34-kien-truc-dong-duong-hien-dai.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd5-nd34-kien-truc-dong-duong-hien-dai.html',
+        points: [
+          '<b>Kiến trúc Pháp kinh điển</b> (cuối TK XIX – đầu TK XX): đối xứng, cột – vòm – tháp; tiêu biểu Nhà thờ Đức Bà (1877–1880), Bưu điện (1886–1891), Nhà hát (1900), Trụ sở UBND TP (1898–1909).',
+          '<b>Kiến trúc Đông Dương:</b> kết hợp kết cấu phương Tây với mái ngói, tháp, hoạ tiết phương Đông; thích ứng khí hậu; tiêu biểu Bảo tàng Lịch sử TP.HCM.',
+          '<b>Kiến trúc hiện đại Sài Gòn</b> (1950–1975): bê tông cốt thép, hình khối đơn giản, lam che nắng, tường kép — dòng “hiện đại nhiệt đới”.',
+          'Tiêu biểu: <b>Dinh Độc Lập</b> (Ngô Viết Thụ, 1962–1966), Thư viện Khoa học Tổng hợp (1971), chùa Vĩnh Nghiêm (1964–1971).',
+          'Giới thiệu một công trình cần: thông tin cơ bản – phong cách – vật liệu – giá trị; ảnh và tư liệu phải ghi nguồn.'
+        ] },
+      { code: 'ND 5', title: 'Kiến trúc Thành phố Hồ Chí Minh đương đại',
+        meta: 'Tuần 21 · 25/01 – 31/01 · Tiết 21',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd5-nd5-kien-truc-duong-dai.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd5-nd5-kien-truc-duong-dai.html',
+        points: [
+          'Phát triển mạnh từ thời kì <b>Đổi mới</b>: cao tầng, đa chức năng, vật liệu kính – thép – bê tông, hình khối táo bạo.',
+          '<b>Tháp biểu tượng:</b> Bitexco (2010, gợi búp sen), Landmark 81 (2018, gợi bó tre, cao <b>461,2 m</b> – cao nhất Việt Nam).',
+          '<b>Hạ tầng đô thị:</b> Metro số 1 (2024), cầu Phú Mỹ (2009), hầm Thủ Thiêm (2011), cầu Ba Son (2022), phố đi bộ Nguyễn Huệ (2015).',
+          '<b>Kiến trúc xanh – bản địa:</b> mảng xanh, thông gió tự nhiên, tiết kiệm năng lượng (VD: House for Trees của Võ Trọng Nghĩa).',
+          '<b>Thách thức:</b> bảo tồn di sản, ngập nước, bê tông hoá.'
+        ] }
+    ]
+  },
+  {
+    n: 6, color: 'var(--c6)', title: 'Hoạt động kinh tế và môi trường ở Thành phố Hồ Chí Minh',
+    weeks: 'Tuần 24 – 26 · Tiết 22 – 24',
+    lessons: [
+      { code: 'ND 1', title: 'Vai trò của môi trường đối với các ngành kinh tế',
+        meta: 'Tuần 24 · 15/02 – 21/02 · Tiết 22',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd6-nd1-vai-tro-moi-truong.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd6-nd1-vai-tro-moi-truong.html',
+        points: [
+          '<b>Môi trường tự nhiên</b> gồm đất, nước, không khí, khí hậu, sinh vật, khoáng sản, biển… bao quanh và phục vụ con người.',
+          'Có <b>3 vai trò</b> với kinh tế: cung cấp tài nguyên – không gian sản xuất, sinh sống – nơi chứa và xử lí chất thải.',
+          'TP.HCM có tài nguyên đa dạng: <b>sông Sài Gòn – Đồng Nai</b>, đất đỏ bazan, dầu khí thềm lục địa, biển đảo, rừng ngập mặn Cần Giờ.',
+          'Không gian thuận lợi cho công nghiệp, <b>cảng biển</b> (Cát Lái, Cái Mép – Thị Vải), du lịch biển – sinh thái.',
+          '<b>Sức chịu tải của môi trường có giới hạn</b> → phát triển kinh tế phải gắn với bảo vệ môi trường để bền vững.'
+        ] },
+      { code: 'ND 2', title: 'Tình hình phát triển các ngành kinh tế ở TP.HCM',
+        meta: 'Tuần 25 · 22/02 – 28/02 · Tiết 23',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd6-nd2-tinh-hinh-kinh-te.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd6-nd2-tinh-hinh-kinh-te.html',
+        points: [
+          'Năm 2025, TP.HCM (sau hợp nhất) có <b>GRDP khoảng 2,97 triệu tỷ đồng</b>, tăng <b>7,53%</b>, chiếm khoảng <b>23,5% GDP</b> cả nước.',
+          '<b>Cơ cấu kinh tế:</b> dịch vụ ~52% – công nghiệp, xây dựng ~35% – nông, lâm, thuỷ sản ~1,7%.',
+          '<b>Dịch vụ dẫn đầu</b> (thương mại, tài chính, logistics, du lịch); công nghiệp có <b>66 KCN, KCX</b>, mạnh về điện tử, cơ khí, hoá chất, dầu khí.',
+          'Mỗi ngành phát triển đều tạo <b>sức ép môi trường</b>: rác thải, nước thải, khí thải, bụi, mất rừng ngập mặn, hoá chất nông nghiệp.'
+        ] },
+      { code: 'ND 3–4', title: 'Tác động của kinh tế đến môi trường và biện pháp hạn chế',
+        meta: 'Tuần 26 · 01/03 – 07/03 · Tiết 24',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd6-nd34-tac-dong-bien-phap.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd6-nd34-tac-dong-bien-phap.html',
+        points: [
+          'Tác động tới <b>4 thành phần môi trường</b>: nước, không khí, đất, sinh vật – hệ sinh thái.',
+          '<b>Công nghiệp – xây dựng:</b> nước thải, khí thải, bụi, chất thải nguy hại; khai thác cát, nước ngầm gây sạt lở, sụt lún.',
+          '<b>Dịch vụ – đô thị:</b> khí thải giao thông, rác thải nhựa, ngập úng. <b>Nông – thuỷ sản:</b> hoá chất nông nghiệp, mất rừng ngập mặn.',
+          '<b>Biện pháp:</b> pháp luật và giám sát; xử lí nước thải, rác thải; giao thông công cộng; công nghệ sạch, <b>kinh tế tuần hoàn</b>.',
+          '<b>Học sinh góp phần:</b> phân loại rác, giảm nhựa, tiết kiệm điện nước, đi phương tiện công cộng, phản ánh vi phạm qua kênh chính thức.'
+        ] }
+    ]
+  },
+  {
+    n: 7, color: 'var(--c7)', title: 'Giáo dục STEM và định hướng nghề nghiệp',
+    weeks: 'Tuần 28 – 31 · Tiết 26 – 29',
+    lessons: [
+      { code: 'ND 1', title: 'Khai phá tiềm năng định hướng nghề nghiệp từ giáo dục STEM',
+        meta: 'Tuần 28 · 15/03 – 21/03 · Tiết 26',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd7-nd1-khai-pha-tiem-nang-stem.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd7-nd1-khai-pha-tiem-nang-stem.html',
+        points: [
+          '<b>STEM</b> = Science (Khoa học) + Technology (Công nghệ) + Engineering (Kĩ thuật) + Mathematics (Toán học).',
+          '<b>Giáo dục STEM</b> là dạy – học tích hợp liên môn, vận dụng kiến thức để giải quyết vấn đề thực tiễn, thường tạo ra sản phẩm.',
+          '<b>Hình thức:</b> bài học STEM; hoạt động trải nghiệm STEM (câu lạc bộ, cuộc thi, ngày hội); nghiên cứu khoa học kĩ thuật.',
+          '<b>Vai trò:</b> hiểu sâu kiến thức; phát triển năng lực giải quyết vấn đề, sáng tạo, hợp tác; chuẩn bị nhân lực cho chuyển đổi số.',
+          'Tham gia STEM giúp khám phá sở thích, điểm mạnh và làm quen nhiều nhóm nghề: kĩ sư, lập trình viên, nhà khoa học, chuyên viên dữ liệu…'
+        ] },
+      { code: 'ND 2', title: 'Ứng dụng kiến thức STEM giải quyết vấn đề thực tiễn',
+        meta: 'Tuần 29 · 22/03 – 28/03 · Tiết 27',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd7-nd2-stem-giai-quyet-van-de.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd7-nd2-stem-giai-quyet-van-de.html',
+        points: [
+          'Kiến thức STEM có giá trị khi được dùng để giải quyết <b>vấn đề thực tiễn</b> của gia đình, trường học, địa phương.',
+          'Vấn đề nổi bật của TP.HCM: <b>ngập do mưa và triều cường</b>, xâm nhập mặn, đảo nhiệt đô thị, rác thải, ô nhiễm, ùn tắc.',
+          '<b>Quy trình thiết kế kĩ thuật:</b> Xác định vấn đề → Nghiên cứu kiến thức nền, đề xuất ý tưởng → Lựa chọn giải pháp → Chế tạo, thử nghiệm, đánh giá → Chia sẻ, điều chỉnh.',
+          'Quy trình mang tính <b>lặp lại</b>: thất bại khi thử nghiệm là dữ liệu quý để cải tiến sản phẩm.',
+          'Dùng AI: chia nhỏ nhiệm vụ, nêu <b>ràng buộc đầu ra</b>, kiểm chứng thông tin, không nhập dữ liệu cá nhân.'
+        ] },
+      { code: 'ND 3', title: 'Thiết kế sản phẩm STEM cho ngành kinh tế đặc thù của địa phương',
+        meta: 'Tuần 30 · 29/03 – 04/04 · Tiết 28',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd7-nd3-san-pham-stem-dia-phuong.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd7-nd3-san-pham-stem-dia-phuong.html',
+        points: [
+          'TP.HCM có nhiều ngành kinh tế đặc thù: <b>cảng biển – logistics</b>, công nghiệp và công nghệ cao, dầu khí, dịch vụ – du lịch, nông nghiệp công nghệ cao và thuỷ sản.',
+          '<b>Sản phẩm STEM</b> là bản thiết kế/mô hình/sản phẩm vận dụng kiến thức liên môn để giải quyết nhu cầu thực tế, luôn kèm bản thuyết minh.',
+          'Mỗi ngành cần các nghề STEM riêng (kĩ sư logistics, tự động hoá, vi mạch, thuỷ sản, môi trường…) với yêu cầu về kiến thức – kĩ năng – phẩm chất.',
+          '<b>Yêu cầu chung:</b> kiến thức nền vững, kĩ năng số và ngoại ngữ, làm việc nhóm, an toàn lao động, học tập suốt đời.',
+          'Tích hợp AI cần trình bày rõ <b>dữ liệu vào – xử lí – đầu ra – con người giám sát</b>; ghi nguồn và tôn trọng bản quyền.'
+        ] },
+      { code: 'ND 4', title: 'Con đường phát triển nghề nghiệp và khởi nghiệp',
+        meta: 'Tuần 31 · 05/04 – 11/04 · Tiết 29',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd7-nd4-lo-trinh-nghe-nghiep.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd7-nd4-lo-trinh-nghe-nghiep.html',
+        points: [
+          'Chọn nghề cần đối chiếu <b>3 yếu tố</b>: năng lực – sở thích – nhu cầu xã hội (kèm điều kiện bản thân, gia đình).',
+          '<b>Mật mã Holland (RIASEC)</b>: 6 nhóm sở thích R – I – A – S – E – C; kết quả trắc nghiệm chỉ là gợi ý tham khảo.',
+          '<b>Lộ trình nghề nghiệp:</b> hiện tại (tự đánh giá, trải nghiệm) → sau THPT (nhiều con đường học tập) → đi làm (học tập suốt đời, điều chỉnh).',
+          '<b>Khởi nghiệp đổi mới sáng tạo</b> bắt đầu từ vấn đề thật, thử nghiệm nhỏ, quản lí rủi ro và tuân thủ pháp luật.',
+          'Dùng AI để nâng cao năng lực nhưng tự mình quyết định; bảo vệ dữ liệu cá nhân: <b>quyền được biết, đồng ý, yêu cầu xoá</b>.'
+        ] }
+    ]
+  },
+  {
+    n: 8, color: 'var(--c8)', title: 'Phong tục, luật tục và giáo dục pháp luật ở TP.HCM',
+    weeks: 'Tuần 32 – 38 · Tiết 30 – 36',
+    lessons: [
+      { code: 'ND 1', title: 'Phong tục, tập quán, luật tục và pháp luật khác nhau thế nào?',
+        meta: 'Tuần 32 · 12/04 – 18/04 · Tiết 30',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd8-nd1-cac-khai-niem.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd8-nd1-cac-khai-niem.html',
+        points: [
+          '<b>Phong tục:</b> thói quen, nếp sống lâu đời của cộng đồng (lễ tết, cưới hỏi, thờ cúng…), duy trì bằng dư luận và sự tự giác.',
+          '<b>Tập quán:</b> quy tắc xử sự hình thành, lặp lại lâu dài, được thừa nhận rộng rãi; <b>Bộ luật Dân sự 2015 (Điều 5)</b> cho phép áp dụng tập quán khi không trái nguyên tắc cơ bản.',
+          '<b>Luật tục:</b> quy tắc do cộng đồng (buôn, làng, dân tộc) tự đặt ra, có chế tài cộng đồng như phạt vạ, hoà giải.',
+          '<b>Pháp luật:</b> do <b>Nhà nước ban hành</b>, bắt buộc chung, được bảo đảm bằng quyền lực nhà nước.',
+          'TP.HCM hội tụ phong tục của nhiều cộng đồng (Việt, Hoa, Khmer, Chăm…): cần tôn trọng sự đa dạng và thực hiện đúng pháp luật.'
+        ] },
+      { code: 'ND 2', title: 'Mối tương quan giữa phong tục, luật tục và pháp luật',
+        meta: 'Tuần 35 · 03/05 – 09/05 · Tiết 33',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd8-nd2-moi-tuong-quan.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd8-nd2-moi-tuong-quan.html',
+        points: [
+          'Cả ba đều là <b>quy tắc xử sự</b>, cùng hướng tới trật tự và giá trị tốt đẹp của xã hội.',
+          '<b>Khác biệt cốt lõi:</b> nguồn gốc (cộng đồng hay Nhà nước), phạm vi và biện pháp bảo đảm thực hiện (dư luận hay cưỡng chế).',
+          'Pháp luật <b>thừa nhận tập quán tốt</b> (Bộ luật Dân sự 2015 cho phép áp dụng tập quán khi không trái nguyên tắc cơ bản).',
+          'Pháp luật <b>điều chỉnh, loại bỏ hủ tục</b>: tảo hôn, cưỡng ép kết hôn, thách cưới, mê tín dị đoan, đốt pháo nổ…',
+          'Phong tục tốt giúp pháp luật đi vào đời sống; học sinh cần trân trọng giá trị tích cực và mạnh dạn thay đổi biểu hiện lạc hậu.'
+        ] },
+      { code: 'ND 3', title: 'Phong tục, luật tục, pháp luật ở Thành phố Hồ Chí Minh',
+        meta: 'Tuần 36 · 10/05 – 16/05 · Tiết 34',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd8-nd3-phong-tuc-phap-luat-tphcm.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd8-nd3-phong-tuc-phap-luat-tphcm.html',
+        points: [
+          'TP.HCM là <b>đô thị đa văn hoá</b>: phong tục của người Việt, Hoa, Khmer, Chăm… cùng tồn tại, giao lưu và cần được tôn trọng.',
+          '<b>Phong tục tiêu biểu:</b> thờ cúng tổ tiên, lễ Kỳ yên ở đình; Tết Nguyên tiêu của người Hoa; Tết Chôl Chnăm Thmây của người Khmer; tục thờ cá Ông, lễ hội Nghinh Ông của ngư dân.',
+          'Ở cơ sở, <b>quy ước ấp, khu phố</b> góp phần xây dựng nếp sống văn minh trong việc cưới, việc tang, lễ hội — nhưng không được trái pháp luật.',
+          '<b>Pháp luật là giới hạn chung:</b> không thực hiện “phong tục” gây nguy hiểm, xâm phạm quyền trẻ em, trật tự công cộng (pháo nổ, tảo hôn…).',
+          '<b>Xử lí tình huống:</b> tôn trọng – đối thoại – đúng pháp luật; khi cần, tìm tới người lớn, nhà trường, tổ dân phố, cơ quan chức năng.'
+        ] },
+      { code: 'ND 4', title: 'Phổ biến nét đẹp của phong tục, luật tục trong đời sống hôm nay',
+        meta: 'Tuần 37 · 17/05 – 23/05 · Tiết 35',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd8-nd4-pho-bien-net-dep-phong-tuc.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd8-nd4-pho-bien-net-dep-phong-tuc.html',
+        points: [
+          '<b>Nét đẹp</b> của phong tục, luật tục: hiếu nghĩa, gắn kết cộng đồng, hài hoà với thiên nhiên, giữ gìn bản sắc dân tộc.',
+          'Phong tục đa dạng của người Việt, Hoa, Khmer, Chăm… đều là <b>tài sản văn hoá chung</b> cần được tôn trọng và gìn giữ.',
+          '<b>Giữ gìn có chọn lọc:</b> giữ ý nghĩa cốt lõi, đổi mới hình thức phù hợp, loại bỏ lãng phí, mê tín, mất an toàn.',
+          'Có thể phổ biến qua <b>poster, clip, podcast, triển lãm ảnh</b> — nội dung chính xác, kể chuyện hấp dẫn.',
+          'Sản phẩm truyền thông phải: <b>xin phép – tôn trọng – ghi nguồn – tuân thủ bản quyền</b>.'
+        ] },
+      { code: 'ND 5', title: 'Giáo dục pháp luật ở Thành phố Hồ Chí Minh',
+        meta: 'Tuần 38 · 24/05 – 30/05 · Tiết 36',
+        file: 'goc-hoc-tap/bai-hoc-gddp11/cd8-nd5-giao-duc-phap-luat.html',
+        game: 'goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd8-nd5-giao-duc-phap-luat.html',
+        points: [
+          '<b>Giáo dục pháp luật</b> giúp mỗi người hiểu quyền, nghĩa vụ, tự giác chấp hành pháp luật và biết tự bảo vệ mình.',
+          '<b>Luật Phổ biến, giáo dục pháp luật 2012</b> xác định ngày <b>9/11</b> hằng năm là Ngày Pháp luật Việt Nam.',
+          'TP.HCM phổ biến pháp luật qua nhiều kênh: khu phố, hoà giải cơ sở, trường học, cổng thông tin và mạng xã hội chính thống.',
+          'Pháp luật gần gũi với học sinh: <b>an toàn giao thông, an toàn trên mạng, quyền trẻ em, không pháo nổ, không tảo hôn</b>.',
+          '<b>Tổng kết chủ đề 8:</b> trân trọng phong tục đẹp – tôn trọng đa dạng văn hoá – sống và làm theo pháp luật.'
+        ] }
+    ]
+  }
+];
+
+/* ---------- Dựng cây ---------- */
+const tree = document.getElementById('tree');
+
+TOPICS.forEach(function (t) {
+  const li = document.createElement('li');
+  li.className = 'branch';
+  li.style.setProperty('--accent', t.color);
+
+  const lessonCount = t.lessons.length;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'branch-card';
+  btn.setAttribute('aria-expanded', 'false');
+  btn.innerHTML =
+    '<span class="branch-num">CĐ' + t.n + '</span>' +
+    '<span class="branch-body">' +
+      '<span class="branch-kicker">CHỦ ĐỀ ' + t.n + '</span>' +
+      '<span class="branch-title">' + t.title + '</span>' +
+      '<span class="branch-meta">' + t.weeks + ' · ' + lessonCount + ' bài</span>' +
+    '</span>' +
+    '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9,5 16,12 9,19"></polyline></svg>';
+
+  const ul = document.createElement('ul');
+  ul.className = 'leaves';
+
+  t.lessons.forEach(function (ls) {
+    const leaf = document.createElement('li');
+    leaf.className = 'leaf';
+    leaf.innerHTML =
+      '<div class="leaf-card">' +
+        '<div class="leaf-head">' +
+          '<span class="leaf-code">' + ls.code + '</span>' +
+          '<span class="leaf-title">' + ls.title + '</span>' +
+        '</div>' +
+        '<p class="leaf-meta" style="margin:.25rem 0 0">' + ls.meta + '</p>' +
+        '<ul class="points">' + ls.points.map(function (p) { return '<li>' + p + '</li>'; }).join('') + '</ul>' +
+        '<div class="leaf-links">' +
+          '<a class="leaf-link" href="' + ls.file + '" target="_blank" rel="noopener">Mở bài giảng →</a>' +
+          '<a class="leaf-link" href="' + ls.game + '" target="_blank" rel="noopener">Trò chơi ôn tập →</a>' +
+        '</div>' +
+      '</div>';
+    ul.appendChild(leaf);
+  });
+
+  btn.addEventListener('click', function () {
+    const open = ul.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  li.appendChild(btn);
+  li.appendChild(ul);
+  tree.appendChild(li);
+});
+
+/* ---------- Mở / thu tất cả ---------- */
+function setAll(open) {
+  document.querySelectorAll('.leaves').forEach(function (ul) { ul.classList.toggle('open', open); });
+  document.querySelectorAll('.branch-card').forEach(function (b) {
+    b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+document.getElementById('btn-expand').addEventListener('click', function () { setAll(true); });
+document.getElementById('btn-collapse').addEventListener('click', function () {
+  setAll(false);
+  document.getElementById('search').value = '';
+  runSearch('');
+});
+document.getElementById('btn-print').addEventListener('click', function () { window.print(); });
+
+/* ---------- Tìm kiếm ---------- */
+const searchInput = document.getElementById('search');
+const hitNote = document.getElementById('hit-note');
+const emptyNote = document.getElementById('empty');
+
+function stripMarks(root) {
+  root.querySelectorAll('mark').forEach(function (m) {
+    m.replaceWith(document.createTextNode(m.textContent));
+  });
+  root.normalize();
+}
+
+function highlight(node, needle) {
+  if (node.nodeType === 3) {
+    const idx = node.nodeValue.toLowerCase().indexOf(needle);
+    if (idx === -1) return false;
+    const after = node.splitText(idx);
+    const rest = after.splitText(needle.length);
+    const mark = document.createElement('mark');
+    mark.textContent = after.nodeValue;
+    after.replaceWith(mark);
+    highlight(rest, needle);
+    return true;
+  }
+  if (node.nodeType === 1 && node.tagName !== 'MARK') {
+    let found = false;
+    Array.prototype.slice.call(node.childNodes).forEach(function (c) {
+      if (highlight(c, needle)) found = true;
+    });
+    return found;
+  }
+  return false;
+}
+
+function runSearch(raw) {
+  const q = raw.trim().toLowerCase();
+  const branches = document.querySelectorAll('.branch');
+
+  branches.forEach(function (br) {
+    stripMarks(br);
+    br.classList.remove('hidden');
+    br.querySelectorAll('.leaf').forEach(function (l) { l.classList.remove('hidden'); });
+  });
+
+  if (!q) {
+    hitNote.textContent = '';
+    emptyNote.classList.add('hidden');
+    return;
+  }
+
+  let hits = 0;
+  branches.forEach(function (br) {
+    let branchHit = 0;
+    br.querySelectorAll('.leaf').forEach(function (leaf) {
+      const text = leaf.textContent.toLowerCase();
+      if (text.indexOf(q) !== -1) {
+        branchHit++;
+        hits++;
+        highlight(leaf.querySelector('.leaf-card'), q);
+      } else {
+        leaf.classList.add('hidden');
+      }
+    });
+    const ul = br.querySelector('.leaves');
+    const btn = br.querySelector('.branch-card');
+    if (branchHit === 0) {
+      br.classList.add('hidden');
+      ul.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    } else {
+      ul.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+
+  hitNote.textContent = hits > 0 ? (hits + ' bài có từ khoá này') : '';
+  emptyNote.classList.toggle('hidden', hits > 0);
+}
+
+let searchTimer = null;
+searchInput.addEventListener('input', function () {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(function () { runSearch(searchInput.value); }, 160);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kinh Tế Và Môi Trường</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=IBM+Plex+Mono:wght@400;600;700&display=swap">
+<style>
+  :root{
+    --ink:#1E2A27;
+    --ink-soft:#48584F;
+    --paper:#ECEFE1;
+    --paper-2:#F7F8EF;
+    --line:#D6D9C4;
+    --dusk:#12262C;
+    --dusk-2:#1D4750;
+    --dusk-3:#265861;
+    --rain:#5AA6B4;
+    --rain-soft:#CDE6E3;
+    --rain-ink:#0E3A40;
+    --sun:#E4A23B;
+    --sun-soft:#F5DCA9;
+    --sun-ink:#5A3B0E;
+    --ember:#B5533A;
+    --backdrop:#D6DAC6;
+    --shadow: 0 40px 70px -30px rgba(8,18,16,0.5);
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    padding:clamp(1.5rem,5vw,3.5rem) 1rem;
+    background:var(--backdrop);
+    color:var(--ink);
+    font-family:'Be Vietnam Pro','Segoe UI',system-ui,sans-serif;
+    display:flex;
+    justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .sheet{
+    width:100%;
+    max-width:760px;
+    background:var(--paper);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:
+      radial-gradient(120% 140% at 82% 8%, color-mix(in srgb, var(--sun) 30%, transparent), transparent 55%),
+      linear-gradient(160deg, var(--dusk) 0%, var(--dusk-2) 62%, var(--dusk-3) 100%);
+    color:var(--paper-2);
+    padding:clamp(1.6rem,4vw,2.6rem) clamp(1.6rem,4vw,2.6rem) 1.4rem;
+    position:relative;
+  }
+  .hero-top{
+    display:flex;
+    flex-wrap:wrap;
+    gap:1.5rem 2rem;
+    align-items:flex-start;
+  }
+  .hero-copy{ flex:1 1 300px; min-width:0; }
+  .kicker{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.7rem;
+    font-weight:600;
+    letter-spacing:0.16em;
+    color:var(--rain-soft);
+    margin-bottom:0.65rem;
+  }
+  .eyebrow{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.68rem;
+    font-weight:600;
+    letter-spacing:0.1em;
+    color:color-mix(in srgb, var(--paper-2) 62%, transparent);
+    margin-bottom:0.9rem;
+  }
+  .hero h1{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:clamp(1.7rem,4.6vw,2.5rem);
+    line-height:1.08;
+    margin:0 0 0.7rem;
+    text-wrap:balance;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--sun-soft);
+  }
+  .hero-sub{
+    margin:0;
+    max-width:38ch;
+    font-size:0.92rem;
+    line-height:1.55;
+    color:color-mix(in srgb, var(--paper-2) 78%, transparent);
+  }
+
+  .hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.6rem;
+    margin-top:1.1rem;
+  }
+  .hero-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:0.4rem;
+    padding:0.55rem 0.9rem;
+    border-radius:999px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.7rem;
+    font-weight:600;
+    letter-spacing:0.01em;
+    text-decoration:none;
+    border:1px solid transparent;
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .hero-btn svg{ width:0.85rem; height:0.85rem; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .hero-btn:hover{ transform:translateY(-1px); }
+  .hero-btn--primary{ background:var(--sun); color:var(--dusk); }
+  .hero-btn--primary:hover{ background:color-mix(in srgb, var(--sun) 88%, white); }
+  .hero-btn--ghost{
+    background:color-mix(in srgb, var(--paper-2) 10%, transparent);
+    border-color:color-mix(in srgb, var(--paper-2) 35%, transparent);
+    color:var(--paper-2);
+  }
+  .hero-btn--ghost:hover{ background:color-mix(in srgb, var(--paper-2) 18%, transparent); }
+
+  .dial-wrap{
+    flex:0 0 auto;
+    width:min(280px,100%);
+    margin:0 auto;
+  }
+  .dial-wrap svg{ width:100%; height:auto; display:block; }
+  .dial-legend{
+    display:flex;
+    justify-content:center;
+    gap:1.1rem;
+    margin-top:0.4rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    letter-spacing:0.04em;
+  }
+  .dial-legend span{ display:flex; align-items:center; gap:0.35rem; color:color-mix(in srgb, var(--paper-2) 80%, transparent); }
+  .dial-legend i{ width:0.55rem; height:0.55rem; border-radius:50%; display:inline-block; }
+
+  /* ---------- STAT STRIP ---------- */
+  .stat-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    margin:0 clamp(1.2rem,3.5vw,2rem);
+    transform:translateY(-1.1rem);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 14px 30px -18px rgba(10,25,22,0.35);
+  }
+  .stat{
+    background:var(--paper-2);
+    padding:0.85rem 0.6rem;
+    text-align:center;
+  }
+  .stat b{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-variant-numeric:tabular-nums;
+    font-size:clamp(1.05rem,3vw,1.35rem);
+    font-weight:700;
+    color:var(--rain-ink);
+    line-height:1.1;
+  }
+  .stat span{
+    display:block;
+    margin-top:0.3rem;
+    font-size:0.66rem;
+    line-height:1.35;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- SECTIONS ---------- */
+  .sections{
+    padding:0.3rem clamp(1.2rem,3.5vw,2rem) 0.5rem;
+    display:flex;
+    flex-direction:column;
+  }
+  .topic{
+    display:grid;
+    grid-template-columns:2.7rem 1fr;
+    column-gap:1rem;
+    padding:1.15rem 0;
+    border-top:1px solid var(--line);
+  }
+  .topic:first-child{ border-top:none; }
+  .topic-badge{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0.35rem;
+    padding-top:0.15rem;
+  }
+  .topic-badge .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.62rem;
+    font-weight:600;
+    letter-spacing:0.05em;
+    color:var(--ink-soft);
+  }
+  .topic-badge .icon-ring{
+    width:2.7rem; height:2.7rem;
+    border-radius:50%;
+    background:var(--rain-soft);
+    display:flex; align-items:center; justify-content:center;
+    flex:0 0 auto;
+  }
+  .topic-badge .icon-ring svg{ width:1.35rem; height:1.35rem; stroke:var(--rain-ink); fill:none; }
+  .topic h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.12rem;
+    margin:0.05rem 0 0.55rem;
+    color:var(--ink);
+  }
+  .topic ul{
+    margin:0; padding:0; list-style:none;
+    display:flex; flex-direction:column; gap:0.4rem;
+  }
+  .topic li{
+    position:relative;
+    padding-left:0.95rem;
+    font-size:0.87rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+  }
+  .topic li::before{
+    content:"";
+    position:absolute; left:0; top:0.55em;
+    width:0.4rem; height:0.4rem;
+    border-radius:50%;
+    background:var(--rain);
+  }
+  .topic b{ color:var(--ink); font-weight:700; }
+
+  .example{
+    margin-top:0.7rem;
+    padding:0.6rem 0.8rem;
+    background:var(--paper-2);
+    border:1px dashed color-mix(in srgb, var(--rain-ink) 35%, var(--line));
+    border-radius:10px;
+    display:flex;
+    gap:0.55rem;
+    align-items:flex-start;
+  }
+  .example .tag{
+    flex:0 0 auto;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.6rem;
+    font-weight:700;
+    letter-spacing:0.06em;
+    color:var(--sun-ink);
+    background:var(--sun-soft);
+    padding:0.15rem 0.4rem;
+    border-radius:5px;
+    margin-top:0.1rem;
+  }
+  .example p{ margin:0; font-size:0.82rem; line-height:1.55; color:var(--ink-soft); }
+
+  /* ---------- SIMULATION ---------- */
+  .simulate{
+    margin:0.4rem clamp(1.2rem,3.5vw,2rem) 1.6rem;
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:1.2rem clamp(1rem,3vw,1.5rem) 1.4rem;
+  }
+  .sim-head{ margin-bottom:0.9rem; }
+  .sim-head .kicker{ color:var(--rain-ink); margin-bottom:0.4rem; }
+  .sim-head h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.12rem;
+    margin:0 0 0.3rem;
+    color:var(--ink);
+  }
+  .sim-head p{ margin:0; font-size:0.82rem; color:var(--ink-soft); line-height:1.5; max-width:52ch; }
+
+  .sim-legend{
+    display:flex; flex-wrap:wrap; gap:0.9rem;
+    margin:0.7rem 0 0.2rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    color:var(--ink-soft);
+  }
+  .sim-legend span{ display:flex; align-items:center; gap:0.35rem; }
+  .sim-legend i{ width:0.7rem; height:0.7rem; border-radius:3px; display:inline-block; }
+  .sim-legend i.dot{ border-radius:50%; }
+
+  .sim-chart{ width:100%; overflow:visible; margin-top:0.3rem; }
+  .sim-chart .bar{ cursor:pointer; transition:opacity .15s ease; }
+  .sim-chart .bar:hover, .sim-chart .bar.active{ opacity:1; }
+  .sim-chart .bar{ opacity:0.62; }
+  .sim-chart .hit{ fill:transparent; cursor:pointer; }
+  .sim-chart .mlabel{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; fill:var(--ink-soft); }
+  .sim-chart .mlabel.active{ fill:var(--ink); font-weight:700; }
+  .sim-chart .glabel{ font-family:'IBM Plex Mono',monospace; font-size:9px; fill:var(--ink-soft); }
+  .sim-chart .gridline{ stroke:var(--line); stroke-width:1; }
+  .sim-chart .templine{ fill:none; stroke:var(--ember); stroke-width:2; }
+  .sim-chart .tempdot{ fill:var(--ember); stroke:var(--paper-2); stroke-width:1.5; cursor:pointer; }
+  .sim-chart .tempdot.active{ r:5.5; }
+
+  .sim-readout{
+    display:flex; flex-wrap:wrap; gap:1rem 1.4rem; align-items:center;
+    margin-top:1rem;
+    padding-top:0.9rem;
+    border-top:1px dashed var(--line);
+  }
+  .sim-readout .month-big{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.5rem;
+    color:var(--ink);
+    min-width:5.5rem;
+  }
+  .sim-pill{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.66rem;
+    font-weight:700;
+    letter-spacing:0.04em;
+    padding:0.3rem 0.6rem;
+    border-radius:999px;
+    color:#fff;
+  }
+  .sim-metrics{ display:flex; gap:1.4rem; }
+  .sim-metrics div b{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-variant-numeric:tabular-nums;
+    font-size:1.05rem;
+    color:var(--rain-ink);
+  }
+  .sim-metrics div span{ font-size:0.68rem; color:var(--ink-soft); }
+  .sim-note{ flex-basis:100%; font-size:0.85rem; line-height:1.55; color:var(--ink-soft); }
+  .sim-caption{
+    margin-top:0.9rem;
+    font-size:0.68rem;
+    color:var(--ink-soft);
+    opacity:0.8;
+  }
+
+  /* ---------- GHI NHỚ ---------- */
+  .ghinho{
+    position:relative;
+    margin:0 clamp(1.2rem,3.5vw,2rem) 1.7rem;
+    background-color:var(--paper-2);
+    background-image:repeating-linear-gradient(
+      to bottom,
+      transparent 0, transparent 27px,
+      color-mix(in srgb, var(--rain) 32%, transparent) 27px,
+      color-mix(in srgb, var(--rain) 32%, transparent) 28px
+    );
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:1.3rem clamp(1.1rem,3vw,1.6rem) 1.4rem clamp(2.5rem,7vw,3.1rem);
+    overflow:hidden;
+  }
+  .ghinho::before{
+    content:"";
+    position:absolute;
+    left:clamp(1.7rem,5vw,2.2rem);
+    top:0; bottom:0;
+    width:1.5px;
+    background:color-mix(in srgb, var(--ember) 65%, transparent);
+  }
+  .ghinho-head{ display:flex; align-items:baseline; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.2rem; }
+  .ghinho-head h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.2rem;
+    margin:0;
+    color:var(--ink);
+  }
+  .ghinho-head .pencil{ font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--ink-soft); letter-spacing:0.02em; }
+  .ghinho ol{
+    margin:0.7rem 0 0;
+    padding:0;
+    list-style:none;
+    counter-reset:ghinho-counter;
+    display:flex;
+    flex-direction:column;
+    gap:0.35rem;
+  }
+  .ghinho li{
+    counter-increment:ghinho-counter;
+    position:relative;
+    padding-left:1.6rem;
+    font-size:0.9rem;
+    line-height:1.95;
+    color:var(--ink);
+  }
+  .ghinho li::before{
+    content:counter(ghinho-counter) ".";
+    position:absolute; left:0; top:0;
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    color:var(--rain-ink);
+  }
+  .ghinho li b{ color:var(--ink); }
+  .ghinho li .mua{ color:var(--rain-ink); font-weight:700; }
+  .ghinho li .kho{ color:var(--sun-ink); font-weight:700; }
+
+  /* ---------- FOOTER ---------- */
+  .colophon{
+    background:var(--dusk);
+    color:color-mix(in srgb, var(--paper-2) 72%, transparent);
+    padding:1.1rem clamp(1.2rem,3.5vw,2rem) 1.3rem;
+  }
+  .rain-rule{
+    display:flex;
+    gap:0.5rem;
+    margin-bottom:0.75rem;
+    overflow:hidden;
+  }
+  .rain-rule span{
+    flex:1;
+    height:2px;
+    background:linear-gradient(90deg,transparent,var(--rain),transparent);
+    opacity:0.55;
+  }
+  .colophon-row{
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.4rem 1rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    letter-spacing:0.03em;
+  }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+
+  :root{ --moss:#6F8A5B; --slate:#5F7285; }
+  .stat b{ font-size:clamp(0.95rem,2.6vw,1.2rem); }
+  @media (max-width:560px){ .stat-strip{ grid-template-columns:repeat(2,1fr); } }
+  .dial-legend{ flex-wrap:wrap; gap:0.35rem 0.9rem; max-width:280px; margin-inline:auto; }
+  .hero-week{ display:inline-block; margin-top:0.2rem; font-family:'IBM Plex Mono',monospace; font-size:0.66rem; color:var(--sun-soft); letter-spacing:0.05em; }
+
+  /* ---------- WIDGETS (chung) ---------- */
+  .w-btn{
+    font-family:'Be Vietnam Pro',system-ui,sans-serif; font-size:0.8rem; font-weight:600;
+    padding:0.5rem 0.8rem; border-radius:10px; cursor:pointer;
+    background:var(--paper); color:var(--ink); border:1px solid var(--line);
+    transition:background .15s ease, border-color .15s ease, transform .15s ease; text-align:left; line-height:1.4;
+  }
+  .w-btn:hover{ border-color:var(--rain); transform:translateY(-1px); }
+  .w-btn.active{ background:var(--rain-soft); border-color:var(--rain); color:var(--rain-ink); }
+  .w-btn.ok{ background:#DCEFD8; border-color:#5E9B57; color:#24501F; }
+  .w-btn.bad{ background:#F6DAD2; border-color:var(--ember); color:#6E2A18; }
+  .w-btn:disabled{ cursor:default; transform:none; }
+  .w-row{ display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.7rem; }
+  .w-card{
+    margin-top:0.8rem; padding:0.9rem 1rem; background:var(--paper); border:1px solid var(--line);
+    border-radius:12px; font-size:0.9rem; line-height:1.55; color:var(--ink);
+  }
+  .w-small{ font-family:'IBM Plex Mono',monospace; font-size:0.66rem; color:var(--ink-soft); letter-spacing:0.04em; }
+  .w-feedback{ margin-top:0.6rem; font-size:0.85rem; line-height:1.55; color:var(--ink-soft); min-height:1.4em; }
+  .w-feedback b{ color:var(--ink); }
+  .w-meter{ height:10px; background:var(--line); border-radius:999px; overflow:hidden; margin-top:0.5rem; }
+  .w-meter i{ display:block; height:100%; width:0; background:var(--rain); border-radius:999px; transition:width .3s ease, background .3s ease; }
+  .w-group{ margin-top:0.9rem; }
+  .w-group > .w-small{ display:block; margin-bottom:0.1rem; }
+  .cmp-grid{ display:grid; gap:0.6rem; margin-top:0.8rem; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); }
+  .cmp-col{ background:var(--paper); border-radius:12px; padding:0.75rem 0.85rem; border-top:4px solid var(--rain); font-size:0.86rem; line-height:1.55; color:var(--ink-soft); }
+  .cmp-col h3{ margin:0 0 0.35rem; font-family:'IBM Plex Mono',monospace; font-size:0.68rem; letter-spacing:0.06em; color:var(--ink); }
+  .tl-scroll{ overflow-x:auto; }
+
+  /* ---------- NHIỆM VỤ ---------- */
+  .mission{
+    margin:0 clamp(1.2rem,3.5vw,2rem) 1.7rem; display:grid; gap:0.6rem;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  }
+  .mission div{ background:var(--paper-2); border:1px solid var(--line); border-radius:14px; padding:0.8rem 0.95rem; }
+  .mission .tag{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:0.6rem; font-weight:700; letter-spacing:0.06em;
+    color:var(--sun-ink); background:var(--sun-soft); padding:0.15rem 0.45rem; border-radius:5px; margin-bottom:0.4rem;
+  }
+  .mission p{ margin:0; font-size:0.82rem; line-height:1.55; color:var(--ink-soft); }
+  .ghinho li .c1{ color:var(--rain-ink); font-weight:700; }
+  .ghinho li .c2{ color:var(--sun-ink); font-weight:700; }
+
+:root{--dusk:#13261A;--dusk-2:#1F4A2C;--dusk-3:#2A5E38;--rain:#4E9A5E;--rain-soft:#D3EAD6;--rain-ink:#1B4A26;}
+</style>
+</head><body><div class="sheet">
+
+  <header class="hero">
+    <div class="hero-top">
+      <div class="hero-copy">
+        <span class="kicker">BÀI HỌC ĐỊA PHƯƠNG · TÁC ĐỘNG MÔI TRƯỜNG</span>
+        <span class="eyebrow">GIÁO DỤC ĐỊA PHƯƠNG 11 · CHỦ ĐỀ 6 · NỘI DUNG 3, 4</span>
+        <h1>Tác động của kinh tế đến môi trường<br>và cách hạn chế ở <em>TP. Hồ Chí Minh</em></h1>
+        <p class="hero-sub">Bụi mịn giờ cao điểm, dòng kênh đen ngòm, bờ biển sạt lở… Đâu là “cái giá” môi trường của tăng trưởng, và Thành phố — cả chúng ta — có thể làm gì để trả ít hơn?</p>
+        <span class="hero-week">TUẦN 26 · 01/03 – 07/03 · TIẾT 24</span>
+        <div class="hero-actions">
+          <a class="hero-btn hero-btn--primary" href="https://tangngocphung.github.io/Day-Hoc/goc-hoc-tap/bai-hoc-gddp11/cd6-nd34-tac-dong-bien-phap.pptx" target="_blank" rel="noopener"><svg aria-hidden="true" viewBox="0 0 20 20"><polygon points="6,4 15,10 6,16"></polygon></svg>Mở slide bài giảng (PPTX)</a>
+          <a class="hero-btn hero-btn--ghost" href="https://tangngocphung.github.io/Day-Hoc/goc-hoc-tap/bai-hoc-gddp11/cd6-nd34-tac-dong-bien-phap.pptx" download=""><svg aria-hidden="true" viewBox="0 0 20 20"><path d="M10 3v10M6 9l4 4 4-4M4 17h12"></path></svg>Tải PPTX</a>
+          <a class="hero-btn hero-btn--ghost" href="https://tangngocphung.github.io/Day-Hoc/goc-hoc-tap/bai-hoc-gddp11/phieu-hoc-tap-cd6-nd34-tac-dong-bien-phap.docx" download=""><svg aria-hidden="true" viewBox="0 0 20 20"><path d="M5 2h7l3 3v13H5z"></path><path d="M12 2v3h3"></path><path d="M7.5 11h5M7.5 13.5h5M7.5 8.5h3"></path></svg>Tải phiếu học tập (Word)</a>
+          <a class="hero-btn hero-btn--ghost" href="https://tangngocphung.github.io/Day-Hoc/goc-hoc-tap/bai-hoc-gddp11/tro-choi-on-tap-cd6-nd34-tac-dong-bien-phap.html" target="_blank" rel="noopener"><svg aria-hidden="true" viewBox="0 0 20 20"><rect x="3" y="6" width="14" height="10" rx="4"></rect><path d="M7 9v4M5 11h4M13.5 10.5h.01M15 12.5h.01"></path></svg>Chơi trò chơi ôn tập</a>
+        </div>
+      </div>
+      <div class="dial-wrap">
+        <svg id="dial" viewBox="0 0 300 300" role="img" aria-label="Bốn thành phần môi trường chịu tác động của hoạt động kinh tế: nước, không khí, đất, sinh vật">
+          <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(247,248,239,0.18)" stroke-width="1"></circle>
+        </svg>
+        <div class="dial-legend" id="dialLegend"></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="stat-strip">
+    <div class="stat"><b>~14 triệu</b><span>Dân số – áp lực rác thải, giao thông</span></div>
+    <div class="stat"><b>66 KCN, KCX</b><span>Nguồn phát sinh nước thải công nghiệp</span></div>
+    <div class="stat"><b>2008</b><span>Phát hiện Vedan xả thải sông Thị Vải</span></div>
+    <div class="stat"><b>12/2024</b><span>Metro số 1 bắt đầu vận hành thương mại</span></div>
+  </section>
+
+  <main class="sections">
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V10l6 4V10l6 4V6l6 3v12H3Z"/><path d="M7 17h2M12 17h2M17 17h1"/></svg></span>
+        <span class="num">01</span>
+      </div>
+      <div>
+        <h2>Tác động của công nghiệp – xây dựng</h2>
+        <ul>
+          <li><b>Nước thải</b> chưa xử lí đạt chuẩn làm ô nhiễm kênh rạch, sông Sài Gòn, Đồng Nai, Thị Vải; ảnh hưởng nguồn nước cấp và nuôi trồng thuỷ sản.</li>
+          <li><b>Khí thải, bụi</b> từ nhà máy, nhiệt điện, công trường; <b>chất thải rắn, chất thải nguy hại</b> (hoá chất, bùn thải).</li>
+          <li>Khai thác cát, đá, nước ngầm quá mức góp phần gây <b>sạt lở bờ sông, sụt lún đất</b>.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">VÍ DỤ</span>
+          <p>Năm 2008, cơ quan chức năng phát hiện Công ty Vedan xả nước thải chưa qua xử lí ra sông Thị Vải trong thời gian dài, khiến một đoạn sông bị ô nhiễm nặng, người nuôi thuỷ sản ven sông bị thiệt hại.</p>
+        </div>
+      </div>
+    </article>
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H16a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h7.5"/></svg></span>
+        <span class="num">02</span>
+      </div>
+      <div>
+        <h2>Tác động của dịch vụ và đô thị</h2>
+        <ul>
+          <li>Hàng triệu xe máy, ô tô, xe tải ra vào cảng thải <b>khí thải, bụi mịn, tiếng ồn</b>; ùn tắc làm tăng lượng nhiên liệu tiêu thụ.</li>
+          <li>Thương mại, ăn uống, du lịch tạo <b>rác thải sinh hoạt và nhựa dùng một lần</b> rất lớn mỗi ngày; nhiều năm chủ yếu chôn lấp.</li>
+          <li>Bê tông hoá, san lấp kênh rạch làm giảm khả năng thoát nước → <b>ngập khi mưa lớn, triều cường</b>.</li>
+        </ul>
+      </div>
+    </article>
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19 13 11"/></svg></span>
+        <span class="num">03</span>
+      </div>
+      <div>
+        <h2>Tác động của nông – lâm – thuỷ sản</h2>
+        <ul>
+          <li>Lạm dụng <b>phân bón hoá học, thuốc bảo vệ thực vật</b> làm ô nhiễm đất, nước; chất thải chăn nuôi gây mùi và ô nhiễm kênh rạch.</li>
+          <li>Mở ao nuôi tôm, lấn biển có thể làm <b>thu hẹp rừng ngập mặn</b>, suy giảm đa dạng sinh học.</li>
+          <li>Khai thác thuỷ sản quá mức, dùng ngư cụ huỷ diệt làm <b>cạn kiệt nguồn lợi</b> ven biển.</li>
+        </ul>
+      </div>
+    </article>
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <span class="num">04</span>
+      </div>
+      <div>
+        <h2>Biện pháp của Nhà nước và doanh nghiệp</h2>
+        <ul>
+          <li><b>Pháp luật</b>: thực hiện Luật Bảo vệ môi trường 2020; đánh giá tác động môi trường trước khi cấp phép; quan trắc tự động và xử phạt nghiêm vi phạm.</li>
+          <li><b>Hạ tầng xanh</b>: xử lí nước thải tập trung ở KCN và đô thị; metro, xe buýt điện; hạn chế khai thác nước ngầm; chuyển rác từ chôn lấp sang tái chế, đốt phát điện.</li>
+          <li><b>Chuyển đổi xanh</b>: di dời cơ sở gây ô nhiễm khỏi nội đô; ưu tiên dự án công nghệ cao; khuyến khích điện mặt trời mái nhà, kinh tế tuần hoàn.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">VÍ DỤ</span>
+          <p>Tuyến metro số 1 Bến Thành – Suối Tiên đi vào vận hành từ cuối năm 2024. Mỗi người chuyển từ xe máy sang tàu điện là bớt một nguồn khí thải trên đường.</p>
+        </div>
+      </div>
+    </article>
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.2a3 3 0 0 1 0 5.6M18 14.4c1.8.8 3 2.6 3 4.6"/></svg></span>
+        <span class="num">05</span>
+      </div>
+      <div>
+        <h2>Cộng đồng và học sinh cùng hành động</h2>
+        <ul>
+          <li><b>Phân loại rác tại nguồn</b>, hạn chế túi nilon, ống hút, hộp xốp; mang bình nước cá nhân.</li>
+          <li>Đi bộ, xe đạp, <b>phương tiện công cộng</b>; tiết kiệm điện, nước ở nhà và trường.</li>
+          <li><b>Giám sát và lên tiếng</b>: phát hiện điểm xả thải, đốt rác trái phép thì phản ánh qua kênh chính thức của Thành phố; tuyên truyền cho người thân.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">VÍ DỤ</span>
+          <p>Một lớp học tổ chức “ngày không nhựa”, gom chai lọ để bán phế liệu gây quỹ trồng cây — vừa giảm rác, vừa lan toả thói quen sống xanh.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <section class="simulate">
+    <div class="sim-head">
+      <span class="kicker">HỘI ĐỒNG MÔI TRƯỜNG · BẤM CHỌN CÁCH XỬ LÍ</span>
+      <h2>Nếu em là người ra quyết định…</h2>
+      <p>Mỗi tình huống là một mâu thuẫn giữa lợi ích kinh tế và môi trường. Hãy chọn cách giải quyết hài hoà, bền vững nhất.</p>
+    </div>
+    <div id="simBody"></div>
+    <p class="sim-caption">*Các tình huống được xây dựng để thảo luận trên lớp, không nhắm tới một doanh nghiệp hay địa điểm cụ thể.</p>
+  </section>
+
+  <section class="ghinho">
+    <div class="ghinho-head">
+      <h2>Ghi nhớ</h2>
+      <span class="pencil">✎ Chép nội dung dưới đây vào vở</span>
+    </div>
+    <ol>
+      <li>Hoạt động kinh tế tác động tới <b>4 thành phần</b> môi trường: <span class="c1">nước</span>, không khí, đất, sinh vật – hệ sinh thái.</li>
+      <li><b>Công nghiệp – xây dựng</b>: nước thải, khí thải, bụi, chất thải nguy hại; khai thác cát, nước ngầm gây sạt lở, sụt lún.</li>
+      <li><b>Dịch vụ – đô thị</b>: khí thải giao thông, rác thải nhựa, ngập úng; <b>nông – thuỷ sản</b>: hoá chất nông nghiệp, mất rừng ngập mặn.</li>
+      <li><b>Biện pháp</b>: pháp luật và giám sát; xử lí nước thải, rác thải; giao thông công cộng; công nghệ sạch, <span class="c2">kinh tế tuần hoàn</span>.</li>
+      <li>Học sinh góp phần: phân loại rác, giảm nhựa, tiết kiệm điện nước, đi phương tiện công cộng, phản ánh vi phạm qua kênh chính thức.</li>
+    </ol>
+  </section>
+
+  <section class="mission">
+    <div><span class="tag">SẢN PHẨM</span><p>Phiếu đề xuất giải pháp giảm tác động tiêu cực của hoạt động kinh tế.</p></div>
+    <div><span class="tag">NĂNG LỰC SỐ</span><p>Phân tích dữ liệu, hợp tác đề xuất giải pháp giảm tác động môi trường và sử dụng công nghệ có trách nhiệm (5.2.NC1b, 2.4.NC1a, 4.4.NC1a).</p></div>
+    <div><span class="tag">GÓC AI</span><p>Vẽ sơ đồ một hệ thống AI giám sát xả thải bằng camera và cảm biến ở KCN: mục tiêu (phát hiện xả thải vượt chuẩn) – dữ liệu (ảnh, chỉ số nước) – thành phần (cảm biến, mô hình, cảnh báo, con người kiểm tra); sau đó sơ đồ hoá các vấn đề đạo đức có thể phát sinh: báo động nhầm gây oan, quyền riêng tư của công nhân, ai chịu trách nhiệm khi AI bỏ sót (11.D1.1, 11.B3.MR1).</p></div>
+  </section>
+
+  <footer class="colophon">
+    <div class="rain-rule"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="colophon-row">
+      <span>GIÁO DỤC ĐỊA PHƯƠNG 11 · CHỦ ĐỀ 6: HOẠT ĐỘNG KINH TẾ &amp; MÔI TRƯỜNG TP.HCM</span>
+      <span>GV: TĂNG NGỌC PHỤNG · THPT NGUYỄN KHUYẾN</span>
+    </div>
+  </footer>
+
+</div>
+<script>window.LESSON = {"ring": {"aria": "Bốn thành phần môi trường chịu tác động của hoạt động kinh tế: nước, không khí, đất, sinh vật", "centerTop": "BỊ TÁC ĐỘNG", "centerBig": "4 yếu tố", "segments": [{"label": "Nguồn nước", "short": "N", "color": "c1"}, {"label": "Không khí", "short": "KK", "color": "c5"}, {"label": "Đất", "short": "Đ", "color": "c2"}, {"label": "Sinh vật, hệ sinh thái", "short": "SV", "color": "c3"}]}, "sim": {"type": "scenario", "kicker": "HỘI ĐỒNG MÔI TRƯỜNG · BẤM CHỌN CÁCH XỬ LÍ", "title": "Nếu em là người ra quyết định…", "desc": "Mỗi tình huống là một mâu thuẫn giữa lợi ích kinh tế và môi trường. Hãy chọn cách giải quyết hài hoà, bền vững nhất.", "items": [{"tag": "CÔNG NGHIỆP · NƯỚC THẢI", "situation": "Người dân phản ánh nước kênh cạnh một khu công nghiệp bỗng đổi màu, cá chết. Doanh nghiệp nghi vấn nói nếu bị đình chỉ sẽ phải cho hàng trăm công nhân nghỉ việc.", "options": [{"text": "Bỏ qua vì doanh nghiệp tạo nhiều việc làm cho Thành phố.", "ok": false, "feedback": "Việc làm quan trọng nhưng không thể đổi bằng sức khoẻ người dân và nguồn nước. Ô nhiễm để lâu, chi phí khắc phục còn lớn hơn."}, {"text": "Lấy mẫu kiểm tra; nếu vi phạm thì xử phạt, buộc dừng xả và nâng cấp hệ thống xử lí trong thời hạn, có giám sát tự động.", "ok": true, "feedback": "Vừa xử lí đúng pháp luật, vừa cho doanh nghiệp cơ hội khắc phục. Quan trắc tự động giúp phát hiện sớm nếu tái phạm."}, {"text": "Kêu gọi người dân tự nạo vét, làm sạch kênh.", "ok": false, "feedback": "Người gây ô nhiễm phải chịu trách nhiệm và chi phí khắc phục (nguyên tắc “người gây ô nhiễm phải trả tiền”), không đẩy gánh nặng cho cộng đồng."}]}, {"tag": "GIAO THÔNG · KHÔNG KHÍ", "situation": "Chỉ số bụi mịn ở trung tâm thường tăng cao vào giờ cao điểm. Thành phố cần giảm khí thải nhưng người dân vẫn phải đi làm, đi học hằng ngày.", "options": [{"text": "Cấm hoàn toàn xe máy trong nội đô ngay từ tuần sau.", "ok": false, "feedback": "Quá đột ngột khi giao thông công cộng chưa đủ thay thế, gây khó khăn lớn cho người lao động."}, {"text": "Mở rộng metro, xe buýt điện, làn xe đạp; lộ trình chuyển đổi xe xanh và kiểm soát khí thải xe cũ.", "ok": true, "feedback": "Giải pháp có lộ trình: tạo lựa chọn thay thế trước, rồi mới hạn chế dần phương tiện gây ô nhiễm."}, {"text": "Khuyên người dân đeo khẩu trang là đủ.", "ok": false, "feedback": "Khẩu trang chỉ bảo vệ cá nhân, không làm giảm nguồn phát thải."}]}, {"tag": "THUỶ SẢN · RỪNG NGẬP MẶN", "situation": "Một nhóm hộ ở ven biển muốn phá thêm rừng ngập mặn để mở rộng ao nuôi tôm vì giá tôm đang cao.", "options": [{"text": "Đồng ý cho phá rừng để tăng thu nhập nhanh.", "ok": false, "feedback": "Mất rừng ngập mặn làm tăng sạt lở, suy giảm nguồn giống thuỷ sản tự nhiên — về lâu dài chính người nuôi tôm chịu thiệt."}, {"text": "Cấm nuôi tôm ở toàn bộ vùng ven biển.", "ok": false, "feedback": "Cực đoan, làm mất sinh kế của người dân; vấn đề là nuôi ở đâu và nuôi thế nào."}, {"text": "Giữ rừng; hỗ trợ kĩ thuật nuôi tôm dưới tán rừng, nuôi thâm canh công nghệ cao trên diện tích cũ và phát triển du lịch sinh thái.", "ok": true, "feedback": "Tăng giá trị trên cùng diện tích mà vẫn bảo vệ hệ sinh thái — hài hoà kinh tế và môi trường."}]}, {"tag": "DỊCH VỤ · RÁC THẢI", "situation": "Sau mỗi dịp lễ, bãi biển du lịch ngập rác nhựa, hộp xốp. Chủ các hàng quán lo nếu cấm đồ nhựa sẽ tăng chi phí.", "options": [{"text": "Lộ trình giảm nhựa dùng một lần, đặt thùng phân loại rác, khuyến khích quán dùng bao bì thân thiện, phạt người xả rác.", "ok": true, "feedback": "Kết hợp quy định, hạ tầng và thay đổi thói quen; bãi biển sạch còn giúp giữ chân du khách — lợi cho chính hàng quán."}, {"text": "Thuê người dọn sạch sau mỗi dịp lễ là đủ.", "ok": false, "feedback": "Chỉ xử lí phần ngọn, tốn kém lặp lại; nhiều rác đã trôi ra biển trước khi được dọn."}, {"text": "Hạn chế khách du lịch đến bãi biển.", "ok": false, "feedback": "Làm mất nguồn thu mà không giải quyết gốc rễ là thói quen dùng và xả rác nhựa."}]}], "caption": "*Các tình huống được xây dựng để thảo luận trên lớp, không nhắm tới một doanh nghiệp hay địa điểm cụ thể."}};</script>
+<script>
+(function(){
+  'use strict';
+  const L = window.LESSON;
+  const NS = 'http://www.w3.org/2000/svg';
+  const COLOR = { c1:'var(--rain)', c2:'var(--sun)', c3:'var(--ember)', c4:'var(--moss)', c5:'var(--slate)' };
+  const INK   = { c1:'var(--rain-ink)', c2:'var(--sun-ink)', c3:'#7A3321', c4:'#3F5530', c5:'#34414F' };
+  const col = k => COLOR[k] || COLOR.c1;
+  const ink = k => INK[k] || INK.c1;
+  function mk(tag, attrs, text){
+    const e = document.createElementNS(NS, tag);
+    for (const k in (attrs||{})) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function el(tag, cls, html){
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html;
+    return e;
+  }
+
+  /* ---------- VÒNG TRÒN HERO ---------- */
+  (function dial(){
+    const svg = document.getElementById('dial');
+    const cx = 150, cy = 150;
+    const polar = (r, deg) => { const a = deg*Math.PI/180; return { x: cx + r*Math.sin(a), y: cy - r*Math.cos(a) }; };
+    const segs = L.ring.segments;
+    const total = segs.reduce((s, x) => s + (x.weight || 1), 0);
+    const gap = segs.length > 1 ? 8 : 0;
+    let start = 0;
+    segs.forEach((s, i) => {
+      const span = 360 * (s.weight || 1) / total;
+      const g2 = Math.min(gap, span*0.35); const a0 = start + g2/2, a1 = start + span - g2/2;
+      const p0 = polar(102, a0), p1 = polar(102, a1);
+      const large = (a1 - a0) > 180 ? 1 : 0;
+      const d = (segs.length === 1)
+        ? 'M 150,48 A 102,102 0 1,1 149.99,48'
+        : 'M ' + p0.x.toFixed(2) + ',' + p0.y.toFixed(2) + ' A 102,102 0 ' + large + ',1 ' + p1.x.toFixed(2) + ',' + p1.y.toFixed(2);
+      svg.appendChild(mk('path', { d, fill:'none', stroke:col(s.color), 'stroke-width':14, 'stroke-linecap':'round' }));
+      const mid = start + span/2;
+      const np = polar(130, mid);
+      const g = mk('g', { transform:'translate(' + np.x.toFixed(2) + ',' + np.y.toFixed(2) + ')' });
+      g.appendChild(mk('circle', { r:11, fill:col(s.color) }));
+      g.appendChild(mk('text', { 'text-anchor':'middle', y:3.5, 'font-family':'IBM Plex Mono, monospace', 'font-size':10, 'font-weight':700, fill:'#fff' }, String(i+1)));
+      svg.appendChild(g);
+      const tp = polar(78, mid);
+      if (s.short && span >= 24) svg.appendChild(mk('text', { x:tp.x.toFixed(2), y:(tp.y+3).toFixed(2), 'text-anchor':'middle', 'font-family':'IBM Plex Mono, monospace', 'font-size':9, fill:'rgba(247,248,239,0.75)' }, s.short));
+      start += span;
+    });
+    const bigLen = (L.ring.centerBig || '').length;
+    svg.appendChild(mk('text', { x:150, y:140, 'text-anchor':'middle', 'font-family':'IBM Plex Mono, monospace', 'font-size':10, fill:'rgba(247,248,239,0.7)', 'letter-spacing':1 }, L.ring.centerTop));
+    svg.appendChild(mk('text', { x:150, y:168, 'text-anchor':'middle', 'font-family':'Fraunces, serif', 'font-weight':700, 'font-size': bigLen > 9 ? 22 : 30, fill:'#F7F8EF' }, L.ring.centerBig));
+    const lg = document.getElementById('dialLegend');
+    segs.forEach((s, i) => {
+      const sp = el('span', null, '<i></i>' + (i+1) + ' · ' + s.label);
+      sp.querySelector('i').style.background = col(s.color);
+      lg.appendChild(sp);
+    });
+  })();
+
+  /* ---------- MÔ PHỎNG ---------- */
+  const S = L.sim;
+  const root = document.getElementById('simBody');
+
+  function legend(items){
+    if (!items || !items.length) return;
+    const lg = el('div', 'sim-legend');
+    items.forEach(it => {
+      const sp = el('span', null, '<i></i>' + it.label);
+      sp.querySelector('i').style.background = col(it.color);
+      lg.appendChild(sp);
+    });
+    root.appendChild(lg);
+  }
+  function readout(){
+    const r = el('div', 'sim-readout');
+    r.innerHTML = '<span class="month-big"></span><span class="sim-pill"></span><div class="sim-metrics"></div><p class="sim-note"></p>';
+    root.appendChild(r);
+    return function(item){
+      r.querySelector('.month-big').textContent = item.name;
+      const pill = r.querySelector('.sim-pill');
+      pill.textContent = item.pill || '';
+      pill.hidden = !item.pill;
+      pill.style.background = ink(item.color);
+      const m = r.querySelector('.sim-metrics');
+      m.innerHTML = '';
+      (item.metrics || []).forEach(x => {
+        const d = el('div'); const b = el('b'); b.textContent = x.v; const s = el('span'); s.textContent = x.k;
+        d.appendChild(b); d.appendChild(s); m.appendChild(d);
+      });
+      r.querySelector('.sim-note').innerHTML = item.note || '';
+    };
+  }
+
+  const renderers = {
+    /* Biểu đồ cột có thể bấm chọn */
+    bars(){
+      legend(S.legend);
+      const items = S.items, n = items.length;
+      const left = 44, right = 650, top = 20, base = 196;
+      const plotW = right - left, plotH = base - top, slot = plotW / n;
+      const max = S.max || Math.max(...items.map(i => i.value)) * 1.1;
+      const svg = mk('svg', { class:'sim-chart', viewBox:'0 0 680 240', role:'img', 'aria-label':S.title });
+      root.appendChild(svg);
+      const y = v => base - (v / max) * plotH;
+      [0, max/2, max].forEach(v => {
+        svg.appendChild(mk('line', { class:'gridline', x1:left, x2:right, y1:y(v), y2:y(v) }));
+        svg.appendChild(mk('text', { class:'glabel', x:left-8, y:y(v)+3, 'text-anchor':'end' }, (Math.round(v*10)/10) + ''));
+      });
+      if (S.unit) svg.appendChild(mk('text', { class:'glabel', x:left-8, y:top-8, 'text-anchor':'end' }, S.unit));
+      const bars = [], labels = [], vals = [];
+      items.forEach((it, i) => {
+        const cx = left + slot*i + slot/2, bw = Math.min(slot*0.56, 60);
+        const b = mk('rect', { class:'bar', x:(cx-bw/2).toFixed(1), y:y(it.value).toFixed(1), width:bw.toFixed(1), height:(base-y(it.value)).toFixed(1), rx:3, fill:col(it.color) });
+        svg.appendChild(b); bars.push(b);
+        const vt = mk('text', { class:'glabel', x:cx, y:(y(it.value)-5).toFixed(1), 'text-anchor':'middle' }, it.valueLabel || String(it.value));
+        svg.appendChild(vt); vals.push(vt);
+        const lb = mk('text', { class:'mlabel', x:cx, y:base+16, 'text-anchor':'middle' }, it.label);
+        svg.appendChild(lb); labels.push(lb);
+        const hit = mk('rect', { class:'hit', x:(cx-slot/2).toFixed(1), y:top, width:slot.toFixed(1), height:base-top+24 });
+        hit.addEventListener('click', () => select(i));
+        svg.appendChild(hit);
+      });
+      const show = readout();
+      function select(i){
+        bars.forEach((b,j) => b.classList.toggle('active', j===i));
+        labels.forEach((b,j) => b.classList.toggle('active', j===i));
+        show(items[i]);
+      }
+      select(S.default || 0);
+    },
+
+    /* Dòng thời gian */
+    timeline(){
+      legend(S.legend);
+      const items = S.items, n = items.length;
+      const W = Math.max(680, n*96), left = 64, right = W-64;
+      const wrap = el('div', 'tl-scroll'); root.appendChild(wrap);
+      const svg = mk('svg', { class:'sim-chart', viewBox:'0 0 ' + W + ' 130', role:'img', 'aria-label':S.title, style: W > 680 ? 'min-width:' + W + 'px' : '' });
+      wrap.appendChild(svg);
+      svg.appendChild(mk('line', { x1:left, x2:right, y1:62, y2:62, stroke:'var(--line)', 'stroke-width':3, 'stroke-linecap':'round' }));
+      const dots = [], names = [];
+      items.forEach((it, i) => {
+        const x = n === 1 ? W/2 : left + (right-left)*i/(n-1);
+        const up = i % 2 === 0;
+        svg.appendChild(mk('text', { class:'mlabel', x, y: up ? 40 : 94, 'text-anchor':'middle', style:'font-weight:700;fill:var(--ink)' }, it.year));
+        const nm = mk('text', { class:'glabel', x, y: up ? 26 : 108, 'text-anchor':'middle' }, it.label || '');
+        svg.appendChild(nm); names.push(nm);
+        const d = mk('circle', { cx:x, cy:62, r:8, fill:col(it.color), stroke:'var(--paper-2)', 'stroke-width':3, style:'cursor:pointer;transition:r .15s' });
+        svg.appendChild(d); dots.push(d);
+        const hit = mk('rect', { class:'hit', x:x-40, y:10, width:80, height:110 });
+        hit.addEventListener('click', () => select(i));
+        svg.appendChild(hit);
+      });
+      const show = readout();
+      function select(i){
+        dots.forEach((d,j) => d.setAttribute('r', j===i ? 12 : 8));
+        names.forEach((t,j) => t.style.fontWeight = j===i ? '700' : '400');
+        show(items[i]);
+      }
+      select(S.default || 0);
+    },
+
+    /* Trò chơi phân loại */
+    sort(){
+      const items = S.items.slice();
+      let idx = 0, score = 0, answered = false;
+      const card = el('div', 'w-card'); root.appendChild(card);
+      const row = el('div', 'w-row'); root.appendChild(row);
+      const fb = el('p', 'w-feedback'); root.appendChild(fb);
+      const meter = el('div', 'w-meter', '<i></i>'); root.appendChild(meter);
+      const ctrl = el('div', 'w-row'); root.appendChild(ctrl);
+      const next = el('button', 'w-btn', 'Câu tiếp theo →'); next.type = 'button';
+      const reset = el('button', 'w-btn', '↺ Làm lại'); reset.type = 'button';
+      ctrl.appendChild(next); ctrl.appendChild(reset);
+      const btns = S.categories.map(c => {
+        const b = el('button', 'w-btn'); b.type = 'button'; b.textContent = c.label;
+        b.addEventListener('click', () => answer(c.key, b));
+        row.appendChild(b); return b;
+      });
+      function render(){
+        answered = false;
+        btns.forEach(b => { b.className = 'w-btn'; b.disabled = false; });
+        if (idx >= items.length){
+          card.innerHTML = '<span class="w-small">HOÀN THÀNH</span><br><b>Em đúng ' + score + '/' + items.length + ' thẻ.</b> ' + (score === items.length ? 'Xuất sắc!' : 'Bấm “Làm lại” để luyện thêm.');
+          btns.forEach(b => b.disabled = true); fb.innerHTML = ''; next.hidden = true; return;
+        }
+        next.hidden = false; next.disabled = true;
+        card.innerHTML = '<span class="w-small">THẺ ' + (idx+1) + '/' + items.length + ' · CHỌN NHÓM PHÙ HỢP</span><br>' + items[idx].text;
+        fb.innerHTML = '';
+      }
+      function answer(key, btn){
+        if (answered) return; answered = true;
+        const it = items[idx], ok = key === it.answer;
+        if (ok) score++;
+        btn.classList.add(ok ? 'ok' : 'bad');
+        if (!ok) btns[S.categories.findIndex(c => c.key === it.answer)].classList.add('ok');
+        btns.forEach(b => b.disabled = true);
+        fb.innerHTML = (ok ? '<b>Chính xác.</b> ' : '<b>Chưa đúng.</b> ') + (it.why || '');
+        meter.firstChild.style.width = (100*score/items.length) + '%';
+        next.disabled = false;
+      }
+      next.addEventListener('click', () => { idx++; render(); });
+      reset.addEventListener('click', () => { idx = 0; score = 0; meter.firstChild.style.width = '0'; render(); });
+      render();
+    },
+
+    /* Xử lí tình huống */
+    scenario(){
+      const tabs = el('div', 'w-row'); root.appendChild(tabs);
+      const card = el('div', 'w-card'); root.appendChild(card);
+      const opts = el('div', 'w-row'); opts.style.flexDirection = 'column'; root.appendChild(opts);
+      const fb = el('p', 'w-feedback'); root.appendChild(fb);
+      const tb = S.items.map((it, i) => {
+        const b = el('button', 'w-btn'); b.type = 'button'; b.textContent = 'Tình huống ' + (i+1);
+        b.addEventListener('click', () => select(i)); tabs.appendChild(b); return b;
+      });
+      function select(i){
+        tb.forEach((b,j) => b.classList.toggle('active', j===i));
+        const it = S.items[i];
+        card.innerHTML = '<span class="w-small">' + (it.tag || 'TÌNH HUỐNG') + '</span><br>' + it.situation;
+        opts.innerHTML = ''; fb.innerHTML = '';
+        it.options.forEach(o => {
+          const b = el('button', 'w-btn'); b.type = 'button'; b.textContent = o.text;
+          b.addEventListener('click', () => {
+            opts.querySelectorAll('.w-btn').forEach(x => x.classList.remove('ok','bad'));
+            b.classList.add(o.ok ? 'ok' : 'bad');
+            fb.innerHTML = (o.ok ? '<b>Phù hợp.</b> ' : '<b>Chưa phù hợp.</b> ') + o.feedback;
+          });
+          opts.appendChild(b);
+        });
+      }
+      select(0);
+    },
+
+    /* Máy tính điểm theo lựa chọn */
+    calc(){
+      const choice = S.groups.map(() => null);
+      const maxScore = S.groups.reduce((s, g) => s + Math.max(...g.options.map(o => o.score)), 0);
+      S.groups.forEach((g, gi) => {
+        const box = el('div', 'w-group'); root.appendChild(box);
+        const lab = el('span', 'w-small'); lab.textContent = (gi+1) + '. ' + g.label.toUpperCase(); box.appendChild(lab);
+        const row = el('div', 'w-row'); row.style.marginTop = '0.35rem'; box.appendChild(row);
+        g.options.forEach((o, oi) => {
+          const b = el('button', 'w-btn'); b.type = 'button'; b.textContent = o.text;
+          b.addEventListener('click', () => {
+            choice[gi] = oi;
+            row.querySelectorAll('.w-btn').forEach((x, xi) => x.classList.toggle('active', xi === oi));
+            update();
+          });
+          row.appendChild(b);
+        });
+      });
+      const meter = el('div', 'w-meter', '<i></i>'); meter.style.marginTop = '1rem'; root.appendChild(meter);
+      const show = readout();
+      function update(){
+        const done = choice.filter(c => c !== null).length;
+        const score = choice.reduce((s, c, gi) => s + (c === null ? 0 : S.groups[gi].options[c].score), 0);
+        const pct = Math.round(100 * score / maxScore);
+        meter.firstChild.style.width = pct + '%';
+        let band = S.bands[0];
+        S.bands.forEach(b => { if (pct >= b.min) band = b; });
+        meter.firstChild.style.background = col(band.color);
+        const last = choice.reduce((a, c, gi) => c === null ? a : S.groups[gi].options[c], null);
+        show({
+          name: done ? pct + '/100' : 'Chưa chọn',
+          pill: done === S.groups.length ? band.label : 'Đã chọn ' + done + '/' + S.groups.length,
+          color: band.color,
+          metrics: [{ v: score + '/' + maxScore, k: S.scoreLabel || 'Điểm' }],
+          note: done === S.groups.length ? band.note : (last && last.hint ? last.hint : (S.hint || 'Hãy chọn một phương án ở mỗi nhóm.'))
+        });
+      }
+      update();
+    },
+
+    /* So sánh theo tiêu chí */
+    compare(){
+      const tabs = el('div', 'w-row'); root.appendChild(tabs);
+      const grid = el('div', 'cmp-grid'); root.appendChild(grid);
+      const fb = el('p', 'w-feedback'); root.appendChild(fb);
+      const tb = S.rows.map((r, i) => {
+        const b = el('button', 'w-btn'); b.type = 'button'; b.textContent = r.label;
+        b.addEventListener('click', () => select(i)); tabs.appendChild(b); return b;
+      });
+      function select(i){
+        tb.forEach((b,j) => b.classList.toggle('active', j===i));
+        const r = S.rows[i];
+        grid.innerHTML = '';
+        S.columns.forEach((c, ci) => {
+          const d = el('div', 'cmp-col'); d.style.borderTopColor = col(c.color);
+          const h = el('h3'); h.textContent = c.label.toUpperCase(); d.appendChild(h);
+          const p = el('div', null, r.cells[ci] || ''); d.appendChild(p);
+          grid.appendChild(d);
+        });
+        fb.innerHTML = r.note ? '<b>Nhận xét:</b> ' + r.note : '';
+      }
+      select(S.default || 0);
+    }
+  };
+
+  (renderers[S.type] || renderers.bars)();
+})();
+
+</script>
+</body></html>

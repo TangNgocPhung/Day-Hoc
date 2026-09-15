@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thư Viện Bài Giảng Giáo Dục Địa Phương 11</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #EFF1EC;
+    --surface: #FFFFFF;
+    --surface-2: #F6F7F1;
+    --ink: #232823;
+    --ink-muted: #5B6259;
+    --ink-faint: #8B9186;
+    --rule: #DEE2D5;
+    --border: #D6DACC;
+    --on-accent: #FFFFFF;
+
+    --accent-1: #8E4472;
+    --exam: #A33B3B;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+    --shadow: 0 10px 30px -14px rgba(35, 40, 35, 0.28);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1B1D18;
+      --surface: #232620;
+      --surface-2: #292C24;
+      --ink: #ECEEE5;
+      --ink-muted: #ABB2A0;
+      --ink-faint: #767C6B;
+      --rule: #363A30;
+      --border: #383C31;
+      --on-accent: #15160F;
+
+      --accent-1: #E092C0;
+      --exam: #E58A8A;
+
+      --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1B1D18;
+    --surface: #232620;
+    --surface-2: #292C24;
+    --ink: #ECEEE5;
+    --ink-muted: #ABB2A0;
+    --ink-faint: #767C6B;
+    --rule: #363A30;
+    --border: #383C31;
+    --on-accent: #15160F;
+
+    --accent-1: #E092C0;
+    --exam: #E58A8A;
+
+    --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    border-bottom: 1px solid var(--border);
+    border-top: 4px solid var(--accent-1);
+    backdrop-filter: blur(10px);
+  }
+  .topbar-inner {
+    max-width: 900px; margin: 0 auto;
+    padding: 0.8rem clamp(1rem, 4vw, 2rem);
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.84rem; font-weight: 600; text-decoration: none; color: var(--ink-muted);
+  }
+  .back-link:hover { color: var(--accent-1); }
+  .back-link svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .lesson-tag {
+    font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; color: var(--accent-1);
+  }
+
+  .page { max-width: 900px; margin: 0 auto; padding: clamp(1.75rem, 4vw, 3rem) clamp(1.25rem, 4vw, 2rem) 4rem; }
+
+  .masthead { max-width: 680px; margin-bottom: 1.75rem; }
+  .masthead-eyebrow {
+    display: block; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.12em; color: var(--ink-faint); margin-bottom: 0.75rem;
+  }
+  .masthead-title {
+    font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem, 4.4vw, 2.6rem);
+    line-height: 1.08; margin: 0 0 0.6rem; text-wrap: balance;
+  }
+  .masthead-sub { font-size: 1rem; color: var(--ink-muted); margin: 0; max-width: 62ch; }
+
+  .summary-strip { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.25rem 0 0.5rem; }
+  .summary-pill {
+    font-family: var(--font-mono); font-size: 0.76rem; font-weight: 600; color: var(--ink-muted);
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 0.4rem 0.8rem;
+  }
+  .summary-pill strong { color: var(--accent-1); }
+
+  .topic-block { margin-top: 2.25rem; }
+  .topic-head {
+    display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 1rem;
+    padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); flex-wrap: wrap;
+  }
+  .topic-head h2 {
+    font-family: var(--font-display); font-weight: 600; font-size: 1.4rem; margin: 0;
+  }
+  .topic-count { font-family: var(--font-mono); font-size: 0.82rem; color: var(--ink-muted); }
+
+  .lesson-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.65rem; }
+
+  .lesson-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    padding: 0.9rem 1.05rem; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2);
+  }
+  .lesson-row-main { display: flex; align-items: flex-start; gap: 0.9rem; min-width: 0; }
+  .lesson-num {
+    flex: 0 0 auto; width: 2.5rem; height: 2.5rem; border-radius: 10px;
+    background: color-mix(in srgb, var(--accent-1) 14%, var(--surface));
+    color: var(--accent-1); display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    line-height: 1.15; text-align: center;
+  }
+  .lesson-info { min-width: 0; }
+  .lesson-topic-tag {
+    display: inline-block; font-family: var(--font-mono); font-size: 0.64rem; font-weight: 600;
+    letter-spacing: 0.06em; color: var(--accent-1); margin-bottom: 0.25rem;
+  }
+  .lesson-info h3 { margin: 0 0 0.2rem; font-size: 0.98rem; font-weight: 700; line-height: 1.35; }
+  .lesson-meta { margin: 0; font-family: var(--font-mono); font-size: 0.76rem; color: var(--ink-muted); }
+
+  .lesson-status {
+    flex: 0 0 auto; display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.82rem; font-weight: 600; padding: 0.5rem 0.85rem; border-radius: 9px; white-space: nowrap;
+  }
+  .lesson-status--link {
+    background: var(--accent-1); color: var(--on-accent); text-decoration: none; border: 1px solid var(--accent-1);
+    transition: transform 0.14s ease;
+  }
+  .lesson-status--link:hover { transform: translateY(-1px); }
+  .lesson-status--link svg { width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .lesson-status--pending {
+    color: var(--ink-faint); background: transparent; border: 1px dashed var(--border); font-style: italic; font-weight: 500;
+  }
+
+  .site-footer { border-top: 1px solid var(--border); background: var(--surface-2); margin-top: 3rem; }
+  .footer-inner {
+    max-width: 900px; margin: 0 auto; padding: 1.4rem clamp(1.25rem, 4vw, 2rem);
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .footer-logo { width: 44px; height: 44px; object-fit: contain; flex: 0 0 auto; }
+  .footer-text { font-size: 0.82rem; color: var(--ink-muted); }
+  .footer-text strong { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="icon-back" viewBox="0 0 24 24"><polyline points="15,5 8,12 15,19"></polyline></symbol>
+  <symbol id="icon-arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12,5 19,12 12,19"></polyline></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="back-link" href="../index.html">
+      <svg aria-hidden="true"><use href="#icon-back"></use></svg>
+      Về Góc Học Tập
+    </a>
+    <span class="lesson-tag">GIÁO DỤC ĐỊA PHƯƠNG 11 · BÀI GIẢNG &amp; CHỦ ĐỀ</span>
+  </div>
+</header>
+
+<div class="page">
+  <header class="masthead">
+    <span class="masthead-eyebrow">THƯ VIỆN BÀI GIẢNG</span>
+    <h1 class="masthead-title">Bài giảng Giáo dục địa phương 11</h1>
+    <p class="masthead-sub">Toàn bộ bài giảng tương tác của 8 chủ đề trong chương trình Giáo dục địa phương Thành phố Hồ Chí Minh lớp 11: Phát triển du lịch; Danh nhân lịch sử; Văn học trước năm 1975; Âm nhạc trong đời sống; Kiến trúc thành phố; Kinh tế và môi trường; Giáo dục STEM và định hướng nghề nghiệp; Phong tục, luật tục và giáo dục pháp luật.</p>
+    <div class="summary-strip">
+      <span class="summary-pill">Chủ đề · <strong>8</strong></span>
+      <span class="summary-pill">Bài giảng · <strong id="lesson-progress">28</strong></span>
+      <span class="summary-pill">Năm học · <strong>2026–2027</strong></span>
+    </div>
+  </header>
+
+  <section class="topic-block">
+    <div class="topic-head">
+      <h2>Chủ đề 1 · Phát triển du lịch ở Thành phố Hồ Chí Minh</h2>
+      <span class="topic-count">Tuần 3 – 4 · Tiết 3 – 4</span>
+    </div>
+    <ul class="lesson-list">
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND<br>1–2</span>
+          <div class="lesson-info">
+            <span class="lesson-topic-tag">BỘ TÀI LIỆU</span>
+            <h3>Nội dung 1 – 2: Tài nguyên du lịch &amp; Một số loại hình du lịch tiêu biểu</h3>
+            <p class="lesson-meta">Bài giảng PPT · Poster A2 · Phiếu học tập · Tóm tắt</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd1-nd12-tai-nguyen-loai-hinh-du-lich.html" target="_blank" rel="noopener">Mở bộ tài liệu<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND3</span>
+          <div class="lesson-info">
+            <h3>Nội dung 3: Vai trò của du lịch xanh ở Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 3 · 21/09 – 27/09  ·  Tiết 3</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd1-nd3-du-lich-xanh.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND4</span>
+          <div class="lesson-info">
+            <h3>Nội dung 4: Định hướng phát triển du lịch ở Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 4 · 28/09 – 04/10  ·  Tiết 4</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd1-nd4-dinh-huong-du-lich.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="topic-block">
+    <div class="topic-head">
+      <h2>Chủ đề 2 · Danh nhân lịch sử của Thành phố Hồ Chí Minh</h2>
+      <span class="topic-count">Tuần 5 – 9 · Tiết 5 – 9</span>
+    </div>
+    <ul class="lesson-list">
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND1</span>
+          <div class="lesson-info">
+            <h3>Nội dung 1: Khái quát về danh nhân lịch sử ở Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 5 · 05/10 – 11/10  ·  Tiết 5</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd2-nd1-khai-quat-danh-nhan.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND2</span>
+          <div class="lesson-info">
+            <h3>Nội dung 2: Một số danh nhân tiêu biểu ở Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 6, 7, 9  ·  Tiết 6, 7, 9</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd2-nd2-danh-nhan-tieu-bieu.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="topic-block">
+    <div class="topic-head">
+      <h2>Chủ đề 3 · Văn học Thành phố Hồ Chí Minh trước năm 1975</h2>
+      <span class="topic-count">Tuần 10 – 13 · Tiết 10 – 13</span>
+    </div>
+    <ul class="lesson-list">
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">1</span>
+          <div class="lesson-info">
+            <h3>Bài 1: Phác thảo về văn học Thành phố Hồ Chí Minh trước năm 1975</h3>
+            <p class="lesson-meta">Tuần 10 · 09/11 – 15/11  ·  Tiết 10</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd3-bai1-phac-thao-van-hoc.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">2</span>
+          <div class="lesson-info">
+            <h3>Bài 2: Văn bản văn học Thành phố Hồ Chí Minh trước năm 1975</h3>
+            <p class="lesson-meta">Tuần 11 · 16/11 – 22/11  ·  Tiết 11</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd3-bai2-van-ban-van-hoc-truoc-1975.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">3</span>
+          <div class="lesson-info">
+            <h3>Bài 3: Viết bài giới thiệu về một tác giả văn học của Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 12 · 23/11 – 29/11  ·  Tiết 12</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd3-bai3-viet-bai-gioi-thieu-tac-gia.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">4</span>
+          <div class="lesson-info">
+            <h3>Bài 4: Giới thiệu về một tác giả văn học của Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 13 · 30/11 – 06/12  ·  Tiết 13</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd3-bai4-gioi-thieu-tac-gia.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="topic-block">
+    <div class="topic-head">
+      <h2>Chủ đề 4 · Âm nhạc trong đời sống Thành phố Hồ Chí Minh</h2>
+      <span class="topic-count">Tuần 14 – 17 · Tiết 14 – 17</span>
+    </div>
+    <ul class="lesson-list">
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND1</span>
+          <div class="lesson-info">
+            <h3>Nội dung 1: Các hoạt động âm nhạc hiện nay ở Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 14 · 07/12 – 13/12  ·  Tiết 14</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd4-nd1-hoat-dong-am-nhac.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND2</span>
+          <div class="lesson-info">
+            <h3>Nội dung 2: Vai trò và ý nghĩa của hoạt động âm nhạc ở Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 15 · 14/12 – 20/12  ·  Tiết 15</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd4-nd2-vai-tro-am-nhac.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND3</span>
+          <div class="lesson-info">
+            <h3>Nội dung 3: Giới thiệu một số tác phẩm âm nhạc gắn với Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 17 · 28/12 – 03/01  ·  Tiết 17</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd4-nd3-tac-pham-am-nhac.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="topic-block">
+    <div class="topic-head">
+      <h2>Chủ đề 5 · Kiến trúc Thành phố Hồ Chí Minh</h2>
+      <span class="topic-count">Tuần 18 – 21 · Tiết 18 – 21</span>
+    </div>
+    <ul class="lesson-list">
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND1</span>
+          <div class="lesson-info">
+            <h3>Nội dung 1: Điều gì đã “nặn” nên diện mạo kiến trúc Thành phố Hồ Chí Minh?</h3>
+            <p class="lesson-meta">Tuần 18 · 04/01 – 10/01  ·  Tiết 18</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd5-nd1-yeu-to-anh-huong-kien-truc.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND2</span>
+          <div class="lesson-info">
+            <h3>Nội dung 2: Đình, chùa, hội quán, nhà cổ — dấu xưa Sài Gòn – Gia Định</h3>
+            <p class="lesson-meta">Tuần 19 · 11/01 – 17/01  ·  Tiết 19</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd5-nd2-kien-truc-sai-gon-gia-dinh.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND<br>3–4</span>
+          <div class="lesson-info">
+            <h3>Nội dung 3, 4: Từ mái vòm Pháp đến rèm hoa bê tông — kiến trúc Đông Dương &amp; hiện đại Sài Gòn</h3>
+            <p class="lesson-meta">Tuần 20 · 18/01 – 24/01  ·  Tiết 20</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd5-nd34-kien-truc-dong-duong-hien-dai.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND5</span>
+          <div class="lesson-info">
+            <h3>Nội dung 5: Nụ sen, bó tre và những mảng xanh — kiến trúc Thành phố Hồ Chí Minh đương đại</h3>
+            <p class="lesson-meta">Tuần 21 · 25/01 – 31/01  ·  Tiết 21</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd5-nd5-kien-truc-duong-dai.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="topic-block">
+    <div class="topic-head">
+      <h2>Chủ đề 6 · Hoạt động kinh tế và môi trường ở Thành phố Hồ Chí Minh</h2>
+      <span class="topic-count">Tuần 24 – 26 · Tiết 22 – 24</span>
+    </div>
+    <ul class="lesson-list">
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND1</span>
+          <div class="lesson-info">
+            <h3>Nội dung 1: Vai trò của môi trường đối với các ngành kinh tế ở Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 24 · 15/02 – 21/02  ·  Tiết 22</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd6-nd1-vai-tro-moi-truong.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND2</span>
+          <div class="lesson-info">
+            <h3>Nội dung 2: Tình hình phát triển các ngành kinh tế ở Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 25 · 22/02 – 28/02  ·  Tiết 23</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd6-nd2-tinh-hinh-kinh-te.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND<br>3–4</span>
+          <div class="lesson-info">
+            <h3>Nội dung 3, 4: Tác động của kinh tế đến môi trường và cách hạn chế ở Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 26 · 01/03 – 07/03  ·  Tiết 24</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd6-nd34-tac-dong-bien-phap.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="topic-block">
+    <div class="topic-head">
+      <h2>Chủ đề 7 · Giáo dục STEM và định hướng nghề nghiệp</h2>
+      <span class="topic-count">Tuần 28 – 31 · Tiết 26 – 29</span>
+    </div>
+    <ul class="lesson-list">
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND1</span>
+          <div class="lesson-info">
+            <h3>Nội dung 1: Khai phá tiềm năng định hướng nghề nghiệp từ giáo dục STEM</h3>
+            <p class="lesson-meta">Tuần 28 · 15/03 – 21/03  ·  Tiết 26</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd7-nd1-khai-pha-tiem-nang-stem.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND2</span>
+          <div class="lesson-info">
+            <h3>Nội dung 2: Ứng dụng kiến thức STEM giải quyết vấn đề thực tiễn</h3>
+            <p class="lesson-meta">Tuần 29 · 22/03 – 28/03  ·  Tiết 27</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd7-nd2-stem-giai-quyet-van-de.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND3</span>
+          <div class="lesson-info">
+            <h3>Nội dung 3: Thiết kế sản phẩm STEM cho các ngành kinh tế đặc thù của địa phương</h3>
+            <p class="lesson-meta">Tuần 30 · 29/03 – 04/04  ·  Tiết 28</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd7-nd3-san-pham-stem-dia-phuong.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND4</span>
+          <div class="lesson-info">
+            <h3>Nội dung 4: Con đường phát triển nghề nghiệp và khởi nghiệp trong kỉ nguyên mới</h3>
+            <p class="lesson-meta">Tuần 31 · 05/04 – 11/04  ·  Tiết 29</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd7-nd4-lo-trinh-nghe-nghiep.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="topic-block">
+    <div class="topic-head">
+      <h2>Chủ đề 8 · Phong tục, luật tục và giáo dục pháp luật ở Thành phố Hồ Chí Minh</h2>
+      <span class="topic-count">Tuần 32 – 38 · Tiết 30 – 36</span>
+    </div>
+    <ul class="lesson-list">
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND1</span>
+          <div class="lesson-info">
+            <h3>Nội dung 1: Phong tục, tập quán, luật tục và pháp luật khác nhau thế nào?</h3>
+            <p class="lesson-meta">Tuần 32 · 12/04 – 18/04  ·  Tiết 30</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd8-nd1-cac-khai-niem.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND2</span>
+          <div class="lesson-info">
+            <h3>Nội dung 2: Mối tương quan giữa phong tục, luật tục và pháp luật</h3>
+            <p class="lesson-meta">Tuần 35 · 03/05 – 09/05  ·  Tiết 33</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd8-nd2-moi-tuong-quan.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND3</span>
+          <div class="lesson-info">
+            <h3>Nội dung 3: Phong tục, luật tục, pháp luật ở Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 36 · 10/05 – 16/05  ·  Tiết 34</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd8-nd3-phong-tuc-phap-luat-tphcm.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND4</span>
+          <div class="lesson-info">
+            <h3>Nội dung 4: Phổ biến nét đẹp của phong tục, luật tục trong đời sống hôm nay</h3>
+            <p class="lesson-meta">Tuần 37 · 17/05 – 23/05  ·  Tiết 35</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd8-nd4-pho-bien-net-dep-phong-tuc.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+      <li class="lesson-row">
+        <div class="lesson-row-main">
+          <span class="lesson-num">ND5</span>
+          <div class="lesson-info">
+            <h3>Nội dung 5: Giáo dục pháp luật ở Thành phố Hồ Chí Minh</h3>
+            <p class="lesson-meta">Tuần 38 · 24/05 – 30/05  ·  Tiết 36</p>
+          </div>
+        </div>
+        <a class="lesson-status lesson-status--link" href="cd8-nd5-giao-duc-phap-luat.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </li>
+    </ul>
+  </section>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <img class="footer-logo" src="../assets/logo-thpt-nguyen-khuyen.png" alt="Logo Trường THPT Nguyễn Khuyến" width="44" height="44" loading="lazy">
+    <p class="footer-text"><strong>Trường THPT Nguyễn Khuyến</strong> · Góc học tập môn Giáo dục địa phương · GV: Tăng Ngọc Phụng</p>
+  </div>
+</footer>
+
+<script>
+  const availableLessons = document.querySelectorAll('.lesson-row .lesson-status--link');
+  document.getElementById('lesson-progress').textContent = availableLessons.length;
+</script>
+
+</body>
+</html>

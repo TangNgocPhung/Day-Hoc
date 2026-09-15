@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trò chơi ôn tập · Tài nguyên &amp; loại hình du lịch TP.HCM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="tro-choi-engine.css">
+<script>
+window.GAME = {
+  cd: 1,
+  chip: "CĐ1 · ND1–2",
+  topic: "CHỦ ĐỀ 1 · TÀI NGUYÊN & LOẠI HÌNH DU LỊCH",
+  title: "Kho báu |du lịch| Sài Gòn",
+  sub: "Ôn lại Nội dung 1 – 2: tài nguyên du lịch tự nhiên và văn hoá của TP.HCM, cùng 5 loại hình du lịch tiêu biểu. Trả lời nhanh, đúng liên tiếp để nhân điểm!",
+  back: "cd1-nd12-tai-nguyen-loai-hinh-du-lich.html",
+  bank: [
+    { q: "Rừng ngập mặn Cần Giờ được UNESCO công nhận là gì?",
+      a: ["Khu dự trữ sinh quyển thế giới", "Di sản thiên nhiên thế giới", "Công viên địa chất toàn cầu", "Di sản văn hoá phi vật thể"], c: 0,
+      e: "Cần Giờ là Khu dự trữ sinh quyển thế giới — nền tảng cho du lịch sinh thái của Thành phố." },
+    { q: "Bờ biển Cần Giờ dài khoảng bao nhiêu ki-lô-mét?",
+      a: ["Khoảng 15 km", "Khoảng 5 km", "Khoảng 40 km", "Khoảng 70 km"], c: 0,
+      e: "Bờ biển Cần Giờ dài khoảng 15 km, có tiềm năng du lịch sinh thái và thể thao biển." },
+    { q: "Nhóm nào dưới đây đều là tài nguyên du lịch TỰ NHIÊN của TP.HCM?",
+      a: ["Sông Sài Gòn, rừng ngập mặn Cần Giờ, bờ biển Cần Giờ", "Dinh Độc Lập, Địa đạo Củ Chi, chợ Bến Thành", "Nhà thờ Đức Bà, Bưu điện Thành phố, hội quán người Hoa", "Đờn ca tài tử, múa rối nước, lễ hội Bánh mì"], c: 0,
+      e: "Tài nguyên tự nhiên gắn với sông nước, rừng ngập mặn và biển; các phương án còn lại là tài nguyên văn hoá." },
+    { q: "Du lịch MICE là tên gọi ghép từ bốn hoạt động nào?",
+      a: ["Meeting – Incentive – Convention – Exhibition", "Music – Internet – Culture – Event", "Meeting – Investment – Convention – Export", "Market – Incentive – Conference – Exchange"], c: 0,
+      e: "MICE = hội họp (Meeting), khen thưởng (Incentive), hội nghị (Convention) và triển lãm (Exhibition)." },
+    { q: "TP.HCM đã bao nhiêu lần được vinh danh “Điểm đến du lịch MICE hàng đầu châu Á”?",
+      a: ["4 lần", "1 lần", "2 lần", "7 lần"], c: 0,
+      e: "Thành phố 4 lần được vinh danh, nhờ hạ tầng khách sạn và trung tâm hội nghị hiện đại." },
+    { q: "Khu du lịch sinh thái Vàm Sát ở Cần Giờ nổi tiếng với điều gì?",
+      a: ["Sân chim và cá sấu", "Chợ nổi trên sông", "Làng gốm cổ truyền", "Bảo tàng nghệ thuật đương đại"], c: 0,
+      e: "Vàm Sát gắn với sân chim và cá sấu — điểm du lịch sinh thái tiêu biểu của Cần Giờ." },
+    { q: "Đảo Khỉ — điểm du lịch sinh thái quen thuộc — thuộc địa bàn nào?",
+      a: ["Cần Giờ", "Củ Chi", "Côn Đảo", "Thủ Đức"], c: 0,
+      e: "Đảo Khỉ nằm ở Cần Giờ, cùng hệ sinh thái rừng ngập mặn." },
+    { q: "Hai loại hình nghệ thuật truyền thống được nhắc đến trong tài nguyên văn hoá của Thành phố là:",
+      a: ["Đờn ca tài tử Nam Bộ và múa rối nước", "Hát xoan và ca trù", "Chèo và tuồng", "Hát then và múa sạp"], c: 0,
+      e: "Đờn ca tài tử Nam Bộ và múa rối nước là hai loại hình được khai thác phục vụ du khách." },
+    { q: "Văn hoá Chợ Lớn với hệ thống hội quán, lễ hội và ẩm thực đặc trưng gắn với cộng đồng nào?",
+      a: ["Cộng đồng người Hoa", "Cộng đồng người Chăm", "Cộng đồng người Khmer", "Cộng đồng người Ấn"], c: 0,
+      e: "Chợ Lớn là khu vực sinh sống lâu đời của người Hoa, nổi bật với các hội quán và ẩm thực riêng." },
+    { q: "Nhóm nào dưới đây đều là DI TÍCH LỊCH SỬ tiêu biểu của TP.HCM?",
+      a: ["Dinh Độc Lập, Địa đạo Củ Chi, Bảo tàng Chứng tích Chiến tranh", "Chợ Bến Thành, phố đi bộ Nguyễn Huệ, Bùi Viện", "Vàm Sát, Đảo Khỉ, bờ biển Cần Giờ", "GEM Center, khách sạn 5 sao, trung tâm thương mại"], c: 0,
+      e: "Đây là ba di tích – bảo tàng gắn với lịch sử, thường xuất hiện trong các tuyến tham quan." },
+    { q: "Du lịch đường thuỷ của Thành phố khai thác chủ yếu tuyến sông – kênh nào?",
+      a: ["Sông Sài Gòn và kênh Nhiêu Lộc – Thị Nghè", "Sông Hồng và kênh Bắc Hưng Hải", "Sông Hương và kênh Vĩnh Tế", "Sông Hàn và kênh Đông"], c: 0,
+      e: "Mạng lưới sông Sài Gòn cùng kênh Nhiêu Lộc – Thị Nghè là trục chính của du lịch đường thuỷ." },
+    { q: "Phương tiện nào KHÔNG thuộc nhóm phương tiện du lịch đường thuỷ được giới thiệu trong bài?",
+      a: ["Xe buýt điện hai tầng", "Buýt đường sông", "Du thuyền / tàu nhà hàng", "Taxi sông"], c: 0,
+      e: "Buýt đường sông, du thuyền – tàu nhà hàng và taxi sông là ba phương tiện đường thuỷ; xe buýt điện là đường bộ." },
+    { q: "Lễ hội ẩm thực nào được nêu làm ví dụ cho du lịch ẩm thực ở TP.HCM?",
+      a: ["Lễ hội Bánh mì Việt Nam", "Lễ hội Hoa ban", "Lễ hội Cà phê Buôn Ma Thuột", "Lễ hội Nghinh Ông Cần Giờ"], c: 0,
+      e: "Lễ hội Bánh mì Việt Nam là sự kiện tiêu biểu quảng bá ẩm thực Thành phố." },
+    { q: "Địa điểm nào có thể khai thác ĐỒNG THỜI cả du lịch ẩm thực và du lịch mua sắm?",
+      a: ["Chợ Bến Thành", "Địa đạo Củ Chi", "Vườn quốc gia Côn Đảo", "Khu du lịch Vàm Sát"], c: 0,
+      e: "Chợ Bến Thành vừa là điểm mua sắm vừa là nơi thưởng thức ẩm thực — nên phục vụ cả hai loại hình." },
+    { q: "Năm loại hình du lịch tiêu biểu của TP.HCM trong bài học gồm:",
+      a: ["Sinh thái, ẩm thực, MICE, mua sắm, đường thuỷ", "Nghỉ dưỡng, thể thao, mạo hiểm, chữa bệnh, tâm linh", "Sinh thái, nông nghiệp, homestay, trekking, lặn biển", "Ẩm thực, mua sắm, giải trí, casino, hội chợ"], c: 0,
+      e: "Đây là 5 loại hình được khai thác dựa trên chính tài nguyên tự nhiên và văn hoá của Thành phố." },
+    { q: "Vì sao du lịch sinh thái ở Cần Giờ luôn gắn với giáo dục môi trường?",
+      a: ["Vì khai thác hệ sinh thái rừng ngập mặn nên phải đi đôi với bảo tồn thiên nhiên", "Vì Cần Giờ chỉ cho phép học sinh vào tham quan", "Vì nơi đây không có dịch vụ lưu trú cho du khách", "Vì đây là khu vực quân sự cần giữ bí mật"], c: 0,
+      e: "Du lịch sinh thái dựa vào tự nhiên, nên bảo tồn và giáo dục môi trường là điều kiện để khai thác lâu dài." }
+  ]
+};
+</script>
+<script src="tro-choi-engine.js" defer></script>
+</head>
+<body></body>
+</html>
