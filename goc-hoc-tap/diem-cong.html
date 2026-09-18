@@ -259,6 +259,36 @@
   .delete-btn:hover { border-color: var(--red); background: var(--red-soft); color: var(--red); }
   .empty { padding: 1.5rem .5rem; color: var(--muted); font-size: .85rem; text-align: center; }
 
+  td.time { white-space: nowrap; font-family: "IBM Plex Mono", Consolas, monospace; font-size: .8rem; color: var(--muted); }
+  .action-tag {
+    display: inline-block;
+    padding: .15rem .5rem;
+    border-radius: 999px;
+    font-size: .72rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .action-tag.add { background: var(--green-soft); color: var(--green); }
+  .action-tag.delete, .action-tag.clear { background: var(--red-soft); color: var(--red); }
+  .action-tag.import, .action-tag.restore { background: var(--blue-soft); color: #274d73; }
+  td.detail { line-height: 1.5; }
+  td.detail small { display: block; color: var(--muted); }
+  .undo-btn {
+    padding: .25rem .55rem;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--surface-2);
+    color: var(--blue);
+    font: inherit;
+    font-size: .74rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .undo-btn:hover { border-color: var(--blue); background: var(--blue-soft); }
+  .undone { color: var(--muted); font-size: .74rem; white-space: nowrap; }
+  .more-btn { margin-top: .8rem; }
+
   .notice {
     margin: 0 0 1rem;
     padding: .9rem 1rem;
@@ -555,6 +585,25 @@
     <p class="count" id="data-result" style="margin-top:.9rem"></p>
   </section>
 
+  <section class="card" aria-labelledby="history-title">
+    <h2 id="history-title">Lịch sử thao tác<small>Mọi lần ghi nhận, xóa và khôi phục đều được ghi lại trên máy này. Lượt nào lỡ tay xóa thì bấm "Hoàn tác" để lấy lại.</small></h2>
+    <p class="count" id="history-count">Chưa có thao tác nào.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Thời gian</th>
+            <th scope="col">Thao tác</th>
+            <th scope="col">Nội dung</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody id="history-body"></tbody>
+      </table>
+    </div>
+    <button class="action-btn more-btn" id="history-more" type="button" hidden>Xem thêm lịch sử cũ hơn</button>
+  </section>
+
   <section class="card" aria-labelledby="pass-title">
     <h2 id="pass-title">Đổi mật khẩu mở sổ<small>Mật khẩu mới chỉ có hiệu lực trên máy đang dùng; máy khác vẫn mở bằng mật khẩu mặc định.</small></h2>
     <form class="form" id="pass-form" autocomplete="off">
@@ -592,6 +641,9 @@
   var DEFAULT_PASS_HASH = "617d0f7a1a2697a7745a81a9169ebd058f6a9fd5a478493ae5909d2c8d5bdb0e";
 
   var STORAGE_KEY = "gocHocTap.diemCong.v1";
+  var HISTORY_KEY = "gocHocTap.diemCong.history.v1";
+  var HISTORY_LIMIT = 1000;
+  var HISTORY_PAGE = 30;
   var UNLOCK_KEY = "gocHocTap.diemCong.unlocked";
   var PASS_HASH_KEY = "gocHocTap.diemCong.passHash";
   var COLUMNS = [
@@ -614,6 +666,8 @@
 
   var rosters = window.STUDENT_ROSTERS || {};
   var entries = [];
+  var history = [];
+  var historyShown = HISTORY_PAGE;
 
   var classInput = document.getElementById("class-input");
   var typeInput = document.getElementById("type-input");
@@ -860,9 +914,30 @@
   function save() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
     } catch (error) {
       showResult("Trình duyệt không cho phép lưu dữ liệu nên danh sách sẽ mất khi tải lại trang.", false);
     }
+  }
+
+  function loadHistory() {
+    try {
+      var parsed = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      history = Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      history = [];
+    }
+  }
+
+  // Mỗi mục lịch sử giữ bản sao các lượt bị ảnh hưởng để có thể hoàn tác khi lỡ tay xóa.
+  function logAction(action, affected) {
+    history.unshift({
+      id: newId(),
+      at: Date.now(),
+      action: action,
+      entries: affected.map(function (entry) { return Object.assign({}, entry); })
+    });
+    if (history.length > HISTORY_LIMIT) history.length = HISTORY_LIMIT;
   }
 
   /* ---------- Khởi tạo các ô chọn ---------- */
@@ -998,6 +1073,7 @@
         if (!window.confirm("Xóa " + typeLabel(entry.type).toLowerCase() + " " + formatSigned(signedPoints(entry))
           + " của " + entry.name + " ngày " + formatDate(entry.date) + "?")) return;
         entries = entries.filter(function (item) { return item.id !== entry.id; });
+        logAction("delete", [entry]);
         save();
         render();
       });
@@ -1072,7 +1148,116 @@
     renderTable(rows);
     renderSummary(rows);
     renderStats();
+    renderHistory();
   }
+
+  /* ---------- Lịch sử thao tác ---------- */
+
+  var ACTION_LABELS = {
+    add: "Ghi nhận",
+    "delete": "Xóa",
+    clear: "Xóa toàn bộ",
+    "import": "Khôi phục từ file",
+    restore: "Hoàn tác"
+  };
+
+  var historyBody = document.getElementById("history-body");
+  var historyCount = document.getElementById("history-count");
+  var historyMore = document.getElementById("history-more");
+
+  function formatTime(ms) {
+    var d = new Date(ms);
+    function two(n) { return ("0" + n).slice(-2); }
+    return two(d.getHours()) + ":" + two(d.getMinutes()) + " · "
+      + two(d.getDate()) + "/" + two(d.getMonth() + 1) + "/" + d.getFullYear();
+  }
+
+  function describeEntry(entry) {
+    return entry.name + " · " + classLabel(entry.className) + " · " + formatSigned(signedPoints(entry))
+      + " · " + entry.column + " · ngày " + formatDate(entry.date)
+      + (entry.reason ? " · " + entry.reason : "");
+  }
+
+  function missingEntries(item) {
+    var present = {};
+    entries.forEach(function (entry) { present[entry.id] = true; });
+    return (item.entries || []).filter(function (entry) { return !present[entry.id]; });
+  }
+
+  function undo(item) {
+    var back = missingEntries(item);
+    if (back.length === 0) return;
+    if (!window.confirm("Lấy lại " + back.length + " lượt ghi nhận đã xóa?")) return;
+    back.forEach(function (entry) { entries.push(Object.assign({}, entry)); });
+    item.undone = true;
+    logAction("restore", back);
+    save();
+    render();
+  }
+
+  function renderHistory() {
+    historyBody.innerHTML = "";
+    historyCount.textContent = history.length === 0
+      ? "Chưa có thao tác nào."
+      : "Đã lưu " + history.length + " thao tác gần nhất trên máy này.";
+
+    if (history.length === 0) {
+      historyBody.appendChild(emptyRow(4, "Các lần ghi nhận, xóa và khôi phục sẽ hiện ở đây."));
+    }
+
+    history.slice(0, historyShown).forEach(function (item) {
+      var list = item.entries || [];
+      var tr = document.createElement("tr");
+      tr.appendChild(cell(formatTime(item.at), "time"));
+
+      var actionTd = document.createElement("td");
+      var tag = document.createElement("span");
+      tag.className = "action-tag " + item.action;
+      tag.textContent = ACTION_LABELS[item.action] || item.action;
+      actionTd.appendChild(tag);
+      tr.appendChild(actionTd);
+
+      var detail = document.createElement("td");
+      detail.className = "detail";
+      if (list.length === 1) {
+        detail.textContent = describeEntry(list[0]);
+      } else {
+        detail.textContent = list.length + " lượt ghi nhận";
+        var names = document.createElement("small");
+        var preview = list.slice(0, 3).map(function (entry) { return entry.name; }).join(", ");
+        names.textContent = preview + (list.length > 3 ? "…" : "");
+        detail.appendChild(names);
+      }
+      tr.appendChild(detail);
+
+      var undoTd = document.createElement("td");
+      if (item.action === "delete" || item.action === "clear") {
+        if (missingEntries(item).length > 0) {
+          var button = document.createElement("button");
+          button.className = "undo-btn";
+          button.type = "button";
+          button.textContent = "↩ Hoàn tác";
+          button.addEventListener("click", function () { undo(item); });
+          undoTd.appendChild(button);
+        } else if (item.undone) {
+          var done = document.createElement("span");
+          done.className = "undone";
+          done.textContent = "Đã lấy lại";
+          undoTd.appendChild(done);
+        }
+      }
+      tr.appendChild(undoTd);
+
+      historyBody.appendChild(tr);
+    });
+
+    historyMore.hidden = history.length <= historyShown;
+  }
+
+  historyMore.addEventListener("click", function () {
+    historyShown += HISTORY_PAGE;
+    renderHistory();
+  });
 
   function showResult(message, ok) {
     formResult.textContent = message;
@@ -1133,7 +1318,7 @@
 
     var type = typeInput.value === "tru" ? "tru" : "cong";
 
-    entries.push({
+    var entry = {
       id: newId(),
       date: dateInput.value,
       name: name,
@@ -1144,7 +1329,9 @@
       points: points,
       reason: reasonInput.value.trim(),
       createdAt: Date.now()
-    });
+    };
+    entries.push(entry);
+    logAction("add", [entry]);
     save();
     render();
 
@@ -1213,8 +1400,9 @@
       showDataResult("Chưa có dữ liệu để sao lưu.");
       return;
     }
-    download("diem-cong-tru-backup-" + todayISO() + ".json", JSON.stringify(entries, null, 2), "application/json");
-    showDataResult("Đã lưu bản sao gồm " + entries.length + " lượt ghi nhận.");
+    download("diem-cong-tru-backup-" + todayISO() + ".json",
+      JSON.stringify({ version: 2, entries: entries, history: history }, null, 2), "application/json");
+    showDataResult("Đã lưu bản sao gồm " + entries.length + " lượt ghi nhận và " + history.length + " mục lịch sử.");
   });
 
   var importFile = document.getElementById("import-file");
@@ -1229,16 +1417,18 @@
     reader.onload = function () {
       try {
         var parsed = JSON.parse(String(reader.result));
-        if (!Array.isArray(parsed)) throw new Error("Sai định dạng.");
+        // Bản sao cũ chỉ là mảng lượt ghi nhận; bản mới gồm cả lịch sử thao tác.
+        var incoming = Array.isArray(parsed) ? parsed : parsed && parsed.entries;
+        if (!Array.isArray(incoming)) throw new Error("Sai định dạng.");
 
         var existing = {};
         entries.forEach(function (entry) { existing[entry.id] = true; });
 
-        var added = 0;
-        parsed.forEach(function (entry) {
+        var restored = [];
+        incoming.forEach(function (entry) {
           if (!entry || !entry.name || !entry.date) return;
           if (entry.id && existing[entry.id]) return;
-          entries.push({
+          restored.push({
             id: entry.id || newId(),
             date: entry.date,
             name: entry.name,
@@ -1250,12 +1440,23 @@
             reason: entry.reason || "",
             createdAt: entry.createdAt || Date.now()
           });
-          added += 1;
         });
+        entries = entries.concat(restored);
+
+        if (parsed && Array.isArray(parsed.history)) {
+          var known = {};
+          history.forEach(function (item) { known[item.id] = true; });
+          parsed.history.forEach(function (item) {
+            if (item && item.id && item.at && !known[item.id]) history.push(item);
+          });
+          history.sort(function (a, b) { return b.at - a.at; });
+          if (history.length > HISTORY_LIMIT) history.length = HISTORY_LIMIT;
+        }
+        if (restored.length) logAction("import", restored);
 
         save();
         render();
-        showDataResult("Đã khôi phục thêm " + added + " lượt ghi nhận từ bản sao.");
+        showDataResult("Đã khôi phục thêm " + restored.length + " lượt ghi nhận từ bản sao.");
       } catch (error) {
         showDataResult("File sao lưu không đọc được. Hãy chọn đúng file JSON đã lưu từ trang này.");
       }
@@ -1266,7 +1467,8 @@
 
   document.getElementById("clear-all").addEventListener("click", function () {
     if (entries.length === 0) return;
-    if (!window.confirm("Xóa toàn bộ " + entries.length + " lượt ghi nhận? Thao tác này không thể hoàn tác.")) return;
+    if (!window.confirm("Xóa toàn bộ " + entries.length + " lượt ghi nhận? Cô vẫn lấy lại được ở mục Lịch sử thao tác.")) return;
+    logAction("clear", entries);
     entries = [];
     save();
     render();
@@ -1287,6 +1489,7 @@
   syncType();
   syncPointChips();
   load();
+  loadHistory();
   render();
 
   if (readUnlockFlag()) openPage();
