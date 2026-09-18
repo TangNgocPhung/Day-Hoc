@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Phiếu bài tập tự chấm Bài 11 – Cơ sở dữ liệu, Tin học 11.">
+  <meta name="theme-color" content="#173c73">
+  <title>Bài tập Bài 11 – Cơ sở dữ liệu | Tin học 11</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173c73'/%3E%3Cellipse cx='32' cy='18' rx='18' ry='8' fill='%23ffd166'/%3E%3Cpath d='M14 18v14c0 4.4 8.1 8 18 8s18-3.6 18-8V18M14 32v14c0 4.4 8.1 8 18 8s18-3.6 18-8V32' fill='none' stroke='%23fff' stroke-width='4'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --navy: #173c73;
+      --navy-deep: #0c284f;
+      --blue: #2876c8;
+      --sky: #eaf4ff;
+      --yellow: #ffd166;
+      --yellow-soft: #fff6d6;
+      --paper: #ffffff;
+      --page: #eef4fa;
+      --ink: #172338;
+      --muted: #5e6d82;
+      --line: #d7e1ed;
+      --success: #16794b;
+      --success-soft: #e9f8f0;
+      --danger: #b53737;
+      --danger-soft: #fff0ef;
+      --shadow: 0 18px 50px rgba(20, 51, 91, .13);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 7% 4%, rgba(255, 209, 102, .28) 0 7rem, transparent 7.1rem),
+        radial-gradient(circle at 96% 15%, rgba(40, 118, 200, .12) 0 10rem, transparent 10.1rem),
+        var(--page);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    button, input { font: inherit; }
+
+    button { touch-action: manipulation; }
+
+    .page-shell {
+      width: min(980px, calc(100% - 28px));
+      margin: 28px auto 80px;
+    }
+
+    .top-card {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background: linear-gradient(130deg, var(--navy-deep), var(--navy) 64%, #20558f);
+      border-radius: 28px;
+      padding: clamp(24px, 5vw, 46px);
+      box-shadow: var(--shadow);
+    }
+
+    .top-card::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -85px;
+      top: -90px;
+      border: 34px solid rgba(255, 255, 255, .07);
+      border-radius: 50%;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 14px;
+      padding: 6px 11px;
+      color: var(--navy-deep);
+      background: var(--yellow);
+      border-radius: 999px;
+      font-size: .84rem;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow svg { width: 18px; height: 18px; }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 750px;
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.65rem);
+      line-height: 1.08;
+      letter-spacing: -.035em;
+    }
+
+    .subtitle {
+      position: relative;
+      z-index: 1;
+      max-width: 690px;
+      margin: 17px 0 0;
+      color: #dbeaff;
+      font-size: 1.05rem;
+    }
+
+    .info-card {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 14px;
+      margin: -18px 26px 24px;
+      padding: 22px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 28px rgba(20, 51, 91, .09);
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .field input {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 13px;
+      color: var(--ink);
+      background: #f8fbff;
+      border: 1px solid #c9d7e6;
+      border-radius: 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+
+    .field input:focus {
+      background: #fff;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(40, 118, 200, .13);
+    }
+
+    .progress-panel {
+      position: sticky;
+      top: 10px;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 0 0 20px;
+      padding: 13px 18px;
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(20, 51, 91, .08);
+      backdrop-filter: blur(10px);
+    }
+
+    .progress-copy { flex: 0 0 auto; font-weight: 800; color: var(--navy); }
+    .progress-track { flex: 1; height: 10px; overflow: hidden; background: #e3ebf4; border-radius: 999px; }
+    .progress-bar { width: 0; height: 100%; background: linear-gradient(90deg, var(--yellow), #ffb43c); border-radius: inherit; transition: width .25s ease; }
+    .save-state { flex: 0 0 auto; color: var(--muted); font-size: .84rem; }
+
+    .quiz-intro {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      margin: 0 0 18px;
+      padding: 16px 18px;
+      background: var(--yellow-soft);
+      border: 1px solid #f0d16f;
+      border-radius: 14px;
+    }
+
+    .quiz-intro svg { flex: 0 0 auto; width: 24px; height: 24px; color: #8a5b00; }
+    .quiz-intro p { margin: 0; color: #624a18; }
+
+    .question-card {
+      margin-bottom: 18px;
+      padding: clamp(19px, 4vw, 28px);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 7px 22px rgba(20, 51, 91, .055);
+      scroll-margin-top: 90px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .question-card.missing {
+      border-color: #df6b57;
+      box-shadow: 0 0 0 4px rgba(181, 55, 55, .1);
+    }
+
+    .question-heading {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 13px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    .question-number {
+      display: grid;
+      place-items: center;
+      min-width: 58px;
+      height: 36px;
+      padding: 0 9px;
+      color: #fff;
+      background: var(--navy);
+      border-radius: 10px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    .question-text { margin: 3px 0 0; font-size: 1.05rem; font-weight: 700; }
+    .question-context { margin: 12px 0 -2px; color: var(--navy); font-weight: 700; }
+
+    .options { display: grid; gap: 10px; }
+
+    .option {
+      position: relative;
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 11px;
+      align-items: start;
+      min-height: 54px;
+      padding: 13px 15px;
+      background: #f8fbff;
+      border: 1.5px solid #d6e1ed;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform .15s, border-color .15s, background .15s, box-shadow .15s;
+    }
+
+    .option:hover { transform: translateY(-1px); border-color: #8bb7e5; background: #f0f7ff; }
+    .option:focus-within { box-shadow: 0 0 0 4px rgba(40, 118, 200, .13); }
+    .option input { position: absolute; opacity: 0; pointer-events: none; }
+
+    .letter {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      color: var(--navy);
+      background: #fff;
+      border: 1.5px solid #aebfd2;
+      border-radius: 50%;
+      font-weight: 800;
+      transition: color .15s, background .15s, border-color .15s;
+    }
+
+    .option-text { padding-top: 2px; }
+    .option:has(input:checked) { border-color: var(--blue); background: var(--sky); box-shadow: inset 4px 0 0 var(--blue); }
+    .option:has(input:checked) .letter { color: #fff; background: var(--blue); border-color: var(--blue); }
+
+    .graded .option { cursor: default; }
+    .graded .option:hover { transform: none; }
+    .graded .option.correct { border-color: #55a97d; background: var(--success-soft); box-shadow: inset 4px 0 0 var(--success); }
+    .graded .option.correct .letter { color: #fff; background: var(--success); border-color: var(--success); }
+    .graded .option.wrong { border-color: #e19a94; background: var(--danger-soft); box-shadow: inset 4px 0 0 var(--danger); }
+    .graded .option.wrong .letter { color: #fff; background: var(--danger); border-color: var(--danger); }
+
+    .explanation {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      color: #285340;
+      background: var(--success-soft);
+      border-left: 4px solid var(--success);
+      border-radius: 0 12px 12px 0;
+    }
+
+    .graded .explanation { display: block; }
+    .explanation strong { color: var(--success); }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 27px 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 49px;
+      padding: 11px 20px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, background .15s;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:focus-visible { outline: 3px solid rgba(40, 118, 200, .28); outline-offset: 2px; }
+    .btn svg { width: 20px; height: 20px; }
+    .btn-primary { color: #fff; background: var(--navy); box-shadow: 0 8px 18px rgba(23, 60, 115, .22); }
+    .btn-primary:hover { background: #20508f; }
+    .btn-secondary { color: var(--navy); background: #fff; border-color: #b9c9da; }
+    .btn-secondary:hover { background: var(--sky); }
+    .btn[hidden] { display: none; }
+
+    .alert {
+      display: none;
+      margin: 18px 0;
+      padding: 13px 16px;
+      color: #782d28;
+      background: var(--danger-soft);
+      border: 1px solid #e6aaa5;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    .alert.show { display: block; }
+
+    .result-card {
+      display: none;
+      overflow: hidden;
+      margin: 26px 0;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      scroll-margin-top: 90px;
+    }
+
+    .result-card.show { display: block; animation: reveal .35s ease both; }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-main {
+      display: grid;
+      grid-template-columns: 145px 1fr;
+      gap: 24px;
+      align-items: center;
+      padding: clamp(24px, 5vw, 38px);
+    }
+
+    .score-ring {
+      display: grid;
+      place-items: center;
+      width: 136px;
+      height: 136px;
+      background: conic-gradient(var(--success) var(--score-angle, 0deg), #e1e9f1 0);
+      border-radius: 50%;
+    }
+
+    .score-inner {
+      display: grid;
+      place-items: center;
+      width: 106px;
+      height: 106px;
+      color: var(--navy);
+      background: #fff;
+      border-radius: 50%;
+      text-align: center;
+    }
+
+    .score-inner strong { display: block; font-size: 2.15rem; line-height: 1; }
+    .score-inner span { color: var(--muted); font-size: .83rem; }
+    .result-copy h2 { margin: 0 0 5px; color: var(--navy); font-size: clamp(1.45rem, 4vw, 2.05rem); }
+    .result-copy p { margin: 0; color: var(--muted); }
+    .result-meta { margin-top: 12px !important; color: var(--ink) !important; font-weight: 700; }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 18px clamp(24px, 5vw, 38px);
+      background: #f6f9fc;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-note { margin-top: 28px; color: var(--muted); font-size: .86rem; text-align: center; }
+
+    .toast {
+      position: fixed;
+      z-index: 20;
+      left: 50%;
+      bottom: 24px;
+      padding: 11px 16px;
+      color: #fff;
+      background: #172338;
+      border-radius: 10px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, .24);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 12px);
+      transition: opacity .2s, transform .2s;
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 640px) {
+      .page-shell { width: min(100% - 18px, 980px); margin-top: 9px; }
+      .top-card { border-radius: 20px; }
+      .info-card { grid-template-columns: 1fr; margin: 12px 0 18px; }
+      .progress-panel { top: 6px; gap: 10px; padding: 11px 13px; }
+      .save-state { display: none; }
+      .question-heading { grid-template-columns: 1fr; gap: 8px; }
+      .question-number { width: max-content; }
+      .option { grid-template-columns: 31px 1fr; padding: 12px; }
+      .result-main { grid-template-columns: 1fr; text-align: center; }
+      .score-ring { margin: auto; }
+      .result-actions { justify-content: center; }
+      .btn { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page-shell { width: 100%; margin: 0; }
+      .top-card { padding: 20px; border-radius: 0; box-shadow: none; print-color-adjust: exact; }
+      .info-card { margin: 14px 0; box-shadow: none; }
+      .progress-panel, .quiz-intro, .actions, .result-actions, .footer-note, .toast { display: none !important; }
+      .question-card { break-inside: avoid; box-shadow: none; }
+      .result-card.show { box-shadow: none; break-inside: avoid; }
+      .explanation { print-color-adjust: exact; }
+    }
+  
+    .back-to-list {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      margin-bottom: 14px;
+      padding: 8px 13px;
+      min-height: 40px;
+      border: 1px solid currentColor;
+      border-radius: 10px;
+      font-size: .84rem;
+      font-weight: 600;
+      text-decoration: none;
+      opacity: .85;
+    }
+    .back-to-list:hover { opacity: 1; }
+    @media print { .back-to-list { display: none !important; } }
+
+    .summary-card {
+      margin: 0 0 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 7px 22px rgba(20, 51, 91, .055);
+    }
+    .summary-card summary {
+      padding: 16px 20px;
+      color: var(--navy);
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .summary-card ul { margin: 0; padding: 0 22px 18px 40px; }
+    .summary-card li { margin-bottom: 8px; }
+
+    .part-title { margin: 30px 0 14px; color: var(--navy); font-size: 1.3rem; }
+    .multi-note { margin: -8px 0 14px; color: #8a5b00; font-size: .92rem; font-weight: 700; }
+    .option .letter.square { border-radius: 7px; }
+
+    .answer-box {
+      width: 100%;
+      min-height: 130px;
+      padding: 12px 14px;
+      color: var(--ink);
+      background: #f8fbff;
+      border: 1.5px solid #d6e1ed;
+      border-radius: 14px;
+      resize: vertical;
+      font: inherit;
+    }
+    .answer-box:focus { outline: none; background: #fff; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(40, 118, 200, .13); }
+
+    .grade-tables { display: flex; flex-wrap: wrap; gap: 0 18px; overflow-x: auto; }
+    .grade-table { border-collapse: collapse; margin: 4px 0 16px; font-size: .95rem; }
+    .grade-table th, .grade-table td { padding: 6px 12px; border: 1px solid #b9c9da; }
+    .grade-table th { background: var(--sky); color: var(--navy); }
+    .grade-table td:last-child { text-align: center; }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <a class="back-to-list" href="index.html">&#8592; Về danh sách phiếu bài tập</a>
+    <header class="top-card">
+      <p class="eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"></path></svg>
+        Tin học 11 · Phiếu luyện tập
+      </p>
+      <h1>Bài 11: Cơ sở dữ liệu</h1>
+      <p class="subtitle">Làm 8 câu trắc nghiệm và 2 câu tự luận. Sau khi hoàn thành, em hãy bấm <strong>Chấm bài</strong> để xem điểm, lời giải và gợi ý đáp án tự luận.</p>
+    </header>
+
+    <section class="info-card" aria-label="Thông tin học sinh">
+      <div class="field">
+        <label for="student-name">Họ và tên</label>
+        <input id="student-name" type="text" autocomplete="name" placeholder="Nhập họ và tên của em">
+      </div>
+      <div class="field">
+        <label for="student-class">Lớp</label>
+        <input id="student-class" type="text" autocomplete="off" placeholder="Ví dụ: 11A1">
+      </div>
+    </section>
+
+    <details class="summary-card">
+      <summary>Tóm tắt kiến thức (bấm để mở)</summary>
+      <ul>
+        <li>Lưu trữ dữ liệu trên máy tính không chỉ là chuyển giấy thành văn bản điện tử. Ghi chép trên giấy dễ dư thừa, dễ mất nhất quán; lưu trữ trên máy tính phải khắc phục được điều này và gắn chặt với việc truy xuất, khai thác thông tin bằng phần mềm.</li>
+        <li>Nếu lưu dữ liệu theo kiểu <strong>tệp</strong> có cấu trúc riêng, người làm phần mềm phải biết rõ cấu trúc tệp để đọc và tách dữ liệu — phần mềm bị phụ thuộc vào cách tổ chức lưu trữ.</li>
+        <li><strong>CSDL</strong> là cách tổ chức lưu trữ dữ liệu <strong>độc lập</strong>, có cấu trúc khai báo được; người dùng và phần mềm cập nhật, truy xuất dữ liệu qua cấu trúc đó mà không cần biết tệp chứa dữ liệu, cấu trúc tệp hay vị trí lưu trên thiết bị.</li>
+        <li>Các tính chất cơ bản của CSDL: <strong>tính độc lập, không dư thừa, nhất quán, toàn vẹn, bảo mật và an toàn</strong>.</li>
+      </ul>
+    </details>
+
+    <section class="progress-panel" aria-label="Tiến độ làm bài">
+      <span class="progress-copy"><span id="answered-count">0</span>/8 câu</span>
+      <div class="progress-track" role="progressbar" aria-label="Số câu trắc nghiệm đã trả lời" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <span class="save-state">Tự động lưu</span>
+    </section>
+
+    <div class="quiz-intro">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7h.01"></path></svg>
+      <p><strong>Gợi ý:</strong> Câu 11.4 hỏi “những phát biểu nào <em>không</em> đúng” nên có thể chọn nhiều đáp án. Các câu còn lại chỉ có một đáp án đúng.</p>
+    </div>
+
+    <form id="quiz-form" novalidate>
+      <h2 class="part-title">Phần A · Trắc nghiệm</h2>
+      <div id="questions"></div>
+
+      <h2 class="part-title">Phần B · Tự luận</h2>
+      <section class="question-card" id="essay-1">
+        <div class="question-heading">
+          <span class="question-number">11.9</span>
+          <div><p class="question-text">Hãy chỉ ra điều kiện đảm bảo tính toàn vẹn của dữ liệu ghi danh sách các biến sử dụng trong một chương trình Python.</p></div>
+        </div>
+        <textarea class="answer-box" id="essay-q9" placeholder="Em viết câu trả lời ở đây…"></textarea>
+        <div class="explanation"><strong>Gợi ý đáp án.</strong> Mỗi biến trong danh sách phải có <em>tên duy nhất</em> (không có hai biến trùng tên) và tên biến phải <em>đúng quy tắc đặt tên</em> của Python: chỉ gồm chữ cái, chữ số và dấu gạch dưới “_”, không bắt đầu bằng chữ số, không trùng với từ khoá như <code>if</code>, <code>for</code>, <code>while</code>… Python phân biệt chữ hoa, chữ thường nên <code>diem</code> và <code>Diem</code> là hai biến khác nhau.</div>
+      </section>
+
+      <section class="question-card" id="essay-2">
+        <div class="question-heading">
+          <span class="question-number">11.10</span>
+          <div><p class="question-text">Dưới đây là một phần dữ liệu bảng điểm của hai môn học. Theo em dữ liệu ở hai bảng này có nhất quán không? Hãy chỉ ra sự không nhất quán của dữ liệu trong hai bảng này.</p></div>
+        </div>
+        <div class="grade-tables">
+          <table class="grade-table">
+            <thead><tr><th>Mã HS</th><th>Họ và tên</th><th>Điểm</th></tr></thead>
+            <tbody>
+              <tr><td>190001</td><td>Trần Văn An</td><td>5</td></tr>
+              <tr><td>190002</td><td>Nguyễn Hoàng Anh</td><td>8</td></tr>
+              <tr><td>190003</td><td>Phan Vàng Anh</td><td>7</td></tr>
+              <tr><td>…</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+          <table class="grade-table">
+            <thead><tr><th>Mã HS</th><th>Họ và tên</th><th>Điểm</th></tr></thead>
+            <tbody>
+              <tr><td>190001</td><td>Trần Văn An</td><td>7</td></tr>
+              <tr><td>190002</td><td>Nguyễn Hoàng Anh</td><td>6</td></tr>
+              <tr><td>190003</td><td>Phan Vàng Anh</td><td>8</td></tr>
+              <tr><td>…</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <textarea class="answer-box" id="essay-q10" placeholder="Em viết câu trả lời ở đây…"></textarea>
+        <div class="explanation"><strong>Gợi ý đáp án.</strong> Ở phần dữ liệu đang thấy, mỗi mã học sinh ứng với cùng một họ tên ở cả hai bảng nên dữ liệu vẫn <em>nhất quán</em>; điểm khác nhau là do hai môn học khác nhau. Tuy nhiên họ tên học sinh bị <em>lưu lặp lại</em> ở hai bảng (dư thừa). Nếu chỉ sửa họ tên ở một bảng (ví dụ sửa “Phan Vàng Anh” thành “Phan Văn Anh”) mà quên sửa bảng kia thì cùng một mã học sinh sẽ có hai họ tên khác nhau — dữ liệu trở nên <em>không nhất quán</em>. Cách khắc phục: chỉ lưu họ tên ở một bảng danh sách học sinh, các bảng điểm chỉ ghi mã HS.</div>
+      </section>
+
+      <div class="alert" id="form-alert" role="alert"></div>
+      <div class="actions">
+        <button class="btn btn-primary" id="submit-btn" type="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg>
+          Chấm bài
+        </button>
+        <button class="btn btn-secondary" id="clear-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 11v5M14 11v5"></path></svg>
+          Xóa bài làm
+        </button>
+      </div>
+    </form>
+
+    <section class="result-card" id="result-card" aria-live="polite" tabindex="-1">
+      <div class="result-main">
+        <div class="score-ring" id="score-ring">
+          <div class="score-inner"><div><strong id="score-value">0</strong><span>điểm</span></div></div>
+        </div>
+        <div class="result-copy">
+          <h2 id="result-title">Kết quả bài làm</h2>
+          <p id="result-message"></p>
+          <p class="result-meta" id="result-meta"></p>
+        </div>
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-primary" id="copy-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>
+          Sao chép kết quả
+        </button>
+        <button class="btn btn-secondary" id="print-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 14h12v7H6z"></path></svg>
+          In / Lưu PDF
+        </button>
+        <button class="btn btn-secondary" id="retry-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>
+          Làm lại trắc nghiệm
+        </button>
+      </div>
+    </section>
+
+    <p class="footer-note">Bài làm được lưu trên chính thiết bị đang sử dụng. Trang này không tự gửi dữ liệu lên Internet.</p>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // answer là số thứ tự đáp án đúng; câu nhiều đáp án dùng mảng và hiện ô chọn vuông.
+    const quizData = [
+      {
+        id: "11.1",
+        question: "Hãy chọn câu trả lời đúng và đầy đủ nhất về việc lưu trữ dữ liệu phục vụ các bài toán quản lí trên máy tính và việc ghi chép lưu trữ dữ liệu thủ công trên giấy, sổ sách.",
+        options: [
+          "Là hai việc giống nhau, chỉ là thay văn bản giấy bằng văn bản trên máy tính.",
+          "Là hai việc khác nhau, hỗ trợ lẫn nhau.",
+          "Là hai việc hướng đến mục tiêu giống nhau nhưng khác nhau về phương pháp làm việc.",
+          "Là hai việc hướng đến mục tiêu giống nhau nhưng do khả năng xử lí nhanh và chính xác của máy tính mà việc lưu trữ dữ liệu trên máy tính đem lại hiệu quả cao hơn và cũng đặt ra những yêu cầu cao hơn, đòi hỏi cần phải tổ chức dữ liệu một cách khoa học."
+        ],
+        answer: 3,
+        explanation: "Hai cách lưu trữ cùng mục tiêu, nhưng lưu trên máy tính hiệu quả hơn và đòi hỏi tổ chức dữ liệu khoa học để tránh dư thừa, mất nhất quán và thuận tiện khai thác."
+      },
+      {
+        id: "11.2",
+        question: "Kĩ thuật lưu trữ dữ liệu nào thường được sử dụng để giải quyết các bài toán quản lí trong thực tế?",
+        options: [
+          "Lưu trữ dữ liệu dạng tệp, quản lí bởi hệ điều hành.",
+          "Lưu trữ dữ liệu dạng văn bản.",
+          "Lưu trữ dữ liệu trong các CSDL.",
+          "Lưu trữ dữ liệu trên thẻ nhớ."
+        ],
+        answer: 2,
+        explanation: "Các bài toán quản lí thực tế thường dùng CSDL vì dữ liệu được tổ chức độc lập, có cấu trúc, dễ cập nhật và truy xuất."
+      },
+      {
+        id: "11.3",
+        question: "Phát biểu nào sau đây phản ánh việc tổ chức lưu trữ dữ liệu độc lập với phần mềm?",
+        options: [
+          "Dữ liệu nằm bên trong tệp chương trình phần mềm.",
+          "Dữ liệu được tổ chức theo thuật toán của phần mềm.",
+          "Người xây dựng phần mềm cập nhật và truy xuất dữ liệu phải biết rõ tên, vị trí lưu trên thiết bị và cấu trúc của các tệp lưu trữ dữ liệu; phải xây dựng thuật toán mở tệp dữ liệu và cập nhật, truy xuất những thành phần dữ liệu.",
+          "Người xây dựng phần mềm cập nhật và truy xuất dữ liệu không cần biết về vị trí lưu trên thiết bị cũng như cấu trúc tệp lưu trữ dữ liệu."
+        ],
+        answer: 3,
+        explanation: "Lưu trữ độc lập nghĩa là phần mềm không cần biết dữ liệu nằm ở tệp nào, cấu trúc tệp ra sao. Phương án C mô tả đúng tình trạng phụ thuộc."
+      },
+      {
+        id: "11.4",
+        question: "Những phát biểu nào <u>không</u> đúng khi nói về hạn chế của việc lưu trữ dữ liệu không độc lập với phần mềm?",
+        options: [
+          "Người xây dựng phần mềm cập nhật và truy xuất dữ liệu không cần phải biết rõ vị trí lưu trên thiết bị và cấu trúc của các tệp lưu trữ dữ liệu.",
+          "Người xây dựng phần mềm phải tự xây dựng thuật toán và mô đun chương trình đọc tệp lưu trữ dữ liệu và phân tích theo cấu trúc của tệp để lấy ra các thành phần dữ liệu.",
+          "Mỗi lần thay đổi cấu trúc tệp lưu trữ dữ liệu phải viết lại mô đun phần mềm cập nhật và truy xuất các thành phần dữ liệu.",
+          "Việc thay đổi cấu trúc tệp lưu trữ dữ liệu không làm ảnh hưởng gì tới mô đun phần mềm cập nhật và truy xuất các thành phần dữ liệu."
+        ],
+        answer: [0, 3],
+        explanation: "Khi dữ liệu không độc lập, người lập trình <em>phải</em> biết rõ vị trí, cấu trúc tệp (A sai) và mỗi lần đổi cấu trúc tệp <em>phải</em> sửa lại phần mềm (D sai). B và C mô tả đúng hạn chế."
+      },
+      {
+        id: "11.5",
+        question: "Để lưu trữ dữ liệu không phụ thuộc phần mềm, người ta lựa chọn giải pháp nào sau đây?",
+        options: [
+          "Tập hợp lưu trữ dữ liệu thành một khối để dễ quản lí.",
+          "Xây dựng mô hình tổ chức lưu trữ dữ liệu (trên máy tính) và cung cấp giải pháp cập nhật, truy xuất dữ liệu theo mô hình lôgic của dữ liệu, không phụ thuộc vào các bài toán cụ thể; người làm phần mềm cập nhật, truy xuất dữ liệu không cần biết về tệp lưu trữ dữ liệu cũng như cấu trúc của nó.",
+          "Lưu trữ dữ liệu dưới dạng các tệp có cấu trúc.",
+          "Sử dụng mạng máy tính, để không đặt chung dữ liệu và phần mềm khai thác dữ liệu trên cùng một máy."
+        ],
+        answer: 1,
+        explanation: "Đây chính là ý tưởng của CSDL: dữ liệu được tổ chức theo một mô hình lôgic, phần mềm làm việc qua mô hình đó chứ không làm việc trực tiếp với tệp."
+      },
+      {
+        id: "11.6",
+        question: "Hãy chọn câu trả lời đúng về khái niệm CSDL.",
+        options: [
+          "Tập hợp tệp trên máy tính chứa những dữ liệu liên quan với nhau.",
+          "Các tệp chứa dữ liệu trong một thư mục trên thiết bị lưu trữ của máy tính.",
+          "Tập hợp dữ liệu có liên quan với nhau được lưu trữ một cách có tổ chức trên hệ thống máy tính.",
+          "Thư mục trên thiết bị lưu trữ của máy tính gồm các tệp chứa dữ liệu."
+        ],
+        answer: 2,
+        explanation: "CSDL là tập hợp dữ liệu có liên quan với nhau, được lưu trữ <em>có tổ chức</em> trên máy tính — không đơn thuần là tệp hay thư mục."
+      },
+      {
+        id: "11.7",
+        question: "Tính không dư thừa trong CSDL có nghĩa là gì?",
+        options: [
+          "Không có dữ liệu nào bị lưu trữ trùng lặp trong CSDL.",
+          "Các dữ liệu được phân loại đúng theo mức độ quan trọng.",
+          "CSDL được thiết kế sao cho không có thông tin nào bị bỏ sót.",
+          "CSDL không bao gồm bất kì thông tin nào không cần thiết."
+        ],
+        answer: 0,
+        explanation: "Không dư thừa nghĩa là mỗi dữ liệu chỉ được lưu một lần, không bị lặp lại ở nhiều nơi."
+      },
+      {
+        id: "11.8",
+        question: "Ràng buộc nào sau đây đảm bảo tính toàn vẹn của dữ liệu ghi số lượng học sinh các lớp tham gia nhóm thiện nguyện “Nụ cười” do đoàn trường tổ chức?",
+        options: [
+          "Phải là số tự nhiên.",
+          "Phải là số nguyên.",
+          "Phải là số thập phân.",
+          "Phải là số thập phân với hai chữ số thập phân."
+        ],
+        answer: 0,
+        explanation: "Số lượng học sinh chỉ có thể là 0, 1, 2, … nên phải là số tự nhiên. Số nguyên vẫn cho phép số âm, số thập phân cho phép giá trị lẻ — đều vô lí."
+      }
+    ];
+
+    const letters = ["A", "B", "C", "D"];
+    const storageKey = "bai11-tin11-worksheet-v1";
+    const questionsContainer = document.getElementById("questions");
+    const form = document.getElementById("quiz-form");
+    const resultCard = document.getElementById("result-card");
+    const formAlert = document.getElementById("form-alert");
+    const progressTrack = document.querySelector(".progress-track");
+    const essayIds = ["essay-q9", "essay-q10"];
+    const total = quizData.length;
+    let graded = false;
+    let lastScore = null;
+    let lastCorrect = null;
+
+    const isMulti = item => Array.isArray(item.answer);
+    const correctSet = item => (isMulti(item) ? item.answer : [item.answer]);
+
+    function renderQuestions() {
+      questionsContainer.innerHTML = quizData.map((item, qIndex) => `
+        <section class="question-card" id="question-${qIndex + 1}" data-question="${qIndex}">
+          <div class="question-heading">
+            <span class="question-number">${item.id}</span>
+            <div><p class="question-text">${item.question}</p></div>
+          </div>
+          ${isMulti(item) ? `<p class="multi-note">Chọn tất cả các phương án đúng.</p>` : ""}
+          <div class="options" role="${isMulti(item) ? "group" : "radiogroup"}" aria-label="Câu ${item.id}">
+            ${item.options.map((option, optionIndex) => `
+              <label class="option" data-option="${optionIndex}">
+                <input type="${isMulti(item) ? "checkbox" : "radio"}" name="q${qIndex}" value="${optionIndex}" aria-label="${letters[optionIndex]}. ${option}">
+                <span class="letter${isMulti(item) ? " square" : ""}">${letters[optionIndex]}</span>
+                <span class="option-text">${option}</span>
+              </label>
+            `).join("")}
+          </div>
+          <div class="explanation"><strong>Đáp án ${correctSet(item).map(i => letters[i]).join(" và ")}.</strong> ${item.explanation}</div>
+        </section>
+      `).join("");
+    }
+
+    // Mỗi câu trả về mảng các phương án đã chọn (rỗng nếu chưa chọn).
+    function getAnswers() {
+      return quizData.map((_, index) =>
+        Array.from(form.querySelectorAll(`input[name="q${index}"]:checked`)).map(input => Number(input.value))
+      );
+    }
+
+    function isRight(item, chosen) {
+      const right = correctSet(item);
+      return chosen.length === right.length && right.every(value => chosen.includes(value));
+    }
+
+    function updateProgress() {
+      const answered = getAnswers().filter(list => list.length).length;
+      document.getElementById("answered-count").textContent = answered;
+      document.getElementById("progress-bar").style.width = `${answered / total * 100}%`;
+      progressTrack.setAttribute("aria-valuenow", answered);
+    }
+
+    function saveWork() {
+      const data = {
+        name: document.getElementById("student-name").value,
+        className: document.getElementById("student-class").value,
+        answers: getAnswers(),
+        essays: essayIds.map(id => document.getElementById(id).value)
+      };
+      try { localStorage.setItem(storageKey, JSON.stringify(data)); } catch (_) {}
+    }
+
+    function loadWork() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey));
+        if (!saved) return;
+        document.getElementById("student-name").value = saved.name || "";
+        document.getElementById("student-class").value = saved.className || "";
+        (saved.answers || []).forEach((list, index) => {
+          (Array.isArray(list) ? list : [list]).forEach(answer => {
+            const input = form.querySelector(`input[name="q${index}"][value="${answer}"]`);
+            if (input) input.checked = true;
+          });
+        });
+        (saved.essays || []).forEach((text, index) => {
+          if (essayIds[index]) document.getElementById(essayIds[index]).value = text || "";
+        });
+      } catch (_) {}
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2300);
+    }
+
+    function clearGrading() {
+      graded = false;
+      lastScore = null;
+      lastCorrect = null;
+      document.querySelectorAll(".question-card").forEach(card => {
+        card.classList.remove("graded", "missing");
+        card.querySelectorAll(".option").forEach(option => option.classList.remove("correct", "wrong"));
+        card.querySelectorAll(".options input").forEach(input => input.disabled = false);
+      });
+      resultCard.classList.remove("show");
+      document.getElementById("submit-btn").hidden = false;
+      formAlert.classList.remove("show");
+    }
+
+    function gradeQuiz() {
+      const answers = getAnswers();
+      const missing = answers.map((list, index) => list.length ? -1 : index).filter(index => index >= 0);
+
+      document.querySelectorAll(".question-card").forEach(card => card.classList.remove("missing"));
+      if (missing.length) {
+        missing.forEach(index => document.getElementById(`question-${index + 1}`).classList.add("missing"));
+        formAlert.textContent = `Em còn ${missing.length} câu trắc nghiệm chưa trả lời. Hãy hoàn thành các câu được đánh dấu.`;
+        formAlert.classList.add("show");
+        document.getElementById(`question-${missing[0] + 1}`).scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      formAlert.classList.remove("show");
+      let correct = 0;
+      quizData.forEach((item, index) => {
+        const card = document.getElementById(`question-${index + 1}`);
+        card.classList.add("graded");
+        card.querySelectorAll("input").forEach(input => input.disabled = true);
+        correctSet(item).forEach(value => card.querySelector(`[data-option="${value}"]`).classList.add("correct"));
+        answers[index].forEach(value => {
+          if (!correctSet(item).includes(value)) card.querySelector(`[data-option="${value}"]`).classList.add("wrong");
+        });
+        if (isRight(item, answers[index])) correct += 1;
+      });
+      // Phần tự luận không tự chấm được nên chỉ hiện gợi ý đáp án để em tự đối chiếu.
+      document.querySelectorAll("#essay-1, #essay-2").forEach(card => card.classList.add("graded"));
+
+      graded = true;
+      lastCorrect = correct;
+      lastScore = Math.round(correct / total * 10 * 100) / 100;
+      const scoreText = String(lastScore).replace(".", ",");
+      const title = correct === total ? "Xuất sắc!" : correct >= 6 ? "Làm rất tốt!" : correct >= 4 ? "Em đã hoàn thành!" : "Cần ôn lại một chút";
+      const message = correct >= 6
+        ? "Em đã nắm vững phần lớn kiến thức của Bài 11. Hãy đối chiếu phần tự luận với gợi ý đáp án."
+        : correct >= 4
+          ? "Hãy xem lại lời giải ở những câu chưa đúng và đối chiếu phần tự luận với gợi ý."
+          : "Em nên đọc lại phần tóm tắt kiến thức rồi thử làm lại bài nhé.";
+      const studentName = document.getElementById("student-name").value.trim() || "Học sinh";
+      const className = document.getElementById("student-class").value.trim();
+
+      document.getElementById("score-value").textContent = scoreText;
+      document.getElementById("score-ring").style.setProperty("--score-angle", `${correct / total * 360}deg`);
+      document.getElementById("result-title").textContent = title;
+      document.getElementById("result-message").textContent = message;
+      document.getElementById("result-meta").textContent = `${studentName}${className ? ` · Lớp ${className}` : ""} · Đúng ${correct}/${total} câu trắc nghiệm`;
+      document.getElementById("submit-btn").hidden = true;
+      resultCard.classList.add("show");
+      resultCard.focus({ preventScroll: true });
+      resultCard.scrollIntoView({ behavior: "smooth", block: "center" });
+      saveWork();
+    }
+
+    function resetAnswers() {
+      if (!window.confirm("Em có chắc muốn xóa toàn bộ bài làm (cả phần tự luận) và làm lại từ đầu không?")) return;
+      form.reset();
+      document.getElementById("student-name").value = "";
+      document.getElementById("student-class").value = "";
+      clearGrading();
+      updateProgress();
+      try { localStorage.removeItem(storageKey); } catch (_) {}
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function retryQuiz() {
+      form.querySelectorAll(".options input").forEach(input => input.checked = false);
+      clearGrading();
+      updateProgress();
+      saveWork();
+      document.getElementById("question-1").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    async function copyResult() {
+      if (lastScore === null) return;
+      const name = document.getElementById("student-name").value.trim() || "Học sinh";
+      const className = document.getElementById("student-class").value.trim() || "—";
+      const essays = essayIds.map(id => document.getElementById(id).value.trim() || "(chưa làm)");
+      const text = `KẾT QUẢ BÀI 11 – TIN HỌC 11\nHọ và tên: ${name}\nLớp: ${className}\n`
+        + `Điểm trắc nghiệm: ${String(lastScore).replace(".", ",")}/10 (đúng ${lastCorrect}/${total} câu)\n\n`
+        + `Câu 11.9: ${essays[0]}\n\nCâu 11.10: ${essays[1]}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("Đã sao chép kết quả");
+      } catch (_) {
+        const helper = document.createElement("textarea");
+        helper.value = text;
+        helper.style.position = "fixed";
+        helper.style.opacity = "0";
+        document.body.appendChild(helper);
+        helper.select();
+        document.execCommand("copy");
+        helper.remove();
+        showToast("Đã sao chép kết quả");
+      }
+    }
+
+    renderQuestions();
+    loadWork();
+    updateProgress();
+
+    form.addEventListener("change", event => {
+      if (!event.target.matches(".options input") || graded) return;
+      event.target.closest(".question-card").classList.remove("missing");
+      formAlert.classList.remove("show");
+      updateProgress();
+      saveWork();
+    });
+
+    ["student-name", "student-class"].concat(essayIds).forEach(id => {
+      document.getElementById(id).addEventListener("input", saveWork);
+    });
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      gradeQuiz();
+    });
+
+    document.getElementById("clear-btn").addEventListener("click", resetAnswers);
+    document.getElementById("retry-btn").addEventListener("click", retryQuiz);
+    document.getElementById("copy-btn").addEventListener("click", copyResult);
+    document.getElementById("print-btn").addEventListener("click", () => window.print());
+  </script>
+</body>
+</html>
