@@ -270,7 +270,7 @@
   }
   .action-tag.add { background: var(--green-soft); color: var(--green); }
   .action-tag.delete, .action-tag.clear { background: var(--red-soft); color: var(--red); }
-  .action-tag.import, .action-tag.restore { background: var(--blue-soft); color: #274d73; }
+  .action-tag.import, .action-tag.restore, .action-tag.upload { background: var(--blue-soft); color: #274d73; }
   td.detail { line-height: 1.5; }
   td.detail small { display: block; color: var(--muted); }
   .undo-btn {
@@ -288,6 +288,21 @@
   .undo-btn:hover { border-color: var(--blue); background: var(--blue-soft); }
   .undone { color: var(--muted); font-size: .74rem; white-space: nowrap; }
   .more-btn { margin-top: .8rem; }
+
+  .sync-status {
+    margin: 0 0 1rem;
+    padding: .7rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: .84rem;
+    line-height: 1.5;
+  }
+  .sync-status[data-state="ok"] { border-color: var(--green); background: var(--green-soft); color: var(--green); }
+  .sync-status[data-state="busy"] { border-color: #b8cbe0; background: var(--blue-soft); color: #274d73; }
+  .sync-status[data-state="error"] { border-color: #ddb5b5; background: var(--red-soft); color: #852e2e; }
+  #sync-form[hidden] { display: none; }
 
   .notice {
     margin: 0 0 1rem;
@@ -572,8 +587,8 @@
   <section class="card" aria-labelledby="data-title">
     <h2 id="data-title">Lưu trữ và xuất dữ liệu</h2>
     <p class="notice">
-      Dữ liệu điểm cộng và điểm trừ được lưu trong trình duyệt của máy này. Nếu đổi máy, đổi trình duyệt hoặc xóa dữ liệu
-      duyệt web thì danh sách sẽ không còn. Nên bấm <strong>Xuất file Excel (CSV)</strong> sau mỗi buổi dạy để có bản lưu bên ngoài.
+      Dữ liệu điểm cộng và điểm trừ được lưu trong trình duyệt của máy này. Nếu chưa kết nối <strong>Google Sheet</strong> ở khung bên dưới
+      thì khi đổi máy, đổi trình duyệt hoặc xóa dữ liệu duyệt web, danh sách sẽ không còn.
     </p>
     <div class="data-actions">
       <button class="action-btn" id="export-csv" type="button">⬇ Xuất file Excel (CSV)</button>
@@ -583,6 +598,26 @@
       <input id="import-file" type="file" accept="application/json,.json" hidden>
     </div>
     <p class="count" id="data-result" style="margin-top:.9rem"></p>
+  </section>
+
+  <section class="card" aria-labelledby="sync-title">
+    <h2 id="sync-title">Đồng bộ Google Sheet<small>Khi đã kết nối, mọi thay đổi tự ghi vào Google Sheet của cô. Tải về dạng Excel bằng Tệp › Tải xuống › Microsoft Excel.</small></h2>
+    <p class="sync-status" id="sync-status" data-state="off">Chưa kết nối — dữ liệu chỉ nằm trên máy này.</p>
+    <form class="form" id="sync-form" autocomplete="off">
+      <div class="field full" id="sync-url-field">
+        <label for="sync-url">Địa chỉ Apps Script <em>(kết thúc bằng /exec)</em></label>
+        <input id="sync-url" type="url" placeholder="https://script.google.com/macros/s/…/exec">
+      </div>
+      <div class="field full">
+        <label for="sync-key">Mã đồng bộ <em>(16 ký tự, lấy khi chạy setup)</em></label>
+        <input id="sync-key" type="password" autocomplete="off" spellcheck="false">
+      </div>
+      <button class="submit full" id="sync-connect" type="submit">Kết nối</button>
+    </form>
+    <div class="data-actions" id="sync-actions" hidden>
+      <button class="action-btn" id="sync-now" type="button">🔄 Đồng bộ ngay</button>
+      <button class="action-btn danger" id="sync-disconnect" type="button">Ngắt kết nối trên máy này</button>
+    </div>
   </section>
 
   <section class="card" aria-labelledby="history-title">
@@ -631,6 +666,7 @@
 </footer>
 
 <script src="data/student-rosters.js?v=1"></script>
+<script src="diem-cong-config.js?v=1"></script>
 <script>
 (function () {
   "use strict";
@@ -814,6 +850,7 @@
     lockScreen.hidden = true;
     pageMain.hidden = false;
     lockAgain.hidden = false;
+    pullFromSheet();
   }
 
   function unlock(remember) {
@@ -931,14 +968,244 @@
 
   // Mỗi mục lịch sử giữ bản sao các lượt bị ảnh hưởng để có thể hoàn tác khi lỡ tay xóa.
   function logAction(action, affected) {
-    history.unshift({
+    var item = {
       id: newId(),
       at: Date.now(),
       action: action,
       entries: affected.map(function (entry) { return Object.assign({}, entry); })
-    });
+    };
+    history.unshift(item);
     if (history.length > HISTORY_LIMIT) history.length = HISTORY_LIMIT;
+    return item;
   }
+
+  /* ---------- Đồng bộ Google Sheet ---------- */
+
+  var SYNC_URL_KEY = "gocHocTap.diemCong.syncUrl";
+  var SYNC_SECRET_KEY = "gocHocTap.diemCong.syncKey";
+  var SYNC_QUEUE_KEY = "gocHocTap.diemCong.syncQueue";
+  var CONFIG_URL = (window.DIEM_CONG_CONFIG && window.DIEM_CONG_CONFIG.apiUrl) || "";
+
+  var syncQueue = [];
+  var syncBusy = false;
+
+  var syncStatus = document.getElementById("sync-status");
+  var syncForm = document.getElementById("sync-form");
+  var syncUrlField = document.getElementById("sync-url-field");
+  var syncUrlInput = document.getElementById("sync-url");
+  var syncKeyInput = document.getElementById("sync-key");
+  var syncActions = document.getElementById("sync-actions");
+
+  function readLocal(key) {
+    try { return localStorage.getItem(key) || ""; } catch (error) { return ""; }
+  }
+
+  function writeLocal(key, value) {
+    try {
+      if (value) localStorage.setItem(key, value);
+      else localStorage.removeItem(key);
+    } catch (error) { /* trình duyệt chặn lưu trữ */ }
+  }
+
+  function syncUrl() { return readLocal(SYNC_URL_KEY) || CONFIG_URL; }
+  function syncOn() { return Boolean(syncUrl() && readLocal(SYNC_SECRET_KEY)); }
+
+  function loadQueue() {
+    try {
+      var parsed = JSON.parse(readLocal(SYNC_QUEUE_KEY) || "[]");
+      syncQueue = Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      syncQueue = [];
+    }
+  }
+
+  function saveQueue() {
+    writeLocal(SYNC_QUEUE_KEY, syncQueue.length ? JSON.stringify(syncQueue) : "");
+  }
+
+  function setSyncStatus(state, message) {
+    syncStatus.dataset.state = state;
+    syncStatus.textContent = message;
+  }
+
+  function showSynced() {
+    var now = new Date();
+    setSyncStatus("ok", "Đã đồng bộ với Google Sheet lúc " + ("0" + now.getHours()).slice(-2) + ":"
+      + ("0" + now.getMinutes()).slice(-2) + " · " + entries.length + " lượt ghi nhận.");
+  }
+
+  function showSyncError(error) {
+    if (error && error.code === "bad-key") {
+      setSyncStatus("error", "Mã đồng bộ không đúng. Cô bấm \"Ngắt kết nối trên máy này\" rồi nhập lại mã.");
+      return;
+    }
+    if (!syncQueue.length) {
+      setSyncStatus("error", "Chưa tải được dữ liệu từ Google Sheet nên máy này đang dùng bản đã lưu. Cô kiểm tra mạng rồi bấm \"Đồng bộ ngay\".");
+      return;
+    }
+    setSyncStatus("error", "Chưa ghi được lên Google Sheet (" + syncQueue.length + " thay đổi đang chờ). "
+      + "Dữ liệu vẫn an toàn trên máy này; trang sẽ gửi lại khi cô bấm \"Đồng bộ ngay\" hoặc mở lại sổ.");
+  }
+
+  function renderSyncForm() {
+    var on = syncOn();
+    syncForm.hidden = on;
+    syncActions.hidden = !on;
+    syncUrlField.hidden = Boolean(CONFIG_URL);
+    if (!on) setSyncStatus("off", "Chưa kết nối — dữ liệu chỉ nằm trên máy này.");
+  }
+
+  function callSync(body, url, key) {
+    return fetch(url || syncUrl(), {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(Object.assign({ key: key || readLocal(SYNC_SECRET_KEY) }, body))
+    }).then(function (response) {
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      return response.json();
+    }).then(function (result) {
+      if (!result.ok) {
+        var error = new Error(result.message || "Google Sheet báo lỗi.");
+        error.code = result.code;
+        throw error;
+      }
+      return result;
+    });
+  }
+
+  function summaryOf(item) {
+    var list = item.entries || [];
+    if (list.length === 1) return describeEntry(list[0]);
+    return list.length + " lượt: " + list.slice(0, 5).map(function (entry) { return entry.name; }).join(", ")
+      + (list.length > 5 ? "…" : "");
+  }
+
+  function withSummary(item) {
+    return Object.assign({ summary: summaryOf(item) }, item);
+  }
+
+  // Mọi thay đổi đi qua đây: lưu trên máy trước, rồi xếp hàng gửi lên Google Sheet.
+  function commit(change) {
+    save();
+    render();
+    if (!syncOn()) return;
+    syncQueue.push({
+      upsert: change.upsert || [],
+      remove: change.remove || [],
+      history: (change.history || []).map(withSummary),
+      markUndone: change.markUndone || []
+    });
+    saveQueue();
+    flushQueue();
+  }
+
+  // Gửi lần lượt từng thay đổi; lỗi thì giữ nguyên hàng đợi để lần sau gửi tiếp.
+  function flushQueue() {
+    if (!syncOn()) return Promise.resolve(false);
+    if (syncBusy) return Promise.resolve(false);
+    if (!syncQueue.length) return Promise.resolve(true);
+
+    syncBusy = true;
+    setSyncStatus("busy", "Đang ghi " + syncQueue.length + " thay đổi lên Google Sheet…");
+    function step() {
+      if (!syncQueue.length) return null;
+      return callSync(Object.assign({ action: "apply" }, syncQueue[0])).then(function () {
+        syncQueue.shift();
+        saveQueue();
+        return step();
+      });
+    }
+    return Promise.resolve().then(step).then(function () {
+      syncBusy = false;
+      showSynced();
+      return true;
+    }).catch(function (error) {
+      syncBusy = false;
+      showSyncError(error);
+      return false;
+    });
+  }
+
+  // Lấy dữ liệu trên Sheet làm chuẩn để các máy của cô thấy cùng một sổ.
+  function pullFromSheet() {
+    if (!syncOn()) return Promise.resolve();
+    return flushQueue().then(function () {
+      if (syncBusy || syncQueue.length) return null;
+      syncBusy = true;
+      setSyncStatus("busy", "Đang tải dữ liệu từ Google Sheet…");
+      return callSync({ action: "pull" }).then(function (result) {
+        syncBusy = false;
+        // Cô vừa ghi thêm trong lúc đang tải thì gửi thay đổi đó trước, lần tải sau sẽ khớp.
+        if (syncQueue.length) return flushQueue();
+        entries = result.entries || [];
+        history = result.history || [];
+        save();
+        render();
+        showSynced();
+        return null;
+      }).catch(function (error) {
+        syncBusy = false;
+        showSyncError(error);
+      });
+    });
+  }
+
+  syncForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    var url = (syncUrlInput.value.trim() || CONFIG_URL);
+    var key = syncKeyInput.value.trim();
+    if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(url)) {
+      setSyncStatus("error", "Địa chỉ Apps Script phải bắt đầu bằng https://script.google.com/ và kết thúc bằng /exec.");
+      return;
+    }
+    if (!key) {
+      setSyncStatus("error", "Cô nhập mã đồng bộ (lấy trong Nhật ký thực thi khi chạy hàm setup).");
+      return;
+    }
+
+    setSyncStatus("busy", "Đang kiểm tra kết nối…");
+    callSync({ action: "pull" }, url, key).then(function (result) {
+      writeLocal(SYNC_URL_KEY, url === CONFIG_URL ? "" : url);
+      writeLocal(SYNC_SECRET_KEY, key);
+      syncKeyInput.value = "";
+
+      var onSheet = {};
+      (result.entries || []).forEach(function (entry) { onSheet[entry.id] = true; });
+      var localOnly = entries.filter(function (entry) { return !onSheet[entry.id]; });
+      var knownHistory = {};
+      (result.history || []).forEach(function (item) { knownHistory[item.id] = true; });
+      var localHistory = history.filter(function (item) { return !knownHistory[item.id]; });
+
+      if (localOnly.length && window.confirm("Máy này có " + localOnly.length + " lượt ghi nhận chưa có trên Google Sheet. "
+        + "Đưa lên Sheet để giữ lại?\n\n(Bấm Hủy thì máy này bỏ các lượt đó và lấy theo dữ liệu trên Sheet.)")) {
+        var upload = logAction("upload", localOnly);
+        syncQueue.push({ upsert: localOnly, remove: [], history: localHistory.concat([upload]).map(withSummary), markUndone: [] });
+        saveQueue();
+      }
+
+      renderSyncForm();
+      return pullFromSheet();
+    }).catch(function (error) {
+      if (error && error.code === "bad-key") setSyncStatus("error", "Mã đồng bộ không đúng. Cô kiểm tra lại mã trong Nhật ký thực thi.");
+      else setSyncStatus("error", "Không kết nối được: " + error.message + ". Cô kiểm tra lại địa chỉ /exec và quyền truy cập \"Bất kỳ ai\".");
+    });
+  });
+
+  document.getElementById("sync-now").addEventListener("click", pullFromSheet);
+
+  document.getElementById("sync-disconnect").addEventListener("click", function () {
+    var warning = syncQueue.length
+      ? "Còn " + syncQueue.length + " thay đổi chưa ghi lên Google Sheet và sẽ không được gửi nữa. Vẫn ngắt kết nối?"
+      : "Ngắt kết nối Google Sheet trên máy này? Dữ liệu trên Sheet vẫn giữ nguyên.";
+    if (!window.confirm(warning)) return;
+    writeLocal(SYNC_URL_KEY, "");
+    writeLocal(SYNC_SECRET_KEY, "");
+    syncQueue = [];
+    saveQueue();
+    renderSyncForm();
+  });
+
+  window.addEventListener("online", function () { flushQueue(); });
 
   /* ---------- Khởi tạo các ô chọn ---------- */
 
@@ -1073,9 +1340,7 @@
         if (!window.confirm("Xóa " + typeLabel(entry.type).toLowerCase() + " " + formatSigned(signedPoints(entry))
           + " của " + entry.name + " ngày " + formatDate(entry.date) + "?")) return;
         entries = entries.filter(function (item) { return item.id !== entry.id; });
-        logAction("delete", [entry]);
-        save();
-        render();
+        commit({ remove: [entry.id], history: [logAction("delete", [entry])] });
       });
       actions.appendChild(remove);
       tr.appendChild(actions);
@@ -1158,7 +1423,8 @@
     "delete": "Xóa",
     clear: "Xóa toàn bộ",
     "import": "Khôi phục từ file",
-    restore: "Hoàn tác"
+    restore: "Hoàn tác",
+    upload: "Tải lên Sheet"
   };
 
   var historyBody = document.getElementById("history-body");
@@ -1190,9 +1456,7 @@
     if (!window.confirm("Lấy lại " + back.length + " lượt ghi nhận đã xóa?")) return;
     back.forEach(function (entry) { entries.push(Object.assign({}, entry)); });
     item.undone = true;
-    logAction("restore", back);
-    save();
-    render();
+    commit({ upsert: back, history: [logAction("restore", back)], markUndone: [item.id] });
   }
 
   function renderHistory() {
@@ -1331,9 +1595,7 @@
       createdAt: Date.now()
     };
     entries.push(entry);
-    logAction("add", [entry]);
-    save();
-    render();
+    commit({ upsert: [entry], history: [logAction("add", [entry])] });
 
     showResult("Đã " + (type === "tru" ? "trừ " : "cộng ") + formatSigned(type === "tru" ? -points : points)
       + " cho " + name + " · " + classLabel(classInput.value)
@@ -1443,19 +1705,20 @@
         });
         entries = entries.concat(restored);
 
+        var newHistory = [];
         if (parsed && Array.isArray(parsed.history)) {
           var known = {};
           history.forEach(function (item) { known[item.id] = true; });
           parsed.history.forEach(function (item) {
-            if (item && item.id && item.at && !known[item.id]) history.push(item);
+            if (item && item.id && item.at && !known[item.id]) newHistory.push(item);
           });
+          history = history.concat(newHistory);
           history.sort(function (a, b) { return b.at - a.at; });
           if (history.length > HISTORY_LIMIT) history.length = HISTORY_LIMIT;
         }
-        if (restored.length) logAction("import", restored);
+        if (restored.length) newHistory.push(logAction("import", restored));
 
-        save();
-        render();
+        commit({ upsert: restored, history: newHistory });
         showDataResult("Đã khôi phục thêm " + restored.length + " lượt ghi nhận từ bản sao.");
       } catch (error) {
         showDataResult("File sao lưu không đọc được. Hãy chọn đúng file JSON đã lưu từ trang này.");
@@ -1468,10 +1731,10 @@
   document.getElementById("clear-all").addEventListener("click", function () {
     if (entries.length === 0) return;
     if (!window.confirm("Xóa toàn bộ " + entries.length + " lượt ghi nhận? Cô vẫn lấy lại được ở mục Lịch sử thao tác.")) return;
-    logAction("clear", entries);
+    var cleared = logAction("clear", entries);
+    var ids = entries.map(function (entry) { return entry.id; });
     entries = [];
-    save();
-    render();
+    commit({ remove: ids, history: [cleared] });
     showDataResult("Đã xóa toàn bộ dữ liệu điểm cộng và điểm trừ.");
   });
 
@@ -1490,6 +1753,8 @@
   syncPointChips();
   load();
   loadHistory();
+  loadQueue();
+  renderSyncForm();
   render();
 
   if (readUnlockFlag()) openPage();
