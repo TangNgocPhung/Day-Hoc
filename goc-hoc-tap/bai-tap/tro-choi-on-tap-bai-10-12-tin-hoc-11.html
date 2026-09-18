@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đấu trường CSDL · Ôn tập Bài 10–12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #eff1ec;
+    --surface: #ffffff;
+    --surface-2: #f6f7f1;
+    --ink: #232823;
+    --muted: #626a60;
+    --faint: #8b9186;
+    --border: #d6dacc;
+    --teal: #256f69;
+    --blue: #34618f;
+    --orange: #b7642e;
+    --plum: #7a4d8c;
+    --gold: #d89a2b;
+    --good: #2f7d4f;
+    --danger: #a83f3f;
+    --shadow: 0 18px 45px -28px rgba(35, 40, 35, 0.45);
+    --display: 'Fraunces', Georgia, serif;
+    --body: 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+    --mono: 'IBM Plex Mono', Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1b1d18; --surface: #232620; --surface-2: #292c24; --ink: #eceee5;
+      --muted: #abb2a0; --faint: #7f8675; --border: #3b4034;
+      --teal: #6fd1c6; --blue: #82b2e1; --orange: #e39c61; --plum: #c79ad8;
+      --gold: #efbd55; --good: #74cf95; --danger: #ed8585;
+      --shadow: 0 18px 45px -28px rgba(0, 0, 0, 0.8);
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font-family: var(--body); -webkit-font-smoothing: antialiased; }
+  button, input { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+
+  .topbar { position: sticky; top: 0; z-index: 20; border-top: 5px solid var(--teal); border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 94%, transparent); backdrop-filter: blur(14px); }
+  .topbar-inner { width: min(1280px, 100%); margin: 0 auto; padding: 0.8rem clamp(1rem, 4vw, 2rem); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .back-link { display: inline-flex; align-items: center; gap: 0.45rem; min-height: 2.5rem; padding: 0.55rem 0.85rem; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); font-size: 0.82rem; font-weight: 600; background: var(--surface-2); text-decoration: none; }
+  .back-link:hover { color: var(--teal); border-color: var(--teal); }
+  .back-link svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .lesson-tag { font: 600 0.7rem/1 var(--mono); letter-spacing: 0.12em; color: var(--orange); }
+
+  .page { width: min(1280px, 100%); margin: 0 auto; padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 2rem) 3rem; }
+  .masthead { display: flex; align-items: end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .eyebrow { font: 600 0.7rem/1 var(--mono); letter-spacing: 0.14em; color: var(--teal); text-transform: uppercase; }
+  h1 { margin: 0.45rem 0 0.3rem; font: 700 clamp(1.8rem, 4.5vw, 2.8rem)/1.05 var(--display); }
+  .sub { margin: 0; color: var(--muted); max-width: 60ch; }
+  .tools { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .btn { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 2.6rem; padding: 0.55rem 1rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-weight: 600; font-size: 0.9rem; }
+  .btn:hover { border-color: var(--teal); color: var(--teal); }
+  .btn--primary { background: var(--teal); border-color: var(--teal); color: var(--surface); }
+  .btn--primary:hover { color: var(--surface); filter: brightness(1.08); }
+
+  /* Teams */
+  .teams { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.7rem; margin-bottom: 1.25rem; }
+  .team { position: relative; padding: 0.75rem 0.9rem; border-radius: 16px; background: var(--surface); border: 2px solid var(--border); box-shadow: var(--shadow); transition: border-color .2s, transform .2s; }
+  .team.is-turn { border-color: var(--c); transform: translateY(-3px); }
+  .team.is-turn::after { content: "ĐANG CHỌN Ô"; position: absolute; top: -0.6rem; right: 0.8rem; padding: 0.15rem 0.5rem; border-radius: 999px; background: var(--c); color: var(--surface); font: 600 0.6rem/1.2 var(--mono); letter-spacing: 0.08em; }
+  .team-name { width: 100%; border: 0; background: transparent; font-weight: 700; font-size: 0.95rem; color: var(--c); padding: 0; }
+  .team-name:focus { outline: 2px dashed var(--c); outline-offset: 2px; }
+  .team-score { font: 700 2rem/1.1 var(--display); font-variant-numeric: tabular-nums; }
+  .team-adjust { display: flex; gap: 0.3rem; margin-top: 0.3rem; }
+  .team-adjust button { flex: 1; border: 1px solid var(--border); background: var(--surface-2); border-radius: 8px; font-size: 0.75rem; font-weight: 600; padding: 0.2rem; color: var(--muted); }
+  .team-adjust button:hover { color: var(--c); border-color: var(--c); }
+
+  /* Board */
+  .board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.7rem; }
+  .cat { padding: 0.8rem 0.6rem; border-radius: 14px; background: var(--c); color: var(--surface); text-align: center; min-height: 5.2rem; display: flex; flex-direction: column; justify-content: center; }
+  .cat b { display: block; font: 700 clamp(1rem, 2.2vw, 1.35rem)/1.1 var(--display); }
+  .cat span { display: block; margin-top: 0.3rem; font-size: clamp(0.7rem, 1.4vw, 0.82rem); opacity: 0.92; line-height: 1.3; }
+  .tile { position: relative; min-height: clamp(4.5rem, 11vh, 6.5rem); border-radius: 14px; border: 2px solid color-mix(in srgb, var(--c) 45%, var(--border)); background: var(--surface); color: var(--c); font: 700 clamp(1.6rem, 4vw, 2.6rem)/1 var(--display); box-shadow: var(--shadow); transition: transform .15s, background .15s; }
+  .tile:hover:not(:disabled) { transform: scale(1.03); background: color-mix(in srgb, var(--c) 10%, var(--surface)); }
+  .tile:disabled { cursor: default; box-shadow: none; background: var(--surface-2); border-style: dashed; border-color: var(--border); color: var(--faint); font-size: clamp(0.72rem, 1.4vw, 0.85rem); font-family: var(--body); font-weight: 600; }
+  .tile .who { display: block; margin-top: 0.25rem; color: var(--tc, var(--faint)); }
+
+  .legend { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; color: var(--muted); font-size: 0.85rem; }
+  .legend b { color: var(--ink); }
+
+  /* Modal */
+  .overlay { position: fixed; inset: 0; z-index: 50; display: none; place-items: center; padding: 1rem; background: color-mix(in srgb, var(--bg) 70%, #000 30%); }
+  .overlay.open { display: grid; }
+  .modal { width: min(980px, 100%); max-height: calc(100vh - 2rem); overflow-y: auto; background: var(--surface); border-radius: 22px; border-top: 8px solid var(--c); box-shadow: 0 30px 80px -30px rgba(0,0,0,.6); padding: clamp(1.1rem, 3vw, 2rem); }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .modal-meta { font: 600 0.75rem/1.3 var(--mono); letter-spacing: 0.1em; color: var(--c); text-transform: uppercase; }
+  .lucky-badge { display: none; margin-top: 0.4rem; padding: 0.3rem 0.7rem; border-radius: 999px; background: var(--gold); color: #2a2208; font-weight: 700; font-size: 0.85rem; }
+  .lucky-badge.show { display: inline-block; animation: pop .5s ease; }
+  @keyframes pop { 0% { transform: scale(.6); } 70% { transform: scale(1.1); } 100% { transform: scale(1); } }
+  .timer { display: flex; align-items: center; gap: 0.6rem; }
+  .timer-num { font: 700 2.2rem/1 var(--mono); font-variant-numeric: tabular-nums; min-width: 3ch; text-align: right; }
+  .timer-num.low { color: var(--danger); }
+  .timer-bar { height: 6px; border-radius: 999px; background: var(--surface-2); overflow: hidden; margin: 0.9rem 0 1.1rem; }
+  .timer-bar i { display: block; height: 100%; width: 100%; background: var(--c); transition: width 1s linear; }
+  .question { margin: 0 0 1.2rem; font: 600 clamp(1.25rem, 3vw, 1.9rem)/1.35 var(--display); }
+  .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; }
+  .opt { display: flex; gap: 0.75rem; align-items: flex-start; text-align: left; padding: 0.9rem 1rem; border-radius: 14px; border: 2px solid var(--border); background: var(--surface-2); font-size: clamp(0.98rem, 2vw, 1.15rem); line-height: 1.4; }
+  .opt:hover:not(:disabled) { border-color: var(--c); }
+  .opt .key { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--c); color: var(--surface); font-weight: 700; }
+  .opt:disabled { cursor: default; opacity: .55; }
+  .opt.correct { opacity: 1; border-color: var(--good); background: color-mix(in srgb, var(--good) 14%, var(--surface)); }
+  .opt.correct .key { background: var(--good); }
+  .opt.wrong { opacity: 1; border-color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, var(--surface)); }
+  .opt.wrong .key { background: var(--danger); }
+  .result { display: none; margin-top: 1.1rem; padding: 1rem 1.1rem; border-radius: 14px; background: var(--surface-2); border-left: 5px solid var(--c); }
+  .result.show { display: block; }
+  .result h3 { margin: 0 0 0.35rem; font: 700 1.2rem/1.2 var(--display); }
+  .result p { margin: 0; color: var(--muted); line-height: 1.55; }
+  .steal { margin-top: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .steal-label { font-weight: 600; font-size: 0.9rem; margin-right: 0.3rem; }
+  .steal button { border: 2px solid var(--tc); color: var(--tc); background: var(--surface); border-radius: 999px; padding: 0.4rem 0.9rem; font-weight: 700; font-size: 0.88rem; }
+  .steal button:hover { background: var(--tc); color: var(--surface); }
+  .modal-foot { display: flex; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.2rem; }
+
+  /* Final */
+  .podium { display: grid; gap: 0.6rem; margin: 1rem 0; }
+  .podium-row { display: flex; align-items: center; gap: 0.9rem; padding: 0.8rem 1rem; border-radius: 14px; background: var(--surface-2); border-left: 6px solid var(--tc); }
+  .podium-rank { font: 700 1.6rem/1 var(--display); width: 2.2rem; }
+  .podium-name { flex: 1; font-weight: 700; font-size: 1.1rem; }
+  .podium-score { font: 700 1.6rem/1 var(--display); font-variant-numeric: tabular-nums; }
+
+  .settings-row { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; margin: 0.8rem 0; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+  .seg button { border: 0; background: var(--surface); padding: 0.45rem 0.9rem; font-weight: 600; }
+  .seg button[aria-pressed="true"] { background: var(--teal); color: var(--surface); }
+
+  @media (max-width: 720px) {
+    .board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .board .cat { grid-row: auto !important; }
+    .options { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="icon-back" viewBox="0 0 24 24"><polyline points="15,5 8,12 15,19"></polyline></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="back-link" href="index.html">
+      <svg aria-hidden="true"><use href="#icon-back"></use></svg>
+      Về danh sách bài tập
+    </a>
+    <span class="lesson-tag">TIN HỌC 11 · TRÒ CHƠI ÔN TẬP</span>
+  </div>
+</header>
+
+<div class="page">
+  <header class="masthead">
+    <div>
+      <span class="eyebrow">Ôn tập Bài 10 · 11 · 12 — Chủ đề F</span>
+      <h1>Đấu trường CSDL</h1>
+      <p class="sub">Các đội lần lượt chọn ô. Trả lời đúng được cộng điểm của ô; trả lời sai thì đội khác được giơ tay <b>cướp điểm</b>. Có 2 ô <b>Ngôi sao may mắn</b> ẩn trên bảng — trúng là được nhân đôi điểm!</p>
+    </div>
+    <div class="tools">
+      <button class="btn" id="btn-settings" type="button">⚙ Chia đội</button>
+      <button class="btn" id="btn-final" type="button">🏆 Xếp hạng</button>
+      <button class="btn" id="btn-new" type="button">↻ Ván mới</button>
+    </div>
+  </header>
+
+  <section class="teams" id="teams" aria-label="Điểm các đội"></section>
+  <section class="board" id="board" aria-label="Bảng câu hỏi"></section>
+
+  <p class="legend">
+    <span><b>Phím tắt trong câu hỏi:</b> A · B · C · D chọn đáp án</span>
+    <span><b>Space</b> dừng / chạy đồng hồ</span>
+    <span><b>Esc</b> đóng câu hỏi</span>
+  </p>
+</div>
+
+<!-- Question modal -->
+<div class="overlay" id="q-overlay" role="dialog" aria-modal="true" aria-labelledby="q-text">
+  <div class="modal" id="q-modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-meta" id="q-meta"></div>
+        <span class="lucky-badge" id="q-lucky">⭐ Ngôi sao may mắn — điểm ×2!</span>
+      </div>
+      <div class="timer">
+        <button class="btn" id="q-pause" type="button">⏸ Dừng</button>
+        <span class="timer-num" id="q-time">30</span>
+      </div>
+    </div>
+    <div class="timer-bar"><i id="q-bar"></i></div>
+    <p class="question" id="q-text"></p>
+    <div class="options" id="q-options"></div>
+    <div class="result" id="q-result">
+      <h3 id="q-result-title"></h3>
+      <p id="q-explain"></p>
+      <div class="steal" id="q-steal"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="q-reveal" type="button">Hết giờ — xem đáp án</button>
+      <button class="btn btn--primary" id="q-close" type="button">Về bảng câu hỏi →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div class="overlay" id="s-overlay" role="dialog" aria-modal="true" aria-labelledby="s-title">
+  <div class="modal" style="--c: var(--teal); width: min(560px, 100%)">
+    <h2 id="s-title" style="margin:0;font:700 1.6rem/1.2 var(--display)">Chia đội</h2>
+    <div class="settings-row">
+      <span>Số đội:</span>
+      <div class="seg" id="s-count"></div>
+    </div>
+    <div class="settings-row">
+      <span>Thời gian mỗi câu:</span>
+      <div class="seg" id="s-time"></div>
+    </div>
+    <p class="sub" style="font-size:.9rem">Đổi số đội sẽ bắt đầu ván mới. Tên đội có thể sửa trực tiếp bằng cách bấm vào tên trên thẻ điểm.</p>
+    <div class="modal-foot"><span></span><button class="btn btn--primary" id="s-close" type="button">Xong</button></div>
+  </div>
+</div>
+
+<!-- Final modal -->
+<div class="overlay" id="f-overlay" role="dialog" aria-modal="true" aria-labelledby="f-title">
+  <div class="modal" style="--c: var(--gold); width: min(620px, 100%)">
+    <h2 id="f-title" style="margin:0;font:700 1.8rem/1.2 var(--display)">🏆 Bảng xếp hạng</h2>
+    <p class="sub" id="f-sub"></p>
+    <div class="podium" id="f-podium"></div>
+    <div class="modal-foot"><button class="btn" id="f-new" type="button">↻ Ván mới</button><button class="btn btn--primary" id="f-close" type="button">Đóng</button></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const CATS = [
+    { title: 'Bài 10', sub: 'Lưu trữ & khai thác thông tin', color: 'var(--teal)' },
+    { title: 'Bài 11', sub: 'Cơ sở dữ liệu', color: 'var(--blue)' },
+    { title: 'Bài 12', sub: 'Hệ QTCSDL & Hệ CSDL', color: 'var(--plum)' },
+    { title: 'Tổng hợp', sub: 'Vận dụng Bài 10–12', color: 'var(--orange)' }
+  ];
+  const POINTS = [100, 200, 300, 400];
+
+  // Q[cat][row] — answer is the index of the correct option.
+  const Q = [
+    [
+      { q: '“Cập nhật dữ liệu” gồm những công việc nào?',
+        o: ['Nhập dữ liệu mới, sửa và xoá dữ liệu đã có', 'Chỉ tìm kiếm dữ liệu theo yêu cầu', 'In các báo cáo thống kê', 'Sao chép dữ liệu ra USB'], a: 0,
+        e: 'Cập nhật dữ liệu gồm: nhập (ghi chép) dữ liệu mới, sửa chữa hay xoá dữ liệu đã có.' },
+      { q: 'Việc lấy ra một nhóm dữ liệu nào đó (tuỳ theo yêu cầu) từ những dữ liệu đã lưu trữ được gọi là gì?',
+        o: ['Cập nhật dữ liệu', 'Truy xuất dữ liệu', 'Thu thập dữ liệu', 'Sao lưu dữ liệu'], a: 1,
+        e: 'Truy xuất dữ liệu là lấy ra một nhóm dữ liệu theo yêu cầu từ dữ liệu đã lưu trữ.' },
+      { q: 'Thu ngân chỉ cần đưa hàng qua đầu đọc mã vạch, dữ liệu tự vào máy tính để lập hoá đơn. Đây là ví dụ về:',
+        o: ['Nhập dữ liệu thủ công', 'Bảo mật dữ liệu', 'Thu thập dữ liệu tự động', 'Xoá dữ liệu'], a: 2,
+        e: 'Mã vạch giúp thu thập dữ liệu tự động: không cần gõ tay, dữ liệu hàng hoá và doanh thu được lưu trữ tự động.' },
+      { q: 'Theo SGK, lợi ích LỚN NHẤT mà ngành điện có được nhờ công tơ điện tử là gì?',
+        o: ['Không cần in hoá đơn tiền điện', 'Giá điện rẻ hơn cho người dân', 'Quản lí kĩ thuật nhờ phân tích dữ liệu liên tục gửi về (biết nơi mất điện, quá tải…)', 'Không cần nhân viên điện lực nữa'], a: 2,
+        e: 'Công tơ điện tử gửi dữ liệu liên tục (điện áp, dòng, tần số…) nên ngành điện có thể phân tích để biết khu vực nào mất điện, quá tải… và ra quyết định phù hợp.' }
+    ],
+    [
+      { q: 'Cơ sở dữ liệu (CSDL) là gì?',
+        o: ['Một phần mềm dùng để soạn thảo văn bản', 'Tập hợp dữ liệu có liên quan với nhau, được lưu trữ có tổ chức trên máy tính nhằm mục đích khai thác', 'Một tệp văn bản ghi lại toàn bộ sổ điểm giấy', 'Một máy chủ chứa dữ liệu'], a: 1,
+        e: 'CSDL là tập hợp dữ liệu có liên quan với nhau, được lưu trữ một cách có tổ chức trên hệ thống máy tính nhằm mục đích khai thác.' },
+      { q: 'Hệ thống từ chối khi ai đó nhập điểm −5 hoặc 15 vì điểm chỉ được từ 0 đến 10. Đây là tính chất nào của CSDL?',
+        o: ['Tính cấu trúc', 'Tính không dư thừa', 'Tính toàn vẹn', 'Tính độc lập'], a: 2,
+        e: 'Tính toàn vẹn: dữ liệu phải thoả mãn các ràng buộc thực tế, ví dụ điểm phải từ 0 đến 10.' },
+      { q: 'Không cần lưu riêng “Bảng điểm lớp” vì có thể tổng hợp tự động từ các “Bảng điểm môn học”. Điều này thể hiện tính chất nào?',
+        o: ['Tính không dư thừa', 'Tính bảo mật và an toàn', 'Tính toàn vẹn', 'Tính cấu trúc'], a: 0,
+        e: 'Tính không dư thừa: hạn chế tối đa việc lưu trữ lặp lại một thông tin, tránh không nhất quán khi cập nhật.' },
+      { q: 'Đổi dấu phẩy thành dấu chấm trong tệp dữ liệu điểm, nhưng lại phải sửa cả mô đun “Điểm môn học” lẫn “Lập bảng điểm”. Đây là vấn đề gì?',
+        o: ['Dữ liệu bị dư thừa', 'Sự phụ thuộc giữa chương trình và dữ liệu', 'Dữ liệu bị mất an toàn', 'Dữ liệu không có cấu trúc'], a: 1,
+        e: 'Đây là sự phụ thuộc giữa chương trình và dữ liệu. CSDL giải quyết bằng cách tổ chức dữ liệu độc lập với phần mềm (tính độc lập dữ liệu).' }
+    ],
+    [
+      { q: 'Một hệ CSDL gồm những thành phần nào?',
+        o: ['CSDL, hệ QTCSDL và các phần mềm ứng dụng CSDL', 'Chỉ gồm CSDL và máy tính', 'Bàn phím, màn hình và máy in', 'Hệ điều hành và phần mềm soạn thảo'], a: 0,
+        e: 'Hệ CSDL gồm 3 thành phần: CSDL, hệ QTCSDL và các phần mềm ứng dụng CSDL.' },
+      { q: 'Phần mềm nào sau đây KHÔNG phải là hệ quản trị CSDL?',
+        o: ['MySQL', 'Oracle', 'Microsoft Excel', 'SQLite'], a: 2,
+        e: 'Excel là phần mềm bảng tính. MySQL, Oracle, SQL Server, PostgreSQL, SQLite, Access… mới là hệ QTCSDL.' },
+      { q: 'Khai báo CSDL, tạo lập/sửa đổi cấu trúc và cài đặt ràng buộc toàn vẹn thuộc nhóm chức năng nào của hệ QTCSDL?',
+        o: ['Cập nhật và truy xuất dữ liệu', 'Định nghĩa dữ liệu', 'Bảo mật và an toàn CSDL', 'Giao diện lập trình ứng dụng'], a: 1,
+        e: 'Nhóm Định nghĩa dữ liệu: khai báo CSDL, tạo lập/sửa cấu trúc, cài đặt ràng buộc toàn vẹn.' },
+      { q: 'Mô hình máy chủ tệp (toàn bộ CSDL đặt trên máy chủ, dữ liệu được chuyển về RAM máy trạm để xử lí) là:',
+        o: ['Hệ CSDL phân tán', 'Hệ CSDL tập trung nhưng xử lí phân tán', 'Hệ CSDL không có hệ QTCSDL', 'Một CSDL cục bộ'], a: 1,
+        e: 'Đây là hệ CSDL tập trung nhưng xử lí phân tán — KHÔNG phải hệ CSDL phân tán, vì dữ liệu vẫn nằm tập trung ở máy chủ tệp.' }
+    ],
+    [
+      { q: 'Sao lưu (backup) và khôi phục dữ liệu khi có sự cố thuộc nhóm chức năng nào của hệ QTCSDL?',
+        o: ['Định nghĩa dữ liệu', 'Cập nhật dữ liệu', 'Bảo mật và an toàn CSDL', 'Truy xuất dữ liệu'], a: 2,
+        e: 'Nhóm Bảo mật và an toàn: kiểm soát quyền truy cập, kiểm soát giao dịch, sao lưu và khôi phục dữ liệu.' },
+      { q: 'Đâu là ƯU ĐIỂM của hệ CSDL phân tán so với tập trung?',
+        o: ['Thiết kế và triển khai đơn giản hơn', 'Dễ bảo đảm tính nhất quán hơn', 'Chi phí duy trì thấp hơn', 'Dễ mở rộng; một trạm gặp sự cố các trạm khác vẫn hoạt động'], a: 3,
+        e: 'Phân tán: dễ mở rộng, sẵn sàng và tin cậy cao, dữ liệu gần nơi dùng. Nhưng thiết kế phức tạp, khó bảo đảm nhất quán và chi phí cao hơn.' },
+      { q: 'Khi tra cứu điểm thi vào lớp 10, trang web cho em nhập số báo danh và hiện kết quả thuộc thành phần nào của hệ CSDL?',
+        o: ['Phần mềm ứng dụng CSDL', 'Hệ QTCSDL', 'CSDL điểm thi', 'Hệ điều hành'], a: 0,
+        e: 'Trang tra cứu là phần mềm ứng dụng CSDL — cầu nối giữa người dùng với hệ QTCSDL và CSDL điểm thi phía sau.' },
+      { q: 'Trong hệ CSDL phân tán, một ứng dụng cần dữ liệu của ít nhất hai trạm để cho ra kết quả được gọi là gì?',
+        o: ['Ứng dụng cục bộ', 'Ứng dụng toàn cục (ứng dụng phân tán)', 'Ứng dụng máy chủ tệp', 'Ứng dụng một người dùng'], a: 1,
+        e: 'Ứng dụng chỉ dùng dữ liệu của một trạm là ứng dụng cục bộ; cần dữ liệu từ ít nhất hai trạm là ứng dụng toàn cục (phân tán).' }
+    ]
+  ];
+
+  const TEAM_COLORS = ['var(--teal)', 'var(--orange)', 'var(--blue)', 'var(--plum)', 'var(--danger)', 'var(--good)'];
+  const KEY = 'dau-truong-csdl-k11-v1';
+  const $ = id => document.getElementById(id);
+
+  let state = load() || fresh(4, 30);
+  let timerId = null, remaining = 0, current = null;
+
+  function fresh(n, seconds) {
+    const all = [];
+    for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) all.push(c + '-' + r);
+    all.sort(() => Math.random() - 0.5);
+    return {
+      seconds,
+      teams: Array.from({ length: n }, (_, i) => ({ name: 'Đội ' + (i + 1), score: 0 })),
+      turn: 0,
+      used: {},
+      lucky: all.slice(0, 2)
+    };
+  }
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+  function renderTeams() {
+    const box = $('teams');
+    box.innerHTML = '';
+    state.teams.forEach((t, i) => {
+      const el = document.createElement('div');
+      el.className = 'team' + (i === state.turn ? ' is-turn' : '');
+      el.style.setProperty('--c', TEAM_COLORS[i]);
+      el.innerHTML = '<input class="team-name" maxlength="20" aria-label="Tên đội"><div class="team-score"></div>' +
+        '<div class="team-adjust"><button type="button" data-d="-100">−100</button><button type="button" data-d="100">+100</button><button type="button" data-turn>Lượt</button></div>';
+      const input = el.querySelector('input');
+      input.value = t.name;
+      input.addEventListener('change', () => { t.name = input.value.trim() || ('Đội ' + (i + 1)); save(); render(); });
+      el.querySelector('.team-score').textContent = t.score;
+      el.querySelectorAll('[data-d]').forEach(b => b.addEventListener('click', () => { t.score += +b.dataset.d; save(); renderTeams(); }));
+      el.querySelector('[data-turn]').addEventListener('click', () => { state.turn = i; save(); renderTeams(); });
+      box.appendChild(el);
+    });
+  }
+
+  function renderBoard() {
+    const board = $('board');
+    board.innerHTML = '';
+    CATS.forEach((c, ci) => {
+      const h = document.createElement('div');
+      h.className = 'cat';
+      h.style.setProperty('--c', c.color);
+      h.style.gridColumn = ci + 1;
+      h.style.gridRow = 1;
+      h.innerHTML = '<b>' + c.title + '</b><span>' + c.sub + '</span>';
+      board.appendChild(h);
+      POINTS.forEach((p, ri) => {
+        const id = ci + '-' + ri;
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'tile';
+        b.style.setProperty('--c', c.color);
+        b.style.gridColumn = ci + 1;
+        b.style.gridRow = ri + 2;
+        const u = state.used[id];
+        if (u) {
+          b.disabled = true;
+          const team = u.team != null ? state.teams[u.team] : null;
+          b.innerHTML = c.title + ' · ' + p + '<span class="who"' + (team ? ' style="--tc:' + TEAM_COLORS[u.team] + '"' : '') + '>' +
+            (team ? '✓ ' + escapeHtml(team.name) + ' +' + u.pts : 'Không đội nào') + '</span>';
+        } else {
+          b.textContent = p;
+          b.setAttribute('aria-label', c.title + ', ' + p + ' điểm');
+          b.addEventListener('click', () => openQuestion(ci, ri));
+        }
+        board.appendChild(b);
+      });
+    });
+    if (window.matchMedia('(max-width: 720px)').matches) {
+      board.querySelectorAll('.cat, .tile').forEach(el => { el.style.gridColumn = ''; el.style.gridRow = ''; });
+    }
+  }
+
+  function render() { renderTeams(); renderBoard(); }
+
+  function escapeHtml(s) { return s.replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])); }
+
+  function openQuestion(ci, ri) {
+    const id = ci + '-' + ri, data = Q[ci][ri], cat = CATS[ci];
+    const lucky = state.lucky.includes(id);
+    current = { id, ci, ri, data, pts: POINTS[ri] * (lucky ? 2 : 1), done: false };
+    const modal = $('q-modal');
+    modal.style.setProperty('--c', cat.color);
+    $('q-meta').textContent = cat.title + ' · ' + POINTS[ri] + ' điểm · lượt của ' + state.teams[state.turn].name;
+    $('q-lucky').classList.toggle('show', lucky);
+    $('q-text').textContent = data.q;
+    const opts = $('q-options');
+    opts.innerHTML = '';
+    data.o.forEach((txt, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opt';
+      b.innerHTML = '<span class="key">' + 'ABCD'[i] + '</span><span></span>';
+      b.lastChild.textContent = txt;
+      b.addEventListener('click', () => answer(i));
+      opts.appendChild(b);
+    });
+    $('q-result').classList.remove('show');
+    $('q-steal').innerHTML = '';
+    $('q-reveal').style.display = '';
+    $('q-overlay').classList.add('open');
+    startTimer(state.seconds);
+  }
+
+  function startTimer(s) {
+    stopTimer();
+    remaining = s;
+    paintTimer();
+    $('q-pause').textContent = '⏸ Dừng';
+    timerId = setInterval(() => {
+      remaining--;
+      paintTimer();
+      if (remaining <= 0) { stopTimer(); if (current && !current.done) answer(-1); }
+    }, 1000);
+  }
+  function stopTimer() { clearInterval(timerId); timerId = null; }
+  function paintTimer() {
+    $('q-time').textContent = Math.max(remaining, 0);
+    $('q-time').classList.toggle('low', remaining <= 5);
+    $('q-bar').style.width = (Math.max(remaining, 0) / state.seconds * 100) + '%';
+  }
+  function togglePause() {
+    if (!current || current.done) return;
+    if (timerId) { stopTimer(); $('q-pause').textContent = '▶ Chạy tiếp'; }
+    else {
+      $('q-pause').textContent = '⏸ Dừng';
+      timerId = setInterval(() => { remaining--; paintTimer(); if (remaining <= 0) { stopTimer(); if (current && !current.done) answer(-1); } }, 1000);
+    }
+  }
+
+  function answer(i) {
+    if (!current || current.done) return;
+    current.done = true;
+    stopTimer();
+    const { data, pts } = current;
+    const btns = $('q-options').querySelectorAll('.opt');
+    btns.forEach((b, k) => { b.disabled = true; if (k === data.a) b.classList.add('correct'); else if (k === i) b.classList.add('wrong'); });
+    $('q-reveal').style.display = 'none';
+    const turnTeam = state.turn;
+    const title = $('q-result-title');
+    if (i === data.a) {
+      title.textContent = '🎉 Chính xác! ' + state.teams[turnTeam].name + ' +' + pts + ' điểm';
+      title.style.color = 'var(--good)';
+      finish(turnTeam);
+    } else {
+      title.textContent = (i === -1 ? '⏰ Hết giờ! ' : '✗ Chưa đúng! ') + 'Đáp án đúng là ' + 'ABCD'[data.a] + '.';
+      title.style.color = 'var(--danger)';
+      state.used[current.id] = { team: null, pts: 0 };
+      const steal = $('q-steal');
+      steal.innerHTML = '<span class="steal-label">Cướp điểm (' + pts + ') — đội nào trả lời đúng?</span>';
+      state.teams.forEach((t, k) => {
+        if (k === turnTeam) return;
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.style.setProperty('--tc', TEAM_COLORS[k]);
+        b.textContent = t.name;
+        b.addEventListener('click', () => {
+          finish(k);
+          steal.innerHTML = '<span class="steal-label" style="color:' + TEAM_COLORS[k] + '">⚡ ' + escapeHtml(t.name) + ' cướp được +' + pts + ' điểm!</span>';
+        });
+        steal.appendChild(b);
+      });
+      save();
+    }
+    $('q-explain').textContent = data.e;
+    $('q-result').classList.add('show');
+    $('q-result').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  function finish(teamIdx) {
+    const prev = state.used[current.id];
+    if (prev && prev.team != null) return;
+    state.teams[teamIdx].score += current.pts;
+    state.used[current.id] = { team: teamIdx, pts: current.pts };
+    save();
+    renderTeams();
+  }
+
+  function closeQuestion() {
+    if (!current) return;
+    if (!current.done) { if (!confirm('Chưa có câu trả lời. Đóng câu hỏi này và giữ ô để chọn lại sau?')) return; }
+    else state.turn = (state.turn + 1) % state.teams.length;
+    stopTimer();
+    current = null;
+    $('q-overlay').classList.remove('open');
+    save();
+    render();
+    if (Object.keys(state.used).length === 16) setTimeout(showFinal, 300);
+  }
+
+  function showFinal() {
+    const ranked = state.teams.map((t, i) => ({ ...t, i })).sort((a, b) => b.score - a.score);
+    const left = 16 - Object.keys(state.used).length;
+    $('f-sub').textContent = left ? 'Còn ' + left + ' ô chưa mở.' : 'Đã mở hết 16 ô — chúc mừng các đội!';
+    const box = $('f-podium');
+    box.innerHTML = '';
+    let rank = 0, last = null;
+    ranked.forEach((t, k) => {
+      if (t.score !== last) { rank = k + 1; last = t.score; }
+      const row = document.createElement('div');
+      row.className = 'podium-row';
+      row.style.setProperty('--tc', TEAM_COLORS[t.i]);
+      row.innerHTML = '<span class="podium-rank">' + (['🥇', '🥈', '🥉'][rank - 1] || rank) + '</span><span class="podium-name"></span><span class="podium-score">' + t.score + '</span>';
+      row.querySelector('.podium-name').textContent = t.name;
+      box.appendChild(row);
+    });
+    $('f-overlay').classList.add('open');
+  }
+
+  function newGame(n, seconds) {
+    const names = state.teams.map(t => t.name);
+    state = fresh(n || state.teams.length, seconds || state.seconds);
+    state.teams.forEach((t, i) => { if (names[i]) t.name = names[i]; });
+    save();
+    render();
+  }
+
+  function renderSettings() {
+    const cnt = $('s-count'), tm = $('s-time');
+    cnt.innerHTML = ''; tm.innerHTML = '';
+    [2, 3, 4, 5, 6].forEach(n => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = n;
+      b.setAttribute('aria-pressed', n === state.teams.length);
+      b.addEventListener('click', () => {
+        if (n === state.teams.length) return;
+        if (Object.keys(state.used).length && !confirm('Đổi số đội sẽ xoá điểm và bắt đầu ván mới. Tiếp tục?')) return;
+        newGame(n); renderSettings();
+      });
+      cnt.appendChild(b);
+    });
+    [20, 30, 45, 60].forEach(s => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = s + ' giây';
+      b.setAttribute('aria-pressed', s === state.seconds);
+      b.addEventListener('click', () => { state.seconds = s; save(); renderSettings(); });
+      tm.appendChild(b);
+    });
+  }
+
+  $('q-close').addEventListener('click', closeQuestion);
+  $('q-reveal').addEventListener('click', () => answer(-1));
+  $('q-pause').addEventListener('click', togglePause);
+  $('btn-settings').addEventListener('click', () => { renderSettings(); $('s-overlay').classList.add('open'); });
+  $('s-close').addEventListener('click', () => $('s-overlay').classList.remove('open'));
+  $('btn-final').addEventListener('click', showFinal);
+  $('f-close').addEventListener('click', () => $('f-overlay').classList.remove('open'));
+  $('btn-new').addEventListener('click', () => { if (confirm('Bắt đầu ván mới? Điểm hiện tại sẽ bị xoá.')) newGame(); });
+  $('f-new').addEventListener('click', () => { $('f-overlay').classList.remove('open'); newGame(); });
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT') return;
+    if ($('q-overlay').classList.contains('open')) {
+      const k = e.key.toUpperCase();
+      if ('ABCD'.includes(k) && k.length === 1) answer('ABCD'.indexOf(k));
+      else if (e.key === ' ') { e.preventDefault(); togglePause(); }
+      else if (e.key === 'Escape') closeQuestion();
+    } else if (e.key === 'Escape') {
+      $('s-overlay').classList.remove('open');
+      $('f-overlay').classList.remove('open');
+    }
+  });
+  window.addEventListener('resize', renderBoard);
+
+  render();
+})();
+</script>
+</body>
+</html>
