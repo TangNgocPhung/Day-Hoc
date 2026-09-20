@@ -116,6 +116,32 @@
   }
   .summary-pill strong { color: var(--accent-1); }
 
+  .assessment-notice {
+    margin: 1.75rem 0 0;
+    padding: 1.15rem 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--exam) 45%, var(--border));
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--exam) 8%, var(--surface));
+    box-shadow: var(--shadow);
+  }
+  .assessment-notice-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+  .assessment-notice-label {
+    font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.1em; color: var(--exam);
+  }
+  .assessment-notice h2 {
+    margin: 0; font-family: var(--font-display); font-size: 1.35rem; line-height: 1.2;
+  }
+  .assessment-notice dl {
+    display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 0.8rem;
+    margin: 0; font-size: 0.9rem;
+  }
+  .assessment-notice dt { font-weight: 700; color: var(--ink); }
+  .assessment-notice dd { margin: 0; color: var(--ink-muted); }
+
   .semester-block { margin-top: 2.25rem; }
   .semester-head {
     display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 1rem;
@@ -217,6 +243,21 @@
       <span class="summary-pill">Đã có bài giảng · <strong id="lesson-progress">4 / 29</strong></span>
     </div>
   </header>
+
+  <section class="assessment-notice" aria-labelledby="assessment-notice-title">
+    <div class="assessment-notice-head">
+      <span class="assessment-notice-label">THÔNG BÁO KIỂM TRA</span>
+      <h2 id="assessment-notice-title">Kiểm tra thường xuyên lần 1</h2>
+    </div>
+    <dl>
+      <dt>Nội dung</dt>
+      <dd>Bài 16: Ngôn ngữ lập trình bậc cao và Python; Bài 17: Biến và lệnh gán.</dd>
+      <dt>Hình thức</dt>
+      <dd>Trắc nghiệm và tự luận.</dd>
+      <dt>Thời gian</dt>
+      <dd>Tuần sau, từ 28/09 đến 02/10/2026.</dd>
+    </dl>
+  </section>
 
   <section class="semester-block" id="hk1">
     <div class="semester-head">
