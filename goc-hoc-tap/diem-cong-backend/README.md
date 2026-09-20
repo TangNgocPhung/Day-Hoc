@@ -4,8 +4,8 @@ Trang `diem-cong.html` lưu dữ liệu trong trình duyệt. Khi kết nối ba
 
 ## Lần đầu cài đặt
 
-1. Tạo một Google Sheet trống, đặt tên `Sổ điểm cộng điểm trừ`. **Không chia sẻ Sheet này** với học sinh.
-2. Trong Sheet, mở **Tiện ích mở rộng > Apps Script**.
+1. Mở [Google Sheet dùng cho sổ điểm](https://docs.google.com/spreadsheets/d/1akRVIQ0bPx2hOC40epQJE-ycTMb7sCzrGHkCEIMQUYw/edit?gid=1760412731#gid=1760412731). **Không chia sẻ quyền chỉnh sửa Sheet này** với học sinh.
+2. Trong Sheet, mở **Tiện ích mở rộng > Apps Script**. Backend đã được khóa vào đúng ID bảng tính này để tránh ghi nhầm nơi.
 3. Thay nội dung `Code.gs` bằng nội dung của file `Code.gs` trong thư mục này rồi bấm Lưu.
 4. Chọn hàm `setup` và bấm **Chạy**, cấp quyền cho script.
 5. Mở **Nhật ký thực thi** và chép **mã đồng bộ** (16 ký tự). Quên mã thì chạy hàm `showSyncKey`.

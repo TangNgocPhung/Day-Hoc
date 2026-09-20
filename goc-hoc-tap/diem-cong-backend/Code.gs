@@ -9,6 +9,8 @@
  * nên thiếu mã này thì không ai đọc hay sửa được điểm của học sinh.
  */
 var SETTINGS = {
+  // Bảng tính đích: https://docs.google.com/spreadsheets/d/1akRVIQ0bPx2hOC40epQJE-ycTMb7sCzrGHkCEIMQUYw/
+  spreadsheetId: "1akRVIQ0bPx2hOC40epQJE-ycTMb7sCzrGHkCEIMQUYw",
   entrySheetName: "DiemCongTru",
   historySheetName: "LichSu",
   historyLimit: 1000,
@@ -31,8 +33,10 @@ var ACTION_LABELS = {
 };
 
 function setup() {
-  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  if (!spreadsheet) throw new Error("Hãy chạy hàm này từ menu Tiện ích mở rộng > Apps Script của Google Sheet.");
+  var spreadsheet = SETTINGS.spreadsheetId
+    ? SpreadsheetApp.openById(SETTINGS.spreadsheetId)
+    : SpreadsheetApp.getActiveSpreadsheet();
+  if (!spreadsheet) throw new Error("Chưa xác định được Google Sheet dùng để lưu sổ điểm.");
   var props = PropertiesService.getScriptProperties();
   props.setProperty("SPREADSHEET_ID", spreadsheet.getId());
 
@@ -244,7 +248,7 @@ function markUndone_(sheet, ids) {
 /* ---------- Tiện ích ---------- */
 
 function getSpreadsheet_() {
-  var id = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+  var id = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID") || SETTINGS.spreadsheetId;
   if (!id) throw new Error("Chưa chạy hàm setup.");
   return SpreadsheetApp.openById(id);
 }
