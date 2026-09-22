@@ -284,7 +284,8 @@ function markUndone_(sheet, ids) {
 /* ---------- Tiện ích ---------- */
 
 function getSpreadsheet_() {
-  var id = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID") || SETTINGS.spreadsheetId;
+  // Ưu tiên ID cố định để không bao giờ ghi nhầm vào Sheet của dự án khác.
+  var id = SETTINGS.spreadsheetId || PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
   if (!id) throw new Error("Chưa chạy hàm setup.");
   return SpreadsheetApp.openById(id);
 }
