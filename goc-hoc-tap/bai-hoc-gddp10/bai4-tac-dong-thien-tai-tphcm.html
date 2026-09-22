@@ -1,0 +1,1101 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tác Động Của Thiên Tai ở TP.HCM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --ink:#1E2A27;
+    --ink-soft:#48584F;
+    --paper:#ECEFE1;
+    --paper-2:#F7F8EF;
+    --line:#D6D9C4;
+    --dusk:#12262C;
+    --dusk-2:#1D4750;
+    --dusk-3:#265861;
+    --rain:#5AA6B4;
+    --rain-soft:#CDE6E3;
+    --rain-ink:#0E3A40;
+    --sun:#E4A23B;
+    --sun-soft:#F5DCA9;
+    --sun-ink:#5A3B0E;
+    --ember:#B5533A;
+    --backdrop:#D6DAC6;
+    --shadow: 0 40px 70px -30px rgba(8,18,16,0.5);
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    padding:clamp(1.5rem,5vw,3.5rem) 1rem;
+    background:var(--backdrop);
+    color:var(--ink);
+    font-family:'Be Vietnam Pro','Segoe UI',system-ui,sans-serif;
+    display:flex;
+    justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .sheet{
+    width:100%;
+    max-width:760px;
+    background:var(--paper);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:
+      radial-gradient(120% 140% at 82% 8%, color-mix(in srgb, var(--sun) 30%, transparent), transparent 55%),
+      linear-gradient(160deg, var(--dusk) 0%, var(--dusk-2) 62%, var(--dusk-3) 100%);
+    color:var(--paper-2);
+    padding:clamp(1.6rem,4vw,2.6rem) clamp(1.6rem,4vw,2.6rem) 1.4rem;
+    position:relative;
+  }
+  .hero-top{
+    display:flex;
+    flex-wrap:wrap;
+    gap:1.5rem 2rem;
+    align-items:flex-start;
+  }
+  .hero-copy{ flex:1 1 300px; min-width:0; }
+  .kicker{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.7rem;
+    font-weight:600;
+    letter-spacing:0.16em;
+    color:var(--rain-soft);
+    margin-bottom:0.65rem;
+  }
+  .eyebrow{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.68rem;
+    font-weight:600;
+    letter-spacing:0.1em;
+    color:color-mix(in srgb, var(--paper-2) 62%, transparent);
+    margin-bottom:0.9rem;
+  }
+  .hero h1{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:clamp(1.7rem,4.6vw,2.5rem);
+    line-height:1.08;
+    margin:0 0 0.7rem;
+    text-wrap:balance;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--sun-soft);
+  }
+  .hero-sub{
+    margin:0;
+    max-width:38ch;
+    font-size:0.92rem;
+    line-height:1.55;
+    color:color-mix(in srgb, var(--paper-2) 78%, transparent);
+  }
+
+  .hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.6rem;
+    margin-top:1.1rem;
+  }
+  .hero-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:0.4rem;
+    padding:0.55rem 0.9rem;
+    border-radius:999px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.7rem;
+    font-weight:600;
+    letter-spacing:0.01em;
+    text-decoration:none;
+    border:1px solid transparent;
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .hero-btn svg{ width:0.85rem; height:0.85rem; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .hero-btn:hover{ transform:translateY(-1px); }
+  .hero-btn--primary{ background:var(--sun); color:var(--dusk); }
+  .hero-btn--primary:hover{ background:color-mix(in srgb, var(--sun) 88%, white); }
+  .hero-btn--ghost{
+    background:color-mix(in srgb, var(--paper-2) 10%, transparent);
+    border-color:color-mix(in srgb, var(--paper-2) 35%, transparent);
+    color:var(--paper-2);
+  }
+  .hero-btn--ghost:hover{ background:color-mix(in srgb, var(--paper-2) 18%, transparent); }
+
+  .dial-wrap{
+    flex:0 0 auto;
+    width:min(280px,100%);
+    margin:0 auto;
+  }
+  .dial-wrap svg{ width:100%; height:auto; display:block; }
+  .dial-legend{
+    display:flex;
+    justify-content:center;
+    gap:1.1rem;
+    margin-top:0.4rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    letter-spacing:0.04em;
+  }
+  .dial-legend span{ display:flex; align-items:center; gap:0.35rem; color:color-mix(in srgb, var(--paper-2) 80%, transparent); }
+  .dial-legend i{ width:0.55rem; height:0.55rem; border-radius:50%; display:inline-block; }
+
+  /* ---------- STAT STRIP ---------- */
+  .stat-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    margin:0 clamp(1.2rem,3.5vw,2rem);
+    transform:translateY(-1.1rem);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 14px 30px -18px rgba(10,25,22,0.35);
+  }
+  .stat{
+    background:var(--paper-2);
+    padding:0.85rem 0.6rem;
+    text-align:center;
+  }
+  .stat b{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-variant-numeric:tabular-nums;
+    font-size:clamp(1.05rem,3vw,1.35rem);
+    font-weight:700;
+    color:var(--rain-ink);
+    line-height:1.1;
+  }
+  .stat span{
+    display:block;
+    margin-top:0.3rem;
+    font-size:0.66rem;
+    line-height:1.35;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- SECTIONS ---------- */
+  .sections{
+    padding:0.3rem clamp(1.2rem,3.5vw,2rem) 0.5rem;
+    display:flex;
+    flex-direction:column;
+  }
+  .topic{
+    display:grid;
+    grid-template-columns:2.7rem 1fr;
+    column-gap:1rem;
+    padding:1.15rem 0;
+    border-top:1px solid var(--line);
+  }
+  .topic:first-child{ border-top:none; }
+  .topic-badge{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0.35rem;
+    padding-top:0.15rem;
+  }
+  .topic-badge .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.62rem;
+    font-weight:600;
+    letter-spacing:0.05em;
+    color:var(--ink-soft);
+  }
+  .topic-badge .icon-ring{
+    width:2.7rem; height:2.7rem;
+    border-radius:50%;
+    background:var(--rain-soft);
+    display:flex; align-items:center; justify-content:center;
+    flex:0 0 auto;
+  }
+  .topic-badge .icon-ring svg{ width:1.35rem; height:1.35rem; stroke:var(--rain-ink); fill:none; }
+  .topic h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.12rem;
+    margin:0.05rem 0 0.55rem;
+    color:var(--ink);
+  }
+  .topic ul{
+    margin:0; padding:0; list-style:none;
+    display:flex; flex-direction:column; gap:0.4rem;
+  }
+  .topic li{
+    position:relative;
+    padding-left:0.95rem;
+    font-size:0.87rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+  }
+  .topic li::before{
+    content:"";
+    position:absolute; left:0; top:0.55em;
+    width:0.4rem; height:0.4rem;
+    border-radius:50%;
+    background:var(--rain);
+  }
+  .topic b{ color:var(--ink); font-weight:700; }
+
+  .example{
+    margin-top:0.7rem;
+    padding:0.6rem 0.8rem;
+    background:var(--paper-2);
+    border:1px dashed color-mix(in srgb, var(--rain-ink) 35%, var(--line));
+    border-radius:10px;
+    display:flex;
+    gap:0.55rem;
+    align-items:flex-start;
+  }
+  .example .tag{
+    flex:0 0 auto;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.6rem;
+    font-weight:700;
+    letter-spacing:0.06em;
+    color:var(--sun-ink);
+    background:var(--sun-soft);
+    padding:0.15rem 0.4rem;
+    border-radius:5px;
+    margin-top:0.1rem;
+  }
+  .example p{ margin:0; font-size:0.82rem; line-height:1.55; color:var(--ink-soft); }
+
+  /* ---------- SIMULATION ---------- */
+  .simulate{
+    margin:0.4rem clamp(1.2rem,3.5vw,2rem) 1.6rem;
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:1.2rem clamp(1rem,3vw,1.5rem) 1.4rem;
+  }
+  .sim-head{ margin-bottom:0.9rem; }
+  .sim-head .kicker{ color:var(--rain-ink); margin-bottom:0.4rem; }
+  .sim-head h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.12rem;
+    margin:0 0 0.3rem;
+    color:var(--ink);
+  }
+  .sim-head p{ margin:0; font-size:0.82rem; color:var(--ink-soft); line-height:1.5; max-width:52ch; }
+
+  .sim-legend{
+    display:flex; flex-wrap:wrap; gap:0.9rem;
+    margin:0.7rem 0 0.2rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    color:var(--ink-soft);
+  }
+  .sim-legend span{ display:flex; align-items:center; gap:0.35rem; }
+  .sim-legend i{ width:0.7rem; height:0.7rem; border-radius:3px; display:inline-block; }
+  .sim-legend i.dot{ border-radius:50%; }
+
+  .sim-chart{ width:100%; overflow:visible; margin-top:0.3rem; }
+  .sim-chart .bar{ cursor:pointer; transition:opacity .15s ease; }
+  .sim-chart .bar:hover, .sim-chart .bar.active{ opacity:1; }
+  .sim-chart .bar{ opacity:0.62; }
+  .sim-chart .hit{ fill:transparent; cursor:pointer; }
+  .sim-chart .mlabel{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; fill:var(--ink-soft); }
+  .sim-chart .mlabel.active{ fill:var(--ink); font-weight:700; }
+  .sim-chart .glabel{ font-family:'IBM Plex Mono',monospace; font-size:9px; fill:var(--ink-soft); }
+  .sim-chart .gridline{ stroke:var(--line); stroke-width:1; }
+  .sim-chart .templine{ fill:none; stroke:var(--ember); stroke-width:2; }
+  .sim-chart .tempdot{ fill:var(--ember); stroke:var(--paper-2); stroke-width:1.5; cursor:pointer; }
+  .sim-chart .tempdot.active{ r:5.5; }
+
+  .sim-readout{
+    display:flex; flex-wrap:wrap; gap:1rem 1.4rem; align-items:center;
+    margin-top:1rem;
+    padding-top:0.9rem;
+    border-top:1px dashed var(--line);
+  }
+  .sim-readout .month-big{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.5rem;
+    color:var(--ink);
+    min-width:5.5rem;
+  }
+  .sim-pill{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.66rem;
+    font-weight:700;
+    letter-spacing:0.04em;
+    padding:0.3rem 0.6rem;
+    border-radius:999px;
+    color:#fff;
+  }
+  .sim-metrics{ display:flex; gap:1.4rem; }
+  .sim-metrics div b{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-variant-numeric:tabular-nums;
+    font-size:1.05rem;
+    color:var(--rain-ink);
+  }
+  .sim-metrics div span{ font-size:0.68rem; color:var(--ink-soft); }
+  .sim-note{ flex-basis:100%; font-size:0.85rem; line-height:1.55; color:var(--ink-soft); }
+  .sim-caption{
+    margin-top:0.9rem;
+    font-size:0.68rem;
+    color:var(--ink-soft);
+    opacity:0.8;
+  }
+
+  /* ---------- GHI NHỚ ---------- */
+  .ghinho{
+    position:relative;
+    margin:0 clamp(1.2rem,3.5vw,2rem) 1.7rem;
+    background-color:var(--paper-2);
+    background-image:repeating-linear-gradient(
+      to bottom,
+      transparent 0, transparent 27px,
+      color-mix(in srgb, var(--rain) 32%, transparent) 27px,
+      color-mix(in srgb, var(--rain) 32%, transparent) 28px
+    );
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:1.3rem clamp(1.1rem,3vw,1.6rem) 1.4rem clamp(2.5rem,7vw,3.1rem);
+    overflow:hidden;
+  }
+  .ghinho::before{
+    content:"";
+    position:absolute;
+    left:clamp(1.7rem,5vw,2.2rem);
+    top:0; bottom:0;
+    width:1.5px;
+    background:color-mix(in srgb, var(--ember) 65%, transparent);
+  }
+  .ghinho-head{ display:flex; align-items:baseline; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.2rem; }
+  .ghinho-head h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    font-size:1.2rem;
+    margin:0;
+    color:var(--ink);
+  }
+  .ghinho-head .pencil{ font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--ink-soft); letter-spacing:0.02em; }
+  .ghinho ol{
+    margin:0.7rem 0 0;
+    padding:0;
+    list-style:none;
+    counter-reset:ghinho-counter;
+    display:flex;
+    flex-direction:column;
+    gap:0.35rem;
+  }
+  .ghinho li{
+    counter-increment:ghinho-counter;
+    position:relative;
+    padding-left:1.6rem;
+    font-size:0.9rem;
+    line-height:1.95;
+    color:var(--ink);
+  }
+  .ghinho li::before{
+    content:counter(ghinho-counter) ".";
+    position:absolute; left:0; top:0;
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    color:var(--rain-ink);
+  }
+  .ghinho li b{ color:var(--ink); }
+  .ghinho li .mua{ color:var(--rain-ink); font-weight:700; }
+  .ghinho li .kho{ color:var(--sun-ink); font-weight:700; }
+
+  /* ---------- FOOTER ---------- */
+  .colophon{
+    background:var(--dusk);
+    color:color-mix(in srgb, var(--paper-2) 72%, transparent);
+    padding:1.1rem clamp(1.2rem,3.5vw,2rem) 1.3rem;
+  }
+  .rain-rule{
+    display:flex;
+    gap:0.5rem;
+    margin-bottom:0.75rem;
+    overflow:hidden;
+  }
+  .rain-rule span{
+    flex:1;
+    height:2px;
+    background:linear-gradient(90deg,transparent,var(--rain),transparent);
+    opacity:0.55;
+  }
+  .colophon-row{
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.4rem 1rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.64rem;
+    letter-spacing:0.03em;
+  }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+
+  /* ---------- PHÂN ĐOẠN A / B ---------- */
+  .part-rule{
+    display:flex;
+    align-items:center;
+    gap:0.8rem;
+    padding:1.5rem clamp(1.4rem,4vw,2.4rem) 0.2rem;
+  }
+  .part-rule .pill{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.66rem;
+    font-weight:700;
+    letter-spacing:0.14em;
+    color:var(--paper-2);
+    background:var(--rain-ink);
+    padding:0.3rem 0.65rem;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .part-rule.warm .pill{ background:var(--ember); }
+  .part-rule h3{
+    margin:0;
+    font-family:'Fraunces',Georgia,serif;
+    font-size:1.02rem;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .part-rule .line{
+    flex:1 1 auto;
+    height:1px;
+    background:var(--line);
+  }
+
+  /* ---------- BẢNG PHÂN LOẠI NGUYÊN NHÂN ---------- */
+  .sort{
+    padding:clamp(1.4rem,4vw,2.2rem);
+    background:var(--paper-2);
+    border-top:1px solid var(--line);
+  }
+  .sort-head{ margin-bottom:0.9rem; }
+  .sort-head .kicker{ color:var(--ember); margin-bottom:0.4rem; }
+  .sort-head h2{
+    margin:0 0 0.35rem;
+    font-family:'Fraunces',Georgia,serif;
+    font-size:clamp(1.1rem,3vw,1.35rem);
+    font-weight:700;
+  }
+  .sort-head p{ margin:0; font-size:0.82rem; color:var(--ink-soft); line-height:1.5; max-width:54ch; }
+
+  .sort-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:0.6rem;
+    margin-top:0.9rem;
+  }
+  .cause{
+    text-align:left;
+    font:inherit;
+    font-size:0.8rem;
+    line-height:1.45;
+    color:var(--ink);
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:0.7rem 0.75rem;
+    cursor:pointer;
+    transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    position:relative;
+    min-height:100%;
+  }
+  .cause:hover{ transform:translateY(-2px); border-color:var(--rain); }
+  .cause .verdict{
+    display:none;
+    margin-top:0.5rem;
+    padding-top:0.45rem;
+    border-top:1px dashed var(--line);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.62rem;
+    letter-spacing:0.06em;
+    font-weight:700;
+  }
+  .cause.revealed .verdict{ display:block; }
+  .cause.revealed[data-kind="chuquan"]{ background:color-mix(in srgb, var(--ember) 12%, var(--paper)); border-color:var(--ember); }
+  .cause.revealed[data-kind="khachquan"]{ background:color-mix(in srgb, var(--rain) 16%, var(--paper)); border-color:var(--rain); }
+  .cause.revealed[data-kind="chuquan"] .verdict{ color:var(--ember); }
+  .cause.revealed[data-kind="khachquan"] .verdict{ color:var(--rain-ink); }
+  .sort-actions{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:0.6rem;
+    margin-top:0.9rem;
+  }
+  .sort-btn{
+    font:inherit;
+    font-size:0.75rem;
+    font-weight:600;
+    color:var(--paper-2);
+    background:var(--rain-ink);
+    border:none;
+    border-radius:999px;
+    padding:0.42rem 0.9rem;
+    cursor:pointer;
+  }
+  .sort-btn.ghost{ background:transparent; color:var(--ink-soft); border:1px solid var(--line); }
+  .sort-score{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.72rem;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- HOẠT ĐỘNG NHÓM ---------- */
+  .group{
+    padding:clamp(1.4rem,4vw,2.2rem);
+    border-top:1px solid var(--line);
+  }
+  .group-head{ margin-bottom:0.9rem; }
+  .group-head .kicker{ color:var(--rain-ink); margin-bottom:0.4rem; }
+  .group-head h2{
+    margin:0 0 0.35rem;
+    font-family:'Fraunces',Georgia,serif;
+    font-size:clamp(1.1rem,3vw,1.35rem);
+    font-weight:700;
+  }
+  .group-head p{ margin:0; font-size:0.82rem; color:var(--ink-soft); line-height:1.5; max-width:54ch; }
+  .group-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:0.7rem;
+    margin-top:0.9rem;
+  }
+  .group-card{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:0.85rem 0.9rem;
+    background:var(--paper-2);
+  }
+  .group-card .tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.6rem;
+    font-weight:700;
+    letter-spacing:0.12em;
+    color:var(--paper-2);
+    background:var(--rain-ink);
+    padding:0.2rem 0.5rem;
+    border-radius:4px;
+    margin-bottom:0.5rem;
+  }
+  .group-card h4{
+    margin:0 0 0.35rem;
+    font-size:0.9rem;
+    font-weight:700;
+  }
+  .group-card p{ margin:0; font-size:0.79rem; line-height:1.5; color:var(--ink-soft); }
+
+  /* ---------- VIDEO ---------- */
+  .videos{
+    padding:clamp(1.4rem,4vw,2.2rem);
+    background:var(--paper-2);
+    border-top:1px solid var(--line);
+  }
+  .videos .kicker{ color:var(--rain-ink); margin-bottom:0.4rem; }
+  .videos h2{
+    margin:0 0 0.8rem;
+    font-family:'Fraunces',Georgia,serif;
+    font-size:clamp(1.1rem,3vw,1.35rem);
+    font-weight:700;
+  }
+  .video-list{ display:grid; gap:0.55rem; }
+  .video-item{
+    display:flex;
+    align-items:flex-start;
+    gap:0.7rem;
+    text-decoration:none;
+    color:inherit;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:0.7rem 0.8rem;
+    background:var(--paper);
+    transition:border-color .12s ease, transform .12s ease;
+  }
+  .video-item:hover{ border-color:var(--ember); transform:translateY(-1px); }
+  .video-item .play{
+    flex:0 0 auto;
+    width:1.9rem;
+    height:1.9rem;
+    border-radius:50%;
+    background:var(--ember);
+    display:grid;
+    place-items:center;
+  }
+  .video-item .play svg{ width:0.7rem; height:0.7rem; fill:var(--paper-2); }
+  .video-item b{ display:block; font-size:0.85rem; font-weight:700; line-height:1.4; }
+  .video-item span{ display:block; font-size:0.72rem; color:var(--ink-soft); margin-top:0.15rem; }
+
+  .hero-mini{ font-family:'IBM Plex Mono',monospace; font-size:0.62rem; }
+
+  /* ---------- CHUỖI TÁC ĐỘNG ---------- */
+  .chain-tabs{ display:flex; flex-wrap:wrap; gap:0.45rem; margin:0.2rem 0 1rem; }
+  .chain-tab{
+    font:inherit; font-size:0.74rem; font-weight:600;
+    color:var(--ink-soft); background:var(--paper);
+    border:1px solid var(--line); border-radius:999px;
+    padding:0.38rem 0.8rem; cursor:pointer;
+    transition:background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .chain-tab:hover{ border-color:var(--rain); }
+  .chain-tab[aria-pressed="true"]{ background:var(--rain-ink); color:var(--paper-2); border-color:var(--rain-ink); }
+  .chain-steps{
+    list-style:none; margin:0; padding:0;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0.6rem;
+    counter-reset:step;
+  }
+  .chain-steps li{
+    counter-increment:step;
+    position:relative;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:0.7rem 0.75rem 0.75rem;
+    font-size:0.8rem; line-height:1.45; color:var(--ink);
+  }
+  .chain-steps li::before{
+    content:"BƯỚC " counter(step);
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.58rem; font-weight:700; letter-spacing:0.1em;
+    color:var(--ink-soft); margin-bottom:0.3rem;
+  }
+  .chain-steps li:last-child{ background:color-mix(in srgb, var(--ember) 12%, var(--paper)); border-color:var(--ember); }
+  .chain-steps li:not(:last-child)::after{
+    content:"→";
+    position:absolute; right:-0.3rem; top:50%;
+    transform:translate(50%,-50%);
+    font-weight:700; color:var(--ember); font-size:0.9rem;
+    background:var(--paper-2); line-height:1; padding:0.1rem 0;
+    z-index:1;
+  }
+  .chain-sectors{ display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.9rem; }
+  .sector-chip{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.62rem; font-weight:700; letter-spacing:0.06em;
+    padding:0.25rem 0.55rem; border-radius:999px;
+  }
+  .sector-chip.tn{ background:var(--rain-soft); color:var(--rain-ink); }
+  .sector-chip.kt{ background:var(--sun-soft); color:var(--sun-ink); }
+  .sector-chip.xh{ background:color-mix(in srgb, var(--ember) 18%, var(--paper-2)); color:var(--ember); }
+  @media (max-width:620px){
+    .chain-steps{ grid-template-columns:1fr; }
+    .chain-steps li:not(:last-child)::after{ content:"↓"; right:50%; top:auto; bottom:-0.3rem; transform:translate(50%,50%); }
+  }
+
+  /* ---------- AI DỄ BỊ TỔN THƯƠNG ---------- */
+  .vuln{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.5rem; margin-top:0.7rem; }
+  .vuln div{
+    background:var(--paper-2); border:1px solid var(--line); border-radius:10px;
+    padding:0.55rem 0.7rem; font-size:0.78rem; line-height:1.45; color:var(--ink-soft);
+  }
+  .vuln b{ display:block; color:var(--ink); font-size:0.82rem; margin-bottom:0.15rem; }
+
+  /* ---------- PHÂN LOẠI 3 LĨNH VỰC ---------- */
+  .cause.revealed[data-kind="tunhien"]{ background:color-mix(in srgb, var(--rain) 16%, var(--paper)); border-color:var(--rain); }
+  .cause.revealed[data-kind="kinhte"]{ background:color-mix(in srgb, var(--sun) 20%, var(--paper)); border-color:var(--sun); }
+  .cause.revealed[data-kind="xahoi"]{ background:color-mix(in srgb, var(--ember) 12%, var(--paper)); border-color:var(--ember); }
+  .cause.revealed[data-kind="tunhien"] .verdict{ color:var(--rain-ink); }
+  .cause.revealed[data-kind="kinhte"] .verdict{ color:var(--sun-ink); }
+  .cause.revealed[data-kind="xahoi"] .verdict{ color:var(--ember); }
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <div class="hero-top">
+      <div class="hero-copy">
+        <span class="kicker">HỒ SƠ BIẾN ĐỔI KHÍ HẬU ĐỊA PHƯƠNG</span>
+        <span class="eyebrow">GIÁO DỤC ĐỊA PHƯƠNG 10 · CHỦ ĐỀ 1 · BÀI 4</span>
+        <h1>Tác động của <em>thiên tai</em><br>&amp; biến đổi khí hậu</h1>
+        <p class="hero-sub">Một đêm triều cường không chỉ làm ướt con đường — nó làm xe chết máy, cửa hàng đóng cửa, học sinh đến lớp muộn và cả khu phố phải dọn bùn. Bài học lần theo những "vòng sóng" lan ra từ mỗi trận thiên tai.</p>
+        <div class="hero-actions">
+          <a class="hero-btn hero-btn--primary" href="bai4-tac-dong-thien-tai-tphcm.pptx" target="_blank" rel="noopener">
+            <svg aria-hidden="true" viewBox="0 0 20 20"><polygon points="6,4 15,10 6,16"></polygon></svg>
+            Mở slide bài giảng (PPTX)
+          </a>
+          <a class="hero-btn hero-btn--ghost" href="bai4-tac-dong-thien-tai-tphcm.pptx" download>
+            <svg aria-hidden="true" viewBox="0 0 20 20"><path d="M10 3v10M6 9l4 4 4-4M4 17h12"></path></svg>
+            Tải PPTX
+          </a>
+          <a class="hero-btn hero-btn--ghost" href="phieu-hoc-tap-tac-dong-thien-tai-tphcm.docx" download>
+            <svg aria-hidden="true" viewBox="0 0 20 20"><path d="M5 2h7l3 3v13H5z"></path><path d="M12 2v3h3"></path><path d="M7.5 11h5M7.5 13.5h5M7.5 8.5h3"></path></svg>
+            Tải phiếu học tập nhóm (Word)
+          </a>
+          <a class="hero-btn hero-btn--ghost" href="phieu-hoc-tap-tac-dong-thien-tai-tphcm.html" target="_blank" rel="noopener">
+            <svg aria-hidden="true" viewBox="0 0 20 20"><path d="M5 2h7l3 3v13H5z"></path><path d="M12 2v3h3"></path><path d="M7.5 11h5M7.5 13.5h5M7.5 8.5h3"></path></svg>
+            Mở phiếu học tập (in được)
+          </a>
+        </div>
+      </div>
+      <div class="dial-wrap">
+        <svg viewBox="0 0 300 300" role="img" aria-label="Sơ đồ vòng sóng: thiên tai ở tâm, tác động lan ra ba lĩnh vực tự nhiên, kinh tế và xã hội">
+          <text x="20" y="22" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="rgba(247,248,239,0.72)" letter-spacing="1">VÒNG SÓNG TÁC ĐỘNG</text>
+          <circle cx="150" cy="160" r="118" fill="none" stroke="var(--ember)" stroke-width="1.5" stroke-dasharray="4 5" opacity="0.85"></circle>
+          <circle cx="150" cy="160" r="86" fill="none" stroke="var(--sun)" stroke-width="1.5" stroke-dasharray="4 5" opacity="0.9"></circle>
+          <circle cx="150" cy="160" r="54" fill="none" stroke="var(--rain)" stroke-width="1.5" stroke-dasharray="4 5"></circle>
+          <circle cx="150" cy="160" r="26" fill="var(--sun)"></circle>
+          <text x="150" y="157" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8" font-weight="700" fill="var(--dusk)">THIÊN</text>
+          <text x="150" y="168" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8" font-weight="700" fill="var(--dusk)">TAI</text>
+          <g font-family="IBM Plex Mono, monospace" font-size="8.5" font-weight="600" text-anchor="middle">
+            <rect x="113" y="99" width="74" height="15" rx="7.5" fill="var(--dusk-2)"></rect>
+            <text x="150" y="110" fill="var(--rain-soft)">TỰ NHIÊN</text>
+            <rect x="119" y="67" width="62" height="15" rx="7.5" fill="var(--dusk-2)"></rect>
+            <text x="150" y="78" fill="var(--sun-soft)">KINH TẾ</text>
+            <rect x="119" y="35" width="62" height="15" rx="7.5" fill="var(--dusk)"></rect>
+            <text x="150" y="46" fill="#F2B8A6">XÃ HỘI</text>
+          </g>
+        </svg>
+        <div class="dial-legend">
+          <span><i style="background:var(--rain)"></i>Tự nhiên</span>
+          <span><i style="background:var(--sun)"></i>Kinh tế</span>
+          <span><i style="background:var(--ember)"></i>Xã hội</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="stat-strip">
+    <div class="stat"><b>1,78m</b><span>Đỉnh triều kỷ lục 11/2025</span></div>
+    <div class="stat"><b>35–37°C</b><span>Nắng nóng cao điểm mùa khô</span></div>
+    <div class="stat"><b>~10.000 tỷ</b><span>Dự án chống ngập do triều</span></div>
+    <div class="stat"><b>3</b><span>Lĩnh vực chịu tác động</span></div>
+  </section>
+
+  <div class="part-rule">
+    <span class="pill">PHẦN A</span>
+    <h3>Thành phố thường gặp những thiên tai nào?</h3>
+    <span class="line"></span>
+  </div>
+
+  <main class="sections">
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15c2 0 2-1.6 4-1.6S8 15 10 15s2-1.6 4-1.6S16 15 18 15s2-1.6 4-1.6"/><path d="M2 19.5c2 0 2-1.6 4-1.6s2 1.6 4 1.6 2-1.6 4-1.6 2 1.6 4 1.6 2-1.6 4-1.6"/><path d="M12 3v7M9 6l3-3 3 3"/></svg></span>
+        <span class="num">01</span>
+      </div>
+      <div>
+        <h2>Những thiên tai "quen mặt" ở thành phố</h2>
+        <ul>
+          <li><b>Ngập lụt</b> do mưa lớn, triều cường và lũ từ thượng nguồn — nhiều khi cả ba cùng lúc.</li>
+          <li><b>Triều cường</b> dâng cao vào cuối năm (khoảng tháng 9 – 12 âm lịch), tràn qua bờ bao vào khu dân cư ven sông.</li>
+          <li><b>Nắng nóng</b> gay gắt, kéo dài vào tháng 3 – 5; <b>hạn hán</b> cục bộ ở vùng ven.</li>
+          <li><b>Xâm nhập mặn</b> theo sông Sài Gòn – Đồng Nai trong mùa khô.</li>
+          <li><b>Sạt lở</b> bờ sông, kênh rạch và bờ biển.</li>
+          <li><b>Dông, lốc, sét, mưa đá</b> đầu và cuối mùa mưa; <b>bão, áp thấp nhiệt đới</b> tuy hiếm nhưng gây thiệt hại lớn khi xảy ra.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">GỢI NHỚ</span>
+          <p>Bài 2 – 3 đã chỉ ra biến đổi khí hậu làm những thiên tai này <b>xảy ra thường xuyên hơn, mạnh hơn và khó đoán hơn</b>. Bài này trả lời câu hỏi tiếp theo: chúng gây ra hậu quả gì?</p>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <div class="part-rule warm">
+    <span class="pill">PHẦN B</span>
+    <h3>Tác động — vòng sóng lan ra ba lĩnh vực</h3>
+    <span class="line"></span>
+  </div>
+
+  <div class="sections">
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg></span>
+        <span class="num">02</span>
+      </div>
+      <div>
+        <h2>Tác động đến tự nhiên và môi trường</h2>
+        <ul>
+          <li><b>Nguồn nước:</b> xâm nhập mặn làm độ mặn tại các điểm lấy nước thô trên sông Sài Gòn – Đồng Nai có lúc vượt ngưỡng, đe doạ nước sinh hoạt; nước ngập cuốn theo rác, nước thải gây <b>ô nhiễm</b>.</li>
+          <li><b>Đất đai:</b> sạt lở làm mất đất ven sông, ven biển; đất nông nghiệp bị <b>nhiễm mặn, nhiễm phèn</b>.</li>
+          <li><b>Hệ sinh thái:</b> rừng ngập mặn Cần Giờ chịu sức ép từ nước biển dâng, sóng và xói lở; nhiều loài sinh vật thay đổi nơi sống; cây xanh đô thị gãy đổ sau dông lốc.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span>
+        <span class="num">03</span>
+      </div>
+      <div>
+        <h2>Tác động đến kinh tế</h2>
+        <ul>
+          <li><b>Nông nghiệp, thuỷ sản vùng ven:</b> lúa, rau màu thiệt hại vì mặn và hạn; tôm, cá nuôi ở Cần Giờ, Nhà Bè chết khi độ mặn và nhiệt độ nước thay đổi đột ngột.</li>
+          <li><b>Giao thông – hạ tầng:</b> đường ngập gây ùn tắc, xe chết máy; mặt đường, cống, bờ kè nhanh hư hỏng; sét và cây đổ làm mất điện.</li>
+          <li><b>Sản xuất – dịch vụ:</b> cửa hàng, nhà xưởng phải đóng cửa, hàng hoá hư hỏng; nắng nóng làm <b>giảm năng suất lao động</b> và tăng tiêu thụ điện.</li>
+          <li><b>Chi phí khắc phục rất lớn:</b> thành phố phải đầu tư hàng chục nghìn tỷ đồng cho đê bao, cống ngăn triều, nâng đường — nguồn tiền lẽ ra có thể dành cho trường học, bệnh viện.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3.5"/><path d="M2.5 21v-1.5A5.5 5.5 0 0 1 8 14h2a5.5 5.5 0 0 1 5.5 5.5V21"/><path d="M16 3.5a3.5 3.5 0 0 1 0 7M21.5 21v-1.5a5.5 5.5 0 0 0-4-5.3"/></svg></span>
+        <span class="num">04</span>
+      </div>
+      <div>
+        <h2>Tác động đến xã hội và đời sống</h2>
+        <ul>
+          <li><b>Sức khoẻ:</b> nắng nóng gây say nắng, sốc nhiệt, làm nặng bệnh tim mạch – hô hấp; sau ngập dễ bùng phát <b>sốt xuất huyết, bệnh ngoài da, tiêu hoá</b>.</li>
+          <li><b>An toàn:</b> nguy cơ điện giật, đuối nước, cây đổ, sét đánh; nhà ven sông có thể bị sạt lở cuốn trôi.</li>
+          <li><b>Học tập và sinh hoạt:</b> học sinh phải lội nước, đến trường muộn hoặc nghỉ học; nhà cửa, đồ đạc hư hỏng; nước sinh hoạt bị gián đoạn.</li>
+          <li><b>Sinh kế và di cư:</b> người buôn bán nhỏ, tài xế công nghệ mất thu nhập những ngày ngập; nhiều hộ ven sông phải di dời, cuộc sống bị xáo trộn.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">AI CHỊU NẶNG NHẤT?</span>
+          <p>Thiên tai không "chia đều" thiệt hại. Những nhóm dưới đây thường khó ứng phó hơn và mất mát nhiều hơn.</p>
+        </div>
+        <div class="vuln">
+          <div><b>Người cao tuổi, trẻ nhỏ</b>Dễ bị sốc nhiệt và mắc bệnh.</div>
+          <div><b>Lao động ngoài trời</b>Shipper, công nhân xây dựng, người bán hàng rong.</div>
+          <div><b>Hộ ở vùng trũng, ven sông</b>Ngập thường xuyên, nguy cơ sạt lở.</div>
+          <div><b>Hộ thu nhập thấp</b>Ít điều kiện nâng nền, sửa nhà, chữa bệnh.</div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <section class="simulate">
+    <div class="sim-head">
+      <span class="kicker">CHUỖI DOMINO · CHỌN MỘT THIÊN TAI</span>
+      <h2>Một thiên tai kéo theo những gì?</h2>
+      <p>Mỗi thiên tai gây ra một chuỗi hậu quả nối tiếp nhau. Chọn một thiên tai để xem chuỗi đó — rồi thử tự kể tiếp bước thứ 5.</p>
+    </div>
+
+    <div class="chain-tabs" id="chainTabs" role="group" aria-label="Chọn thiên tai"></div>
+    <ol class="chain-steps" id="chainSteps"></ol>
+    <div class="chain-sectors" id="chainSectors"></div>
+
+    <p class="sim-caption">*Chuỗi mô phỏng giúp hình dung mối liên hệ nhân – quả, không phải thống kê thiệt hại.</p>
+  </section>
+
+  <section class="sort">
+    <div class="sort-head">
+      <span class="kicker">TRÒ CHƠI PHÂN LOẠI · BẤM ĐỂ LẬT THẺ</span>
+      <h2>Tác động này thuộc lĩnh vực nào?</h2>
+      <p>Đọc từng thẻ, đoán xem đó là tác động đến <b>tự nhiên – môi trường</b>, <b>kinh tế</b> hay <b>xã hội – đời sống</b>, rồi bấm để kiểm tra. Có thể chia lớp thành ba đội, mỗi đội "giữ" một lĩnh vực.</p>
+    </div>
+
+    <div class="sort-grid" id="sortGrid">
+      <button class="cause" data-kind="kinhte" type="button">Ruộng lúa ở vùng ven bị nhiễm mặn, mất mùa<span class="verdict">→ KINH TẾ</span></button>
+      <button class="cause" data-kind="xahoi" type="button">Số ca sốt xuất huyết tăng sau những đợt ngập kéo dài<span class="verdict">→ XÃ HỘI</span></button>
+      <button class="cause" data-kind="tunhien" type="button">Bờ sông bị xói lở, mất dần đất ven sông<span class="verdict">→ TỰ NHIÊN</span></button>
+      <button class="cause" data-kind="kinhte" type="button">Cửa hàng phải đóng cửa, hàng hoá ngấm nước hư hỏng<span class="verdict">→ KINH TẾ</span></button>
+      <button class="cause" data-kind="xahoi" type="button">Học sinh lội nước, đến trường muộn hoặc phải nghỉ học<span class="verdict">→ XÃ HỘI</span></button>
+      <button class="cause" data-kind="tunhien" type="button">Nước ngập cuốn rác, nước thải làm ô nhiễm kênh rạch<span class="verdict">→ TỰ NHIÊN</span></button>
+      <button class="cause" data-kind="kinhte" type="button">Đường ngập gây ùn tắc, xe chết máy hàng loạt<span class="verdict">→ KINH TẾ</span></button>
+      <button class="cause" data-kind="xahoi" type="button">Người già bị say nắng, sốc nhiệt trong đợt nắng nóng<span class="verdict">→ XÃ HỘI</span></button>
+      <button class="cause" data-kind="tunhien" type="button">Rừng ngập mặn Cần Giờ bị sóng và nước dâng xâm thực<span class="verdict">→ TỰ NHIÊN</span></button>
+      <button class="cause" data-kind="kinhte" type="button">Tôm nuôi chết hàng loạt khi độ mặn thay đổi đột ngột<span class="verdict">→ KINH TẾ</span></button>
+      <button class="cause" data-kind="xahoi" type="button">Hộ dân ven sông phải di dời vì nhà có nguy cơ sụp<span class="verdict">→ XÃ HỘI</span></button>
+      <button class="cause" data-kind="tunhien" type="button">Nước sông bị nhiễm mặn vào mùa khô<span class="verdict">→ TỰ NHIÊN</span></button>
+    </div>
+
+    <div class="sort-actions">
+      <button class="sort-btn" id="sortReveal" type="button">Lật tất cả</button>
+      <button class="sort-btn ghost" id="sortReset" type="button">Úp lại từ đầu</button>
+      <span class="sort-score" id="sortScore">Đã lật 0 / 12 thẻ</span>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="group-head">
+      <span class="kicker">HOẠT ĐỘNG NHÓM · 4 NHÓM · 12 PHÚT</span>
+      <h2>Bốn đội đánh giá thiệt hại</h2>
+      <p>Mỗi nhóm nhận một nhiệm vụ, hoàn thành phần tương ứng trong phiếu học tập, sau đó trình bày 2 phút trước lớp. Các nhóm còn lại ghi nhanh ý chính vào phiếu của mình.</p>
+    </div>
+    <div class="group-grid">
+      <div class="group-card">
+        <span class="tag">NHÓM 1</span>
+        <h4>Đội môi trường</h4>
+        <p>Chỉ ra tác động của thiên tai và biến đổi khí hậu đến nguồn nước, đất đai và hệ sinh thái (đặc biệt là rừng ngập mặn Cần Giờ).</p>
+      </div>
+      <div class="group-card">
+        <span class="tag">NHÓM 2</span>
+        <h4>Đội kinh tế</h4>
+        <p>Nêu thiệt hại cho nông nghiệp – thuỷ sản, giao thông – hạ tầng, sản xuất – dịch vụ; giải thích vì sao chi phí chống ngập của thành phố lại lớn như vậy.</p>
+      </div>
+      <div class="group-card">
+        <span class="tag">NHÓM 3</span>
+        <h4>Đội đời sống</h4>
+        <p>Tìm tác động đến sức khoẻ, an toàn, học tập, sinh kế của người dân; chỉ ra những nhóm người dễ bị tổn thương nhất.</p>
+      </div>
+      <div class="group-card">
+        <span class="tag">NHÓM 4</span>
+        <h4>Đội bản đồ rủi ro</h4>
+        <p>Chọn một thiên tai từng xảy ra gần trường hoặc nơi ở, vẽ chuỗi domino ít nhất 4 bước tác động và đánh dấu mỗi bước thuộc lĩnh vực nào.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="videos">
+    <span class="kicker">TƯ LIỆU THAM KHẢO</span>
+    <h2>Video cho tiết học</h2>
+    <div class="video-list">
+      <a class="video-item" href="https://www.youtube.com/watch?v=otUYNCrMulw" target="_blank" rel="noopener">
+        <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><polygon points="6,4 15,10 6,16"></polygon></svg></span>
+        <span>
+          <b>Toàn cảnh TP.HCM ngập sâu do triều cường vượt mốc lịch sử, cuộc sống người dân đảo lộn</b>
+          <span>Tin24h · dùng cho khởi động và tác động đến đời sống, giao thông</span>
+        </span>
+      </a>
+      <a class="video-item" href="https://www.youtube.com/watch?v=lBsAf5gw79Y" target="_blank" rel="noopener">
+        <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><polygon points="6,4 15,10 6,16"></polygon></svg></span>
+        <span>
+          <b>Sạt lở tại TP.HCM kỳ 1: Người đã di cư, người nặng lòng ở lại!</b>
+          <span>Báo Thanh Niên · dùng cho tác động đến đất đai và chuyện phải di dời</span>
+        </span>
+      </a>
+      <a class="video-item" href="https://www.youtube.com/watch?v=yEbw7m4XS_A" target="_blank" rel="noopener">
+        <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><polygon points="6,4 15,10 6,16"></polygon></svg></span>
+        <span>
+          <b>Nắng nóng gay gắt, mưu sinh nhọc nhằn giữa trưa gần 38 độ ở TP.HCM</b>
+          <span>Dùng cho tác động đến sức khoẻ và người lao động ngoài trời</span>
+        </span>
+      </a>
+      <a class="video-item" href="https://www.youtube.com/watch?v=Xt6RAY5Y9FU" target="_blank" rel="noopener">
+        <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><polygon points="6,4 15,10 6,16"></polygon></svg></span>
+        <span>
+          <b>Giải pháp thích ứng biến đổi khí hậu tại đô thị ven biển</b>
+          <span>Gợi mở cho phần vận dụng và bài học về phòng, chống thiên tai</span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <section class="ghinho">
+    <div class="ghinho-head">
+      <h2>Ghi nhớ</h2>
+      <span class="pencil">✎ Chép nội dung dưới đây vào vở</span>
+    </div>
+    <ol>
+      <li><b>Thiên tai thường gặp:</b> ngập lụt, triều cường, nắng nóng – hạn hán, xâm nhập mặn, sạt lở, dông lốc – sét, bão và áp thấp nhiệt đới; biến đổi khí hậu làm chúng <b>thường xuyên và dữ dội hơn</b>.</li>
+      <li><b>Tự nhiên – môi trường:</b> nguồn nước bị <span class="mua">nhiễm mặn</span>, ô nhiễm; đất bị sạt lở, nhiễm mặn; hệ sinh thái, nhất là rừng ngập mặn Cần Giờ, bị suy giảm.</li>
+      <li><b>Kinh tế:</b> nông nghiệp – thuỷ sản mất mùa; giao thông ùn tắc, hạ tầng hư hỏng; sản xuất – dịch vụ gián đoạn; <b>chi phí khắc phục rất lớn</b>.</li>
+      <li><b>Xã hội – đời sống:</b> ảnh hưởng <span class="kho">sức khoẻ</span> (sốc nhiệt, dịch bệnh), an toàn tính mạng, việc học, sinh kế; một số hộ phải di dời.</li>
+      <li><b>Nhóm dễ bị tổn thương:</b> người cao tuổi, trẻ nhỏ, lao động ngoài trời, hộ ở vùng trũng ven sông và hộ thu nhập thấp.</li>
+      <li><b>Tác động nối thành chuỗi:</b> một thiên tai lan từ tự nhiên sang kinh tế rồi đến đời sống — vì vậy <b>phòng ngừa từ sớm</b> luôn ít tốn kém hơn khắc phục về sau.</li>
+    </ol>
+  </section>
+
+  <footer class="colophon">
+    <div class="rain-rule"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="colophon-row">
+      <span>GIÁO DỤC ĐỊA PHƯƠNG 10 · CHỦ ĐỀ 1: BIẾN ĐỔI KHÍ HẬU VÀ PHÒNG, CHỐNG THIÊN TAI Ở TP.HCM</span>
+      <span>GV: TĂNG NGỌC PHỤNG · THPT NGUYỄN KHUYẾN</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  const SECTOR = { tn:'TỰ NHIÊN', kt:'KINH TẾ', xh:'XÃ HỘI' };
+  const chains = [
+    { name:'Mưa lớn + triều cường', steps:[
+      'Mưa trên 100mm trùng lúc đỉnh triều vượt báo động 3',
+      'Cống không thoát kịp, nước sông tràn bờ bao vào khu dân cư',
+      'Đường ngập sâu, xe chết máy, cửa hàng đóng cửa, học sinh nghỉ học',
+      'Nước bẩn đọng lại, muỗi sinh sôi → nguy cơ sốt xuất huyết, bệnh ngoài da'
+    ], sectors:['tn','kt','xh'] },
+    { name:'Nắng nóng kéo dài', steps:[
+      'Nhiệt độ 35–37°C nhiều ngày liền, nội thành còn nóng hơn do đảo nhiệt',
+      'Nhu cầu dùng điện tăng vọt, nguy cơ quá tải lưới điện',
+      'Lao động ngoài trời giảm năng suất, cây trồng thiếu nước',
+      'Người già, trẻ nhỏ dễ say nắng, sốc nhiệt; bệnh viện đông hơn'
+    ], sectors:['tn','kt','xh'] },
+    { name:'Xâm nhập mặn', steps:[
+      'Mùa khô, nước sông cạn, nước mặn từ biển lấn sâu vào sông Sài Gòn – Đồng Nai',
+      'Độ mặn tại điểm lấy nước thô có lúc vượt ngưỡng cho phép',
+      'Nhà máy nước phải điều chỉnh giờ bơm; ruộng vườn ven sông bị nhiễm mặn',
+      'Nguy cơ thiếu nước sạch sinh hoạt, nông dân mất mùa, giảm thu nhập'
+    ], sectors:['tn','kt','xh'] },
+    { name:'Sạt lở bờ sông', steps:[
+      'Dòng chảy xoáy mạnh, triều lên xuống liên tục khoét chân bờ sông',
+      'Bờ sông, bờ kè sụp xuống, đất ven sông mất dần',
+      'Nhà cửa, đường giao thông ven sông nứt, sụp, hư hỏng',
+      'Người dân phải di dời khẩn cấp, mất nơi ở và kế sinh nhai'
+    ], sectors:['tn','kt','xh'] },
+    { name:'Dông, lốc, sét', steps:[
+      'Mây dông phát triển nhanh vào đầu hoặc cuối mùa mưa',
+      'Gió giật mạnh làm tốc mái, gãy đổ cây xanh, biển quảng cáo',
+      'Dây điện đứt, mất điện; giao thông tê liệt tại chỗ',
+      'Nguy cơ thương vong do cây đổ đè, sét đánh, điện giật'
+    ], sectors:['tn','kt','xh'] }
+  ];
+
+  const tabs = document.getElementById('chainTabs');
+  const stepsEl = document.getElementById('chainSteps');
+  const sectorsEl = document.getElementById('chainSectors');
+  const buttons = chains.map((c, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chain-tab';
+    b.textContent = c.name;
+    b.addEventListener('click', () => select(i));
+    tabs.appendChild(b);
+    return b;
+  });
+
+  function select(i){
+    const c = chains[i];
+    buttons.forEach((b, j) => b.setAttribute('aria-pressed', j === i ? 'true' : 'false'));
+    stepsEl.innerHTML = '';
+    c.steps.forEach(s => {
+      const li = document.createElement('li');
+      li.textContent = s;
+      stepsEl.appendChild(li);
+    });
+    sectorsEl.innerHTML = '';
+    c.sectors.forEach(k => {
+      const chip = document.createElement('span');
+      chip.className = 'sector-chip ' + k;
+      chip.textContent = SECTOR[k];
+      sectorsEl.appendChild(chip);
+    });
+  }
+
+  select(0);
+})();
+
+(function(){
+  const grid = document.getElementById('sortGrid');
+  if (!grid) return;
+  const cards = Array.prototype.slice.call(grid.querySelectorAll('.cause'));
+  const score = document.getElementById('sortScore');
+
+  function update(){
+    const n = grid.querySelectorAll('.cause.revealed').length;
+    score.textContent = 'Đã lật ' + n + ' / ' + cards.length + ' thẻ';
+  }
+  cards.forEach(c => c.addEventListener('click', () => {
+    c.classList.toggle('revealed');
+    update();
+  }));
+  document.getElementById('sortReveal').addEventListener('click', () => {
+    cards.forEach(c => c.classList.add('revealed'));
+    update();
+  });
+  document.getElementById('sortReset').addEventListener('click', () => {
+    cards.forEach(c => c.classList.remove('revealed'));
+    update();
+  });
+  update();
+})();
+</script>
