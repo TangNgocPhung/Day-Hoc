@@ -137,6 +137,42 @@
   }
   .game-banner-link:hover { filter: brightness(1.08); }
 
+  .assessment-notice {
+    margin: 1.25rem 0 0;
+    padding: 1.15rem 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--exam) 45%, var(--border));
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--exam) 8%, var(--surface));
+    box-shadow: var(--shadow);
+  }
+  .assessment-notice-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+  .assessment-notice-label {
+    font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.1em; color: var(--exam);
+  }
+  .assessment-notice h2 {
+    margin: 0; font-family: var(--font-display); font-size: 1.35rem; line-height: 1.2;
+  }
+  .assessment-notice dl {
+    display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 0.8rem;
+    margin: 0; font-size: 0.9rem;
+  }
+  .assessment-notice dt { font-weight: 700; color: var(--ink); }
+  .assessment-notice dd { margin: 0; color: var(--ink-muted); }
+  .assessment-notice-link {
+    display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.9rem;
+    padding: 0.5rem 0.95rem; border-radius: 999px; background: var(--exam); color: var(--on-accent);
+    font-size: 0.84rem; font-weight: 700; text-decoration: none;
+  }
+  .assessment-notice-link:hover { filter: brightness(1.08); }
+  @media (max-width: 520px) {
+    .assessment-notice dl { grid-template-columns: 1fr; gap: 0.15rem; }
+    .assessment-notice dd { margin-bottom: 0.4rem; }
+  }
+
   .semester-block { margin-top: 2.25rem; }
   .semester-head {
     display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 1rem;
@@ -246,6 +282,28 @@
       </div>
       <a class="game-banner-link" href="tro-choi-on-tap-bai1-bai2.html" target="_blank" rel="noopener">▶ Chơi ngay</a>
     </div>
+
+    <section class="assessment-notice" aria-labelledby="assessment-notice-title">
+      <div class="assessment-notice-head">
+        <span class="assessment-notice-label">THÔNG BÁO KIỂM TRA · GIÁO DỤC ĐỊA PHƯƠNG 10</span>
+        <h2 id="assessment-notice-title">Kiểm tra thường xuyên lần 1: “Thử thách xanh 5 ngày”</h2>
+      </div>
+      <dl>
+        <dt>Nội dung</dt>
+        <dd>Chủ đề 1: Biến đổi khí hậu và phòng, chống thiên tai ở Thành phố Hồ Chí Minh.</dd>
+        <dt>Nhiệm vụ</dt>
+        <dd>Trong 5 ngày (không cần liên tiếp), mỗi ngày làm ít nhất một việc giúp giảm phát thải khí nhà kính, thuộc ít nhất 3 nhóm khác nhau (tiết kiệm điện, đi lại xanh, giảm rác và nhựa, ăn uống bền vững, cây xanh và nước). Mỗi ngày có ít nhất 1 ảnh do em tự chụp.</dd>
+        <dt>Hình thức</dt>
+        <dd>Bài cá nhân. Trình bày thành bản báo cáo khổ A4, khoảng 6–10 trang, theo bố cục trong phiếu giao nhiệm vụ. In ra (trắng đen cũng được), đóng bìa kính, có chữ ký phụ huynh.</dd>
+        <dt>Nhận phiếu</dt>
+        <dd>Tuần 4, từ 28/09 đến 02/10/2026.</dd>
+        <dt>Hạn nộp</dt>
+        <dd>Nộp trực tiếp cho cô tại tiết Giáo dục địa phương của lớp em ở Tuần 5, từ 05/10 đến 09/10/2026. Không nhận bản điện tử.</dd>
+        <dt>Đánh giá</dt>
+        <dd>Chấm theo thang 10 điểm; từ 5 điểm trở lên là Đạt. Không dùng ảnh trên mạng, không sao chép bài của bạn.</dd>
+      </dl>
+      <a class="assessment-notice-link" href="phieu-kttx1-thu-thach-xanh-5-ngay.docx" download>↓ Tải phiếu giao nhiệm vụ và bảng chấm</a>
+    </section>
   </header>
 
   <section class="semester-block" id="hk1">
