@@ -302,7 +302,6 @@
   .sync-status[data-state="ok"] { border-color: var(--green); background: var(--green-soft); color: var(--green); }
   .sync-status[data-state="busy"] { border-color: #b8cbe0; background: var(--blue-soft); color: #274d73; }
   .sync-status[data-state="error"] { border-color: #ddb5b5; background: var(--red-soft); color: #852e2e; }
-  #sync-form[hidden] { display: none; }
 
   .notice {
     margin: 0 0 1rem;
@@ -587,9 +586,10 @@
   <section class="card" aria-labelledby="data-title">
     <h2 id="data-title">Lưu trữ và xuất dữ liệu</h2>
     <p class="notice">
-      Dữ liệu điểm cộng và điểm trừ được lưu trong trình duyệt của máy này. Nếu chưa kết nối <strong>Google Sheet</strong> ở khung bên dưới
-      thì khi đổi máy, đổi trình duyệt hoặc xóa dữ liệu duyệt web, danh sách sẽ không còn.
+      Mọi thay đổi tự ghi vào <a href="https://docs.google.com/spreadsheets/d/1akRVIQ0bPx2hOC40epQJE-ycTMb7sCzrGHkCEIMQUYw/edit" target="_blank" rel="noopener"><strong>Google Sheet sổ điểm</strong></a>
+      nên đổi máy hay xóa dữ liệu trình duyệt cũng không mất. Muốn có file Excel: mở Sheet, chọn Tệp › Tải xuống › Microsoft Excel (.xlsx).
     </p>
+    <p class="sync-status" id="sync-status" data-state="off">Đang chờ kết nối Google Sheet…</p>
     <div class="data-actions">
       <button class="action-btn" id="export-csv" type="button">⬇ Xuất file Excel (CSV)</button>
       <button class="action-btn" id="export-json" type="button">💾 Lưu bản sao (JSON)</button>
@@ -598,26 +598,6 @@
       <input id="import-file" type="file" accept="application/json,.json" hidden>
     </div>
     <p class="count" id="data-result" style="margin-top:.9rem"></p>
-  </section>
-
-  <section class="card" aria-labelledby="sync-title">
-    <h2 id="sync-title">Đồng bộ Google Sheet<small>Khi đã kết nối, mọi thay đổi tự ghi vào Google Sheet của cô. Tải về dạng Excel bằng Tệp › Tải xuống › Microsoft Excel.</small></h2>
-    <p class="sync-status" id="sync-status" data-state="off">Chưa kết nối — dữ liệu chỉ nằm trên máy này.</p>
-    <form class="form" id="sync-form" autocomplete="off">
-      <div class="field full" id="sync-url-field">
-        <label for="sync-url">Địa chỉ Apps Script <em>(kết thúc bằng /exec)</em></label>
-        <input id="sync-url" type="url" placeholder="https://script.google.com/macros/s/…/exec">
-      </div>
-      <div class="field full">
-        <label for="sync-key">Mã đồng bộ <em>(16 ký tự, lấy khi chạy setup)</em></label>
-        <input id="sync-key" type="password" autocomplete="off" spellcheck="false">
-      </div>
-      <button class="submit full" id="sync-connect" type="submit">Kết nối</button>
-    </form>
-    <div class="data-actions" id="sync-actions" hidden>
-      <button class="action-btn" id="sync-now" type="button">🔄 Đồng bộ ngay</button>
-      <button class="action-btn danger" id="sync-disconnect" type="button">Ngắt kết nối trên máy này</button>
-    </div>
   </section>
 
   <section class="card" aria-labelledby="history-title">
@@ -850,15 +830,16 @@
     lockScreen.hidden = true;
     pageMain.hidden = false;
     lockAgain.hidden = false;
-    pullFromSheet();
   }
 
-  function unlock(remember) {
+  function unlock(remember, passcode) {
     try {
       // Chỉ lưu dấu "đã mở", không bao giờ lưu mật khẩu.
       (remember ? localStorage : sessionStorage).setItem(UNLOCK_KEY, "1");
     } catch (error) { /* trình duyệt chặn lưu trữ thì vẫn mở được cho phiên này */ }
     openPage();
+    // Mật khẩu chỉ được gửi cho Apps Script để lấy mã đồng bộ, không lưu lại.
+    linkSheet(passcode);
   }
 
   lockForm.addEventListener("submit", function (event) {
@@ -870,8 +851,9 @@
         lockInput.select();
         return;
       }
+      var passcode = lockInput.value.trim();
       lockInput.value = "";
-      unlock(lockRemember.checked);
+      unlock(lockRemember.checked, passcode);
     }).catch(function () {
       showLockError("Trình duyệt chưa kiểm tra được mật khẩu. Cô mở trang bằng địa chỉ https thay vì mở thẳng file trên máy.");
     });
@@ -981,20 +963,15 @@
 
   /* ---------- Đồng bộ Google Sheet ---------- */
 
-  var SYNC_URL_KEY = "gocHocTap.diemCong.syncUrl";
+  // Trang không có ô nhập mã: khi cô mở sổ bằng mật khẩu, Apps Script kiểm tra mật khẩu
+  // và trả về mã đồng bộ, trang giữ mã đó trên máy để các lần sau tự đồng bộ.
   var SYNC_SECRET_KEY = "gocHocTap.diemCong.syncKey";
   var SYNC_QUEUE_KEY = "gocHocTap.diemCong.syncQueue";
-  var CONFIG_URL = (window.DIEM_CONG_CONFIG && window.DIEM_CONG_CONFIG.apiUrl) || "";
+  var SYNC_URL = (window.DIEM_CONG_CONFIG && window.DIEM_CONG_CONFIG.apiUrl) || "";
 
   var syncQueue = [];
   var syncBusy = false;
-
   var syncStatus = document.getElementById("sync-status");
-  var syncForm = document.getElementById("sync-form");
-  var syncUrlField = document.getElementById("sync-url-field");
-  var syncUrlInput = document.getElementById("sync-url");
-  var syncKeyInput = document.getElementById("sync-key");
-  var syncActions = document.getElementById("sync-actions");
 
   function readLocal(key) {
     try { return localStorage.getItem(key) || ""; } catch (error) { return ""; }
@@ -1007,8 +984,7 @@
     } catch (error) { /* trình duyệt chặn lưu trữ */ }
   }
 
-  function syncUrl() { return readLocal(SYNC_URL_KEY) || CONFIG_URL; }
-  function syncOn() { return Boolean(syncUrl() && readLocal(SYNC_SECRET_KEY)); }
+  function syncOn() { return Boolean(SYNC_URL && readLocal(SYNC_SECRET_KEY)); }
 
   function loadQueue() {
     try {
@@ -1030,36 +1006,39 @@
 
   function showSynced() {
     var now = new Date();
-    setSyncStatus("ok", "Đã đồng bộ với Google Sheet lúc " + ("0" + now.getHours()).slice(-2) + ":"
+    setSyncStatus("ok", "✓ Đã đồng bộ với Google Sheet lúc " + ("0" + now.getHours()).slice(-2) + ":"
       + ("0" + now.getMinutes()).slice(-2) + " · " + entries.length + " lượt ghi nhận.");
+  }
+
+  function showNotLinked() {
+    setSyncStatus("error", "Máy này chưa kết nối Google Sheet. Cô bấm \"🔒 Khóa lại\" ở góc trên rồi mở sổ lại bằng mật khẩu một lần để kết nối.");
   }
 
   function showSyncError(error) {
     if (error && error.code === "bad-key") {
-      setSyncStatus("error", "Mã đồng bộ không đúng. Cô bấm \"Ngắt kết nối trên máy này\" rồi nhập lại mã.");
+      // Mã trên Apps Script đã đổi: bỏ mã cũ, lần mở sổ sau bằng mật khẩu sẽ nhận mã mới.
+      writeLocal(SYNC_SECRET_KEY, "");
+      showNotLinked();
       return;
     }
     if (!syncQueue.length) {
-      setSyncStatus("error", "Chưa tải được dữ liệu từ Google Sheet nên máy này đang dùng bản đã lưu. Cô kiểm tra mạng rồi bấm \"Đồng bộ ngay\".");
+      setSyncStatus("error", "Chưa tải được dữ liệu từ Google Sheet nên máy này đang dùng bản đã lưu. Cô kiểm tra mạng rồi tải lại trang.");
       return;
     }
     setSyncStatus("error", "Chưa ghi được lên Google Sheet (" + syncQueue.length + " thay đổi đang chờ). "
-      + "Dữ liệu vẫn an toàn trên máy này; trang sẽ gửi lại khi cô bấm \"Đồng bộ ngay\" hoặc mở lại sổ.");
+      + "Dữ liệu vẫn an toàn trên máy này; trang tự gửi lại khi có mạng.");
   }
 
-  function renderSyncForm() {
-    var on = syncOn();
-    syncForm.hidden = on;
-    syncActions.hidden = !on;
-    syncUrlField.hidden = Boolean(CONFIG_URL);
-    if (!on) setSyncStatus("off", "Chưa kết nối — dữ liệu chỉ nằm trên máy này.");
+  function renderSyncStatus() {
+    if (!SYNC_URL) setSyncStatus("off", "Chưa cài địa chỉ Google Sheet — dữ liệu chỉ nằm trên máy này.");
+    else if (!syncOn()) showNotLinked();
   }
 
-  function callSync(body, url, key) {
-    return fetch(url || syncUrl(), {
+  function callSync(body) {
+    return fetch(SYNC_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(Object.assign({ key: key || readLocal(SYNC_SECRET_KEY) }, body))
+      body: JSON.stringify(Object.assign({ key: readLocal(SYNC_SECRET_KEY) }, body))
     }).then(function (response) {
       if (!response.ok) throw new Error("HTTP " + response.status);
       return response.json();
@@ -1088,7 +1067,7 @@
   function commit(change) {
     save();
     render();
-    if (!syncOn()) return;
+    if (!SYNC_URL) return;
     syncQueue.push({
       upsert: change.upsert || [],
       remove: change.remove || [],
@@ -1128,7 +1107,10 @@
 
   // Lấy dữ liệu trên Sheet làm chuẩn để các máy của cô thấy cùng một sổ.
   function pullFromSheet() {
-    if (!syncOn()) return Promise.resolve();
+    if (!syncOn()) {
+      renderSyncStatus();
+      return Promise.resolve();
+    }
     return flushQueue().then(function () {
       if (syncBusy || syncQueue.length) return null;
       syncBusy = true;
@@ -1150,62 +1132,44 @@
     });
   }
 
-  syncForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    var url = (syncUrlInput.value.trim() || CONFIG_URL);
-    var key = syncKeyInput.value.trim();
-    if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(url)) {
-      setSyncStatus("error", "Địa chỉ Apps Script phải bắt đầu bằng https://script.google.com/ và kết thúc bằng /exec.");
-      return;
-    }
-    if (!key) {
-      setSyncStatus("error", "Cô nhập mã đồng bộ (lấy trong Nhật ký thực thi khi chạy hàm setup).");
-      return;
-    }
+  // Gọi ngay sau khi cô gõ đúng mật khẩu. Máy đã có mã thì chỉ đồng bộ như thường.
+  function linkSheet(passcode) {
+    if (!SYNC_URL) return renderSyncStatus();
+    if (syncOn()) return pullFromSheet();
 
-    setSyncStatus("busy", "Đang kiểm tra kết nối…");
-    callSync({ action: "pull" }, url, key).then(function (result) {
-      writeLocal(SYNC_URL_KEY, url === CONFIG_URL ? "" : url);
-      writeLocal(SYNC_SECRET_KEY, key);
-      syncKeyInput.value = "";
-
+    setSyncStatus("busy", "Đang kết nối Google Sheet…");
+    callSync({ action: "login", passcode: passcode }).then(function (login) {
+      writeLocal(SYNC_SECRET_KEY, login.key);
+      return callSync({ action: "pull" });
+    }).then(function (result) {
       var onSheet = {};
       (result.entries || []).forEach(function (entry) { onSheet[entry.id] = true; });
-      var localOnly = entries.filter(function (entry) { return !onSheet[entry.id]; });
-      var knownHistory = {};
-      (result.history || []).forEach(function (item) { knownHistory[item.id] = true; });
-      var localHistory = history.filter(function (item) { return !knownHistory[item.id]; });
+      var queued = {};
+      syncQueue.forEach(function (change) {
+        (change.upsert || []).forEach(function (entry) { queued[entry.id] = true; });
+      });
+      var localOnly = entries.filter(function (entry) { return !onSheet[entry.id] && !queued[entry.id]; });
 
       if (localOnly.length && window.confirm("Máy này có " + localOnly.length + " lượt ghi nhận chưa có trên Google Sheet. "
         + "Đưa lên Sheet để giữ lại?\n\n(Bấm Hủy thì máy này bỏ các lượt đó và lấy theo dữ liệu trên Sheet.)")) {
-        var upload = logAction("upload", localOnly);
-        syncQueue.push({ upsert: localOnly, remove: [], history: localHistory.concat([upload]).map(withSummary), markUndone: [] });
+        syncQueue.push({ upsert: localOnly, remove: [], history: [withSummary(logAction("upload", localOnly))], markUndone: [] });
         saveQueue();
       }
-
-      renderSyncForm();
       return pullFromSheet();
     }).catch(function (error) {
-      if (error && error.code === "bad-key") setSyncStatus("error", "Mã đồng bộ không đúng. Cô kiểm tra lại mã trong Nhật ký thực thi.");
-      else setSyncStatus("error", "Không kết nối được: " + error.message + ". Cô kiểm tra lại địa chỉ /exec và quyền truy cập \"Bất kỳ ai\".");
+      if (error && (error.code === "bad-pass" || error.code === "locked")) {
+        setSyncStatus("error", error.code === "locked"
+          ? error.message
+          : "Sổ đã mở bằng mật khẩu riêng của máy này nên chưa kết nối được Google Sheet. Cô mở sổ bằng mật khẩu chung để kết nối.");
+        return;
+      }
+      setSyncStatus("error", "Chưa kết nối được Google Sheet (" + error.message + "). Cô kiểm tra mạng rồi mở lại sổ.");
     });
-  });
-
-  document.getElementById("sync-now").addEventListener("click", pullFromSheet);
-
-  document.getElementById("sync-disconnect").addEventListener("click", function () {
-    var warning = syncQueue.length
-      ? "Còn " + syncQueue.length + " thay đổi chưa ghi lên Google Sheet và sẽ không được gửi nữa. Vẫn ngắt kết nối?"
-      : "Ngắt kết nối Google Sheet trên máy này? Dữ liệu trên Sheet vẫn giữ nguyên.";
-    if (!window.confirm(warning)) return;
-    writeLocal(SYNC_URL_KEY, "");
-    writeLocal(SYNC_SECRET_KEY, "");
-    syncQueue = [];
-    saveQueue();
-    renderSyncForm();
-  });
+  }
 
   window.addEventListener("online", function () { flushQueue(); });
+  // Có thay đổi đang chờ (vd. vừa mất mạng) thì cứ mỗi phút thử gửi lại một lần.
+  setInterval(function () { if (syncQueue.length) flushQueue(); }, 60000);
 
   /* ---------- Khởi tạo các ô chọn ---------- */
 
@@ -1754,11 +1718,15 @@
   load();
   loadHistory();
   loadQueue();
-  renderSyncForm();
+  renderSyncStatus();
   render();
 
-  if (readUnlockFlag()) openPage();
-  else lockInput.focus();
+  if (readUnlockFlag()) {
+    openPage();
+    pullFromSheet();
+  } else {
+    lockInput.focus();
+  }
 })();
 </script>
 </body>

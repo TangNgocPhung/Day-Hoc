@@ -6,7 +6,9 @@
  * Excel bằng Tệp > Tải xuống > Microsoft Excel.
  *
  * Mọi yêu cầu phải kèm mã đồng bộ (tạo khi chạy setup). Địa chỉ /exec là công khai
- * nên thiếu mã này thì không ai đọc hay sửa được điểm của học sinh.
+ * nên thiếu mã này thì không ai đọc hay sửa được điểm của học sinh. Trang không bắt
+ * cô nhập mã: khi cô mở sổ bằng mật khẩu, trang gửi mật khẩu về đây (yêu cầu "login")
+ * và nhận lại mã đồng bộ.
  */
 var SETTINGS = {
   // Bảng tính đích: https://docs.google.com/spreadsheets/d/1akRVIQ0bPx2hOC40epQJE-ycTMb7sCzrGHkCEIMQUYw/
@@ -14,6 +16,10 @@ var SETTINGS = {
   entrySheetName: "DiemCongTru",
   historySheetName: "LichSu",
   historyLimit: 1000,
+  // Mã băm SHA-256 của mật khẩu mở sổ, trùng DEFAULT_PASS_HASH trong diem-cong.html.
+  passHash: "617d0f7a1a2697a7745a81a9169ebd058f6a9fd5a478493ae5909d2c8d5bdb0e",
+  // Sai mật khẩu quá số lần này trong 15 phút thì tạm khóa, chống dò mật khẩu.
+  maxLoginFailures: 10,
   // Một ô Google Sheet chứa tối đa 50 000 ký tự nên dữ liệu hoàn tác dài được chia ra nhiều ô.
   chunkSize: 45000
 };
@@ -84,6 +90,7 @@ function doPost(e) {
   var lock = LockService.getScriptLock();
   try {
     var payload = JSON.parse((e.postData && e.postData.contents) || "{}");
+    if (payload.action === "login") return jsonResponse_(login_(payload));
     var key = PropertiesService.getScriptProperties().getProperty("SYNC_KEY");
     if (!key || String(payload.key || "") !== key) {
       return jsonResponse_({ ok: false, code: "bad-key", message: "Mã đồng bộ không đúng." });
@@ -98,6 +105,35 @@ function doPost(e) {
   } finally {
     if (lock.hasLock()) lock.releaseLock();
   }
+}
+
+/* ---------- Mở sổ bằng mật khẩu ---------- */
+
+function login_(payload) {
+  var cache = CacheService.getScriptCache();
+  var failures = Number(cache.get("loginFailures")) || 0;
+  if (failures >= SETTINGS.maxLoginFailures) {
+    return { ok: false, code: "locked", message: "Nhập sai mật khẩu quá nhiều lần. Cô thử lại sau 15 phút." };
+  }
+
+  if (sha256Hex_(String(payload.passcode || "")) !== SETTINGS.passHash) {
+    cache.put("loginFailures", String(failures + 1), 15 * 60);
+    return { ok: false, code: "bad-pass", message: "Mật khẩu không đúng." };
+  }
+
+  var props = PropertiesService.getScriptProperties();
+  var key = props.getProperty("SYNC_KEY");
+  if (!key) {
+    key = newKey_();
+    props.setProperty("SYNC_KEY", key);
+  }
+  return { ok: true, key: key };
+}
+
+function sha256Hex_(text) {
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, text, Utilities.Charset.UTF_8)
+    .map(function (byte) { return ("0" + ((byte + 256) % 256).toString(16)).slice(-2); })
+    .join("");
 }
 
 /* ---------- Đọc toàn bộ dữ liệu ---------- */
