@@ -54,3 +54,14 @@ Danh sách phòng và số máy nằm ở hai nơi và **phải khớp nhau**:
 - `window.PHONG_MAY` trong `../data/phong-may.js`
 
 Mã phòng (`PM1`…`PM5`) là khóa đối chiếu, đổi ở một bên thì phải đổi ở bên kia.
+
+## Sổ điểm cộng · điểm trừ (cùng file `Code.gs`)
+
+Phần cuối `Code.gs` phục vụ trang `diem-cong.html`, dùng **chung bảng tính và chung bản triển khai** với đăng ký chỗ ngồi (`../diem-cong-config.js` trỏ cùng URL `/exec`). Dữ liệu nằm ở hai trang tính:
+
+- `DiemCongTru`: mỗi dòng một lượt ghi nhận (điểm trừ ghi số âm). Tải về dạng Excel bằng **Tệp > Tải xuống > Microsoft Excel**.
+- `LichSu`: mỗi thao tác ghi nhận, xóa, hoàn tác. Từ cột G trở đi là dữ liệu để hoàn tác, **không sửa tay**.
+
+Lần đầu: chạy hàm `setupDiemCong` một lần (tạo tiêu đề, định dạng cột và mã đồng bộ). Không chạy `setup`, vì hàm đó dành cho trang tính đăng ký chỗ ngồi.
+
+Trang không có ô nhập mã: khi cô mở sổ bằng mật khẩu, trang gửi mật khẩu về Apps Script (so với `DC_SETTINGS.passHash`, trùng `DEFAULT_PASS_HASH` trong `diem-cong.html`) và nhận lại mã đồng bộ. Mật khẩu không được lưu. Sai 10 lần trong 15 phút thì tạm khóa đăng nhập. Nghi mã bị lộ thì chạy `resetSyncKey`, rồi trên mỗi máy bấm **Khóa lại** và mở sổ lại bằng mật khẩu.
