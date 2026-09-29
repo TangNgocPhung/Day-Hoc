@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bài 20 · Câu lệnh lặp for — Tin học 10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1f2937;
+    --ink-soft: #52606d;
+    --ink-faint: #8a94a3;
+    --page-bg: #fbf9f3;
+    --card: #ffffff;
+    --line: #e6e0d2;
+    --line-strong: #d3c9b3;
+
+    --teal: #0f6e56;
+    --teal-bg: #e1f5ee;
+    --teal-line: #9fe1cb;
+
+    --coral: #b34c1f;
+    --coral-bg: #ffede3;
+    --coral-line: #f5b48e;
+
+    --violet: #6d4fc4;
+    --violet-bg: #efe9fc;
+    --violet-line: #c9b8f2;
+
+    --amber: #a8650b;
+    --amber-bg: #fff1d9;
+    --amber-line: #f6ce8a;
+
+    --pink: #c04a75;
+    --pink-bg: #fdeaf1;
+    --pink-line: #f2b7cf;
+
+    --font-head: 'Fraunces', Georgia, serif;
+    --font-body: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.65;
+    font-size: 16px;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--ink);
+    border-bottom: 3px solid var(--teal);
+  }
+  .topbar-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0.9rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+  }
+  .topbar .brand {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 18px;
+    color: #fff;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+  }
+  .topbar .brand small {
+    display: block;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 11px;
+    color: #a8b3c2;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .topbar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    flex: 1;
+  }
+  .topbar-nav a {
+    font-size: 13.5px;
+    color: #cfd6e0;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+  }
+  .topbar-nav a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .topbar-nav a.hue-teal:hover { background: var(--teal); color: #fff; }
+  .topbar-nav a.hue-coral:hover { background: var(--coral); color: #fff; }
+  .topbar-nav a.hue-violet:hover { background: var(--violet); color: #fff; }
+  .topbar-nav a.hue-amber:hover { background: var(--amber); color: #fff; }
+  .topbar-nav a.hue-pink:hover { background: var(--pink); color: #fff; }
+
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  section { margin-bottom: 3.5rem; scroll-margin-top: 2rem; }
+
+  .goals {
+    background: var(--violet-bg);
+    border: 1px solid var(--violet-line);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .goals p { margin: 0 0 0.5rem; font-size: 13px; font-weight: 500; color: var(--violet); text-transform: uppercase; letter-spacing: 0.04em; }
+  .goals ul { margin: 0; padding-left: 1.2rem; }
+  .goals li { font-size: 15px; margin-bottom: 4px; }
+
+  h1 {
+    font-family: var(--font-head);
+    font-size: 44px;
+    font-weight: 600;
+    margin: 0 0 0.3rem;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--teal);
+  }
+  .lesson-tag { font-size: 13px; color: var(--ink-faint); margin-bottom: 1.75rem; font-family: var(--font-mono); }
+
+  h2 {
+    font-family: var(--font-head);
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 3px solid var(--sec-line, var(--teal-line));
+    color: var(--sec-color, var(--teal));
+  }
+  section#lenh-for { --sec-color: var(--teal); --sec-line: var(--teal-line); }
+  section#lenh-range { --sec-color: var(--coral); --sec-line: var(--coral-line); }
+  section#thuc-hanh { --sec-color: var(--violet); --sec-line: var(--violet-line); }
+  section#luyen-tap { --sec-color: var(--amber); --sec-line: var(--amber-line); }
+  section#van-dung { --sec-color: var(--pink); --sec-line: var(--pink-line); }
+
+  h3 {
+    font-family: var(--font-head);
+    font-size: 19px;
+    font-weight: 600;
+    margin: 2rem 0 0.75rem;
+    color: var(--ink);
+  }
+
+  p { margin: 0 0 1rem; }
+
+  .activity-label {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sec-color, var(--teal));
+    background: var(--sec-bg, var(--teal-bg));
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+  }
+  section#lenh-for .activity-label { --sec-bg: var(--teal-bg); }
+  section#lenh-range .activity-label { --sec-bg: var(--coral-bg); }
+
+  pre.code-block {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    background: #1a2233;
+    color: #e3e8f0;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    overflow-x: auto;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+    border-left: 4px solid var(--sec-color, var(--teal));
+  }
+  pre.code-block .kw { color: #7fd9c4; font-weight: 500; }
+  pre.code-block .cm { color: #7d8aa8; font-style: italic; }
+  pre.code-block .num { color: #f5b48e; }
+
+  code.inline {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--teal-bg);
+    color: var(--teal);
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+
+  .callout {
+    background: var(--amber-bg);
+    border-left: 4px solid var(--amber);
+    border-radius: 0 10px 10px 0;
+    padding: 0.9rem 1.25rem;
+    margin: 1.25rem 0;
+    font-size: 14.5px;
+  }
+  .callout strong { color: var(--amber); font-family: var(--font-head); }
+
+  .question-box {
+    background: var(--pink-bg);
+    border: 1px solid var(--pink-line);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+  }
+  .question-box .q-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--pink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin: 1.25rem 0 1.75rem;
+    box-shadow: 0 1px 3px rgba(31,41,55,0.06);
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+  .controls label { font-size: 14px; color: var(--ink-soft); }
+  input[type="range"] { flex: 1; min-width: 140px; accent-color: var(--teal); }
+  .n-value { font-weight: 600; min-width: 24px; text-align: center; }
+  button {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 8px 18px;
+    border-radius: 24px;
+    border: 1px solid var(--line-strong);
+    background: var(--card);
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  button:hover { background: var(--page-bg); }
+  button:active { transform: scale(0.97); }
+  button.primary {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #fff;
+  }
+  button.primary:hover { background: #0c5a45; }
+
+  .code-line {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 1.25rem;
+    color: var(--ink-soft);
+  }
+  .code-line .n-hi { color: var(--teal); font-weight: 600; }
+
+  svg.sim-svg { width: 100%; height: auto; overflow: visible; display: block; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 1.25rem;
+  }
+  .stat {
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+  .stat .label { font-size: 12px; color: var(--ink-soft); margin-bottom: 4px; }
+  .stat .value { font-size: 20px; font-weight: 600; }
+
+  table.trace {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 1rem;
+  }
+  table.trace th {
+    text-align: left;
+    padding: 6px 10px;
+    color: var(--ink-soft);
+    font-weight: 600;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  table.trace td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+  }
+  tr.even-row { background: var(--teal-bg); }
+
+  .done-banner {
+    display: none;
+    margin-top: 1rem;
+    background: var(--teal-bg);
+    color: var(--teal);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .ball { animation: popIn 0.35s ease-out; }
+  @keyframes popIn { 0% { transform: scale(0.3); opacity: 0; } 60% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
+  .pulse { animation: pulseGlow 0.5s ease-in-out; }
+  @keyframes pulseGlow { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+  .exercise-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 1rem 0;
+  }
+  .exercise-item {
+    background: var(--coral-bg);
+    border: 1px solid var(--coral-line);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--coral);
+  }
+
+  ol.task-list { padding-left: 1.3rem; }
+  ol.task-list li { margin-bottom: 0.6rem; }
+
+  .practice-item { border-top: 2px dashed var(--line-strong); padding-top: 1.5rem; margin-top: 1.5rem; }
+  .practice-item:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+
+  @media (max-width: 860px) {
+    .topbar-inner { flex-direction: column; align-items: flex-start; gap: 0.6rem; padding: 0.9rem 1.25rem; }
+    .topbar-nav { gap: 6px; }
+    main { padding: 2rem 1.25rem 4rem; }
+    .exercise-grid { grid-template-columns: 1fr; }
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+    h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><small>Tin học 10 · Bài 20</small>Câu lệnh lặp for</div>
+    <nav class="topbar-nav">
+      <a class="hue-teal" href="#muc-tieu">Mục tiêu</a>
+      <a class="hue-teal" href="#lenh-for">1. Lệnh for</a>
+      <a class="hue-coral" href="#lenh-range">2. Lệnh range</a>
+      <a class="hue-violet" href="#thuc-hanh">Thực hành</a>
+      <a class="hue-amber" href="#luyen-tap">Luyện tập</a>
+      <a class="hue-pink" href="#van-dung">Vận dụng</a>
+    </nav>
+  </div>
+</div>
+
+  <main>
+    <h1>Câu lệnh lặp for</h1>
+    <p class="lesson-tag">Bài 20 · Tin học 10 · Kết nối tri thức với cuộc sống</p>
+
+    <div class="goals" id="muc-tieu">
+      <p>Sau bài này em sẽ:</p>
+      <ul>
+        <li>Biết được ý nghĩa của vùng giá trị tạo bởi lệnh <code class="inline">range()</code></li>
+        <li>Biết được chức năng của lệnh lặp <code class="inline">for</code> và cách dùng trong Python</li>
+      </ul>
+    </div>
+
+    <p>Em có thể đã gặp những trường hợp cần thực hiện một số công việc lặp đi lặp lại nhiều lần. Ví dụ, để kể tên tất cả các bạn trong lớp có 30 học sinh, em cần lần lượt đọc tên từng bạn; để đếm số lượng các số chia hết cho 3 trong khoảng từ 1 đến 50, em có thể kiểm tra lần lượt các số từ 1 đến 50 và ghi ra các số chia hết cho 3 rồi đếm các số đó. Ngôn ngữ lập trình bậc cao có các câu lệnh cho phép viết một cách ngắn gọn các bước cần thực hiện lặp đi lặp lại để tạo thành một cấu trúc lập trình được gọi là <strong>cấu trúc lặp</strong>.</p>
+
+    <section id="lenh-for">
+      <h2>1. Lệnh for</h2>
+
+      <div id="hd1">
+        <span class="activity-label">Hoạt động 1 · Làm quen với lệnh lặp for</span>
+        <p>Thực hiện đoạn chương trình sau trong chế độ gõ lệnh trực tiếp của Python để tính tổng 0 + 1 + ... + 9. Tổng này có giá trị bao nhiêu? Giải thích kết quả.</p>
+        <pre class="code-block">&gt;&gt;&gt; S = <span class="num">0</span>
+&gt;&gt;&gt; <span class="kw">for</span> k <span class="kw">in</span> range(<span class="num">10</span>):
+        S = S + k
+&gt;&gt;&gt; print(S)
+45</pre>
+      </div>
+
+      <p>Trong đoạn chương trình trên, lệnh <code class="inline">range(10)</code> trả lại một <em>vùng giá trị</em> gồm 10 số 0, 1, 2, 3, 4, 5, 6, 7, 8, 9. Lệnh <code class="inline">for</code> sẽ thực hiện 10 lần lặp, mỗi lần lặp ứng với một giá trị k trong vùng giá trị trên. Sau lệnh lặp <code class="inline">for</code> trên, biến S sẽ có giá trị là tổng 0 + 1 + ... + 9 = 45.</p>
+
+      <p>Lệnh <code class="inline">range(n)</code> trả lại vùng giá trị gồm n số từ 0 đến n − 1. Cú pháp của lệnh lặp với số lần biết trước <code class="inline">for</code> trong Python như sau:</p>
+
+      <pre class="code-block"><span class="kw">for</span> &lt;i&gt; <span class="kw">in</span> range(n):
+    &lt;khối lệnh&gt;</pre>
+
+      <p>Khi thực hiện, ở mỗi vòng lặp biến i sẽ được gán lần lượt các giá trị trong vùng giá trị của lệnh <code class="inline">range()</code> và thực hiện khối lệnh.</p>
+
+      <h3 id="vi-du-tong">Ví dụ 1. Tính tổng các số tự nhiên chẵn nhỏ hơn n</h3>
+      <p>Với n cho trước (n = 10):</p>
+      <pre class="code-block">n = <span class="num">10</span>
+S = <span class="num">0</span>
+<span class="kw">for</span> k <span class="kw">in</span> range(n):
+    <span class="kw">if</span> k%<span class="num">2</span> == <span class="num">0</span>:  <span class="cm"># điều kiện k là số chẵn</span>
+        S = S + k
+print(S)</pre>
+
+      <p>Dưới đây là mô phỏng đúng đoạn chương trình trên — mỗi số trong vùng giá trị của <code class="inline">range(n)</code> hiện thành một viên bi chạy qua máy kiểm tra điều kiện chẵn lẻ, rồi cộng dồn vào tổng S.</p>
+
+      <div class="card">
+        <div class="controls">
+          <label for="nSlider1">n =</label>
+          <input type="range" id="nSlider1" min="4" max="16" value="10" step="1">
+          <span class="n-value" id="nOut1">10</span>
+          <button id="resetBtn1">Bắt đầu lại</button>
+          <button class="primary" id="playBtn1">Chạy tự động</button>
+        </div>
+
+        <div class="code-line">
+          for k in range(<span class="n-hi" id="codeN1">10</span>): &nbsp;if k % 2 == 0: &nbsp;S = S + k
+        </div>
+
+        <svg class="sim-svg" viewBox="0 0 680 300" role="img">
+          <title>Mô phỏng tính tổng số chẵn</title>
+          <text x="70" y="30" text-anchor="middle" font-size="12" fill="#5c5347">Vùng range(n)</text>
+          <g id="ballTrack1"></g>
+          <g id="machine1" transform="translate(280,60)">
+            <rect x="0" y="0" width="120" height="90" rx="12" fill="#faf6ee" stroke="#cdbf9f" stroke-width="1"/>
+            <text x="60" y="24" text-anchor="middle" font-size="14" font-weight="600" fill="#2b2620">k % 2 == 0?</text>
+            <text id="condResult1" x="60" y="55" text-anchor="middle" font-size="13" fill="#5c5347">–</text>
+          </g>
+          <line x1="200" y1="105" x2="278" y2="105" stroke="#cdbf9f" stroke-width="1.5" marker-end="url(#arrow1)"/>
+          <text id="passLabel1" x="420" y="90" text-anchor="middle" font-size="12" fill="#0f6e56" opacity="0">Đúng</text>
+          <g transform="translate(460,50)">
+            <text x="0" y="0" font-size="14" font-weight="600" fill="#5c5347">Tổng S</text>
+            <rect x="0" y="14" width="160" height="26" rx="6" fill="#faf6ee" stroke="#cdbf9f" stroke-width="1"/>
+            <rect id="sBarFill1" x="0" y="14" width="0" height="26" rx="6" fill="#0f6e56" opacity="0.55"/>
+            <text id="sValue1" x="80" y="27" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#2b2620">0</text>
+          </g>
+          <defs>
+            <marker id="arrow1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#cdbf9f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+        </svg>
+
+        <div class="stat-row">
+          <div class="stat"><div class="label">Vòng lặp</div><div class="value" id="stVong1">–</div></div>
+          <div class="stat"><div class="label">k</div><div class="value" id="stK1">–</div></div>
+          <div class="stat"><div class="label">Chẵn?</div><div class="value" id="stCond1">–</div></div>
+          <div class="stat"><div class="label">S</div><div class="value" id="stS1">0</div></div>
+        </div>
+
+        <table class="trace">
+          <thead><tr><th>Vòng</th><th>k</th><th>k % 2 == 0?</th><th>S trước</th><th>S sau</th></tr></thead>
+          <tbody id="traceBody1"></tbody>
+        </table>
+
+        <div class="done-banner" id="doneMsg1">Vòng lặp kết thúc. Kết quả cuối cùng: S = <span id="finalS1"></span></div>
+      </div>
+
+      <h3 id="vi-du-boi">Ví dụ 2. Đếm số các số nguyên nhỏ hơn n và là bội của 3</h3>
+      <p>Với n = 20:</p>
+      <pre class="code-block">n = <span class="num">20</span>
+C = <span class="num">0</span>
+<span class="kw">for</span> k <span class="kw">in</span> range(n):
+    <span class="kw">if</span> k%<span class="num">3</span> == <span class="num">0</span>:  <span class="cm"># điều kiện k là bội của 3</span>
+        C = C + <span class="num">1</span>
+print(C)</pre>
+
+      <div class="callout">
+        <strong>Ghi nhớ.</strong> <code class="inline">for</code> là lệnh lặp với số lần biết trước. Số lần lặp thường được xác định bởi vùng giá trị của lệnh <code class="inline">range()</code>.
+      </div>
+
+      <div class="question-box">
+        <p class="q-label">Câu hỏi</p>
+        <p>Với giá trị n cho trước, so sánh giá trị S trong đoạn chương trình sau với tổng 1 + 2 + ... + n.</p>
+        <pre class="code-block" style="margin:0">S = <span class="num">0</span>
+<span class="kw">for</span> k <span class="kw">in</span> range(<span class="num">1</span>,n+<span class="num">1</span>):
+    S = S + k</pre>
+      </div>
+    </section>
+
+    <section id="lenh-range">
+      <h2>2. Lệnh range</h2>
+
+      <div id="hd2">
+        <span class="activity-label">Hoạt động 2 · Tìm hiểu vùng giá trị xác định bởi lệnh range()</span>
+        <p>Quan sát các lệnh <code class="inline">for</code> sau và so sánh kết quả in ra để biết vùng giá trị được xác định bởi lệnh <code class="inline">range()</code>. Lưu ý, lệnh <code class="inline">print()</code> có thêm tham số để in bộ dữ liệu theo hàng ngang.</p>
+        <pre class="code-block">&gt;&gt;&gt; <span class="kw">for</span> k <span class="kw">in</span> range(<span class="num">3</span>,<span class="num">10</span>):
+        print(k, end = <span class="num">" "</span>)
+3 4 5 6 7 8 9   <span class="cm">← Đây là vùng range(3,10)</span>
+
+&gt;&gt;&gt; <span class="kw">for</span> k <span class="kw">in</span> range(<span class="num">0</span>,<span class="num">15</span>):
+        print(k, end = <span class="num">" "</span>)
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14   <span class="cm">← Đây là vùng range(0,15)</span></pre>
+      </div>
+
+      <p>Lệnh tạo vùng giá trị <code class="inline">range()</code> có các dạng sau:</p>
+      <ul>
+        <li><code class="inline">range(stop)</code> trả lại vùng giá trị từ 0 đến stop − 1.</li>
+        <li><code class="inline">range(start, stop)</code> trả lại vùng giá trị từ start đến stop − 1.</li>
+      </ul>
+
+      <div class="exercise-grid">
+        <div class="exercise-item">range(n) → 0, 1, ..., n − 1</div>
+        <div class="exercise-item">range(1, n+1) → 1, 2, ..., n</div>
+        <div class="exercise-item">range(0, 99) → 0, 1, 2, ..., 98</div>
+        <div class="exercise-item">range(100, 1) → vùng rỗng</div>
+      </div>
+
+      <div class="callout">
+        <strong>Ghi nhớ.</strong> Lệnh tạo vùng giá trị có cú pháp <code class="inline">range(start, stop)</code> trả lại vùng giá trị gồm các số nguyên liên tiếp từ start đến stop − 1.
+      </div>
+
+      <div class="question-box">
+        <p class="q-label">Câu hỏi</p>
+        <p>Hãy biểu diễn các dãy sau đây bằng lệnh <code class="inline">range()</code>.</p>
+        <p style="margin:0">a) 1, 2, 3, ..., 50 &nbsp;&nbsp; b) 5, 6, 7, 8, 9, 10 &nbsp;&nbsp; c) 0, 1 &nbsp;&nbsp; d) 10</p>
+      </div>
+    </section>
+
+    <section id="thuc-hanh">
+      <h2>Thực hành. Lệnh lặp for và lệnh range()</h2>
+
+      <div class="practice-item" id="nhiem-vu-1">
+        <h3 style="margin-top:0">Nhiệm vụ 1</h3>
+        <p>Nhập số tự nhiên n từ bàn phím và in ra màn hình dãy các ước số của n theo chiều ngang màn hình. Ví dụ nếu n = 10 thì chương trình sẽ in ra dãy số 1, 2, 5, 10.</p>
+        <p><em>Hướng dẫn.</em> Các ước số của n là các số tự nhiên k thoả mãn n%k = 0. Muốn in các số trên một hàng ngang cần dùng thêm tham số <code class="inline">end = " "</code> trong lệnh <code class="inline">print()</code>.</p>
+        <pre class="code-block">n = <span class="num">int</span>(input(<span class="num">"Nhập số tự nhiên n: "</span>))
+<span class="kw">for</span> k <span class="kw">in</span> range(<span class="num">1</span>, n+<span class="num">1</span>):
+    <span class="kw">if</span> n%k == <span class="num">0</span>:
+        print(k, end = <span class="num">" "</span>)</pre>
+
+        <p>Mô phỏng dưới đây minh hoạ đúng bài toán này — mỗi số k trong vùng <code class="inline">range(1, n)</code> chạy qua máy kiểm tra "n có chia hết cho k không?", đúng thì được thêm vào danh sách ước số.</p>
+
+        <div class="card">
+          <div class="controls">
+            <label for="nSlider2">n =</label>
+            <input type="range" id="nSlider2" min="4" max="30" value="12" step="1">
+            <span class="n-value" id="nOut2">12</span>
+            <button id="resetBtn2">Bắt đầu lại</button>
+            <button class="primary" id="playBtn2">Chạy tự động</button>
+          </div>
+
+          <div class="code-line">
+            for k in range(1, <span class="n-hi" id="codeN2">12</span>): &nbsp;if n % k == 0: &nbsp;in ra k
+          </div>
+
+          <svg class="sim-svg" viewBox="0 0 680 300" role="img">
+            <title>Mô phỏng đếm ước số</title>
+            <text x="70" y="30" text-anchor="middle" font-size="12" fill="#5c5347">Vùng range(1, n)</text>
+            <g id="ballTrack2"></g>
+            <g id="machine2" transform="translate(280,60)">
+              <rect x="0" y="0" width="120" height="90" rx="12" fill="#faf6ee" stroke="#cdbf9f" stroke-width="1"/>
+              <text x="60" y="24" text-anchor="middle" font-size="14" font-weight="600" fill="#2b2620">n % k == 0?</text>
+              <text id="condResult2" x="60" y="55" text-anchor="middle" font-size="13" fill="#5c5347">–</text>
+            </g>
+            <line x1="200" y1="105" x2="278" y2="105" stroke="#cdbf9f" stroke-width="1.5" marker-end="url(#arrow2)"/>
+            <text id="passLabel2" x="420" y="90" text-anchor="middle" font-size="12" fill="#0f6e56" opacity="0">Là ước số</text>
+            <g transform="translate(460,50)">
+              <text x="0" y="0" font-size="14" font-weight="600" fill="#5c5347">Các ước số tìm được</text>
+              <rect x="0" y="14" width="160" height="90" rx="6" fill="#faf6ee" stroke="#cdbf9f" stroke-width="1"/>
+              <text id="divisorList2" x="10" y="34" font-size="13" fill="#2b2620"></text>
+            </g>
+            <defs>
+              <marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#cdbf9f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </marker>
+            </defs>
+          </svg>
+
+          <div class="stat-row">
+            <div class="stat"><div class="label">Vòng lặp</div><div class="value" id="stVong2">–</div></div>
+            <div class="stat"><div class="label">k</div><div class="value" id="stK2">–</div></div>
+            <div class="stat"><div class="label">Là ước số?</div><div class="value" id="stCond2">–</div></div>
+            <div class="stat"><div class="label">Số ước tìm được</div><div class="value" id="stCount2">0</div></div>
+          </div>
+
+          <table class="trace">
+            <thead><tr><th>Vòng</th><th>k</th><th>n % k == 0?</th><th>Kết quả</th></tr></thead>
+            <tbody id="traceBody2"></tbody>
+          </table>
+
+          <div class="done-banner" id="doneMsg2">Vòng lặp kết thúc. Các ước số của n: <span id="finalDivisors2"></span></div>
+        </div>
+      </div>
+
+      <div class="practice-item" id="nhiem-vu-2">
+        <h3 style="margin-top:0">Nhiệm vụ 2</h3>
+        <p>Nhập số tự nhiên n từ bàn phím và đếm số các ước số thực sự của n. Ước số thực sự của n là số tự nhiên k &lt; n và là ước của n.</p>
+        <p><em>Hướng dẫn.</em> Tương tự như chương trình ở nhiệm vụ 1, điểm khác là cần đếm số các ước số này và không tính n. Tạo một biến có tên <code class="inline">count</code> để đếm số các ước số thực sự của n.</p>
+        <pre class="code-block">n = <span class="num">int</span>(input(<span class="num">"Nhập số tự nhiên n: "</span>))
+count = <span class="num">0</span>
+<span class="kw">for</span> k <span class="kw">in</span> range(<span class="num">1</span>, n):
+    <span class="kw">if</span> n%k == <span class="num">0</span>:
+        count = count + <span class="num">1</span>
+print(count)</pre>
+      </div>
+    </section>
+
+    <section id="luyen-tap">
+      <h2>Luyện tập</h2>
+      <ol class="task-list">
+        <li>
+          <p>Đoạn chương trình sau in ra kết quả gì?</p>
+          <pre class="code-block">n = <span class="num">int</span>(input(<span class="num">"Nhập số tự nhiên n:"</span>))
+S = <span class="num">0</span>
+<span class="kw">for</span> k <span class="kw">in</span> range(n+<span class="num">1</span>):
+    S = S + k
+print(S*S)</pre>
+        </li>
+        <li>
+          <p>Viết đoạn chương trình tính tích 1 × 2 × 3 × ... × n với n được nhập vào từ bàn phím.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section id="van-dung">
+      <h2>Vận dụng</h2>
+      <ol class="task-list">
+        <li>
+          <p>Viết chương trình nhập từ bàn phím số tự nhiên n và in ra kết quả:</p>
+          <p style="font-family: var(--font-mono); font-size: 15px;">S = 1 + 1/2 + ... + 1/n</p>
+        </li>
+        <li>
+          <p>Viết chương trình nhập từ bàn phím số tự nhiên n và in ra kết quả là tổng sau:</p>
+          <p style="font-family: var(--font-mono); font-size: 15px;">S = 1³ + 2³ + ... + n³</p>
+        </li>
+      </ol>
+    </section>
+
+  </main>
+
+<script>
+function makeSumSimulator() {
+  let n = 10, k = -1, S = 0, maxS = 1, finished = true, autoTimer = null;
+
+  const nSlider = document.getElementById('nSlider1');
+  const nOut = document.getElementById('nOut1');
+  const codeN = document.getElementById('codeN1');
+  const playBtn = document.getElementById('playBtn1');
+  const resetBtn = document.getElementById('resetBtn1');
+  const ballTrack = document.getElementById('ballTrack1');
+  const machine = document.getElementById('machine1');
+  const condResult = document.getElementById('condResult1');
+  const sBarFill = document.getElementById('sBarFill1');
+  const sValue = document.getElementById('sValue1');
+  const doneMsg = document.getElementById('doneMsg1');
+  const finalS = document.getElementById('finalS1');
+  const passLabel = document.getElementById('passLabel1');
+  const traceBody = document.getElementById('traceBody1');
+  const stVong = document.getElementById('stVong1');
+  const stK = document.getElementById('stK1');
+  const stCond = document.getElementById('stCond1');
+  const stS = document.getElementById('stS1');
+
+  function computeMaxS(nn) {
+    let s = 0;
+    for (let i = 0; i < nn; i++) { if (i % 2 === 0) s += i; }
+    return Math.max(s, 1);
+  }
+
+  function drawTrack() {
+    ballTrack.innerHTML = '';
+    const spacing = Math.min(18, 200 / n);
+    for (let i = 0; i < n; i++) {
+      const cx = 30 + i * spacing;
+      const cy = 60;
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.setAttribute('id', 'ball1_' + i);
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', cx); c.setAttribute('cy', cy);
+      c.setAttribute('r', Math.min(8, spacing / 2 - 1));
+      c.setAttribute('fill', '#e4dbc9');
+      c.setAttribute('stroke', '#cdbf9f');
+      c.setAttribute('stroke-width', '0.5');
+      g.appendChild(c);
+      ballTrack.appendChild(g);
+    }
+  }
+
+  function resetState() {
+    n = parseInt(nSlider.value, 10);
+    k = -1; S = 0; maxS = computeMaxS(n); finished = false;
+    clearInterval(autoTimer); autoTimer = null;
+    playBtn.textContent = 'Chạy tự động';
+    nOut.textContent = n; codeN.textContent = n;
+    doneMsg.style.display = 'none';
+    condResult.textContent = '–'; condResult.setAttribute('fill', '#5c5347');
+    sBarFill.setAttribute('width', 0); sValue.textContent = '0';
+    passLabel.setAttribute('opacity', 0);
+    traceBody.innerHTML = '';
+    stVong.textContent = '–'; stK.textContent = '–'; stCond.textContent = '–'; stS.textContent = '0';
+    drawTrack();
+  }
+
+  function step() {
+    if (finished) return;
+    k = k + 1;
+    if (k >= n) {
+      finished = true;
+      finalS.textContent = S;
+      doneMsg.style.display = 'block';
+      clearInterval(autoTimer); autoTimer = null;
+      playBtn.textContent = 'Đã xong';
+      return;
+    }
+    const isEven = (k % 2 === 0);
+    const sBefore = S;
+    const ball = document.getElementById('ball1_' + k);
+    if (ball) {
+      const circle = ball.querySelector('circle');
+      circle.setAttribute('fill', isEven ? '#9fe1cb' : '#f0997b');
+      circle.setAttribute('stroke', isEven ? '#0f6e56' : '#993c1d');
+      ball.classList.add('ball');
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', circle.getAttribute('cx'));
+      text.setAttribute('y', 78);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('font-size', '11');
+      text.setAttribute('fill', '#2b2620');
+      text.textContent = k;
+      ballTrack.appendChild(text);
+    }
+    condResult.textContent = isEven ? 'Đúng, k = ' + k : 'Sai, k = ' + k;
+    condResult.setAttribute('fill', isEven ? '#0f6e56' : '#993c1d');
+    machine.classList.add('pulse');
+    setTimeout(() => machine.classList.remove('pulse'), 500);
+
+    if (isEven) {
+      S = S + k;
+      passLabel.setAttribute('opacity', 1);
+      setTimeout(() => passLabel.setAttribute('opacity', 0), 700);
+    } else {
+      passLabel.setAttribute('opacity', 0);
+    }
+    const widthPx = Math.min(160, (S / maxS) * 160);
+    sBarFill.setAttribute('width', widthPx);
+    sValue.textContent = S;
+
+    stVong.textContent = k + 1; stK.textContent = k;
+    stCond.textContent = isEven ? 'Đúng' : 'Sai'; stS.textContent = S;
+
+    const tr = document.createElement('tr');
+    if (isEven) tr.classList.add('even-row');
+    tr.innerHTML = '<td>' + (k + 1) + '</td><td>' + k + '</td><td>' + (isEven ? 'Đúng' : 'Sai') + '</td><td>' + sBefore + '</td><td>' + S + '</td>';
+    traceBody.appendChild(tr);
+  }
+
+  nSlider.addEventListener('input', () => { nOut.textContent = nSlider.value; });
+  nSlider.addEventListener('change', resetState);
+  resetBtn.addEventListener('click', resetState);
+  playBtn.addEventListener('click', () => {
+    if (finished) return;
+    if (autoTimer) {
+      clearInterval(autoTimer); autoTimer = null;
+      playBtn.textContent = 'Chạy tự động';
+    } else {
+      autoTimer = setInterval(step, 700);
+      playBtn.textContent = 'Tạm dừng';
+    }
+  });
+
+  resetState();
+}
+
+function makeDivisorSimulator() {
+  let n = 12, k = 0, finished = true, autoTimer = null;
+  let divisors = [];
+
+  const nSlider = document.getElementById('nSlider2');
+  const nOut = document.getElementById('nOut2');
+  const codeN = document.getElementById('codeN2');
+  const playBtn = document.getElementById('playBtn2');
+  const resetBtn = document.getElementById('resetBtn2');
+  const ballTrack = document.getElementById('ballTrack2');
+  const machine = document.getElementById('machine2');
+  const condResult = document.getElementById('condResult2');
+  const doneMsg = document.getElementById('doneMsg2');
+  const finalDivisors = document.getElementById('finalDivisors2');
+  const passLabel = document.getElementById('passLabel2');
+  const traceBody = document.getElementById('traceBody2');
+  const divisorList = document.getElementById('divisorList2');
+  const stVong = document.getElementById('stVong2');
+  const stK = document.getElementById('stK2');
+  const stCond = document.getElementById('stCond2');
+  const stCount = document.getElementById('stCount2');
+
+  function drawTrack() {
+    ballTrack.innerHTML = '';
+    const count = n - 1;
+    const spacing = Math.min(18, 200 / Math.max(count, 1));
+    for (let i = 0; i < count; i++) {
+      const val = i + 1;
+      const cx = 30 + i * spacing;
+      const cy = 60;
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.setAttribute('id', 'ball2_' + val);
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', cx); c.setAttribute('cy', cy);
+      c.setAttribute('r', Math.min(8, spacing / 2 - 1));
+      c.setAttribute('fill', '#e4dbc9');
+      c.setAttribute('stroke', '#cdbf9f');
+      c.setAttribute('stroke-width', '0.5');
+      g.appendChild(c);
+      ballTrack.appendChild(g);
+    }
+  }
+
+  function resetState() {
+    n = parseInt(nSlider.value, 10);
+    k = 0; finished = false; divisors = [];
+    clearInterval(autoTimer); autoTimer = null;
+    playBtn.textContent = 'Chạy tự động';
+    nOut.textContent = n; codeN.textContent = n;
+    doneMsg.style.display = 'none';
+    condResult.textContent = '–'; condResult.setAttribute('fill', '#5c5347');
+    passLabel.setAttribute('opacity', 0);
+    traceBody.innerHTML = ''; divisorList.textContent = '';
+    stVong.textContent = '–'; stK.textContent = '–'; stCond.textContent = '–'; stCount.textContent = '0';
+    drawTrack();
+  }
+
+  function step() {
+    if (finished) return;
+    k = k + 1;
+    if (k >= n) {
+      finished = true;
+      finalDivisors.textContent = divisors.join(', ');
+      doneMsg.style.display = 'block';
+      clearInterval(autoTimer); autoTimer = null;
+      playBtn.textContent = 'Đã xong';
+      return;
+    }
+    const isDivisor = (n % k === 0);
+    const ball = document.getElementById('ball2_' + k);
+    if (ball) {
+      const circle = ball.querySelector('circle');
+      circle.setAttribute('fill', isDivisor ? '#9fe1cb' : '#f0997b');
+      circle.setAttribute('stroke', isDivisor ? '#0f6e56' : '#993c1d');
+      ball.classList.add('ball');
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', circle.getAttribute('cx'));
+      text.setAttribute('y', 78);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('font-size', '11');
+      text.setAttribute('fill', '#2b2620');
+      text.textContent = k;
+      ballTrack.appendChild(text);
+    }
+    condResult.textContent = isDivisor ? 'Đúng, k = ' + k : 'Sai, k = ' + k;
+    condResult.setAttribute('fill', isDivisor ? '#0f6e56' : '#993c1d');
+    machine.classList.add('pulse');
+    setTimeout(() => machine.classList.remove('pulse'), 500);
+
+    if (isDivisor) {
+      divisors.push(k);
+      passLabel.setAttribute('opacity', 1);
+      setTimeout(() => passLabel.setAttribute('opacity', 0), 700);
+      divisorList.textContent = divisors.join(', ');
+    } else {
+      passLabel.setAttribute('opacity', 0);
+    }
+
+    stVong.textContent = k; stK.textContent = k;
+    stCond.textContent = isDivisor ? 'Đúng' : 'Sai'; stCount.textContent = divisors.length;
+
+    const tr = document.createElement('tr');
+    if (isDivisor) tr.classList.add('even-row');
+    tr.innerHTML = '<td>' + k + '</td><td>' + k + '</td><td>' + (isDivisor ? 'Đúng' : 'Sai') + '</td><td>' + (isDivisor ? 'Thêm ' + k + ' vào danh sách' : 'Bỏ qua') + '</td>';
+    traceBody.appendChild(tr);
+  }
+
+  nSlider.addEventListener('input', () => { nOut.textContent = nSlider.value; });
+  nSlider.addEventListener('change', resetState);
+  resetBtn.addEventListener('click', resetState);
+  playBtn.addEventListener('click', () => {
+    if (finished) return;
+    if (autoTimer) {
+      clearInterval(autoTimer); autoTimer = null;
+      playBtn.textContent = 'Chạy tự động';
+    } else {
+      autoTimer = setInterval(step, 700);
+      playBtn.textContent = 'Tạm dừng';
+    }
+  });
+
+  resetState();
+}
+
+makeSumSimulator();
+makeDivisorSimulator();
+</script>
+
+</body>
+</html>
