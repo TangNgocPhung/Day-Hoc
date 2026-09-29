@@ -6,106 +6,251 @@
 <title>Bài 19: Câu lệnh rẽ nhánh if - Tin học 10</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
     :root {
         --primary: #E8654B;
         --primary-hover: #D15A42;
+        --primary-soft: #FEECE9;
         --accent: #496B5A;
+        --accent-soft: #EAF3EE;
+        --accent-line: #CFE3D6;
+        --gold: #F1BD4C;
+        --gold-soft: #FFF6E5;
+        --ok: #1E8E4A;
+        --ok-soft: #DDF3E4;
+        --bad: #C8323F;
+        --bad-soft: #FBE3E5;
         --bg-body: #FDFBFA;
         --text-main: #2D3436;
-        --text-light: #636E72;
+        --text-light: #5F6B70;
         --border-color: #E2E8F0;
         --white: #FFFFFF;
         --radius: 12px;
         --shadow: 0 4px 15px rgba(0,0,0,0.05);
-        --transition: all 0.3s ease;
+        --transition: all 0.25s ease;
+        --mono: 'JetBrains Mono', Consolas, 'Courier New', monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body { font-family: 'Be Vietnam Pro', sans-serif; font-size: 16px; line-height: 1.7; color: var(--text-main); background-color: var(--bg-body); }
+    /* Tắt chữ ghép để <= != == hiển thị đúng như khi gõ */
+    code, pre, textarea, .tt, .bug-line, .code-trace, .flow text.mono, .predict-item .expr, .choice, .chip, .toggle, .tf-btn, .num-input, .numline text { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+    code { font-family: var(--mono); font-size: 0.9em; background: #F1F4F3; padding: 1px 6px; border-radius: 4px; }
 
     header { background-color: var(--primary); color: var(--white); padding: 2rem 1rem; text-align: center; box-shadow: 0 4px 6px rgba(232, 101, 75, 0.2); }
-    header p { opacity: 0.9; margin-top: 0.5rem; font-size: 1.1rem; }
+    header h1 { font-size: clamp(1.5rem, 4vw, 2.3rem); letter-spacing: 0.01em; }
+    header p { opacity: 0.92; margin-top: 0.4rem; font-size: 1.05rem; }
 
-    nav { background: var(--white); display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 15px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-    .tab-btn { padding: 10px 20px; border: 2px solid transparent; background: #F4F7F6; cursor: pointer; font-weight: 600; font-family: inherit; color: var(--text-light); border-radius: 30px; transition: var(--transition); }
-    .tab-btn:hover, .tab-btn:focus { background-color: #FEECE9; color: var(--primary); outline: none; }
-    .js-enabled section:not(.active) { display: none; }
+    nav { background: var(--white); display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 12px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+    .tab-btn { padding: 8px 18px; border: 2px solid transparent; background: #F4F7F6; cursor: pointer; font-weight: 600; font-family: inherit; font-size: 0.95rem; color: var(--text-light); border-radius: 30px; transition: var(--transition); }
+    .tab-btn:hover, .tab-btn:focus-visible { background-color: var(--primary-soft); color: var(--primary); outline: none; }
     .tab-btn.active { background-color: var(--primary); color: var(--white); border-color: var(--primary); box-shadow: 0 4px 10px rgba(232, 101, 75, 0.3); }
+    .js-enabled main > section:not(.active) { display: none; }
 
     main { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
-    section { background: var(--white); padding: 2.5rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 2rem; border: 1px solid var(--border-color); }
+    main > section { background: var(--white); padding: 2.5rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 2rem; border: 1px solid var(--border-color); }
 
-    h2 { color: var(--accent); border-left: 5px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem; font-size: 1.5rem; }
-    h3 { color: var(--primary); margin: 2rem 0 1rem; font-size: 1.2rem; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.5rem; }
+    h2 { color: var(--accent); border-left: 5px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem; font-size: 1.55rem; }
+    h3 { color: var(--primary); margin: 2.2rem 0 1rem; font-size: 1.2rem; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.5rem; }
     h4 { color: var(--accent); margin: 1.2rem 0 0.6rem; font-size: 1.05rem; }
     p { margin-bottom: 1rem; }
     ul, ol { margin-bottom: 1rem; padding-left: 1.5rem; }
-    li { margin-bottom: 0.5rem; }
+    li { margin-bottom: 0.45rem; }
+    .muted { color: var(--text-light); font-size: 0.92rem; }
+    .sgk-ref { display: inline-block; font-size: 0.78rem; font-weight: 600; color: var(--text-light); background: #F4F7F6; border-radius: 20px; padding: 2px 10px; margin-left: 6px; vertical-align: middle; }
 
-    .activity-box { background: #EAF3EE; border: 1px solid #CFE3D6; border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.2rem 0; }
-    .activity-tag { display: inline-block; background: var(--accent); color: #fff; font-weight: 700; font-size: 0.8rem; padding: 3px 12px; border-radius: 20px; margin-bottom: 0.6rem; letter-spacing: 0.03em; }
-    .highlight-box { background-color: #F8F9FA; border-left: 4px solid var(--accent); padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-    .note-box { background: #FFF6E5; border-left: 4px solid #F1BD4C; padding: 1.2rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-    .task-box { background: #FDEFEA; border: 1.5px solid #F3C7B8; border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.2rem 0; }
-    .task-label { display: inline-block; background: var(--primary); color: #fff; font-weight: 700; font-size: 0.8rem; padding: 3px 12px; border-radius: 20px; margin-bottom: 0.6rem; }
+    /* Hộp nội dung */
+    .activity-box { background: var(--accent-soft); border: 1px solid var(--accent-line); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.2rem 0; }
+    .activity-tag, .task-label, .q-tag { display: inline-block; color: #fff; font-weight: 700; font-size: 0.78rem; padding: 3px 12px; border-radius: 20px; margin-bottom: 0.6rem; letter-spacing: 0.03em; text-transform: uppercase; }
+    .activity-tag { background: var(--accent); }
+    .task-label { background: var(--primary); }
+    .q-tag { background: #7A5AB8; }
+    .highlight-box { background-color: #F8F9FA; border-left: 4px solid var(--accent); padding: 1.2rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+    .remember-box { background: #FFF1EA; border: 2px dashed #F3B49F; border-radius: 10px; padding: 1rem 1.4rem; margin: 1.5rem 0; color: #B6452F; font-weight: 500; }
+    .remember-box ul { margin-bottom: 0; }
+    .remember-box::before { content: "GHI NHỚ"; display: block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 0.3rem; }
+    .note-box { background: var(--gold-soft); border-left: 4px solid var(--gold); padding: 1rem 1.4rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+    .note-box > :last-child { margin-bottom: 0; }
+    .question-box { background: #F4F0FB; border: 1px solid #DCD0F2; border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; }
+    .task-box { background: #FDF3EF; border: 1.5px solid #F3C7B8; border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.2rem 0; }
+    .extend-box { background: #F3F7FB; border: 1px solid #D5E2EF; border-radius: 10px; padding: 1rem 1.4rem; margin: 1.5rem 0; }
+    .extend-box > :last-child { margin-bottom: 0; }
+    .extend-box strong.tag { color: #2F6690; }
     .guide-label { color: var(--accent); font-weight: 700; }
 
-    .code-block { background: #2D3436; color: #A3BE8C; padding: 1rem; border-radius: 8px; font-family: 'Courier New', Courier, monospace; overflow-x: auto; margin: 1rem 0; white-space: pre; }
-    .code-block .kw { color: #81A1C1; }
-    .code-block .str { color: #EBCB8B; }
-    .code-block .cm { color: #8a8f8f; font-style: italic; }
+    /* Mã lệnh */
+    .code-block { background: #263238; color: #E6EDF3; padding: 1rem 1.2rem; border-radius: 8px; font-family: var(--mono); font-size: 0.9rem; line-height: 1.65; overflow-x: auto; margin: 1rem 0; white-space: pre; tab-size: 4; }
+    .code-block .kw { color: #82AAFF; font-weight: 600; }
+    .code-block .fn { color: #C3E88D; }
+    .code-block .str { color: #FFCB6B; }
+    .code-block .num { color: #F78C6C; }
+    .code-block .cm { color: #8A9BA8; font-style: italic; }
+    .code-block .pr { color: #7F8C8D; }
 
-    table.data-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
-    table.data-table th, table.data-table td { border: 1px solid var(--border-color); padding: 12px; text-align: center; }
+    table.data-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.95rem; }
+    table.data-table th, table.data-table td { border: 1px solid var(--border-color); padding: 9px 12px; text-align: center; }
     table.data-table th { background-color: #F4F7F6; color: var(--accent); }
+    table.data-table td.l, table.data-table th.l { text-align: left; }
+    .tt { font-family: var(--mono); font-size: 0.9rem; }
+    .tv-true { color: var(--ok); font-weight: 600; }
+    .tv-false { color: var(--bad); font-weight: 600; }
+    .table-wrap { overflow-x: auto; }
 
-    .btn { padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: inherit; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    /* Nút */
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: inherit; font-size: 0.95rem; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-primary { background-color: var(--primary); color: var(--white); }
-    .btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); transform: translateY(-2px); }
+    .btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); }
     .btn-secondary { background-color: #E2E8F0; color: var(--text-main); }
     .btn-secondary:hover:not(:disabled) { background-color: #CBD5E1; }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-accent { background-color: var(--accent); color: #fff; }
+    .btn-accent:hover:not(:disabled) { background-color: #3B5849; }
+    .btn-sm { padding: 6px 14px; font-size: 0.88rem; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 0.8rem; }
 
-    .lab-wrapper { border: 2px solid var(--accent); border-radius: var(--radius); overflow: hidden; margin-top: 1.5rem; }
-    .lab-header { background: var(--accent); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; font-weight: 500; }
+    .reveal { display: none; margin-top: 0.9rem; padding: 1rem 1.2rem; background: var(--white); border: 1px solid var(--accent-line); border-left: 4px solid var(--accent); border-radius: 8px; }
+    .reveal.open { display: block; animation: fadeIn 0.25s; }
+    .reveal > :last-child { margin-bottom: 0; }
+    .feedback { margin-top: 0.8rem; padding: 0.8rem 1rem; border-radius: 8px; display: none; }
+    .feedback.show { display: block; }
+    .feedback.ok { background: var(--ok-soft); color: #145A32; }
+    .feedback.bad { background: var(--bad-soft); color: #7B1E26; }
+    .feedback.info { background: var(--gold-soft); color: #6B4E0B; }
+
+    /* Chọn đáp án HĐ1 */
+    .choice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin: 0.8rem 0; }
+    .choice { display: flex; align-items: center; gap: 10px; background: #fff; border: 2px solid var(--border-color); border-radius: 8px; padding: 10px 14px; cursor: pointer; font-family: var(--mono); font-size: 0.92rem; transition: var(--transition); }
+    .choice:hover { border-color: var(--accent); }
+    .choice input { accent-color: var(--accent); width: 18px; height: 18px; }
+    .choice.right { border-color: var(--ok); background: var(--ok-soft); }
+    .choice.wrong { border-color: var(--bad); background: var(--bad-soft); }
+
+    /* Sơ đồ khối */
+    .figure { background: #F8F9FA; border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.2rem; text-align: center; margin: 1.2rem 0; }
+    .figure figcaption { font-size: 0.88rem; color: var(--text-light); margin-top: 0.4rem; font-weight: 600; }
+    .flow svg { width: 100%; max-width: 380px; height: auto; display: block; margin: 0 auto; }
+    .flow .fnode { fill: #FFF4C2; stroke: #D9B84A; stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; }
+    .flow .fcond { fill: #1FA58F; stroke: #17806F; stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; }
+    .flow .fcond-text { fill: #fff; font-weight: 600; }
+    .flow text { font-family: 'Be Vietnam Pro', sans-serif; font-size: 13px; fill: #2D3436; }
+    .flow text.mono { font-family: var(--mono); font-size: 12.5px; }
+    .flow .fedge { fill: none; stroke: #555; stroke-width: 1.8; transition: stroke 0.3s, stroke-width 0.3s; }
+    .flow .flabel { font-size: 12px; font-weight: 700; }
+    .flow .on.fnode { fill: var(--primary-soft); stroke: var(--primary); stroke-width: 3; }
+    .flow .on.fcond { fill: var(--primary); stroke: #B94A34; stroke-width: 3; }
+    .flow .on.fedge { stroke: var(--primary); stroke-width: 3.5; }
+    .flow .dim { opacity: 0.35; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; align-items: start; }
+    .sim { border: 2px solid var(--accent); border-radius: var(--radius); overflow: hidden; margin: 1.5rem 0; }
+    .sim-head { background: var(--accent); color: #fff; padding: 10px 16px; font-weight: 600; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center; }
+    .sim-body { padding: 1.2rem; background: #FBFCFB; }
+    .sim-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 1rem; }
+    .sim-controls label { font-weight: 600; font-family: var(--mono); }
+    .num-input { padding: 8px 10px; border: 1.5px solid var(--border-color); border-radius: 6px; width: 90px; text-align: center; font-family: var(--mono); font-size: 1rem; }
+    .num-input:focus { outline: none; border-color: var(--accent); }
+    .code-trace { background: #263238; border-radius: 8px; padding: 0.8rem 0; font-family: var(--mono); font-size: 0.88rem; color: #E6EDF3; overflow-x: auto; }
+    .code-trace .ln { padding: 1px 1rem; white-space: pre; border-left: 4px solid transparent; transition: background 0.25s; }
+    .code-trace .ln.on { background: rgba(232,101,75,0.35); border-left-color: var(--primary); }
+    .code-trace .ln.skip { opacity: 0.35; }
+    .mini-console { margin-top: 0.8rem; background: #111; color: #7CFC9A; font-family: var(--mono); font-size: 0.88rem; border-radius: 8px; padding: 0.7rem 1rem; min-height: 3.2em; white-space: pre-wrap; }
+    .mini-console::before { content: "Màn hình"; display: block; color: #888; font-size: 0.72rem; margin-bottom: 2px; }
+
+    /* Bảng chân trị tương tác */
+    .toggle-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin: 0.8rem 0 1rem; }
+    .toggle { font-family: var(--mono); font-weight: 600; border: 2px solid; border-radius: 8px; padding: 6px 14px; cursor: pointer; background: #fff; min-width: 120px; }
+    .toggle[data-v="1"] { color: var(--ok); border-color: var(--ok); background: var(--ok-soft); }
+    .toggle[data-v="0"] { color: var(--bad); border-color: var(--bad); background: var(--bad-soft); }
+    .truth-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+    .truth-grid table { margin: 0; }
+    .truth-grid th.op { background: #FDE9B8; color: #6B4E0B; }
+    .truth-grid tr.hit td { background: var(--primary-soft); font-weight: 700; }
+    .result-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip { font-family: var(--mono); background: #fff; border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 20px; font-size: 0.9rem; }
+
+    /* Dự đoán True/False */
+    .predict { display: grid; gap: 10px; margin: 1rem 0; }
+    .predict-item { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 14px; }
+    .predict-item .expr { font-family: var(--mono); flex: 1 1 260px; }
+    .predict-item .pick { display: flex; gap: 6px; }
+    .predict-item .why { flex-basis: 100%; font-size: 0.9rem; color: var(--text-light); display: none; }
+    .predict-item.done .why { display: block; }
+    .predict-item.good { border-color: var(--ok); background: #F5FBF7; }
+    .predict-item.miss { border-color: var(--bad); background: #FDF6F6; }
+    .tf-btn { font-family: var(--mono); font-weight: 600; font-size: 0.85rem; padding: 5px 12px; border-radius: 6px; border: 1.5px solid var(--border-color); background: #fff; cursor: pointer; }
+    .tf-btn:hover:not(:disabled) { border-color: var(--accent); }
+    .tf-btn:disabled { cursor: default; }
+    .tf-btn.sel-ok { background: var(--ok); color: #fff; border-color: var(--ok); }
+    .tf-btn.sel-bad { background: var(--bad); color: #fff; border-color: var(--bad); }
+
+    /* Tìm lỗi */
+    .bug-card { background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; }
+    .bug-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .bug-card .bug-title { font-weight: 600; margin-bottom: 0.5rem; }
+    .bug-lines { background: #263238; border-radius: 8px; padding: 0.5rem 0; }
+    .bug-line { display: block; width: 100%; text-align: left; background: none; border: none; color: #E6EDF3; font-family: var(--mono); font-size: 0.88rem; padding: 3px 0.9rem; white-space: pre; cursor: pointer; border-left: 4px solid transparent; }
+    .bug-line:hover:not(:disabled) { background: rgba(255,255,255,0.08); }
+    .bug-line:disabled { cursor: default; }
+    .bug-line.right { background: rgba(30,142,74,0.45); border-left-color: #4CD68A; }
+    .bug-line.wrong { background: rgba(200,50,63,0.45); border-left-color: #FF7B86; }
+
+    /* Trục số */
+    .numline { width: 100%; max-width: 520px; height: auto; display: block; margin: 0.4rem 0 0.8rem; }
+    .numline text { font-family: var(--mono); font-size: 12px; fill: #2D3436; }
+
+    /* Tiền điện */
+    .bill-bars { display: grid; gap: 8px; margin: 1rem 0; }
+    .bill-row { display: grid; grid-template-columns: 150px 1fr 150px; gap: 10px; align-items: center; font-size: 0.9rem; }
+    .bill-track { background: #EEF2F1; border-radius: 6px; height: 22px; overflow: hidden; }
+    .bill-fill { height: 100%; width: 0; border-radius: 6px; transition: width 0.4s; }
+    .bill-row .amt { font-family: var(--mono); text-align: right; }
+    .bill-total { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+    input[type="range"] { accent-color: var(--primary); flex: 1 1 200px; }
+
+    /* Phòng thực hành */
+    .lab-wrapper { border: 2px solid var(--accent); border-radius: var(--radius); overflow: hidden; margin-top: 1.5rem; scroll-margin-top: 90px; }
+    .lab-header { background: var(--accent); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; font-weight: 500; flex-wrap: wrap; gap: 8px; }
     .status-badge { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; }
-    .lab-editor-area { display: grid; grid-template-columns: 1fr; background: #1E1E1E; }
-    #py-editor { width: 100%; height: 260px; background: #1E1E1E; color: #D4D4D4; font-family: Consolas, 'Courier New', monospace; font-size: 15px; padding: 15px; border: none; resize: vertical; outline: none; }
+    #py-editor { display: block; width: 100%; height: 280px; background: #1E1E1E; color: #D4D4D4; font-family: var(--mono); font-size: 14.5px; line-height: 1.6; padding: 15px; border: none; resize: vertical; outline: none; tab-size: 4; }
+    .lab-stdin { background: #2A2F33; padding: 10px 15px; border-top: 1px solid #444; }
+    .lab-stdin label { color: #C9D1D9; font-size: 0.85rem; display: block; margin-bottom: 4px; }
+    #py-stdin { width: 100%; height: 58px; background: #1E1E1E; color: #FFCB6B; font-family: var(--mono); font-size: 14px; border: 1px solid #444; border-radius: 6px; padding: 6px 10px; resize: vertical; outline: none; }
     .lab-toolbar { background: #2D3436; padding: 10px 15px; display: flex; gap: 10px; flex-wrap: wrap; }
-    .lab-console { background: #000000; color: #00FF00; padding: 15px; min-height: 120px; font-family: Consolas, monospace; white-space: pre-wrap; border-top: 1px solid #444; }
+    .lab-console { background: #000; color: #00FF66; padding: 15px; min-height: 120px; font-family: var(--mono); font-size: 14px; white-space: pre-wrap; border-top: 1px solid #444; }
 
-    .sim-container { background: #F8F9FA; border: 1px solid var(--border-color); border-radius: var(--radius); padding: 2rem; text-align: center; }
-    .flowchart-svg { max-width: 100%; height: auto; margin: 20px auto; display: block; }
-    .sim-controls { display: flex; justify-content: center; gap: 15px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
-    .sim-input { padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; width: 80px; text-align: center; font-family: inherit; }
-    .node { transition: fill 0.4s, stroke 0.4s; }
-    .node text { font-family: 'Be Vietnam Pro', sans-serif; font-size: 14px; fill: #333; }
-    .node-active { fill: #FEECE9 !important; stroke: var(--primary) !important; stroke-width: 3px !important; }
-    .node-active text { fill: var(--primary); font-weight: bold; }
-    .edge { transition: stroke 0.4s; }
-    .edge-active { stroke: var(--primary) !important; stroke-width: 3px !important; }
-
+    /* Trắc nghiệm */
     .progress-container { width: 100%; height: 8px; background: var(--border-color); border-radius: 4px; margin-bottom: 2rem; overflow: hidden; }
     #quiz-progress { height: 100%; background: var(--primary); width: 0%; transition: width 0.4s ease; }
-    .quiz-slide { display: none; animation: fadeIn 0.3s; }
-    .quiz-slide.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .opt-btn { display: block; width: 100%; text-align: left; padding: 15px 20px; margin-bottom: 10px; background: var(--white); border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 1rem; transition: var(--transition); }
-    .opt-btn:hover:not(:disabled) { border-color: var(--primary); background: #FEECE9; }
+    .opt-btn { display: block; width: 100%; text-align: left; padding: 13px 18px; margin-bottom: 10px; background: var(--white); border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 1rem; transition: var(--transition); }
+    .opt-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-soft); }
+    .opt-btn:disabled { cursor: default; }
     .opt-btn.correct { background: #D4EDDA; border-color: #28A745; color: #155724; }
     .opt-btn.wrong { background: #F8D7DA; border-color: #DC3545; color: #721C24; }
-    #quiz-feedback { margin-top: 15px; display: none; }
 
-    .exp-answer { display: none; margin-top: 0.8rem; padding: 1rem; background: #EAF3EE; border-radius: 8px; color: var(--accent); font-weight: 600; }
-    .exp-btn { margin-top: 0.5rem; }
+    /* Tổng kết */
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0 1.5rem; }
+    .summary-card { border: 1px solid var(--border-color); border-top: 4px solid var(--primary); border-radius: 10px; padding: 1rem 1.2rem; background: #fff; }
+    .summary-card h4 { margin-top: 0; }
+    .summary-card ul { margin-bottom: 0; }
+    .check-list { list-style: none; padding-left: 0; }
+    .check-list label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+    .check-list input { margin-top: 6px; width: 18px; height: 18px; accent-color: var(--accent); flex-shrink: 0; }
+
+    .pager { display: flex; justify-content: space-between; gap: 10px; margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border-color); }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
     @media (max-width: 768px) {
-        section { padding: 1.5rem; }
-        .tab-btn { padding: 8px 12px; font-size: 0.9rem; }
-        .lab-toolbar { flex-direction: column; }
-        .btn { width: 100%; }
+        main > section { padding: 1.4rem 1.1rem; }
+        .tab-btn { padding: 6px 12px; font-size: 0.85rem; }
+        nav { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; }
+        .tab-btn { flex-shrink: 0; }
+        .two-col { grid-template-columns: 1fr; }
+        .bill-row { grid-template-columns: 1fr; gap: 3px; }
+        .bill-row .amt { text-align: left; }
+        .lab-toolbar .btn { flex: 1 1 auto; }
     }
 </style>
 </head>
@@ -113,744 +258,1350 @@
 
 <header>
     <h1>BÀI 19: CÂU LỆNH RẼ NHÁNH IF</h1>
-    <p>Môn Tin học 10 - Chủ đề F: Giải quyết vấn đề với sự hỗ trợ của máy tính</p>
+    <p>Tin học 10 · Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính</p>
 </header>
 
-<nav id="main-nav">
+<nav id="main-nav" aria-label="Các phần của bài học">
     <button type="button" class="tab-btn active" data-target="s-intro">1. Khởi động</button>
-    <button type="button" class="tab-btn" data-target="s-goals">2. Mục tiêu</button>
-    <button type="button" class="tab-btn" data-target="s-logic">3. Biểu thức lôgic</button>
-    <button type="button" class="tab-btn" data-target="s-if">4. Lệnh if</button>
-    <button type="button" class="tab-btn" data-target="s-lab">5. Thực hành</button>
-    <button type="button" class="tab-btn" data-target="s-quiz">6. Luyện tập</button>
-    <button type="button" class="tab-btn" data-target="s-apply">7. Vận dụng</button>
-    <button type="button" class="tab-btn" data-target="s-exercises">8. Bài tập SGK</button>
+    <button type="button" class="tab-btn" data-target="s-logic">2. Biểu thức lôgic</button>
+    <button type="button" class="tab-btn" data-target="s-if">3. Lệnh if</button>
+    <button type="button" class="tab-btn" data-target="s-lab">4. Thực hành</button>
+    <button type="button" class="tab-btn" data-target="s-practice">5. Luyện tập</button>
+    <button type="button" class="tab-btn" data-target="s-apply">6. Vận dụng</button>
+    <button type="button" class="tab-btn" data-target="s-quiz">7. Trắc nghiệm</button>
+    <button type="button" class="tab-btn" data-target="s-extra">8. Bài tập bổ sung</button>
     <button type="button" class="tab-btn" data-target="s-summary">9. Tổng kết</button>
 </nav>
 
 <main>
-    <!-- PHẦN 1: KHỞI ĐỘNG -->
+    <!-- ============ 1. KHỞI ĐỘNG ============ -->
     <section id="s-intro" class="active">
         <h2>1. Khởi động</h2>
-        <p style="font-weight:600; color:var(--accent);">Sau bài này em sẽ:</p>
-        <ul>
-            <li>Biết và trình bày được các phép toán với kiểu dữ liệu lôgic.</li>
-            <li>Sử dụng được lệnh rẽ nhánh <code>if</code> trong lập trình.</li>
-        </ul>
 
-        <p>Trong cuộc sống, chúng ta vẫn thường gặp các tình huống mà việc được thực hiện hay không phụ thuộc vào một điều kiện nào đó. Ví dụ, em dự định: <em>nếu ngày mai trời không mưa, em sẽ đi chơi cùng bạn, ngược lại trời mưa thì em sẽ ở nhà làm bài tập.</em> Các tình huống như vậy trong lập trình được gọi là <strong>rẽ nhánh</strong>. Em hãy điền thông tin còn thiếu vào vị trí &lt;Điều kiện&gt; trong sơ đồ tương ứng với cấu trúc rẽ nhánh ở Hình 19.1.</p>
-
-        <div class="sim-container" style="max-width:420px; margin:1.5rem auto;">
-            <svg viewBox="0 0 300 240" width="100%" style="max-width:300px;">
-                <polygon points="150,10 260,60 150,110 40,60" fill="#EAF3EE" stroke="#496B5A" stroke-width="2"/>
-                <text x="150" y="65" text-anchor="middle" font-size="13" fill="#2D3436">&lt;Điều kiện&gt;</text>
-                <text x="270" y="60" font-size="12" fill="#DC3545" font-weight="bold">Sai</text>
-                <text x="160" y="130" font-size="12" fill="#28A745" font-weight="bold">Đúng</text>
-                <line x1="150" y1="110" x2="150" y2="150" stroke="#666" stroke-width="2" marker-end="url(#ar1)"/>
-                <line x1="260" y1="60" x2="330" y2="60" stroke="#666" stroke-width="2"/>
-                <rect x="80" y="150" width="140" height="40" rx="6" fill="#FEECE9" stroke="var(--primary)" stroke-width="2"/>
-                <text x="150" y="175" text-anchor="middle" font-size="13">Lệnh 1</text>
-                <defs><marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#666"/></marker></defs>
-            </svg>
-            <p style="font-size:0.85rem; color:var(--text-light);">Hình 19.1. Sơ đồ khối cấu trúc rẽ nhánh</p>
+        <div class="highlight-box">
+            <p style="font-weight:700; color:var(--accent); margin-bottom:0.4rem;">Sau bài này em sẽ:</p>
+            <ul style="margin-bottom:0;">
+                <li>Biết và trình bày được các phép toán với kiểu dữ liệu lôgic.</li>
+                <li>Sử dụng được lệnh rẽ nhánh <code>if</code> trong lập trình.</li>
+            </ul>
         </div>
 
-        <button type="button" class="btn btn-primary" id="btn-reveal-intro">Xem gợi ý</button>
-        <div id="intro-answer" style="display: none; margin-top: 1rem; padding: 1rem; background:#EAF3EE; border-radius: 8px; color: var(--accent); font-weight: 600;">
-            <p>Ô &lt;Điều kiện&gt; chứa một <strong>biểu thức lôgic</strong> — biểu thức chỉ nhận giá trị Đúng (True) hoặc Sai (False), ví dụ như "trời không mưa". Máy tính kiểm tra biểu thức này để quyết định có thực hiện Lệnh 1 hay không.</p>
-        </div>
-    </section>
-
-    <!-- PHẦN 2: MỤC TIÊU -->
-    <section id="s-goals">
-        <h2>2. Mục tiêu bài học</h2>
-        <p>Sau khi hoàn thành bài học này, em sẽ:</p>
-        <ul style="list-style-type: square;">
-            <li>Biết và trình bày được khái niệm <strong>biểu thức lôgic</strong>, các phép so sánh và các phép toán lôgic <code>and</code>, <code>or</code>, <code>not</code> trong Python.</li>
-            <li>Nắm vững cú pháp và cách hoạt động của lệnh rẽ nhánh <code>if</code> dạng thiếu và <code>if - else</code> dạng đủ.</li>
-            <li>Viết được chương trình Python sử dụng lệnh <code>if</code> để giải quyết các bài toán thực tế có kiểm tra điều kiện.</li>
-        </ul>
-    </section>
-
-    <!-- PHẦN 3: BIỂU THỨC LÔGIC -->
-    <section id="s-logic">
-        <h2>3. Biểu thức lôgic</h2>
+        <p>Trong cuộc sống, chúng ta vẫn thường gặp các tình huống một việc được thực hiện hay không phụ thuộc vào một điều kiện. Ví dụ, em dự định: <em>nếu ngày mai trời không mưa em sẽ đi chơi cùng bạn, ngược lại nếu trời mưa em sẽ ở nhà làm bài tập.</em> Các tình huống như vậy trong lập trình được gọi là <strong>rẽ nhánh</strong>.</p>
 
         <div class="activity-box">
-            <span class="activity-tag">HOẠT ĐỘNG 1</span>
-            <p style="font-weight:600;">Khái niệm biểu thức lôgic</p>
-            <p>Biểu thức nào sau đây có thể đưa vào vị trí &lt;điều kiện&gt; trong lệnh: <br><em>Nếu &lt;điều kiện&gt; thì &lt;lệnh&gt;</em> của các ngôn ngữ lập trình bậc cao?</p>
-            <ul>
-                <li>A. m, n = 1, 2.</li>
-                <li>B. a + b &gt; 1.</li>
-                <li>C. a * b &lt; a + b.</li>
-                <li>D. 12 + 15 &gt; 2 * 13.</li>
-            </ul>
-            <button type="button" class="btn btn-secondary exp-btn" data-exp="exp-hd1">Xem đáp án</button>
-            <div class="exp-answer" id="exp-hd1">
-                <p>Đáp án: <strong>B, C và D</strong> — đây là những biểu thức so sánh, kết quả trả về Đúng hoặc Sai. Đáp án A (<code>m, n = 1, 2</code>) là một câu lệnh gán, không phải biểu thức lôgic, nên không thể đặt vào vị trí &lt;điều kiện&gt;.</p>
+            <span class="activity-tag">Khởi động</span>
+            <p style="margin-bottom:0.6rem;">Em hãy điền thông tin ở tình huống trên vào vị trí <strong>&lt;Điều kiện&gt;</strong> và các lệnh tương ứng trong sơ đồ cấu trúc rẽ nhánh ở Hình 19.1.</p>
+            <div class="two-col">
+                <div>
+                    <p style="margin-bottom:0.3rem;"><label for="sel-cond"><strong>&lt;Điều kiện&gt;</strong></label></p>
+                    <select id="sel-cond" class="intro-sel" style="width:100%; padding:8px; border-radius:6px; border:1.5px solid var(--border-color); font-family:inherit; margin-bottom:0.8rem;">
+                        <option value="">— Chọn —</option>
+                        <option value="c">Trời không mưa</option>
+                        <option value="a">Đi chơi cùng bạn</option>
+                        <option value="b">Ở nhà làm bài tập</option>
+                    </select>
+                    <p style="margin-bottom:0.3rem;"><label for="sel-l1"><strong>Lệnh 1</strong> (khi điều kiện Đúng)</label></p>
+                    <select id="sel-l1" class="intro-sel" style="width:100%; padding:8px; border-radius:6px; border:1.5px solid var(--border-color); font-family:inherit; margin-bottom:0.8rem;">
+                        <option value="">— Chọn —</option>
+                        <option value="c">Trời không mưa</option>
+                        <option value="a">Đi chơi cùng bạn</option>
+                        <option value="b">Ở nhà làm bài tập</option>
+                    </select>
+                    <p style="margin-bottom:0.3rem;"><label for="sel-l2"><strong>Lệnh 2</strong> (khi điều kiện Sai)</label></p>
+                    <select id="sel-l2" class="intro-sel" style="width:100%; padding:8px; border-radius:6px; border:1.5px solid var(--border-color); font-family:inherit;">
+                        <option value="">— Chọn —</option>
+                        <option value="c">Trời không mưa</option>
+                        <option value="a">Đi chơi cùng bạn</option>
+                        <option value="b">Ở nhà làm bài tập</option>
+                    </select>
+                    <div class="btn-row">
+                        <button type="button" class="btn btn-primary" id="btn-intro-check">Kiểm tra</button>
+                    </div>
+                    <div class="feedback" id="intro-fb"></div>
+                </div>
+                <figure class="figure flow" style="margin:0;">
+                    <div id="flow-intro"></div>
+                    <figcaption>Hình 19.1. Sơ đồ cấu trúc rẽ nhánh</figcaption>
+                </figure>
             </div>
         </div>
 
-        <p>Trong Python, <strong>biểu thức lôgic</strong> là biểu thức chỉ nhận giá trị <code>True</code> (đúng) hoặc <code>False</code> (sai). Biểu thức lôgic thường được tạo thành từ các phép so sánh giữa số hoặc xâu kí tự.</p>
-
-        <p>Quan sát các lệnh sau để nhận biết kiểu dữ liệu lôgic:</p>
-        <div class="code-block">>>> a,b,s = 10,2,"Number"
->>> a &gt; 10
-False
->>> b &lt; 3
-True
->>> s == "number"
-False</div>
-        <p style="font-size:0.9rem; color:var(--text-light);"><em>a &gt; 10 là sai, b &lt; 3 là đúng, s và "number" là hai xâu có giá trị khác nhau.</em></p>
-
-        <h3>3.1. Các phép so sánh</h3>
-        <table class="data-table">
-            <thead><tr><th>Kí hiệu</th><th>Ý nghĩa</th><th>Kí hiệu</th><th>Ý nghĩa</th></tr></thead>
-            <tbody>
-                <tr><td><code>&lt;</code></td><td>nhỏ hơn</td><td><code>&gt;</code></td><td>lớn hơn</td></tr>
-                <tr><td><code>&lt;=</code></td><td>nhỏ hơn hoặc bằng</td><td><code>&gt;=</code></td><td>lớn hơn hoặc bằng</td></tr>
-                <tr><td><code>==</code></td><td>bằng nhau</td><td><code>!=</code></td><td>khác nhau</td></tr>
-            </tbody>
-        </table>
-        <p class="note-box"><strong>Chú ý:</strong> Với xâu kí tự cũng có đầy đủ các phép so sánh trên (so sánh theo thứ tự từ điển).</p>
-
-        <h3>3.2. Các phép toán lôgic: and, or, not</h3>
-        <p>Các phép toán lôgic trên kiểu dữ liệu bool bao gồm phép <code>and</code> (và), <code>or</code> (hoặc) và <code>not</code> (phủ định). Bảng chân trị:</p>
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap:1rem; margin:1rem 0;">
-            <table class="data-table">
-                <thead><tr><th colspan="3" style="background:#F1BD4C22;">Phép toán and</th></tr><tr><th>X</th><th>Y</th><th>X and Y</th></tr></thead>
-                <tbody>
-                    <tr><td>True</td><td>True</td><td>True</td></tr>
-                    <tr><td>True</td><td>False</td><td>False</td></tr>
-                    <tr><td>False</td><td>True</td><td>False</td></tr>
-                    <tr><td>False</td><td>False</td><td>False</td></tr>
-                </tbody>
-            </table>
-            <table class="data-table">
-                <thead><tr><th colspan="3" style="background:#F1BD4C22;">Phép toán or</th></tr><tr><th>X</th><th>Y</th><th>X or Y</th></tr></thead>
-                <tbody>
-                    <tr><td>True</td><td>True</td><td>True</td></tr>
-                    <tr><td>True</td><td>False</td><td>True</td></tr>
-                    <tr><td>False</td><td>True</td><td>True</td></tr>
-                    <tr><td>False</td><td>False</td><td>False</td></tr>
-                </tbody>
-            </table>
-            <table class="data-table">
-                <thead><tr><th colspan="2" style="background:#F1BD4C22;">Phép toán not</th></tr><tr><th>X</th><th>not X</th></tr></thead>
-                <tbody>
-                    <tr><td>True</td><td>False</td></tr>
-                    <tr><td>False</td><td>True</td></tr>
-                </tbody>
-            </table>
+        <div class="note-box">
+            <p><strong>Nhận xét.</strong> Ô <em>&lt;Điều kiện&gt;</em> luôn là một câu có thể trả lời <strong>Đúng</strong> hoặc <strong>Sai</strong> (“Trời không mưa” — đúng hay sai?). Còn “Đi chơi cùng bạn”, “Ở nhà làm bài tập” là <em>việc cần làm</em> (lệnh), không thể đúng/sai. Trong lập trình, &lt;Điều kiện&gt; được viết bằng một <strong>biểu thức lôgic</strong> — nội dung của phần tiếp theo.</p>
         </div>
 
-        <h4>Ví dụ</h4>
-        <p>Cho các lệnh sau và dự đoán giá trị của các biến lôgic a, b, c:</p>
-        <div class="code-block">>>> x, y, z = 10, 5, 9
->>> b = x &lt; 11 and z &gt; 5
->>> c = x &gt; 15 or y &lt; 9
->>> a = not b</div>
-        <p><strong>Giải thích:</strong></p>
-        <ul>
-            <li>Ta có <code>x = 10</code>, <code>z = 9</code> nên <code>x &lt; 11</code> là đúng, <code>z &gt; 5</code> đúng. Theo bảng phép toán and thì <code>b = x &lt; 11 and z &gt; 5</code> nhận giá trị đúng.</li>
-            <li>Ta lại có: <code>x &gt; 15</code> sai (vì x = 10) nhưng <code>y &lt; 9</code> đúng (vì y = 5). Theo bảng phép toán or suy ra <code>c = x &gt; 15 or y &lt; 9</code> nhận giá trị đúng.</li>
-            <li>Cuối cùng, vì b là đúng nên <code>a = not b</code> sẽ nhận giá trị sai.</li>
-        </ul>
+        <h3>Rẽ nhánh có ở khắp nơi</h3>
+        <div class="table-wrap">
+        <table class="data-table">
+            <thead><tr><th class="l">Tình huống</th><th>Điều kiện</th><th>Nếu Đúng</th><th>Nếu Sai</th></tr></thead>
+            <tbody>
+                <tr><td class="l">Đăng nhập tài khoản</td><td>Mật khẩu đúng</td><td>Vào trang chính</td><td>Báo “Sai mật khẩu”</td></tr>
+                <tr><td class="l">Kết quả học tập</td><td>Điểm ≥ 5</td><td>Đạt</td><td>Chưa đạt</td></tr>
+                <tr><td class="l">Mua cam ở siêu thị</td><td>Mua dưới 5 kg</td><td>12 000 đồng/kg</td><td>10 000 đồng/kg</td></tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+
+    <!-- ============ 2. BIỂU THỨC LÔGIC ============ -->
+    <section id="s-logic">
+        <h2>2. Biểu thức lôgic <span class="sgk-ref">SGK mục 1</span></h2>
+
+        <div class="activity-box">
+            <span class="activity-tag">Hoạt động 1 · Khái niệm biểu thức lôgic</span>
+            <p>Biểu thức nào sau đây có thể đưa vào vị trí <code>&lt;điều kiện&gt;</code> trong lệnh <em>Nếu <code>&lt;điều kiện&gt;</code> thì <code>&lt;lệnh&gt;</code></em> của các ngôn ngữ lập trình bậc cao? <span class="muted">(Có thể chọn nhiều phương án.)</span></p>
+            <div class="choice-grid" id="hd1-choices">
+                <label class="choice"><input type="checkbox" value="A"> A. m, n = 1, 2</label>
+                <label class="choice"><input type="checkbox" value="B"> B. a + b &gt; 1</label>
+                <label class="choice"><input type="checkbox" value="C"> C. a * b &lt; a + b</label>
+                <label class="choice"><input type="checkbox" value="D"> D. 12 + 15 &gt; 2 * 13</label>
+            </div>
+            <button type="button" class="btn btn-accent btn-sm" id="btn-hd1">Kiểm tra</button>
+            <div class="feedback" id="hd1-fb"></div>
+        </div>
+
+        <p>Trong Python, <strong>biểu thức lôgic</strong> là biểu thức chỉ nhận giá trị <code>True</code> (đúng) hoặc <code>False</code> (sai). Biểu thức lôgic đơn giản nhất là các biểu thức <strong>so sánh</strong> số hoặc xâu kí tự. Trong Hoạt động 1, các phương án B, C, D là biểu thức lôgic.</p>
+
+        <p>Quan sát các lệnh sau để nhận biết kiểu dữ liệu lôgic:</p>
+<pre class="code-block">&gt;&gt;&gt; a,b,s = 10,2,"Number"     # gán a = 10, b = 2, s = "Number"
+&gt;&gt;&gt; a &gt; 10
+False                        # a &gt; 10 là sai
+&gt;&gt;&gt; b &lt; 3
+True                         # b &lt; 3 là đúng
+&gt;&gt;&gt; s == "number"
+False                        # "Number" và "number" là hai xâu khác nhau</pre>
+
+        <h3>2.1. Các phép so sánh</h3>
+        <div class="table-wrap">
+        <table class="data-table">
+            <thead><tr><th>Kí hiệu</th><th>Ý nghĩa</th><th>Kí hiệu</th><th>Ý nghĩa</th><th>Kí hiệu</th><th>Ý nghĩa</th></tr></thead>
+            <tbody>
+                <tr><td class="tt">&lt;</td><td>nhỏ hơn</td><td class="tt">&gt;</td><td>lớn hơn</td><td class="tt">==</td><td>bằng nhau</td></tr>
+                <tr><td class="tt">&lt;=</td><td>nhỏ hơn hoặc bằng</td><td class="tt">&gt;=</td><td>lớn hơn hoặc bằng</td><td class="tt">!=</td><td>khác nhau</td></tr>
+            </tbody>
+        </table>
+        </div>
+        <p class="muted"><em>Chú ý:</em> Với xâu kí tự cũng có đầy đủ các phép so sánh trên (sẽ học sau).</p>
 
         <div class="note-box">
-            <ul style="margin-bottom:0;">
-                <li>Biểu thức lôgic là biểu thức chỉ nhận giá trị <strong>True</strong> hoặc <strong>False</strong>. Giá trị của các biểu thức lôgic thuộc kiểu <code>bool</code>.</li>
+            <p><strong>Dễ nhầm:</strong> <code>=</code> là <em>lệnh gán</em> (đưa giá trị vào biến), còn <code>==</code> là <em>phép so sánh bằng</em> (hỏi “có bằng nhau không?”). Viết <code>if a = 5:</code> là <strong>lỗi cú pháp</strong>; phải viết <code>if a == 5:</code>.</p>
+        </div>
+
+        <h3>2.2. Các phép toán lôgic: and, or, not</h3>
+        <p>Các phép toán trên kiểu dữ liệu lôgic gồm <code>and</code> (và), <code>or</code> (hoặc) và <code>not</code> (phủ định):</p>
+        <ul>
+            <li><code>X and Y</code> chỉ <strong>đúng khi cả hai</strong> X, Y cùng đúng.</li>
+            <li><code>X or Y</code> chỉ <strong>sai khi cả hai</strong> X, Y cùng sai.</li>
+            <li><code>not X</code> cho giá trị <strong>ngược lại</strong> với X.</li>
+        </ul>
+
+        <div class="sim">
+            <div class="sim-head"><span>Thử ngay: bấm để đổi giá trị X, Y</span></div>
+            <div class="sim-body">
+                <div class="toggle-row">
+                    <span><strong>X =</strong> <button type="button" class="toggle" id="tg-x" data-v="1">True</button></span>
+                    <span><strong>Y =</strong> <button type="button" class="toggle" id="tg-y" data-v="1">True</button></span>
+                </div>
+                <div class="result-chips" id="tt-chips"></div>
+                <div class="truth-grid" style="margin-top:1rem;">
+                    <table class="data-table tt" id="tt-and">
+                        <thead><tr><th colspan="3" class="op">Phép toán and</th></tr><tr><th>X</th><th>Y</th><th>X and Y</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                    <table class="data-table tt" id="tt-or">
+                        <thead><tr><th colspan="3" class="op">Phép toán or</th></tr><tr><th>X</th><th>Y</th><th>X or Y</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                    <table class="data-table tt" id="tt-not">
+                        <thead><tr><th colspan="2" class="op">Phép toán not</th></tr><tr><th>X</th><th>not X</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <h4>Ví dụ. Cho các lệnh sau, dự đoán giá trị của các biến lôgic a, b, c.</h4>
+<pre class="code-block">&gt;&gt;&gt; x, y, z = 10, 5, 9
+&gt;&gt;&gt; b = x &lt; 11 and z &gt; 5
+&gt;&gt;&gt; c = x &gt; 15 or y &lt; 9
+&gt;&gt;&gt; a = not b</pre>
+        <p class="muted">Tự dự đoán trước, sau đó mới bấm để xem lời giải từng bước.</p>
+        <div class="predict" id="predict-vd"></div>
+
+        <div class="remember-box">
+            <ul>
+                <li>Biểu thức lôgic là biểu thức chỉ nhận giá trị <code>True</code> hoặc <code>False</code>. Giá trị các biểu thức lôgic thuộc kiểu <code>bool</code>.</li>
                 <li>Các phép toán trên kiểu dữ liệu lôgic là <code>and</code> (và), <code>or</code> (hoặc) và <code>not</code> (phủ định).</li>
             </ul>
         </div>
 
-        <div class="task-box">
-            <span class="task-label">CÂU HỎI</span>
-            <p style="font-weight:600; margin-top:0.5rem;">Mỗi biểu thức sau có giá trị True hay False?</p>
-            <ul style="margin-bottom:0;">
-                <li>a) <code>100%4 == 0</code></li>
-                <li>b) <code>111//5 != 20 or 20%3 != 0</code></li>
-            </ul>
-            <button type="button" class="btn btn-secondary exp-btn" data-exp="exp-cauhoi3">Xem đáp án</button>
-            <div class="exp-answer" id="exp-cauhoi3">
-                <p>a) <code>100%4</code> = 0, nên <code>100%4 == 0</code> là <strong>True</strong>.</p>
-                <p>b) <code>111//5</code> = 22 (khác 20) → vế trái True. Với phép <code>or</code>, chỉ cần một vế True là đủ, nên cả biểu thức là <strong>True</strong> (không cần xét vế phải).</p>
-            </div>
+        <div class="question-box">
+            <span class="q-tag">Câu hỏi</span>
+            <p>Mỗi biểu thức sau có giá trị <code>True</code> hay <code>False</code>?</p>
+            <div class="predict" id="predict-q1"></div>
+        </div>
+
+        <div class="extend-box">
+            <p><strong class="tag">Mở rộng — thứ tự thực hiện.</strong> Trong một biểu thức, Python tính các phép số học (<code>+ - * / // %</code>) trước, rồi đến phép so sánh, sau cùng là phép lôgic theo thứ tự <code>not</code> → <code>and</code> → <code>or</code>. Khi không chắc, hãy dùng dấu ngoặc: <code>(0 &lt;= x and x &lt;= 1) or (5 &lt;= x and x &lt;= 10)</code>.</p>
         </div>
     </section>
 
-    <!-- PHẦN 4: LỆNH IF -->
+    <!-- ============ 3. LỆNH IF ============ -->
     <section id="s-if">
-        <h2>4. Lệnh if</h2>
+        <h2>3. Lệnh if <span class="sgk-ref">SGK mục 2</span></h2>
 
         <div class="activity-box">
-            <span class="activity-tag">HOẠT ĐỘNG 2</span>
-            <p style="font-weight:600;">Cấu trúc lệnh if trong Python</p>
-            <p>Cho trước số tự nhiên n (được gán nhập từ bàn phím). Đoạn chương trình như bên dưới sẽ kiểm tra và in ra thông báo "n là số lớn hơn 0".</p>
-            <div class="code-block"><span class="kw">if</span> n &gt; 0:
-    print("n là số lớn hơn 0")</div>
-            <p>Em có nhận xét gì về cấu trúc lệnh <code>if</code>? Sau &lt;điều kiện&gt; lệnh if có kí tự gì? Lệnh <code>print()</code> được viết như thế nào?</p>
-            <button type="button" class="btn btn-secondary exp-btn" data-exp="exp-hd2">Xem đáp án</button>
-            <div class="exp-answer" id="exp-hd2">
-                <p>Sau &lt;điều kiện&gt; của lệnh <code>if</code> luôn có dấu hai chấm <code>:</code>. Lệnh <code>print()</code> (khối lệnh bên trong <code>if</code>) được viết lùi vào so với dòng <code>if</code>, thẳng hàng nhau (mặc định 1 Tab hoặc 4 dấu cách).</p>
+            <span class="activity-tag">Hoạt động 2 · Cấu trúc lệnh if trong Python</span>
+            <p>Cho trước số tự nhiên n (được gán hoặc nhập từ bàn phím). Đoạn chương trình sau kiểm tra <code>n &gt; 0</code> thì thông báo <code>"n là số lớn hơn 0"</code>.</p>
+<pre class="code-block">if n &gt; 0:
+    print("n là số lớn hơn 0")</pre>
+            <p>Em có nhận xét gì về cấu trúc lệnh <code>if</code>? Sau <code>&lt;điều kiện&gt;</code> lệnh <code>if</code> có kí tự gì? Lệnh <code>print()</code> được viết như thế nào?</p>
+            <button type="button" class="btn btn-secondary btn-sm" data-reveal="ans-hd2">Xem gợi ý trả lời</button>
+            <div class="reveal" id="ans-hd2">
+                <ul>
+                    <li>Dòng <code>if</code> gồm: từ khoá <code>if</code>, một biểu thức lôgic (<code>n &gt; 0</code>) và kết thúc bằng dấu hai chấm <code>:</code>.</li>
+                    <li>Lệnh <code>print()</code> <strong>không</strong> viết thẳng dưới chữ <code>if</code> mà được <strong>viết lùi vào</strong> (mặc định 1 tab hay 4 dấu cách). Nhờ lùi vào, Python biết lệnh này <em>thuộc về</em> lệnh <code>if</code>: chỉ chạy khi điều kiện đúng.</li>
+                </ul>
             </div>
         </div>
 
         <p>Để xử lí các tình huống rẽ nhánh, giống như các ngôn ngữ lập trình khác, Python cũng có các câu lệnh để mô tả cấu trúc rẽ nhánh.</p>
 
-        <h3>4.1. Câu lệnh điều kiện dạng thiếu</h3>
-        <div class="code-block"><span class="kw">if</span> &lt;điều kiện&gt;:
-    &lt;khối lệnh&gt;</div>
-        <p>Khi thực hiện lệnh, Python sẽ kiểm tra &lt;điều kiện&gt;, nếu đúng thì thực hiện &lt;khối lệnh&gt;, ngược lại thì bỏ qua chuyển sang lệnh tiếp theo sau lệnh if.</p>
-
-        <div class="sim-container" style="max-width:340px; margin:1.5rem auto;">
-            <svg viewBox="0 0 260 200" width="100%" style="max-width:240px;">
-                <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#666"/></marker></defs>
-                <polygon points="130,10 220,55 130,100 40,55" fill="#EAF3EE" stroke="#496B5A" stroke-width="2"/>
-                <text x="130" y="60" text-anchor="middle" font-size="12">&lt;Điều kiện&gt;</text>
-                <text x="230" y="55" font-size="11" fill="#DC3545" font-weight="bold">Sai</text>
-                <text x="140" y="120" font-size="11" fill="#28A745" font-weight="bold">Đúng</text>
-                <line x1="130" y1="100" x2="130" y2="140" stroke="#666" stroke-width="2" marker-end="url(#ar2)"/>
-                <rect x="70" y="140" width="120" height="35" rx="6" fill="#FEECE9" stroke="var(--primary)" stroke-width="2"/>
-                <text x="130" y="162" text-anchor="middle" font-size="12">Khối lệnh</text>
-            </svg>
-            <p style="font-size:0.85rem; color:var(--text-light);">Hình 19.2. Sơ đồ khối if dạng thiếu</p>
+        <h3>3.1. Câu lệnh điều kiện dạng thiếu</h3>
+        <div class="two-col">
+            <div>
+<pre class="code-block">if &lt;điều kiện&gt;:
+    &lt;khối lệnh&gt;</pre>
+                <ul class="muted">
+                    <li>Sau điều kiện cần có dấu hai chấm <code>:</code>.</li>
+                    <li>Khối lệnh tiếp theo cần viết lùi vào và thẳng hàng, mặc định là 1 tab hay 4 dấu cách.</li>
+                </ul>
+                <p>Khi thực hiện lệnh, Python sẽ kiểm tra <code>&lt;điều kiện&gt;</code>, nếu đúng thì thực hiện <code>&lt;khối lệnh&gt;</code>, ngược lại thì bỏ qua, chuyển sang lệnh tiếp theo sau lệnh <code>if</code>.</p>
+            </div>
+            <figure class="figure flow" style="margin:0;">
+                <div id="flow-thieu"></div>
+                <figcaption>Hình 19.2. Câu lệnh if dạng thiếu</figcaption>
+            </figure>
         </div>
 
-        <h3>4.2. Câu lệnh điều kiện dạng đủ</h3>
-        <div class="code-block"><span class="kw">if</span> &lt;điều kiện&gt;:
-    &lt;khối lệnh 1&gt;
-<span class="kw">else</span>:
-    &lt;khối lệnh 2&gt;</div>
-        <p>Khi thực hiện lệnh, Python sẽ kiểm tra &lt;điều kiện&gt;, nếu đúng thì thực hiện &lt;khối lệnh 1&gt;, ngược lại thì thực hiện &lt;khối lệnh 2&gt;.</p>
-        <p>Ví dụ, nếu a, b là hai số đã được tạo thì lệnh sau sẽ in ra giá trị tuyệt đối của hiệu số:</p>
-        <div class="code-block"><span class="kw">if</span> a &gt; b:
-    print(a - b)
-<span class="kw">else</span>:
-    print(b - a)</div>
+        <div class="sim" id="sim-thieu">
+            <div class="sim-head"><span>Mô phỏng: chương trình chạy theo nhánh nào?</span><span class="status-badge">if dạng thiếu</span></div>
+            <div class="sim-body">
+                <div class="sim-controls">
+                    <label for="st-n">n =</label>
+                    <input type="number" class="num-input" id="st-n" value="7">
+                    <button type="button" class="btn btn-primary btn-sm" id="st-run">Chạy từng bước ▶</button>
+                    <span class="muted">Thử n = 7, rồi n = 0, n = -4.</span>
+                </div>
+                <div class="two-col">
+                    <div>
+                        <div class="code-trace" id="st-code"></div>
+                        <div class="mini-console" id="st-out"></div>
+                    </div>
+                    <div class="flow" id="flow-thieu-sim"></div>
+                </div>
+            </div>
+        </div>
 
-        <div class="sim-container" style="max-width:400px; margin:1.5rem auto;">
-            <svg viewBox="0 0 300 190" width="100%" style="max-width:300px;">
-                <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#666"/></marker></defs>
-                <polygon points="150,10 240,55 150,100 60,55" fill="#EAF3EE" stroke="#496B5A" stroke-width="2"/>
-                <text x="150" y="60" text-anchor="middle" font-size="12">&lt;Điều kiện&gt;</text>
-                <text x="250" y="55" font-size="11" fill="#DC3545" font-weight="bold">Sai</text>
-                <text x="90" y="120" font-size="11" fill="#28A745" font-weight="bold">Đúng</text>
-                <line x1="120" y1="90" x2="90" y2="130" stroke="#666" stroke-width="2" marker-end="url(#ar3)"/>
-                <line x1="180" y1="90" x2="210" y2="130" stroke="#666" stroke-width="2" marker-end="url(#ar3)"/>
-                <rect x="20" y="130" width="120" height="35" rx="6" fill="#FEECE9" stroke="var(--primary)" stroke-width="2"/>
-                <text x="80" y="152" text-anchor="middle" font-size="12">Khối lệnh 1</text>
-                <rect x="160" y="130" width="120" height="35" rx="6" fill="#fff" stroke="#666" stroke-width="2"/>
-                <text x="220" y="152" text-anchor="middle" font-size="12">Khối lệnh 2</text>
-            </svg>
-            <p style="font-size:0.85rem; color:var(--text-light);">Hình 19.3. Sơ đồ khối if - else dạng đủ</p>
+        <h3>3.2. Câu lệnh điều kiện dạng đủ</h3>
+        <div class="two-col">
+            <div>
+<pre class="code-block">if &lt;điều kiện&gt;:
+    &lt;khối lệnh 1&gt;
+else:
+    &lt;khối lệnh 2&gt;</pre>
+                <ul class="muted">
+                    <li>Từ khoá <code>if</code> và <code>else</code> cần viết thẳng lề trái.</li>
+                    <li>Các khối lệnh 1 và khối lệnh 2 cần viết lùi vào và thẳng hàng, mặc định là 1 tab hay 4 dấu cách.</li>
+                </ul>
+                <p>Khi thực hiện lệnh, Python sẽ kiểm tra <code>&lt;điều kiện&gt;</code>, nếu đúng thì thực hiện <code>&lt;khối lệnh 1&gt;</code>, ngược lại thì thực hiện <code>&lt;khối lệnh 2&gt;</code>.</p>
+            </div>
+            <figure class="figure flow" style="margin:0;">
+                <div id="flow-du"></div>
+                <figcaption>Hình 19.3. Câu lệnh if dạng đủ</figcaption>
+            </figure>
+        </div>
+
+        <p>Ví dụ, nếu a, b là hai số đã được tạo thì lệnh sau sẽ in ra giá trị tuyệt đối của hiệu hai số:</p>
+<pre class="code-block">if a &gt; b:
+    print(a - b)
+else:
+    print(b - a)</pre>
+
+        <div class="sim" id="sim-du">
+            <div class="sim-head"><span>Mô phỏng: giá trị tuyệt đối của hiệu hai số</span><span class="status-badge">if dạng đủ</span></div>
+            <div class="sim-body">
+                <div class="sim-controls">
+                    <label for="sd-a">a =</label>
+                    <input type="number" class="num-input" id="sd-a" value="3">
+                    <label for="sd-b">b =</label>
+                    <input type="number" class="num-input" id="sd-b" value="8">
+                    <button type="button" class="btn btn-primary btn-sm" id="sd-run">Chạy từng bước ▶</button>
+                </div>
+                <div class="two-col">
+                    <div>
+                        <div class="code-trace" id="sd-code"></div>
+                        <div class="mini-console" id="sd-out"></div>
+                    </div>
+                    <div class="flow" id="flow-du-sim"></div>
+                </div>
+                <p class="muted" style="margin:0.8rem 0 0;">Dù chạy theo nhánh nào, kết quả in ra luôn là số không âm. Khi a = b thì điều kiện <code>a &gt; b</code> sai, chương trình in <code>b - a = 0</code>.</p>
+            </div>
         </div>
 
         <div class="note-box">
-            <p style="margin-bottom:0.5rem;"><strong>Chú ý:</strong> Các khối lệnh trong if đều cần viết sau dấu ":" và lùi vào, thẳng hàng. Đây là điểm khác biệt của Python so với các ngôn ngữ lập trình khác.</p>
-        </div>
-        <div class="highlight-box">
-            <p style="margin-bottom:0;">Câu lệnh điều kiện <code>if</code> thể hiện cấu trúc rẽ nhánh trong Python. Khối lệnh rẽ nhánh của <code>if</code> được viết sau dấu ":", cần viết lùi vào và thẳng hàng.</p>
+            <p><em>Chú ý.</em> Các khối lệnh trong Python đều cần viết sau dấu <code>:</code> và lùi vào, thẳng hàng. Đây là điểm khác biệt của Python với các ngôn ngữ lập trình khác.</p>
         </div>
 
-        <div class="task-box">
-            <span class="task-label">CÂU HỎI</span>
-            <p style="font-weight:600; margin-top:0.5rem;">Đoạn chương trình sau thực hiện công việc gì?</p>
-            <div class="code-block">k = int(input("Nhập một số nguyên dương: "))
-<span class="kw">if</span> k &lt;= 0:
-    print("Bạn nhập sai rồi!")</div>
-            <button type="button" class="btn btn-secondary exp-btn" data-exp="exp-cauhoi4">Xem đáp án</button>
-            <div class="exp-answer" id="exp-cauhoi4">
-                <p>Chương trình nhập một số nguyên <code>k</code> từ bàn phím. Nếu <code>k</code> không phải số dương (tức <code>k &lt;= 0</code>) thì in ra thông báo "Bạn nhập sai rồi!". Đây là lệnh <code>if</code> dạng thiếu, dùng để kiểm tra dữ liệu đầu vào có hợp lệ hay không.</p>
+        <div class="remember-box">
+            Câu lệnh điều kiện <code>if</code> thể hiện cấu trúc rẽ nhánh trong Python. Khối lệnh rẽ nhánh của <code>if</code> được viết sau dấu <code>:</code>, cần viết lùi vào và thẳng hàng.
+        </div>
+
+        <h3>Luyện mắt: tìm dòng viết sai</h3>
+        <p>Mỗi đoạn chương trình dưới đây có <strong>đúng một dòng</strong> sai cú pháp. Em hãy bấm vào dòng đó.</p>
+        <div class="bug-grid" id="bug-grid"></div>
+
+        <h3>3.3. Lệnh if lồng nhau</h3>
+        <p>Khối lệnh bên trong <code>if</code> hoặc <code>else</code> có thể chứa một lệnh <code>if</code> khác. Cách viết này dùng khi có <strong>nhiều hơn hai</strong> trường hợp, như ở Nhiệm vụ 2 phần Thực hành. Ví dụ, xếp loại một số nguyên n thành ba trường hợp:</p>
+<pre class="code-block">if n &gt; 0:
+    print("n là số dương")
+else:
+    if n == 0:                 # lệnh if nằm trong khối else
+        print("n bằng 0")
+    else:
+        print("n là số âm")</pre>
+        <p class="muted">Lệnh <code>if</code> bên trong được lùi vào một mức; các khối lệnh của nó lại lùi thêm một mức nữa.</p>
+
+        <div class="question-box">
+            <span class="q-tag">Câu hỏi</span>
+            <p>Đoạn chương trình sau thực hiện công việc gì?</p>
+<pre class="code-block">k = int(input("Nhập một số nguyên dương: "))
+if k &lt;= 0:
+    print("Bạn nhập sai rồi!")</pre>
+            <button type="button" class="btn btn-secondary btn-sm" data-reveal="ans-q2">Xem đáp án</button>
+            <div class="reveal" id="ans-q2">
+                <p>Chương trình yêu cầu nhập một số nguyên dương k. Nếu người dùng nhập số không dương (<code>k &lt;= 0</code>, ví dụ 0 hoặc -3) thì máy in ra thông báo <code>Bạn nhập sai rồi!</code>; nếu nhập đúng số dương thì không in gì.</p>
+                <p>Đây là lệnh <code>if</code> <strong>dạng thiếu</strong>, dùng để <strong>kiểm tra dữ liệu nhập vào có hợp lệ không</strong>.</p>
             </div>
         </div>
     </section>
 
-    <!-- PHẦN 5: THỰC HÀNH -->
+    <!-- ============ 4. THỰC HÀNH ============ -->
     <section id="s-lab">
-        <h2>5. Thực hành</h2>
-        <p style="font-weight:600; color:var(--accent);">Các bài liên quan đến kiểu dữ liệu bool và lệnh if.</p>
+        <h2>4. Thực hành</h2>
+        <p style="font-weight:600; color:var(--accent);">Các bài tập liên quan đến kiểu dữ liệu <code>bool</code> và lệnh <code>if</code>.</p>
 
         <div class="task-box">
-            <span class="task-label">NHIỆM VỤ 1</span>
+            <span class="task-label">Nhiệm vụ 1</span>
             <p>Viết chương trình nhập số tự nhiên n từ bàn phím. Sau đó thông báo số em đã nhập là số chẵn hay số lẻ phụ thuộc vào n là chẵn hay lẻ.</p>
-            <p><span class="guide-label">Hướng dẫn.</span> Để kiểm tra một số tự nhiên n là chẵn hay lẻ, ta dùng phép toán lấy số dư n%2. Nếu số dư bằng 0 thì n là số chẵn, ngược lại là số lẻ. Chương trình tham khảo:</p>
-            <div class="code-block">n = int(input("Nhập số tự nhiên n: "))
-<span class="kw">if</span> n%2 == 0:
+            <p><span class="guide-label">Hướng dẫn.</span> Để kiểm tra một số tự nhiên n là chẵn hay lẻ, ta dùng phép toán lấy số dư <code>n%2</code>. Nếu số dư bằng 0 thì n là số chẵn, ngược lại n là số lẻ. Chương trình có thể như sau:</p>
+<pre class="code-block" id="code-nv1">n = int(input("Nhập số tự nhiên n: "))
+if n%2 == 0:
     print("Số đã nhập là số chẵn.")
-<span class="kw">else</span>:
-    print("Số đã nhập là số lẻ.")</div>
-            <button type="button" class="btn btn-secondary" id="btn-load-nv1">Nạp bài vào Phòng thực hành ↓</button>
+else:
+    print("Số đã nhập là số lẻ.")</pre>
+            <p><strong>Bộ kiểm thử</strong> — chạy chương trình với từng dữ liệu vào và so sánh kết quả:</p>
+            <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Dữ liệu vào (n)</th><th>8</th><th>13</th><th>0</th></tr></thead>
+                <tbody><tr><th>Kết quả mong đợi</th><td>Số chẵn</td><td>Số lẻ</td><td>Số chẵn <span class="muted">(0 % 2 = 0)</span></td></tr></tbody>
+            </table>
+            </div>
+            <div class="btn-row"><button type="button" class="btn btn-secondary btn-sm" data-load="code-nv1" data-stdin="8">Nạp vào Phòng thực hành ↓</button></div>
         </div>
 
         <div class="task-box">
-            <span class="task-label">NHIỆM VỤ 2</span>
-            <p>Giả sử gia đình sinh hoạt trong khu vực gia đình em ở được tính luỹ kế theo từng tháng như sau (giá tính theo từng kWh điện tiêu thụ):</p>
+            <span class="task-label">Nhiệm vụ 2</span>
+            <p>Giả sử giá điện sinh hoạt trong khu vực gia đình em ở được tính luỹ kế theo từng tháng như sau (giá tính theo từng kWh điện tiêu thụ):</p>
             <ul>
                 <li>Với mức điện tiêu thụ từ 0 đến 50 kWh, giá thành mỗi kWh là 1,678 nghìn đồng.</li>
                 <li>Với mức từ 51 đến 100, giá thành mỗi kWh là 1,734 nghìn đồng.</li>
                 <li>Từ mức 101 trở lên, giá thành mỗi kWh là 2,014 nghìn đồng.</li>
             </ul>
-            <p>Viết chương trình nhập số điện tiêu thụ của gia đình em. Khi đó theo cách tính luỹ kế trên chúng ta cần tính dựa trên các điều kiện sau:</p>
+            <p>Viết chương trình nhập số điện tiêu thụ trong tháng của gia đình em và tính số tiền điện phải trả.</p>
+            <p><span class="guide-label">Hướng dẫn.</span> Gọi k là số kWh điện tiêu thụ của gia đình em. Khi đó theo cách tính luỹ kế trên chúng ta cần tính dựa trên các điều kiện sau:</p>
             <ul>
-                <li>Nếu <code>k &lt;= 50</code> thì số tiền cần trả là <code>k × 1.678</code>.</li>
-                <li>Nếu <code>50 &lt; k &lt;= 100</code> thì số tiền cần trả là <code>50 × 1.678 + (k − 50) × 1.734</code>.</li>
-                <li>Nếu <code>100 &lt; k</code> thì số tiền cần trả là: <code>50 × 1.678 + 50 × 1.734 + (k − 100) × 2.014</code>.</li>
+                <li>Nếu <code>k ≤ 50</code> thì số tiền cần trả là <code>k × 1,678</code> nghìn đồng.</li>
+                <li>Nếu <code>50 &lt; k ≤ 100</code> thì số tiền cần trả là <code>50 × 1,678 + (k − 50) × 1,734</code> nghìn đồng.</li>
+                <li>Nếu <code>100 &lt; k</code> thì số tiền cần trả là <code>50 × 1,678 + 50 × 1,734 + (k − 100) × 2,014</code> nghìn đồng.</li>
             </ul>
-            <p><span class="guide-label">Hướng dẫn.</span> Chúng ta sử dụng lệnh <code>round(t)</code> để làm tròn số thực t. Chú ý trong máy tính dùng dấu "." để viết các số thập phân. Chương trình tham khảo:</p>
-            <div class="code-block">k = float(input("Nhập số kWh tiêu thụ điện nhà em: "))
-<span class="kw">if</span> k&lt;= 50:
+            <p>Chúng ta sử dụng lệnh <code>round(t)</code> để làm tròn số thực t. Chú ý trong máy tính dùng dấu <code>.</code> để viết các số thập phân. Chương trình có thể như sau:</p>
+<pre class="code-block" id="code-nv2">k = float(input("Nhập số kWh tiêu thụ điện nhà em: "))
+if k&lt;= 50:
     t = k*1.678
-<span class="kw">else</span>:
-    <span class="kw">if</span> k &lt;= 100:
+else:
+    if k &lt;= 100:
         t = 50*1.678 + (k-50)*1.734
-    <span class="kw">else</span>:
+    else:
         t = 50*1.678 + 50*1.734 + (k-100)*2.014
-print("Số tiền điện phải trả là:", round(t), "nghìn đồng")</div>
-            <button type="button" class="btn btn-secondary" id="btn-load-nv2">Nạp bài vào Phòng thực hành ↓</button>
+print("Số tiền điện phải trả là:",round(t), "nghìn đồng")</pre>
+
+            <p><strong>Hiểu “luỹ kế”:</strong> không phải toàn bộ số điện tính theo một giá. 50 kWh đầu tính giá bậc 1, 50 kWh tiếp theo tính giá bậc 2, phần còn lại tính giá bậc 3. Kéo thanh trượt để xem:</p>
+            <div class="sim" style="margin-top:0.6rem;">
+                <div class="sim-head"><span>Máy tính tiền điện luỹ kế</span></div>
+                <div class="sim-body">
+                    <div class="sim-controls">
+                        <label for="bill-k">k =</label>
+                        <input type="range" id="bill-k" min="0" max="300" value="150">
+                        <input type="number" class="num-input" id="bill-k-num" value="150" min="0" aria-label="Số kWh">
+                        <span>kWh</span>
+                    </div>
+                    <div class="bill-bars" id="bill-bars"></div>
+                    <p class="bill-total" id="bill-total"></p>
+                    <p class="muted" id="bill-branch" style="margin-bottom:0;"></p>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Dữ liệu vào (k)</th><th>40</th><th>80</th><th>150</th></tr></thead>
+                <tbody><tr><th>Nhánh chạy</th><td><code>k&lt;=50</code></td><td><code>k&lt;=100</code></td><td><code>else</code> trong cùng</td></tr>
+                <tr><th>Kết quả mong đợi</th><td>67 nghìn đồng</td><td>136 nghìn đồng</td><td>271 nghìn đồng</td></tr></tbody>
+            </table>
+            </div>
+            <div class="btn-row"><button type="button" class="btn btn-secondary btn-sm" data-load="code-nv2" data-stdin="80">Nạp vào Phòng thực hành ↓</button></div>
         </div>
 
-        <div class="lab-wrapper">
+        <div class="lab-wrapper" id="lab">
             <div class="lab-header">
-                <span><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: text-bottom; margin-right:5px;"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm.5 12.5a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 1 0v4zm0-6a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 1 0v1z"/></svg> main.py</span>
-                <span id="py-status" class="status-badge" style="background: #D15A42;">Đang kiểm tra thư viện...</span>
+                <span>🐍 Phòng thực hành Python · main.py</span>
+                <span id="py-status" class="status-badge" style="background:#D15A42;">Đang tải trình chạy Python...</span>
             </div>
-            <div class="lab-editor-area">
-                <textarea id="py-editor" spellcheck="false">
-# Viết mã Python của em ở đây
-n = int(input("Nhập một số nguyên n: "))
-
-if n > 0:
+            <textarea id="py-editor" spellcheck="false" aria-label="Soạn thảo mã Python">n = int(input("Nhập một số nguyên n: "))
+if n &gt; 0:
     print(n, "là số dương")
 else:
     print(n, "không phải số dương")
 </textarea>
+            <div class="lab-stdin">
+                <label for="py-stdin">Dữ liệu vào — mỗi dòng dành cho một lệnh <code style="background:#333;color:#ddd;">input()</code>. Để trống thì máy sẽ hỏi khi chạy.</label>
+                <textarea id="py-stdin" spellcheck="false">5</textarea>
             </div>
             <div class="lab-toolbar">
-                <button type="button" id="btn-py-run" class="btn btn-primary" disabled>Chạy mã ⏵</button>
-                <button type="button" id="btn-py-clear" class="btn btn-secondary">Xóa kết quả</button>
+                <button type="button" id="btn-py-run" class="btn btn-primary" disabled>Chạy mã ▶</button>
+                <button type="button" id="btn-py-clear" class="btn btn-secondary">Xoá kết quả</button>
             </div>
             <div id="py-console" class="lab-console">Môi trường sẵn sàng. Đang đợi mã lệnh...</div>
         </div>
-        <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 10px;">* Hệ thống sử dụng Skulpt (chạy hoàn toàn trên trình duyệt, an toàn và không cần cài đặt). Có giới hạn thời gian chạy để tránh kẹt vòng lặp vô hạn.</p>
+        <p class="muted" style="margin-top:10px;">Mẹo: phím <kbd>Tab</kbd> trong khung soạn thảo sẽ chèn 4 dấu cách để lùi lề. Trình chạy dùng Skulpt, hoạt động ngay trên trình duyệt, không cần cài đặt.</p>
     </section>
 
-    <!-- PHẦN 6: LUYỆN TẬP -->
+    <!-- ============ 5. LUYỆN TẬP (SGK) ============ -->
+    <section id="s-practice">
+        <h2>5. Luyện tập <span class="sgk-ref">SGK trang 104</span></h2>
+
+        <div class="task-box">
+            <span class="task-label">Bài 1</span>
+            <p>Viết biểu thức lôgic ứng với mỗi câu sau:</p>
+            <ol type="a">
+                <li>Số x nằm trong khoảng (0; 10).</li>
+                <li>Số y nằm ngoài đoạn [1; 2].</li>
+                <li>Số z nằm trong đoạn [0; 1] hoặc [5; 10].</li>
+            </ol>
+            <p class="muted">Gợi ý: khoảng ( ) không lấy hai đầu mút → dùng <code>&lt;</code>; đoạn [ ] có lấy hai đầu mút → dùng <code>&lt;=</code>.</p>
+            <button type="button" class="btn btn-secondary btn-sm" data-reveal="ans-lt1">Xem đáp án</button>
+            <div class="reveal" id="ans-lt1">
+                <p><strong>a)</strong> <code>0 &lt; x and x &lt; 10</code></p>
+                <svg class="numline" viewBox="0 0 520 50" role="img" aria-label="Khoảng mở từ 0 đến 10">
+                    <line x1="10" y1="25" x2="510" y2="25" stroke="#999" stroke-width="1.5"/>
+                    <line x1="110" y1="25" x2="410" y2="25" stroke="#1E8E4A" stroke-width="6"/>
+                    <circle cx="110" cy="25" r="6" fill="#fff" stroke="#1E8E4A" stroke-width="2.5"/>
+                    <circle cx="410" cy="25" r="6" fill="#fff" stroke="#1E8E4A" stroke-width="2.5"/>
+                    <text x="110" y="47" text-anchor="middle">0</text><text x="410" y="47" text-anchor="middle">10</text>
+                </svg>
+                <p><strong>b)</strong> <code>y &lt; 1 or y &gt; 2</code> <span class="muted">(hoặc <code>not (1 &lt;= y and y &lt;= 2)</code>)</span></p>
+                <svg class="numline" viewBox="0 0 520 50" role="img" aria-label="Ngoài đoạn từ 1 đến 2">
+                    <line x1="10" y1="25" x2="510" y2="25" stroke="#999" stroke-width="1.5"/>
+                    <line x1="10" y1="25" x2="200" y2="25" stroke="#1E8E4A" stroke-width="6"/>
+                    <line x1="320" y1="25" x2="510" y2="25" stroke="#1E8E4A" stroke-width="6"/>
+                    <circle cx="200" cy="25" r="6" fill="#fff" stroke="#1E8E4A" stroke-width="2.5"/>
+                    <circle cx="320" cy="25" r="6" fill="#fff" stroke="#1E8E4A" stroke-width="2.5"/>
+                    <text x="200" y="47" text-anchor="middle">1</text><text x="320" y="47" text-anchor="middle">2</text>
+                </svg>
+                <p class="muted">Nằm ngoài đoạn [1; 2] thì y không thể vừa nhỏ hơn 1 vừa lớn hơn 2, nên phải dùng <code>or</code>, không dùng <code>and</code>.</p>
+                <p><strong>c)</strong> <code>(0 &lt;= z and z &lt;= 1) or (5 &lt;= z and z &lt;= 10)</code></p>
+                <svg class="numline" viewBox="0 0 520 50" role="img" aria-label="Đoạn 0 đến 1 hoặc đoạn 5 đến 10">
+                    <line x1="10" y1="25" x2="510" y2="25" stroke="#999" stroke-width="1.5"/>
+                    <line x1="40" y1="25" x2="80" y2="25" stroke="#1E8E4A" stroke-width="6"/>
+                    <line x1="240" y1="25" x2="440" y2="25" stroke="#1E8E4A" stroke-width="6"/>
+                    <circle cx="40" cy="25" r="6" fill="#1E8E4A"/><circle cx="80" cy="25" r="6" fill="#1E8E4A"/>
+                    <circle cx="240" cy="25" r="6" fill="#1E8E4A"/><circle cx="440" cy="25" r="6" fill="#1E8E4A"/>
+                    <text x="40" y="47" text-anchor="middle">0</text><text x="80" y="47" text-anchor="middle">1</text>
+                    <text x="240" y="47" text-anchor="middle">5</text><text x="440" y="47" text-anchor="middle">10</text>
+                </svg>
+                <p class="muted">Chấm rỗng: không lấy đầu mút; chấm đặc: có lấy đầu mút. Python còn cho phép viết gọn <code>0 &lt; x &lt; 10</code>, nhưng cách viết với <code>and</code> như trên dùng được trong mọi ngôn ngữ lập trình.</p>
+            </div>
+        </div>
+
+        <div class="task-box">
+            <span class="task-label">Bài 2</span>
+            <p>Tìm một vài giá trị m, n thoả mãn các biểu thức sau:</p>
+            <ol type="a" class="tt">
+                <li>100%m == 0 and n%5 != 0</li>
+                <li>m%100 == 0 and m%400 != 0</li>
+                <li>n%3 == 0 or (n%3 != 0 and n%4 == 0)</li>
+            </ol>
+            <div class="sim" style="margin-top:0.6rem;">
+                <div class="sim-head"><span>Máy kiểm tra: nhập m, n em tìm được</span></div>
+                <div class="sim-body">
+                    <div class="sim-controls">
+                        <label for="mn-m">m =</label><input type="number" class="num-input" id="mn-m" value="20">
+                        <label for="mn-n">n =</label><input type="number" class="num-input" id="mn-n" value="7">
+                    </div>
+                    <div id="mn-result"></div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" data-reveal="ans-lt2">Xem gợi ý đáp án</button>
+            <div class="reveal" id="ans-lt2">
+                <p><strong>a)</strong> m là ước của 100 (1, 2, 4, 5, 10, 20, 25, 50, 100) và n không chia hết cho 5. Ví dụ: <code>m = 20, n = 7</code>; <code>m = 4, n = 12</code>. <span class="muted">Chú ý: m = 0 gây lỗi chia cho 0.</span></p>
+                <p><strong>b)</strong> m chia hết cho 100 nhưng không chia hết cho 400: <code>m = 100, 200, 300, 500, 1900</code>… <span class="muted">(Đây chính là những năm tròn thế kỉ <em>không</em> nhuận!)</span></p>
+                <p><strong>c)</strong> n chia hết cho 3, hoặc không chia hết cho 3 nhưng chia hết cho 4 — tức là n chia hết cho 3 hoặc cho 4: <code>n = 3, 4, 6, 8, 9, 12, 15, 16</code>…</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ 6. VẬN DỤNG ============ -->
+    <section id="s-apply">
+        <h2>6. Vận dụng <span class="sgk-ref">SGK trang 104</span></h2>
+        <p>Hãy tự viết chương trình trước. Bấm <strong>Nạp khung bài</strong> để có sẵn phần nhập dữ liệu trong Phòng thực hành, rồi viết tiếp phần còn thiếu.</p>
+
+        <div class="task-box">
+            <span class="task-label">Vận dụng 1</span>
+            <p>Giá bán cam tại siêu thị tính như sau: nếu khối lượng cam mua dưới 5 kg thì giá bán là 12 000 đồng/kg, nếu khối lượng mua lớn hơn hoặc bằng 5 kg thì giá bán là 10 000 đồng/kg. Viết chương trình nhập số lượng mua (tính theo kg) sau đó tính số tiền phải trả.</p>
+            <p><span class="guide-label">Phân tích.</span> Dữ liệu vào: khối lượng m (số thực). Điều kiện rẽ nhánh: <code>m &lt; 5</code>. Hai nhánh chỉ khác nhau ở <em>đơn giá</em>.</p>
+<pre class="code-block" id="skel-vd1" hidden>m = float(input("Nhập khối lượng cam (kg): "))
+# Viết lệnh if ... else để tính số tiền t
+
+print("Số tiền phải trả là:", t, "đồng")</pre>
+            <div class="btn-row">
+                <button type="button" class="btn btn-secondary btn-sm" data-load="skel-vd1" data-stdin="4">Nạp khung bài ↓</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-reveal="ans-vd1">Xem chương trình tham khảo</button>
+            </div>
+            <div class="reveal" id="ans-vd1">
+<pre class="code-block" id="code-vd1">m = float(input("Nhập khối lượng cam (kg): "))
+if m &lt; 5:
+    t = m*12000
+else:
+    t = m*10000
+print("Số tiền phải trả là:", t, "đồng")</pre>
+                <p>Kiểm thử: m = 4 → 48000.0 đồng; m = 5 → 50000.0 đồng; m = 4.5 → 54000.0 đồng.</p>
+                <p><strong>Suy nghĩ thêm:</strong> mua 4,5 kg phải trả 54 000 đồng, <em>nhiều hơn</em> mua 5 kg (50 000 đồng)! Nếu là người mua, em sẽ làm gì?</p>
+                <button type="button" class="btn btn-secondary btn-sm" data-load="code-vd1" data-stdin="4.5">Nạp chương trình này ↓</button>
+            </div>
+        </div>
+
+        <div class="task-box">
+            <span class="task-label">Vận dụng 2</span>
+            <p>Năm n là năm nhuận nếu giá trị n thoả mãn điều kiện: n chia hết cho 400 hoặc n chia hết cho 4 đồng thời không chia hết cho 100. Viết chương trình nhập số năm n và cho biết năm n có phải là năm nhuận hay không.</p>
+            <p><span class="guide-label">Phân tích.</span> Chuyển từng cụm từ của đề thành biểu thức: “chia hết cho 400” → <code>n%400 == 0</code>; “chia hết cho 4” → <code>n%4 == 0</code>; “không chia hết cho 100” → <code>n%100 != 0</code>; “đồng thời” → <code>and</code>; “hoặc” → <code>or</code>.</p>
+<pre class="code-block" id="skel-vd2" hidden>n = int(input("Nhập năm n: "))
+# Viết lệnh if ... else kiểm tra n có phải năm nhuận không
+</pre>
+            <div class="btn-row">
+                <button type="button" class="btn btn-secondary btn-sm" data-load="skel-vd2" data-stdin="2024">Nạp khung bài ↓</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-reveal="ans-vd2">Xem chương trình tham khảo</button>
+            </div>
+            <div class="reveal" id="ans-vd2">
+<pre class="code-block" id="code-vd2">n = int(input("Nhập năm n: "))
+if n%400 == 0 or (n%4 == 0 and n%100 != 0):
+    print("Năm", n, "là năm nhuận.")
+else:
+    print("Năm", n, "không phải là năm nhuận.")</pre>
+                <div class="table-wrap">
+                <table class="data-table">
+                    <thead><tr><th>n</th><th>n%400 == 0</th><th>n%4 == 0</th><th>n%100 != 0</th><th>Kết luận</th></tr></thead>
+                    <tbody>
+                        <tr><td>2024</td><td class="tv-false">False</td><td class="tv-true">True</td><td class="tv-true">True</td><td>Nhuận</td></tr>
+                        <tr><td>2026</td><td class="tv-false">False</td><td class="tv-false">False</td><td class="tv-true">True</td><td>Không nhuận</td></tr>
+                        <tr><td>1900</td><td class="tv-false">False</td><td class="tv-true">True</td><td class="tv-false">False</td><td>Không nhuận</td></tr>
+                        <tr><td>2000</td><td class="tv-true">True</td><td class="tv-true">True</td><td class="tv-false">False</td><td>Nhuận</td></tr>
+                    </tbody>
+                </table>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" data-load="code-vd2" data-stdin="1900">Nạp chương trình này ↓</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ 7. TRẮC NGHIỆM ============ -->
     <section id="s-quiz">
-        <h2>6. Luyện tập trắc nghiệm</h2>
-        <p>Hãy kiểm tra lại kiến thức em vừa học. Hệ thống sẽ chấm điểm sau khi em hoàn thành 5 câu hỏi.</p>
+        <h2>7. Trắc nghiệm củng cố</h2>
+        <p>10 câu hỏi. Mỗi câu có giải thích ngay sau khi em chọn đáp án.</p>
         <div class="progress-container"><div id="quiz-progress"></div></div>
         <div id="quiz-area" style="min-height: 250px;">
             <p style="text-align:center; color:var(--text-light);">Đang tải câu hỏi...</p>
         </div>
     </section>
 
-    <!-- PHẦN 7: VẬN DỤNG -->
-    <section id="s-apply">
-        <h2>7. Vận dụng</h2>
-
-        <div class="task-box">
-            <span class="task-label">VẬN DỤNG 1</span>
-            <p>Giá bán cam tại siêu thị tính như sau: nếu khối lượng cam mua dưới 5 kg thì giá bán là 12 000 đồng/kg, nếu khối lượng cam mua lớn hơn hoặc bằng 5 kg thì giá bán là 10 000 đồng/kg. Viết chương trình nhập số lượng mua (tính theo kg) sau đó tính số tiền phải trả.</p>
-            <button type="button" class="btn btn-secondary" id="btn-load-vd1">Nạp bài vào Phòng thực hành ↓</button>
-        </div>
-
-        <div class="task-box">
-            <span class="task-label">VẬN DỤNG 2</span>
-            <p>Năm n là năm nhuận nếu giá trị n thoả mãn điều kiện: n chia hết cho 400 hoặc n chia hết cho 4 đồng thời không chia hết cho 100. Viết chương trình nhập số năm n và cho biết năm n có phải là năm nhuận hay không.</p>
-            <button type="button" class="btn btn-secondary" id="btn-load-vd2">Nạp bài vào Phòng thực hành ↓</button>
-        </div>
-
-        <p class="highlight-box">Nhấn vào nút "Nạp bài vào Phòng thực hành" để tự động chuyển tới phần Thực hành và nạp sẵn mã nguồn — sau đó em có thể chỉnh sửa và nhấn <strong>Chạy mã</strong> để kiểm tra.</p>
-    </section>
-
-    <!-- PHẦN 8: BÀI TẬP VÀ THỰC HÀNH (SGK) -->
-    <section id="s-exercises">
-        <h2>8. Bài tập và thực hành (19.1 – 19.12)</h2>
+    <!-- ============ 8. BÀI TẬP BỔ SUNG ============ -->
+    <section id="s-extra">
+        <h2>8. Bài tập bổ sung (19.1 – 19.12)</h2>
+        <p>Các bài tập rèn luyện thêm, tăng dần độ khó. Mỗi bài có gợi ý và chương trình tham khảo; hãy tự làm trước khi xem.</p>
 
         <h3>19.1. Viết biểu thức lôgic tương ứng</h3>
-        <div class="highlight-box">
-            <ul style="margin-bottom:0;">
-                <li>a) Số x nhỏ hơn 50: <code>x &lt; 50</code></li>
-                <li>b) Số x nằm trong khoảng (50; 100]: <code>50 &lt; x and x &lt;= 100</code></li>
-                <li>c) Số x nằm trong đoạn [0; 50] hoặc lớn hơn 100: <code>(0 &lt;= x and x &lt;= 50) or x &gt; 100</code></li>
-            </ul>
+        <ol type="a">
+            <li>Số x nhỏ hơn 50.</li>
+            <li>Số x nằm trong khoảng (50; 100].</li>
+            <li>Số x nằm trong đoạn [0; 50] hoặc lớn hơn 100.</li>
+        </ol>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x1">Xem đáp án</button>
+        <div class="reveal" id="x1">
+            <p>a) <code>x &lt; 50</code> &nbsp; b) <code>50 &lt; x and x &lt;= 100</code> &nbsp; c) <code>(0 &lt;= x and x &lt;= 50) or x &gt; 100</code></p>
         </div>
 
         <h3>19.2. Tìm giá trị m, n thoả mãn</h3>
-        <p>Em hãy tìm một vài giá trị <code>m</code>, <code>n</code> thoả mãn các biểu thức sau:</p>
-        <ul>
-            <li>a) <code>50%m == 0 and n%4 != 0</code></li>
-            <li>b) <code>m%100 == 0 and m%400 != 0</code></li>
-            <li>c) <code>n%5 == 0 or (n%5 != 0 and n%3 == 0)</code></li>
-        </ul>
+        <ol type="a" class="tt">
+            <li>50%m == 0 and n%4 != 0</li>
+            <li>m%100 == 0 and m%400 != 0</li>
+            <li>n%5 == 0 or (n%5 != 0 and n%3 == 0)</li>
+        </ol>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x2">Xem gợi ý</button>
+        <div class="reveal" id="x2">
+            <p>a) m là ước của 50 (1, 2, 5, 10, 25, 50), n không chia hết cho 4: ví dụ <code>m = 5, n = 3</code>.<br>
+            b) <code>m = 100, 200, 300, 500</code>…<br>
+            c) n chia hết cho 5 hoặc cho 3: <code>n = 3, 5, 6, 9, 10</code>…</p>
+        </div>
 
         <h3>19.3. Viết biểu thức điều kiện</h3>
-        <ul>
-            <li>a) m chia hết cho 100 nhưng không chia hết cho 400.</li>
-            <li>b) x có giá trị không thuộc đoạn [0; 2].</li>
-            <li>c) x có giá trị thuộc khoảng (2; 4) hoặc thuộc khoảng (5; 6).</li>
-        </ul>
+        <ol type="a">
+            <li>m chia hết cho 100 nhưng không chia hết cho 400.</li>
+            <li>x có giá trị không thuộc đoạn [0; 2].</li>
+            <li>x có giá trị thuộc khoảng (2; 4) hoặc thuộc khoảng (5; 6).</li>
+        </ol>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x3">Xem đáp án</button>
+        <div class="reveal" id="x3">
+            <p>a) <code>m%100 == 0 and m%400 != 0</code><br>
+            b) <code>x &lt; 0 or x &gt; 2</code> (hoặc <code>not (0 &lt;= x and x &lt;= 2)</code>)<br>
+            c) <code>(2 &lt; x and x &lt; 4) or (5 &lt; x and x &lt; 6)</code></p>
+        </div>
 
-        <h3>19.4. Xác định giá trị của a, b, c</h3>
-        <div class="code-block">a, b, c = 1, 2, 3
-a = (a &lt; b) <span class="kw">and</span> (b &lt; c)
-b = (b &lt; c) <span class="kw">or</span> (c%b==0)
-c = c%2 != 0</div>
+        <h3>19.4. Xác định giá trị của a, b, c sau khi thực hiện các lệnh</h3>
+<pre class="code-block">a, b, c = 1, 2, 3
+a = (a &lt; b) and (b &lt; c)
+b = (b &lt; c) or (c%b == 0)
+c = c%2 != 0</pre>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x4">Xem đáp án</button>
+        <div class="reveal" id="x4">
+            <ul>
+                <li>Dòng 2: <code>1 &lt; 2</code> đúng, <code>2 &lt; 3</code> đúng → <code>a = True</code>.</li>
+                <li>Dòng 3: lúc này b = 2, c = 3; <code>2 &lt; 3</code> đúng → <code>b = True</code> (với <code>or</code> chỉ cần một vế đúng).</li>
+                <li>Dòng 4: <code>3%2 = 1</code>, <code>1 != 0</code> đúng → <code>c = True</code>.</li>
+            </ul>
+            <p>Kết quả: <code>a = True, b = True, c = True</code>. Chú ý các lệnh chạy lần lượt: khi tính b, biến a đã đổi nhưng biểu thức của b không dùng a.</p>
+        </div>
 
-        <h3>19.5. Câu lệnh điều kiện chẵn/lẻ</h3>
+        <h3>19.5. Số chẵn hay số lẻ</h3>
         <p>Viết câu lệnh điều kiện để in ra các thông báo tương ứng tuỳ theo giá trị của số nguyên n là số chẵn hay số lẻ.</p>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x5">Xem gợi ý</button>
+        <div class="reveal" id="x5"><p>Giống Nhiệm vụ 1 phần Thực hành: điều kiện <code>n%2 == 0</code>. Với số nguyên âm, Python vẫn cho <code>-7%2 = 1</code> nên chương trình vẫn đúng.</p></div>
 
-        <h3>19.6. Kiểm tra năm nhuận</h3>
-        <p>Cho m là một năm dương lịch. Biết rằng, nếu m chia hết cho 400 hoặc m chia hết cho 4 nhưng không chia hết cho 100 thì năm đó là năm nhuận. Viết câu lệnh điều kiện để in ra thông báo tương ứng.</p>
+        <h3>19.6. Năm nhuận</h3>
+        <p>Cho m là một năm dương lịch. Nếu m chia hết cho 400 hoặc m chia hết cho 4 nhưng không chia hết cho 100 thì năm đó là năm nhuận. Viết câu lệnh điều kiện để in ra thông báo tương ứng.</p>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x6">Xem gợi ý</button>
+        <div class="reveal" id="x6"><p>Giống Vận dụng 2: <code>if m%400 == 0 or (m%4 == 0 and m%100 != 0):</code></p></div>
 
         <h3>19.7. Chỉ số BMI</h3>
-        <p>Chỉ số BMI (Body Mass Index) được tính dựa trên tỉ lệ giữa cân nặng (tính bằng kg) và chiều cao (tính bằng mét) bình phương, nói lên tình trạng cân nặng hiện tại của người trưởng thành (lớn hơn 18 tuổi). Với người trưởng thành gốc châu Á, giá trị BMI tiêu chuẩn được xác định như sau:</p>
-        <table class="data-table">
-            <thead><tr><th>Chỉ số BMI tiêu chuẩn</th><th>Phân loại</th></tr></thead>
+        <p>Chỉ số BMI (Body Mass Index) được tính bằng cân nặng (kg) chia cho bình phương chiều cao (m), cho biết tình trạng cân nặng của người trưởng thành (trên 18 tuổi). Với người trưởng thành châu Á:</p>
+        <table class="data-table" style="max-width:480px;">
+            <thead><tr><th>BMI</th><th>Phân loại</th></tr></thead>
             <tbody>
-                <tr><td>&lt; 18.5</td><td>Thiếu cân (người gầy còm)</td></tr>
-                <tr><td>18.5 – 22.9</td><td>Bình thường</td></tr>
-                <tr><td>&gt;= 23</td><td>Thừa cân</td></tr>
+                <tr><td>&lt; 18,5</td><td>Thiếu cân</td></tr>
+                <tr><td>18,5 – 22,9</td><td>Bình thường</td></tr>
+                <tr><td>≥ 23</td><td>Thừa cân</td></tr>
             </tbody>
         </table>
         <p>Em hãy viết chương trình tính chỉ số BMI của một người và đưa ra thông báo tương ứng.</p>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x7">Xem chương trình tham khảo</button>
+        <div class="reveal" id="x7">
+<pre class="code-block" id="code-x7">m = float(input("Cân nặng (kg): "))
+h = float(input("Chiều cao (m): "))
+bmi = m/(h*h)
+print("BMI =", round(bmi, 1))
+if bmi &lt; 18.5:
+    print("Thiếu cân")
+else:
+    if bmi &lt; 23:
+        print("Bình thường")
+    else:
+        print("Thừa cân")</pre>
+            <button type="button" class="btn btn-secondary btn-sm" data-load="code-x7" data-stdin="55&#10;1.65">Nạp vào Phòng thực hành ↓</button>
+        </div>
 
         <h3>19.8. Khuyến mại mua cam</h3>
-        <p>Để khuyến khích tiêu thụ cam, một chủ vườn đã đưa ra chính sách khuyến mại sau: Nếu số cam mua lớn hơn 10 kg thì đơn giá mua phần lớn hơn đó chỉ bằng 90% đơn giá cho 10 kg cam đầu tiên. Em hãy viết chương trình tính số tiền mua cam phải trả với đơn giá và số cam mua được nhập từ bàn phím.</p>
+        <p>Để khuyến khích tiêu thụ cam, một chủ vườn đưa ra chính sách: nếu số cam mua lớn hơn 10 kg thì đơn giá của phần vượt quá 10 kg chỉ bằng 90% đơn giá của 10 kg đầu tiên. Em hãy viết chương trình tính số tiền mua cam phải trả với đơn giá và số cam mua được nhập từ bàn phím.</p>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x8">Xem chương trình tham khảo</button>
+        <div class="reveal" id="x8">
+<pre class="code-block" id="code-x8">p = float(input("Đơn giá (đồng/kg): "))
+x = float(input("Số kg cam mua: "))
+if x &lt;= 10:
+    t = x*p
+else:
+    t = 10*p + (x-10)*p*0.9
+print("Số tiền phải trả:", t, "đồng")</pre>
+            <p class="muted">Tính luỹ kế giống Nhiệm vụ 2: chỉ phần vượt 10 kg mới được giảm giá.</p>
+            <button type="button" class="btn btn-secondary btn-sm" data-load="code-x8" data-stdin="20000&#10;15">Nạp vào Phòng thực hành ↓</button>
+        </div>
 
-        <h3>19.9. Kiểm tra ba cạnh tam giác</h3>
+        <h3>19.9. Ba cạnh của tam giác</h3>
         <p>Em hãy viết chương trình nhập ba số thực dương a, b, c, kiểm tra xem ba số đó có thể là độ dài các cạnh của một tam giác hay không, nếu có thì tính chu vi, diện tích của tam giác đó.</p>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x9">Xem chương trình tham khảo</button>
+        <div class="reveal" id="x9">
+            <p>Ba số là ba cạnh tam giác khi tổng hai số bất kì lớn hơn số còn lại. Diện tích tính theo công thức Heron: <code>S = √(p(p−a)(p−b)(p−c))</code> với p là nửa chu vi.</p>
+<pre class="code-block" id="code-x9">a = float(input("a = "))
+b = float(input("b = "))
+c = float(input("c = "))
+if a+b &gt; c and a+c &gt; b and b+c &gt; a:
+    p = (a+b+c)/2
+    s = (p*(p-a)*(p-b)*(p-c))**0.5
+    print("Chu vi:", a+b+c)
+    print("Diện tích:", round(s, 2))
+else:
+    print("Ba số đã nhập không phải ba cạnh của tam giác.")</pre>
+            <button type="button" class="btn btn-secondary btn-sm" data-load="code-x9" data-stdin="3&#10;4&#10;5">Nạp vào Phòng thực hành ↓</button>
+        </div>
 
         <h3>19.10. Phương trình bậc nhất</h3>
         <p>Em hãy viết chương trình giải phương trình bậc nhất dạng tổng quát <code>ax + b = c</code>, các hệ số a, b, c là các số thực được nhập vào từ bàn phím.</p>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x10">Xem chương trình tham khảo</button>
+        <div class="reveal" id="x10">
+            <p>Phương trình tương đương <code>ax = c − b</code>. Nếu a ≠ 0: một nghiệm. Nếu a = 0: vô số nghiệm khi b = c, vô nghiệm khi b ≠ c.</p>
+<pre class="code-block" id="code-x10">a = float(input("a = "))
+b = float(input("b = "))
+c = float(input("c = "))
+if a != 0:
+    print("Nghiệm x =", (c-b)/a)
+else:
+    if b == c:
+        print("Phương trình có vô số nghiệm.")
+    else:
+        print("Phương trình vô nghiệm.")</pre>
+            <button type="button" class="btn btn-secondary btn-sm" data-load="code-x10" data-stdin="2&#10;3&#10;11">Nạp vào Phòng thực hành ↓</button>
+        </div>
 
         <h3>19.11. Phương trình bậc hai</h3>
-        <p>Em hãy viết chương trình giải phương trình bậc hai dạng tổng quát <code>ax² + bx + c = 0</code> (a khác 0). Yêu cầu các giá trị a, b, c là các số thực được nhập vào từ bàn phím.</p>
+        <p>Em hãy viết chương trình giải phương trình bậc hai dạng tổng quát <code>ax² + bx + c = 0</code> (a khác 0), các giá trị a, b, c là các số thực được nhập vào từ bàn phím.</p>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x11">Xem chương trình tham khảo</button>
+        <div class="reveal" id="x11">
+<pre class="code-block" id="code-x11">a = float(input("a = "))
+b = float(input("b = "))
+c = float(input("c = "))
+d = b*b - 4*a*c
+if d &lt; 0:
+    print("Phương trình vô nghiệm.")
+else:
+    if d == 0:
+        print("Nghiệm kép x =", -b/(2*a))
+    else:
+        x1 = (-b + d**0.5)/(2*a)
+        x2 = (-b - d**0.5)/(2*a)
+        print("x1 =", x1, "; x2 =", x2)</pre>
+            <button type="button" class="btn btn-secondary btn-sm" data-load="code-x11" data-stdin="1&#10;-3&#10;2">Nạp vào Phòng thực hành ↓</button>
+        </div>
 
         <h3>19.12. Tiền điện theo đơn giá bậc thang</h3>
-        <p>Tiền điện được tính theo đơn giá bậc thang như sau: đơn giá 1 được áp dụng cho 50 kWh điện tiêu thụ đầu tiên; đơn giá 2 được áp dụng cho mỗi 1 kW từ 51 cho tới 100; đơn giá 3 được áp dụng cho mỗi 1 kWh từ 101 tới 200 và đơn giá 4 áp dụng cho mỗi kWh từ 201 trở đi. Đơn giá và lượng điện tiêu thụ là các số nguyên được nhập vào từ bàn phím. Em hãy viết chương trình tính tiền điện phải nộp.</p>
-
-        <div class="highlight-box" style="border-left-color: var(--primary); text-align:center;">
-            <p style="margin-bottom: 1rem;"><strong>Gợi ý:</strong> hãy thử viết lời giải và chạy kiểm tra ngay trong Phòng thực hành mã lệnh.</p>
-            <button type="button" class="btn btn-secondary" id="btn-goto-lab">← Đến Phòng thực hành</button>
+        <p>Đơn giá 1 áp dụng cho 50 kWh đầu tiên; đơn giá 2 cho mỗi kWh từ 51 tới 100; đơn giá 3 cho mỗi kWh từ 101 tới 200; đơn giá 4 cho mỗi kWh từ 201 trở đi. Đơn giá và lượng điện tiêu thụ là các số nguyên được nhập vào từ bàn phím. Em hãy viết chương trình tính tiền điện phải nộp.</p>
+        <button type="button" class="btn btn-secondary btn-sm" data-reveal="x12">Xem chương trình tham khảo</button>
+        <div class="reveal" id="x12">
+            <p>Mở rộng Nhiệm vụ 2 thành bốn bậc bằng cách lồng thêm một lệnh <code>if</code>:</p>
+<pre class="code-block" id="code-x12">d1 = int(input("Đơn giá 1: "))
+d2 = int(input("Đơn giá 2: "))
+d3 = int(input("Đơn giá 3: "))
+d4 = int(input("Đơn giá 4: "))
+k = int(input("Số kWh tiêu thụ: "))
+if k &lt;= 50:
+    t = k*d1
+else:
+    if k &lt;= 100:
+        t = 50*d1 + (k-50)*d2
+    else:
+        if k &lt;= 200:
+            t = 50*d1 + 50*d2 + (k-100)*d3
+        else:
+            t = 50*d1 + 50*d2 + 100*d3 + (k-200)*d4
+print("Tiền điện phải nộp:", t)</pre>
+            <div class="extend-box">
+                <p><strong class="tag">Mở rộng — elif.</strong> Python có từ khoá <code>elif</code> (viết tắt của <em>else if</em>) để tránh lồng quá sâu. Phần <code>if</code> ở trên có thể viết thẳng hàng như sau, kết quả không đổi:</p>
+<pre class="code-block">if k &lt;= 50:
+    t = k*d1
+elif k &lt;= 100:
+    t = 50*d1 + (k-50)*d2
+elif k &lt;= 200:
+    t = 50*d1 + 50*d2 + (k-100)*d3
+else:
+    t = 50*d1 + 50*d2 + 100*d3 + (k-200)*d4</pre>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" data-load="code-x12" data-stdin="1806&#10;1866&#10;2167&#10;2729&#10;250">Nạp vào Phòng thực hành ↓</button>
         </div>
     </section>
 
-    <!-- PHẦN 9: TỔNG KẾT -->
+    <!-- ============ 9. TỔNG KẾT ============ -->
     <section id="s-summary">
         <h2>9. Tổng kết bài học</h2>
-        <div id="result-board" style="text-align: center; padding: 2rem; background: #F4F7F6; border-radius: 8px; margin-bottom: 2rem;">
-            <p style="font-size: 1.2rem; color: var(--text-light);">Hoàn thành phần Luyện tập để xem điểm số của em!</p>
+        <div id="result-board" style="text-align:center; padding:1.5rem; background:#F4F7F6; border-radius:8px; margin-bottom:1.5rem;">
+            <p style="font-size:1.1rem; color:var(--text-light); margin:0;">Hoàn thành phần Trắc nghiệm để xem điểm số của em!</p>
         </div>
-        <h3>Ghi nhớ cốt lõi:</h3>
-        <ul style="line-height: 1.8;">
-            <li><strong>Biểu thức lôgic:</strong> chỉ nhận giá trị <code>True</code> (Đúng) hoặc <code>False</code> (Sai). Kiểu dữ liệu tương ứng trong Python là <code>bool</code>.</li>
-            <li><strong>Các phép toán:</strong> So sánh (<code>&gt;, &lt;, ==, !=, &gt;=, &lt;=</code>) và Lôgic (<code>and, or, not</code>).</li>
-            <li><strong>Cấu trúc rẽ nhánh:</strong>
-                <br> - Dùng lệnh <code>if</code> (dạng thiếu) hoặc <code>if - else</code> (dạng đủ).
-                <br> - Sau &lt;điều kiện&gt; bắt buộc phải có dấu hai chấm <code>:</code>.
-                <br> - Khối lệnh bên trong phải được lùi vào và thẳng hàng.
-            </li>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <h4>Biểu thức lôgic</h4>
+                <ul>
+                    <li>Chỉ nhận giá trị <code>True</code> hoặc <code>False</code>, kiểu <code>bool</code>.</li>
+                    <li>So sánh: <code>&lt; &lt;= &gt; &gt;= == !=</code></li>
+                    <li>Lôgic: <code>and</code> đúng khi cả hai đúng; <code>or</code> sai khi cả hai sai; <code>not</code> đảo giá trị.</li>
+                </ul>
+            </div>
+            <div class="summary-card">
+                <h4>Lệnh if dạng thiếu</h4>
+<pre class="code-block" style="margin:0.4rem 0;">if &lt;điều kiện&gt;:
+    &lt;khối lệnh&gt;</pre>
+                <p class="muted" style="margin:0;">Điều kiện sai → bỏ qua khối lệnh.</p>
+            </div>
+            <div class="summary-card">
+                <h4>Lệnh if dạng đủ</h4>
+<pre class="code-block" style="margin:0.4rem 0;">if &lt;điều kiện&gt;:
+    &lt;khối lệnh 1&gt;
+else:
+    &lt;khối lệnh 2&gt;</pre>
+                <p class="muted" style="margin:0;">Luôn thực hiện đúng một trong hai khối.</p>
+            </div>
+            <div class="summary-card" style="border-top-color:var(--gold);">
+                <h4>3 lỗi hay gặp</h4>
+                <ul>
+                    <li>Quên dấu <code>:</code> sau điều kiện hoặc sau <code>else</code>.</li>
+                    <li>Không lùi lề khối lệnh, hoặc <code>else</code> không thẳng hàng với <code>if</code>.</li>
+                    <li>Viết <code>=</code> thay cho <code>==</code> trong điều kiện.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Tự đánh giá</h3>
+        <ul class="check-list" id="self-check">
+            <li><label><input type="checkbox"> Em tính được giá trị của biểu thức có <code>and</code>, <code>or</code>, <code>not</code>.</label></li>
+            <li><label><input type="checkbox"> Em viết được biểu thức lôgic diễn tả một khoảng, một đoạn trên trục số.</label></li>
+            <li><label><input type="checkbox"> Em phân biệt được lệnh <code>if</code> dạng thiếu và dạng đủ, vẽ được sơ đồ khối của chúng.</label></li>
+            <li><label><input type="checkbox"> Em viết và chạy được chương trình Nhiệm vụ 1, Nhiệm vụ 2.</label></li>
+            <li><label><input type="checkbox"> Em tự viết được chương trình Vận dụng 1 hoặc Vận dụng 2.</label></li>
         </ul>
+        <p class="muted" id="self-check-msg"></p>
     </section>
 </main>
 
-<!-- ================= SCRIPTS ================= -->
-<script>
-    window.MathJax = {
-        tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
-        svg: { fontCache: 'global' },
-        startup: { typeset: false }
-    };
-</script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js" defer></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const NEWLINE = String.fromCharCode(10);
+document.addEventListener('DOMContentLoaded', function () {
+    const NL = String.fromCharCode(10);
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-    // --- A. ĐIỀU HƯỚNG TABS ---
-    document.documentElement.classList.add('js-enabled');
-    const navBtns = document.querySelectorAll('.tab-btn');
-    const sections = document.querySelectorAll('main section');
-
-    function openTab(targetId) {
-        sections.forEach(s => s.classList.remove('active'));
-        navBtns.forEach(b => b.classList.remove('active'));
-        const targetSec = document.getElementById(targetId);
-        if (targetSec) {
-            targetSec.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+    /* ---------- Tô màu mã Python ---------- */
+    const KW = ['if', 'else', 'elif', 'and', 'or', 'not', 'True', 'False', 'for', 'in', 'while'];
+    const FN = ['print', 'input', 'int', 'float', 'round', 'str'];
+    function highlight(code) {
+        const re = /(#[^\n]*)|("[^"\n]*"|'[^'\n]*')|(>>>)|\b([A-Za-z_]\w*)\b|\b(\d+(?:\.\d+)?)\b/g;
+        let out = '', last = 0, m;
+        while ((m = re.exec(code))) {
+            out += esc(code.slice(last, m.index));
+            if (m[1]) out += '<span class="cm">' + esc(m[1]) + '</span>';
+            else if (m[2]) out += '<span class="str">' + esc(m[2]) + '</span>';
+            else if (m[3]) out += '<span class="pr">&gt;&gt;&gt;</span>';
+            else if (m[4]) {
+                if (KW.includes(m[4])) out += '<span class="kw">' + m[4] + '</span>';
+                else if (FN.includes(m[4])) out += '<span class="fn">' + m[4] + '</span>';
+                else out += m[4];
+            } else if (m[5]) out += '<span class="num">' + m[5] + '</span>';
+            last = re.lastIndex;
         }
-        const btn = document.querySelector('.tab-btn[data-target="' + targetId + '"]');
-        if (btn) btn.classList.add('active');
+        return out + esc(code.slice(last));
     }
-
-    navBtns.forEach(btn => {
-        btn.addEventListener('click', function() { openTab(this.getAttribute('data-target')); });
+    document.querySelectorAll('pre.code-block').forEach(pre => {
+        pre.dataset.src = pre.textContent;
+        pre.innerHTML = highlight(pre.textContent);
     });
 
-    // --- B. KHỞI ĐỘNG: nút xem gợi ý ---
-    const btnReveal = document.getElementById('btn-reveal-intro');
-    const ansIntro = document.getElementById('intro-answer');
-    if (btnReveal && ansIntro) {
-        btnReveal.addEventListener('click', function() {
-            ansIntro.style.display = 'block';
-            this.style.display = 'none';
-        });
-    }
+    /* ---------- Điều hướng tab ---------- */
+    document.documentElement.classList.add('js-enabled');
+    const navBtns = Array.from(document.querySelectorAll('.tab-btn'));
+    const sections = Array.from(document.querySelectorAll('main > section'));
+    const order = navBtns.map(b => b.dataset.target);
 
-    // --- C. NÚT "XEM ĐÁP ÁN" CHO CÁC HOẠT ĐỘNG / CÂU HỎI ---
-    document.querySelectorAll('.exp-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const target = document.getElementById(this.dataset.exp);
-            if (!target) return;
-            const showing = target.style.display === 'block';
-            target.style.display = showing ? 'none' : 'block';
-            this.textContent = showing ? 'Xem đáp án' : 'Ẩn đáp án';
+    function openTab(id, scrollTarget) {
+        if (!$(id)) return;
+        sections.forEach(s => s.classList.toggle('active', s.id === id));
+        navBtns.forEach(b => b.classList.toggle('active', b.dataset.target === id));
+        const btn = navBtns.find(b => b.dataset.target === id);
+        if (btn && btn.scrollIntoView) btn.scrollIntoView({ block: 'nearest', inline: 'center' });
+        if (history.replaceState) history.replaceState(null, '', '#' + id);
+        if (scrollTarget) setTimeout(() => scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    navBtns.forEach(btn => btn.addEventListener('click', () => openTab(btn.dataset.target)));
+
+    sections.forEach((sec, i) => {
+        const pager = document.createElement('div');
+        pager.className = 'pager';
+        const prev = order[i - 1], next = order[i + 1];
+        const label = (id) => navBtns.find(b => b.dataset.target === id).textContent;
+        pager.innerHTML = (prev ? '<button type="button" class="btn btn-secondary" data-go="' + prev + '">← ' + label(prev) + '</button>' : '<span></span>') +
+                          (next ? '<button type="button" class="btn btn-primary" data-go="' + next + '">' + label(next) + ' →</button>' : '');
+        sec.appendChild(pager);
+    });
+    document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => openTab(b.dataset.go)));
+    if (location.hash && order.includes(location.hash.slice(1))) openTab(location.hash.slice(1));
+
+    /* ---------- Nút ẩn/hiện đáp án ---------- */
+    document.querySelectorAll('[data-reveal]').forEach(btn => {
+        const original = btn.textContent;
+        btn.addEventListener('click', () => {
+            const t = $(btn.dataset.reveal);
+            const open = t.classList.toggle('open');
+            btn.textContent = open ? 'Ẩn' : original;
         });
     });
 
-    // --- D. PHÒNG THỰC HÀNH PYTHON (Skulpt) ---
-    const pyEditor = document.getElementById('py-editor');
-    const pyConsole = document.getElementById('py-console');
-    const pyStatus = document.getElementById('py-status');
-    const pyBtnRun = document.getElementById('btn-py-run');
-    const pyBtnClear = document.getElementById('btn-py-clear');
+    function showFb(el, kind, html) {
+        el.className = 'feedback show ' + kind;
+        el.innerHTML = html;
+    }
+
+    /* ---------- Sơ đồ khối ---------- */
+    function flowSVG(p, cfg) {
+        const full = !!cfg.b2;
+        const t = (x, y, s, cls) => '<text x="' + x + '" y="' + y + '" text-anchor="middle" dominant-baseline="central"' + (cls ? ' class="' + cls + '"' : '') + '>' + esc(s) + '</text>';
+        let s = '<svg viewBox="0 0 370 290" role="img" aria-label="' + (full ? 'Sơ đồ if dạng đủ' : 'Sơ đồ if dạng thiếu') + '">';
+        s += '<defs><marker id="ar-' + p + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#555"/></marker></defs>';
+        s += '<line class="fedge" id="' + p + '-in" x1="150" y1="5" x2="150" y2="38" marker-end="url(#ar-' + p + ')"/>';
+        s += '<polygon class="fcond" id="' + p + '-cond" points="150,40 240,78 150,116 60,78"/>';
+        s += t(150, 78, cfg.cond, 'fcond-text' + (cfg.mono ? ' mono' : ''));
+        s += '<line class="fedge" id="' + p + '-yes" x1="150" y1="116" x2="150" y2="153" marker-end="url(#ar-' + p + ')"/>';
+        s += '<text x="160" y="134" class="flabel" style="fill:#1E8E4A">Đúng</text>';
+        s += '<rect class="fnode" id="' + p + '-b1" x="82" y="155" width="136" height="42" rx="4"/>';
+        s += t(150, 176, cfg.b1, cfg.mono ? 'mono' : '');
+        s += '<line class="fedge" id="' + p + '-y2" x1="150" y1="197" x2="150" y2="238"/>';
+        s += '<line class="fedge" id="' + p + '-out" x1="150" y1="238" x2="150" y2="280" marker-end="url(#ar-' + p + ')"/>';
+        s += '<text x="252" y="68" class="flabel" style="fill:#C8323F">Sai</text>';
+        if (full) {
+            s += '<polyline class="fedge" id="' + p + '-no" points="240,78 295,78 295,153" marker-end="url(#ar-' + p + ')"/>';
+            s += '<rect class="fnode" id="' + p + '-b2" x="228" y="155" width="136" height="42" rx="4"/>';
+            s += t(296, 176, cfg.b2, cfg.mono ? 'mono' : '');
+            s += '<polyline class="fedge" id="' + p + '-n2" points="295,197 295,238 152,238"/>';
+        } else {
+            s += '<polyline class="fedge" id="' + p + '-no" points="240,78 295,78 295,238 152,238"/>';
+        }
+        s += '</svg>';
+        return s;
+    }
+
+    function setText(svgHost, idx, txt) {
+        // idx: 0 = điều kiện, 1 = khối 1, 2 = khối 2
+        const texts = svgHost.querySelectorAll('text[text-anchor="middle"]');
+        if (texts[idx]) texts[idx].textContent = txt;
+    }
+
+    $('flow-intro').innerHTML = flowSVG('fi', { cond: '<Điều kiện>', b1: 'Lệnh 1', b2: 'Lệnh 2' });
+    $('flow-thieu').innerHTML = flowSVG('ft', { cond: '<Điều kiện>', b1: 'Khối lệnh' });
+    $('flow-du').innerHTML = flowSVG('fd', { cond: '<Điều kiện>', b1: 'Khối lệnh 1', b2: 'Khối lệnh 2' });
+    $('flow-thieu-sim').innerHTML = flowSVG('fts', { cond: 'n > 0', b1: 'print(...)', mono: true });
+    $('flow-du-sim').innerHTML = flowSVG('fds', { cond: 'a > b', b1: 'print(a - b)', b2: 'print(b - a)', mono: true });
+
+    /* ---------- Khởi động ---------- */
+    const introNames = { a: 'Đi chơi cùng bạn', b: 'Ở nhà làm bài tập', c: 'Trời không mưa?' };
+    const introHost = $('flow-intro');
+    function introUpdate() {
+        const c = $('sel-cond').value, l1 = $('sel-l1').value, l2 = $('sel-l2').value;
+        setText(introHost, 0, c ? introNames[c] : '<Điều kiện>');
+        setText(introHost, 1, l1 ? introNames[l1].replace('?', '') : 'Lệnh 1');
+        setText(introHost, 2, l2 ? introNames[l2].replace('?', '') : 'Lệnh 2');
+    }
+    document.querySelectorAll('.intro-sel').forEach(s => s.addEventListener('change', introUpdate));
+    $('btn-intro-check').addEventListener('click', () => {
+        const c = $('sel-cond').value, l1 = $('sel-l1').value, l2 = $('sel-l2').value;
+        const fb = $('intro-fb');
+        if (!c || !l1 || !l2) return showFb(fb, 'info', 'Em hãy chọn đủ cả ba ô nhé.');
+        if (c === 'c' && l1 === 'a' && l2 === 'b')
+            return showFb(fb, 'ok', '<strong>Chính xác!</strong> Điều kiện là <em>“Trời không mưa”</em>. Nếu Đúng → đi chơi cùng bạn; nếu Sai (trời mưa) → ở nhà làm bài tập.');
+        if (c !== 'c')
+            return showFb(fb, 'bad', 'Ô &lt;Điều kiện&gt; phải là điều có thể trả lời <strong>Đúng/Sai</strong>. “' + introNames[c] + '” là một việc làm, không phải điều kiện.');
+        showFb(fb, 'bad', 'Điều kiện đúng rồi! Hãy xem lại: khi trời <em>không mưa</em> (Đúng) thì em làm gì?');
+    });
+
+    /* ---------- Hoạt động 1 ---------- */
+    $('btn-hd1').addEventListener('click', () => {
+        const boxes = document.querySelectorAll('#hd1-choices input');
+        const right = { A: false, B: true, C: true, D: true };
+        let allOk = true, any = false;
+        boxes.forEach(b => {
+            const lab = b.closest('.choice');
+            lab.classList.remove('right', 'wrong');
+            if (b.checked) any = true;
+            if (b.checked !== right[b.value]) allOk = false;
+            if (b.checked) lab.classList.add(right[b.value] ? 'right' : 'wrong');
+        });
+        const fb = $('hd1-fb');
+        if (!any) return showFb(fb, 'info', 'Em hãy chọn ít nhất một phương án.');
+        if (allOk) showFb(fb, 'ok', '<strong>Chính xác: B, C, D.</strong> Đây là các phép so sánh, kết quả chỉ có thể là Đúng hoặc Sai. Riêng D luôn đúng vì 27 &gt; 26. Phương án A <code>m, n = 1, 2</code> là <em>lệnh gán</em>, không có giá trị đúng/sai.');
+        else showFb(fb, 'bad', 'Chưa đúng. Gợi ý: một biểu thức đặt được vào &lt;điều kiện&gt; phải trả lời được câu hỏi “Đúng hay Sai?”. Hãy xem lại từng phương án.');
+    });
+
+    /* ---------- Bảng chân trị ---------- */
+    const TV = (v) => v ? '<span class="tv-true">True</span>' : '<span class="tv-false">False</span>';
+    const pairs = [[1, 1], [1, 0], [0, 1], [0, 0]];
+    $('tt-and').querySelector('tbody').innerHTML = pairs.map(([x, y]) => '<tr data-x="' + x + '" data-y="' + y + '"><td>' + TV(x) + '</td><td>' + TV(y) + '</td><td>' + TV(x && y) + '</td></tr>').join('');
+    $('tt-or').querySelector('tbody').innerHTML = pairs.map(([x, y]) => '<tr data-x="' + x + '" data-y="' + y + '"><td>' + TV(x) + '</td><td>' + TV(y) + '</td><td>' + TV(x || y) + '</td></tr>').join('');
+    $('tt-not').querySelector('tbody').innerHTML = [1, 0].map(x => '<tr data-x="' + x + '"><td>' + TV(x) + '</td><td>' + TV(!x) + '</td></tr>').join('');
+    function ttUpdate() {
+        const x = $('tg-x').dataset.v === '1', y = $('tg-y').dataset.v === '1';
+        document.querySelectorAll('#tt-and tbody tr, #tt-or tbody tr').forEach(tr => tr.classList.toggle('hit', (tr.dataset.x === '1') === x && (tr.dataset.y === '1') === y));
+        document.querySelectorAll('#tt-not tbody tr').forEach(tr => tr.classList.toggle('hit', (tr.dataset.x === '1') === x));
+        $('tt-chips').innerHTML = '<span class="chip">X and Y → ' + TV(x && y) + '</span><span class="chip">X or Y → ' + TV(x || y) + '</span><span class="chip">not X → ' + TV(!x) + '</span>';
+    }
+    ['tg-x', 'tg-y'].forEach(id => $(id).addEventListener('click', function () {
+        this.dataset.v = this.dataset.v === '1' ? '0' : '1';
+        this.textContent = this.dataset.v === '1' ? 'True' : 'False';
+        ttUpdate();
+    }));
+    ttUpdate();
+
+    /* ---------- Dự đoán True/False ---------- */
+    function buildPredict(hostId, items) {
+        const host = $(hostId);
+        items.forEach(it => {
+            const div = document.createElement('div');
+            div.className = 'predict-item';
+            div.innerHTML = '<span class="expr">' + it.label + '</span><span class="pick"><button type="button" class="tf-btn" data-v="1">True</button><button type="button" class="tf-btn" data-v="0">False</button></span><span class="why">' + it.why + '</span>';
+            div.querySelectorAll('.tf-btn').forEach(b => b.addEventListener('click', () => {
+                const chosen = b.dataset.v === '1';
+                const ok = chosen === it.ans;
+                div.querySelectorAll('.tf-btn').forEach(x => x.disabled = true);
+                b.classList.add(ok ? 'sel-ok' : 'sel-bad');
+                if (!ok) div.querySelector('.tf-btn[data-v="' + (it.ans ? 1 : 0) + '"]').classList.add('sel-ok');
+                div.classList.add('done', ok ? 'good' : 'miss');
+            }));
+            host.appendChild(div);
+        });
+    }
+    buildPredict('predict-vd', [
+        { label: 'b = x &lt; 11 and z &gt; 5', ans: true, why: 'x = 10 nên <code>x &lt; 11</code> đúng; z = 9 nên <code>z &gt; 5</code> đúng. Theo bảng phép toán <code>and</code>: True and True → <strong>b = True</strong>.' },
+        { label: 'c = x &gt; 15 or y &lt; 9', ans: true, why: '<code>x &gt; 15</code> sai (vì x = 10) nhưng <code>y &lt; 9</code> đúng (vì y = 5). Theo bảng phép toán <code>or</code>: False or True → <strong>c = True</strong>.' },
+        { label: 'a = not b', ans: false, why: 'Vì b là True nên <code>not b</code> → <strong>a = False</strong>.' }
+    ]);
+    buildPredict('predict-q1', [
+        { label: 'a) 100%4 == 0', ans: true, why: '100 chia 4 được 25, dư 0 → <code>100%4</code> = 0 → <code>0 == 0</code> là <strong>True</strong>.' },
+        { label: 'b) 111//5 != 20 or 20%3 != 0', ans: true, why: '<code>111//5</code> = 22 (phép chia lấy phần nguyên), <code>22 != 20</code> là True. Vế phải: <code>20%3</code> = 2, <code>2 != 0</code> cũng True. True or True → <strong>True</strong>. (Với <code>or</code>, chỉ cần vế trái True là đủ.)' }
+    ]);
+
+    /* ---------- Mô phỏng lệnh if ---------- */
+    function renderTrace(host, lines) {
+        host.innerHTML = lines.map((l, i) => '<div class="ln" data-i="' + i + '">' + highlight(l) + '</div>').join('');
+    }
+    function clearFlow(p) {
+        document.querySelectorAll('[id^="' + p + '-"]').forEach(el => el.classList.remove('on', 'dim'));
+    }
+    function runSteps(steps, codeHost, p, outEl, btn) {
+        btn.disabled = true;
+        clearFlow(p);
+        codeHost.querySelectorAll('.ln').forEach(l => l.classList.remove('on', 'skip'));
+        outEl.textContent = '';
+        let i = 0;
+        (function tick() {
+            codeHost.querySelectorAll('.ln').forEach(l => l.classList.remove('on'));
+            if (i >= steps.length) { btn.disabled = false; return; }
+            const st = steps[i++];
+            if (st.line != null) codeHost.querySelector('.ln[data-i="' + st.line + '"]').classList.add('on');
+            (st.skip || []).forEach(k => codeHost.querySelector('.ln[data-i="' + k + '"]').classList.add('skip'));
+            (st.nodes || []).forEach(n => { const el = $(p + '-' + n); if (el) el.classList.add('on'); });
+            if (st.out != null) outEl.textContent += st.out + NL;
+            setTimeout(tick, 900);
+        })();
+    }
+
+    const stLines = ['n = ' + '7', 'if n > 0:', '    print("n là số lớn hơn 0")', 'print("Kết thúc")'];
+    function stRender() {
+        const n = parseInt($('st-n').value, 10) || 0;
+        stLines[0] = 'n = ' + n;
+        renderTrace($('st-code'), stLines);
+    }
+    $('st-n').addEventListener('input', stRender);
+    stRender();
+    $('st-run').addEventListener('click', () => {
+        stRender();
+        const n = parseInt($('st-n').value, 10) || 0;
+        const ok = n > 0;
+        const steps = [{ line: 0, nodes: ['in'] }, { line: 1, nodes: ['cond'] }];
+        if (ok) steps.push({ line: 2, nodes: ['yes', 'b1'], out: 'n là số lớn hơn 0' }, { line: 3, nodes: ['y2', 'out'], out: 'Kết thúc' });
+        else steps.push({ line: 3, nodes: ['no', 'out'], skip: [2], out: 'Kết thúc' });
+        runSteps(steps, $('st-code'), 'fts', $('st-out'), $('st-run'));
+    });
+
+    function sdRender() {
+        const a = parseFloat($('sd-a').value) || 0, b = parseFloat($('sd-b').value) || 0;
+        renderTrace($('sd-code'), ['a, b = ' + a + ', ' + b, 'if a > b:', '    print(a - b)', 'else:', '    print(b - a)']);
+    }
+    ['sd-a', 'sd-b'].forEach(id => $(id).addEventListener('input', sdRender));
+    sdRender();
+    $('sd-run').addEventListener('click', () => {
+        sdRender();
+        const a = parseFloat($('sd-a').value) || 0, b = parseFloat($('sd-b').value) || 0;
+        const fmt = (v) => String(Math.round(v * 1e9) / 1e9);
+        const steps = [{ line: 0, nodes: ['in'] }, { line: 1, nodes: ['cond'] }];
+        if (a > b) steps.push({ line: 2, nodes: ['yes', 'b1'], skip: [3, 4], out: fmt(a - b) }, { nodes: ['y2', 'out'] });
+        else steps.push({ line: 3, nodes: ['no'], skip: [2] }, { line: 4, nodes: ['b2'], out: fmt(b - a) }, { nodes: ['n2', 'out'] });
+        runSteps(steps, $('sd-code'), 'fds', $('sd-out'), $('sd-run'));
+    });
+
+    /* ---------- Tìm dòng sai ---------- */
+    const bugs = [
+        { title: 'Đoạn 1', lines: ['n = int(input("n = "))', 'if n > 0', '    print("n dương")'], bug: 1, why: 'Thiếu dấu <code>:</code> ở cuối dòng <code>if</code>.' },
+        { title: 'Đoạn 2', lines: ['a = 5', 'if a = 5:', '    print("a bằng 5")'], bug: 1, why: 'Dùng <code>=</code> (lệnh gán) thay vì <code>==</code> (so sánh bằng).' },
+        { title: 'Đoạn 3', lines: ['x = 3', 'if x%2 == 1:', 'print("x là số lẻ")'], bug: 2, why: 'Khối lệnh của <code>if</code> phải được viết lùi vào.' },
+        { title: 'Đoạn 4', lines: ['d = 7', 'if d >= 5:', '    print("Đạt")', '  else:', '    print("Chưa đạt")'], bug: 3, why: '<code>else</code> phải viết thẳng lề với <code>if</code>.' }
+    ];
+    const bugGrid = $('bug-grid');
+    bugs.forEach(bg => {
+        const card = document.createElement('div');
+        card.className = 'bug-card';
+        card.innerHTML = '<div class="bug-title">' + bg.title + '</div><div class="bug-lines">' +
+            bg.lines.map((l, i) => '<button type="button" class="bug-line" data-i="' + i + '">' + highlight(l) + '</button>').join('') +
+            '</div><div class="feedback"></div>';
+        const fb = card.querySelector('.feedback');
+        card.querySelectorAll('.bug-line').forEach(b => b.addEventListener('click', () => {
+            const i = +b.dataset.i;
+            card.querySelectorAll('.bug-line').forEach(x => x.classList.remove('wrong'));
+            if (i === bg.bug) {
+                b.classList.add('right');
+                card.querySelectorAll('.bug-line').forEach(x => x.disabled = true);
+                showFb(fb, 'ok', '<strong>Đúng!</strong> ' + bg.why);
+            } else {
+                b.classList.add('wrong');
+                showFb(fb, 'bad', 'Dòng này viết đúng rồi. Tìm tiếp nhé!');
+            }
+        }));
+        bugGrid.appendChild(card);
+    });
+
+    /* ---------- Máy tính tiền điện ---------- */
+    function pyRound(t) {
+        const f = Math.floor(t), d = t - f;
+        if (Math.abs(d - 0.5) < 1e-9) return f % 2 === 0 ? f : f + 1;
+        return Math.round(t);
+    }
+    const vn = (v, dg) => v.toLocaleString('vi-VN', { minimumFractionDigits: dg, maximumFractionDigits: dg });
+    function billUpdate(k) {
+        k = Math.max(0, k || 0);
+        const t1 = Math.min(k, 50), t2 = Math.min(Math.max(k - 50, 0), 50), t3 = Math.max(k - 100, 0);
+        const tiers = [
+            { name: 'Bậc 1 (0–50)', kwh: t1, price: 1.678, color: '#1FA58F', cap: 50 },
+            { name: 'Bậc 2 (51–100)', kwh: t2, price: 1.734, color: '#F1BD4C', cap: 50 },
+            { name: 'Bậc 3 (từ 101)', kwh: t3, price: 2.014, color: '#E8654B', cap: Math.max(200, t3) }
+        ];
+        $('bill-bars').innerHTML = tiers.map(t =>
+            '<div class="bill-row"><span>' + t.name + '</span><div class="bill-track"><div class="bill-fill" style="width:' + (t.kwh / t.cap * 100) + '%;background:' + t.color + '"></div></div>' +
+            '<span class="amt">' + vn(t.kwh, 0) + ' × ' + vn(t.price, 3) + ' = ' + vn(t.kwh * t.price, 3) + '</span></div>').join('');
+        const total = tiers.reduce((s, t) => s + t.kwh * t.price, 0);
+        $('bill-total').textContent = 'Tổng t = ' + vn(total, 3) + ' nghìn đồng → round(t) = ' + pyRound(total) + ' nghìn đồng';
+        $('bill-branch').innerHTML = 'Chương trình chạy vào nhánh: ' + (k <= 50 ? '<code>if k&lt;= 50</code>' : k <= 100 ? '<code>else</code> → <code>if k &lt;= 100</code>' : '<code>else</code> → <code>else</code> (k &gt; 100)');
+    }
+    $('bill-k').addEventListener('input', e => { $('bill-k-num').value = e.target.value; billUpdate(+e.target.value); });
+    $('bill-k-num').addEventListener('input', e => { const v = +e.target.value; $('bill-k').value = Math.min(v, 300); billUpdate(v); });
+    billUpdate(150);
+
+    /* ---------- Máy kiểm tra m, n ---------- */
+    const pmod = (a, b) => a - b * Math.floor(a / b);
+    function mnUpdate() {
+        const m = parseInt($('mn-m').value, 10), n = parseInt($('mn-n').value, 10);
+        if (isNaN(m) || isNaN(n)) { $('mn-result').innerHTML = '<p class="muted">Nhập số nguyên cho m và n.</p>'; return; }
+        const B = (v) => TV(v);
+        const rows = [];
+        if (m === 0) rows.push(['a', '<code>100%m</code> với m = 0', '<span class="tv-false">Lỗi ZeroDivisionError — không chia được cho 0</span>', null]);
+        else {
+            const p1 = pmod(100, m) === 0, p2 = pmod(n, 5) !== 0;
+            rows.push(['a', '<code>100%m == 0</code> → ' + B(p1) + ' &nbsp; <code>n%5 != 0</code> → ' + B(p2), 'and', p1 && p2]);
+        }
+        const q1 = pmod(m, 100) === 0, q2 = pmod(m, 400) !== 0;
+        rows.push(['b', '<code>m%100 == 0</code> → ' + B(q1) + ' &nbsp; <code>m%400 != 0</code> → ' + B(q2), 'and', q1 && q2]);
+        const r1 = pmod(n, 3) === 0, r2 = pmod(n, 3) !== 0 && pmod(n, 4) === 0;
+        rows.push(['c', '<code>n%3 == 0</code> → ' + B(r1) + ' &nbsp; <code>(n%3 != 0 and n%4 == 0)</code> → ' + B(r2), 'or', r1 || r2]);
+        $('mn-result').innerHTML = '<div class="table-wrap"><table class="data-table"><thead><tr><th>Câu</th><th class="l">Từng vế</th><th>Kết quả</th></tr></thead><tbody>' +
+            rows.map(r => '<tr><td>' + r[0] + '</td><td class="l">' + r[1] + '</td><td>' + (r[3] === null ? r[2] : B(r[3]) + (r[3] ? ' ✓' : '')) + '</td></tr>').join('') +
+            '</tbody></table></div>';
+    }
+    ['mn-m', 'mn-n'].forEach(id => $(id).addEventListener('input', mnUpdate));
+    mnUpdate();
+
+    /* ---------- Phòng thực hành Python (Skulpt) ---------- */
+    const pyEditor = $('py-editor'), pyStdin = $('py-stdin'), pyConsole = $('py-console');
+    const pyStatus = $('py-status'), pyBtnRun = $('btn-py-run');
+
+    pyEditor.addEventListener('keydown', e => {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const s = pyEditor.selectionStart, en = pyEditor.selectionEnd;
+            pyEditor.value = pyEditor.value.slice(0, s) + '    ' + pyEditor.value.slice(en);
+            pyEditor.selectionStart = pyEditor.selectionEnd = s + 4;
+        }
+    });
+
+    let skTries = 0;
+    (function checkSkulpt() {
+        if (window.Sk && Sk.builtinFiles) {
+            pyStatus.textContent = 'Sẵn sàng';
+            pyStatus.style.background = '#28A745';
+            pyBtnRun.disabled = false;
+        } else if (++skTries > 60) {
+            pyStatus.textContent = 'Không tải được trình chạy (kiểm tra mạng)';
+        } else setTimeout(checkSkulpt, 300);
+    })();
 
     function builtinRead(x) {
-        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined) {
-            throw "File not found: '" + x + "'";
-        }
-        return Sk.builtinFiles["files"][x];
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles.files[x] === undefined) throw "File not found: '" + x + "'";
+        return Sk.builtinFiles.files[x];
     }
 
-    function checkSkulptReady() {
-        if (window.Sk && Sk.builtinFiles) {
-            pyStatus.textContent = "Sẵn sàng";
-            pyStatus.style.background = "#28A745";
-            pyBtnRun.disabled = false;
-        } else {
-            setTimeout(checkSkulptReady, 300);
-        }
+    function friendlyError(msg) {
+        const tips = [
+            [/SyntaxError/, 'Lỗi cú pháp: kiểm tra dấu hai chấm ":" sau if/else, dấu ngoặc và dấu nháy.'],
+            [/IndentationError|indent/i, 'Lỗi lùi lề: các lệnh trong cùng một khối phải lùi vào như nhau (4 dấu cách).'],
+            [/NameError/, 'Lỗi tên biến: có biến chưa được gán giá trị hoặc gõ sai tên.'],
+            [/ValueError/, 'Lỗi giá trị: dữ liệu nhập vào không đổi được sang số (ví dụ gõ chữ, hoặc dùng dấu phẩy thay dấu chấm).'],
+            [/ZeroDivisionError/, 'Lỗi chia cho 0.'],
+            [/TypeError/, 'Lỗi kiểu dữ liệu: có thể em quên int()/float() khi nhập số.']
+        ];
+        const hit = tips.find(t => t[0].test(msg));
+        return hit ? NL + '💡 ' + hit[1] : '';
     }
-    checkSkulptReady();
 
     async function runPythonCode() {
         const code = pyEditor.value;
-        pyConsole.textContent = "";
+        const queue = pyStdin.value.split(/\r?\n/);
+        while (queue.length && queue[queue.length - 1] === '') queue.pop();
+        pyConsole.textContent = '';
         pyBtnRun.disabled = true;
-        pyBtnRun.textContent = "Đang chạy...";
-        pyStatus.textContent = "Đang thực thi";
-        pyStatus.style.background = "#F39C12";
-
+        pyBtnRun.textContent = 'Đang chạy...';
+        pyStatus.textContent = 'Đang thực thi';
+        pyStatus.style.background = '#F39C12';
         try {
             Sk.configure({
-                output: function(text) { pyConsole.textContent += text; },
+                output: (text) => { pyConsole.textContent += text; },
                 read: builtinRead,
-                inputfun: function(promptStr) { return window.prompt(promptStr); },
-                __future__: Sk.python3
+                inputfun: (promptStr) => {
+                    let v = queue.length ? queue.shift() : window.prompt(promptStr || 'Nhập dữ liệu:');
+                    if (v === null) v = '';
+                    pyConsole.textContent += v + NL;
+                    return v;
+                },
+                __future__: Sk.python3,
+                execLimit: 30000
             });
-
-            const myPromise = Sk.misceval.asyncToPromise(function() {
-                return Sk.importMainWithBody("<stdin>", false, code, true);
-            });
-            const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => { reject(new Error("Quá thời gian thực thi (Gợi ý: Kiểm tra lại vòng lặp vô hạn)")); }, 8000);
-            });
-
-            await Promise.race([myPromise, timeoutPromise]);
-
-            if (pyConsole.textContent.trim() === "") {
-                pyConsole.textContent = "[Chương trình chạy thành công, không có đầu ra]";
-            }
+            await Sk.misceval.asyncToPromise(() => Sk.importMainWithBody('<stdin>', false, code, true));
+            if (pyConsole.textContent.trim() === '') pyConsole.textContent = '[Chương trình chạy xong, không có kết quả in ra]';
         } catch (err) {
-            pyConsole.textContent += NEWLINE + "LỖI: " + err.toString();
+            const msg = err.toString();
+            pyConsole.textContent += NL + '❌ ' + msg + friendlyError(msg);
         } finally {
             pyBtnRun.disabled = false;
-            pyBtnRun.textContent = "Chạy mã ⏵";
-            pyStatus.textContent = "Sẵn sàng";
-            pyStatus.style.background = "#28A745";
+            pyBtnRun.textContent = 'Chạy mã ▶';
+            pyStatus.textContent = 'Sẵn sàng';
+            pyStatus.style.background = '#28A745';
         }
     }
+    pyBtnRun.addEventListener('click', runPythonCode);
+    $('btn-py-clear').addEventListener('click', () => { pyConsole.textContent = 'Đã xoá kết quả.'; });
 
-    if (pyBtnRun) pyBtnRun.addEventListener('click', runPythonCode);
-    if (pyBtnClear) {
-        pyBtnClear.addEventListener('click', () => { pyConsole.textContent = "Đã xóa kết quả."; });
-    }
+    document.querySelectorAll('[data-load]').forEach(btn => btn.addEventListener('click', () => {
+        const src = $(btn.dataset.load);
+        pyEditor.value = (src.dataset.src || src.textContent).replace(/\s+$/, '') + NL;
+        pyStdin.value = btn.dataset.stdin || '';
+        pyConsole.textContent = 'Đã nạp chương trình. Kiểm tra ô Dữ liệu vào rồi nhấn Chạy mã ▶';
+        openTab('s-lab', $('lab'));
+    }));
 
-    // --- Mẫu bài để nạp vào Phòng thực hành ---
-    const samples = {
-        nv1: "n = int(input(\"Nhập số tự nhiên n: \"))" + NEWLINE +
-             "if n%2 == 0:" + NEWLINE +
-             "    print(\"Số đã nhập là số chẵn.\")" + NEWLINE +
-             "else:" + NEWLINE +
-             "    print(\"Số đã nhập là số lẻ.\")",
-        nv2: "k = float(input(\"Nhập số kWh tiêu thụ điện nhà em: \"))" + NEWLINE +
-             "if k <= 50:" + NEWLINE +
-             "    t = k*1.678" + NEWLINE +
-             "else:" + NEWLINE +
-             "    if k <= 100:" + NEWLINE +
-             "        t = 50*1.678 + (k-50)*1.734" + NEWLINE +
-             "    else:" + NEWLINE +
-             "        t = 50*1.678 + 50*1.734 + (k-100)*2.014" + NEWLINE +
-             "print(\"Số tiền điện phải trả là:\", round(t, 2), \"nghìn đồng\")",
-        vd1: "kl = float(input(\"Nhập khối lượng cam mua (kg): \"))" + NEWLINE +
-             "if kl < 5:" + NEWLINE +
-             "    gia = 12000" + NEWLINE +
-             "else:" + NEWLINE +
-             "    gia = 10000" + NEWLINE +
-             "tien = kl * gia" + NEWLINE +
-             "print(\"Số tiền phải trả là:\", tien, \"đồng\")",
-        vd2: "n = int(input(\"Nhập năm n: \"))" + NEWLINE +
-             "if n%400 == 0 or (n%4 == 0 and n%100 != 0):" + NEWLINE +
-             "    print(n, \"là năm nhuận.\")" + NEWLINE +
-             "else:" + NEWLINE +
-             "    print(n, \"không phải là năm nhuận.\")"
-    };
-
-    function loadSampleAndGoLab(key) {
-        pyEditor.value = samples[key];
-        pyConsole.textContent = "Đã nạp bài mẫu. Nhấn Chạy mã để thử!";
-        openTab('s-lab');
-    }
-
-    const btnNv1 = document.getElementById('btn-load-nv1');
-    const btnNv2 = document.getElementById('btn-load-nv2');
-    const btnVd1 = document.getElementById('btn-load-vd1');
-    const btnVd2 = document.getElementById('btn-load-vd2');
-    const btnGotoLab = document.getElementById('btn-goto-lab');
-    if (btnNv1) btnNv1.addEventListener('click', () => loadSampleAndGoLab('nv1'));
-    if (btnNv2) btnNv2.addEventListener('click', () => loadSampleAndGoLab('nv2'));
-    if (btnVd1) btnVd1.addEventListener('click', () => loadSampleAndGoLab('vd1'));
-    if (btnVd2) btnVd2.addEventListener('click', () => loadSampleAndGoLab('vd2'));
-    if (btnGotoLab) btnGotoLab.addEventListener('click', () => openTab('s-lab'));
-
-    // --- E. HỆ THỐNG TRẮC NGHIỆM ---
+    /* ---------- Trắc nghiệm ---------- */
     const quizData = [
-        {
-            q: "Đoạn mã `10 % 3 == 1 or 5 < 2` sẽ trả về kết quả kiểu dữ liệu gì, và giá trị là bao nhiêu?",
-            opts: ["bool, True", "bool, False", "int, 1", "Lỗi cú pháp"],
-            ans: 0,
-            exp: "`10 % 3 == 1` là True. True or False trả về True. Kiểu dữ liệu là bool."
-        },
-        {
-            q: "Để cấu trúc rẽ nhánh `if` trong Python hoạt động đúng, sau điều kiện cần có kí tự gì?",
-            opts: ["Dấu chấm phẩy (;)", "Dấu hai chấm (:)", "Dấu ngoặc nhọn ({)", "Không cần kí tự gì"],
-            ans: 1,
-            exp: "Cú pháp chuẩn trong Python yêu cầu dấu hai chấm `:` sau điều kiện của `if` hoặc `else`."
-        },
-        {
-            q: "Trong đoạn lệnh rẽ nhánh if-else, khối lệnh thuộc else sẽ được thực hiện khi nào?",
-            opts: ["Bất cứ khi nào chạy chương trình", "Khi điều kiện của if là True", "Khi điều kiện của if là False", "Chỉ khi người dùng nhập dữ liệu sai"],
-            ans: 2,
-            exp: "Khối lệnh `else` (ngược lại) luôn được máy tính thực thi nếu điều kiện của `if` trả về False."
-        },
-        {
-            q: "Khẳng định nào ĐÚNG khi nói về việc thụt lề (lùi đầu dòng) trong lệnh if của Python?",
-            opts: ["Chỉ để code đẹp hơn, không ảnh hưởng logic.", "Bắt buộc phải lùi đầu dòng cho các lệnh thuộc khối lệnh if.", "Tùy thuộc vào trình biên dịch.", "Được phép viết trên cùng một dòng nối tiếp nhau."],
-            ans: 1,
-            exp: "Python sử dụng thụt lề (indentation) để xác định các câu lệnh nào nằm bên trong khối `if` hoặc `else`."
-        },
-        {
-            q: "Kết quả của biểu thức `not (4 >= 5)` là gì?",
-            opts: ["True", "False", "None", "Error"],
-            ans: 0,
-            exp: "`4 >= 5` là False. Phủ định `not False` sẽ trở thành True."
-        }
+        { q: 'Biểu thức <code>10 % 3 == 1 or 5 &lt; 2</code> có giá trị là gì?', opts: ['True', 'False', '1', 'Báo lỗi'], ans: 0,
+          exp: '<code>10 % 3</code> = 1 nên vế trái True; <code>5 &lt; 2</code> là False. True or False → True.' },
+        { q: 'Giá trị của biểu thức <code>not (4 &gt;= 5)</code> là:', opts: ['True', 'False', '4', 'Báo lỗi'], ans: 0,
+          exp: '<code>4 &gt;= 5</code> là False, <code>not False</code> là True.' },
+        { q: 'Biểu thức nào đúng với “x thuộc đoạn [1; 5]”?', opts: ['<code>1 &lt;= x or x &lt;= 5</code>', '<code>1 &lt; x and x &lt; 5</code>', '<code>1 &lt;= x and x &lt;= 5</code>', '<code>x &gt;= 1 and x &gt; 5</code>'], ans: 2,
+          exp: 'Thuộc đoạn thì phải thoả <em>đồng thời</em> hai điều kiện (dùng <code>and</code>) và lấy cả hai đầu mút (dùng <code>&lt;=</code>).' },
+        { q: 'Với <code>n = 1900</code>, biểu thức <code>n%400 == 0 or (n%4 == 0 and n%100 != 0)</code> có giá trị:', opts: ['True', 'False'], ans: 1,
+          exp: '<code>1900%400</code> = 300 → False. <code>1900%4 == 0</code> True nhưng <code>1900%100 != 0</code> False → vế trong ngoặc False. False or False → False: năm 1900 không nhuận.' },
+        { q: 'Sau <code>&lt;điều kiện&gt;</code> của lệnh <code>if</code> trong Python cần có kí tự gì?', opts: ['Dấu chấm phẩy <code>;</code>', 'Dấu hai chấm <code>:</code>', 'Dấu ngoặc nhọn <code>{</code>', 'Không cần kí tự nào'], ans: 1,
+          exp: 'Cú pháp Python: sau điều kiện của <code>if</code> và sau <code>else</code> đều phải có dấu <code>:</code>.' },
+        { q: 'Trong lệnh <code>if … else</code>, khối lệnh sau <code>else</code> được thực hiện khi nào?', opts: ['Luôn được thực hiện', 'Khi điều kiện có giá trị True', 'Khi điều kiện có giá trị False', 'Không bao giờ'], ans: 2,
+          exp: 'Điều kiện đúng → khối lệnh 1; ngược lại (điều kiện sai) → khối lệnh 2 sau <code>else</code>.' },
+        { q: 'Chương trình sau in ra gì?<pre class="code-block">x = 7\nif x % 2 == 0:\n    print("A")\nelse:\n    print("B")\nprint("C")</pre>', opts: ['A rồi C', 'B rồi C', 'Chỉ B', 'Chỉ C'], ans: 1,
+          exp: '7 % 2 = 1 nên điều kiện sai → in B. Lệnh <code>print("C")</code> không lùi vào, nằm ngoài lệnh if nên luôn được thực hiện.' },
+        { q: 'Chương trình sau in ra gì?<pre class="code-block">n = -3\nif n &gt; 0:\n    print("dương")\nprint("Kết thúc")</pre>', opts: ['dương', 'dương rồi Kết thúc', 'Kết thúc', 'Không in gì'], ans: 2,
+          exp: 'Đây là if dạng thiếu. -3 &gt; 0 sai nên bỏ qua khối lệnh, chuyển sang lệnh tiếp theo: in “Kết thúc”.' },
+        { q: 'Dòng lệnh nào viết <strong>sai</strong> cú pháp?', opts: ['<code>if a == b:</code>', '<code>if a = b:</code>', '<code>if a != b:</code>', '<code>if a &gt;= b:</code>'], ans: 1,
+          exp: '<code>=</code> là lệnh gán, không dùng làm điều kiện. So sánh bằng phải viết <code>==</code>.' },
+        { q: 'Theo chương trình Nhiệm vụ 2 (tiền điện luỹ kế), nhà em dùng 80 kWh thì chương trình in ra bao nhiêu?', opts: ['139 nghìn đồng', '134 nghìn đồng', '136 nghìn đồng', '161 nghìn đồng'], ans: 2,
+          exp: '50 × 1,678 + 30 × 1,734 = 83,9 + 52,02 = 135,92 → <code>round</code> được 136 nghìn đồng.' }
     ];
 
-    const quizArea = document.getElementById('quiz-area');
-    const quizProg = document.getElementById('quiz-progress');
-    let currentQ = 0;
-    let score = 0;
+    const quizArea = $('quiz-area'), quizProg = $('quiz-progress');
+    let currentQ = 0, score = 0;
 
     function renderQuiz() {
-        if (!quizArea) return;
-        if (currentQ >= quizData.length) { finishQuiz(); return; }
-
+        if (currentQ >= quizData.length) return finishQuiz();
         const q = quizData[currentQ];
-        let htmlContent = '<div class="quiz-slide active">';
-        htmlContent += '<h3 style="margin-top:0;">Câu ' + (currentQ + 1) + '/' + quizData.length + ':</h3>';
-        htmlContent += '<p style="font-size:1.1rem; font-weight:500;">' + q.q + '</p>';
-        htmlContent += '<div style="margin-top:1.5rem;">';
-        for (let i = 0; i < q.opts.length; i++) {
-            htmlContent += '<button type="button" class="opt-btn" data-id="' + i + '">' + q.opts[i] + '</button>';
-        }
-        htmlContent += '</div>';
-        htmlContent += '<div id="quiz-feedback" class="highlight-box"></div>';
-        htmlContent += '<div style="text-align:right; margin-top:1rem;">';
-        htmlContent += '<button type="button" id="btn-next-q" class="btn btn-primary" style="display:none;">Câu tiếp theo ⮕</button>';
-        htmlContent += '</div></div>';
-
-        quizArea.innerHTML = htmlContent;
-        if (quizProg) quizProg.style.width = (currentQ / quizData.length * 100) + '%';
-
-        const optBtns = quizArea.querySelectorAll('.opt-btn');
-        optBtns.forEach(btn => { btn.addEventListener('click', handleAnswerClick); });
+        let h = '<div style="animation:fadeIn .3s">';
+        h += '<h3 style="margin-top:0;">Câu ' + (currentQ + 1) + '/' + quizData.length + '</h3>';
+        h += '<div style="font-size:1.05rem; font-weight:500; margin-bottom:1rem;">' + q.q + '</div>';
+        q.opts.forEach((o, i) => { h += '<button type="button" class="opt-btn" data-id="' + i + '">' + String.fromCharCode(65 + i) + '. ' + o + '</button>'; });
+        h += '<div id="quiz-feedback" class="feedback"></div>';
+        h += '<div style="text-align:right; margin-top:1rem;"><button type="button" id="btn-next-q" class="btn btn-primary" style="display:none;">' + (currentQ + 1 < quizData.length ? 'Câu tiếp theo →' : 'Xem kết quả') + '</button></div></div>';
+        quizArea.innerHTML = h;
+        quizArea.querySelectorAll('pre.code-block').forEach(p => { p.innerHTML = highlight(p.textContent); });
+        quizProg.style.width = (currentQ / quizData.length * 100) + '%';
+        quizArea.querySelectorAll('.opt-btn').forEach(b => b.addEventListener('click', onAnswer));
+        $('btn-next-q').addEventListener('click', () => { currentQ++; renderQuiz(); });
     }
 
-    function handleAnswerClick(e) {
-        const selectedId = parseInt(e.target.getAttribute('data-id'));
-        const q = quizData[currentQ];
-        const fbBox = document.getElementById('quiz-feedback');
-        const nextBtn = document.getElementById('btn-next-q');
-        const allOpts = quizArea.querySelectorAll('.opt-btn');
-
-        allOpts.forEach(b => b.disabled = true);
-
-        if (selectedId === q.ans) {
-            e.target.classList.add('correct');
-            score++;
-            fbBox.innerHTML = '<strong style="color:#28A745">✓ Chính xác!</strong><br>' + q.exp;
-            fbBox.style.borderLeftColor = "#28A745";
-        } else {
-            e.target.classList.add('wrong');
-            allOpts[q.ans].classList.add('correct');
-            fbBox.innerHTML = '<strong style="color:#DC3545">✗ Chưa chính xác!</strong><br>' + q.exp;
-            fbBox.style.borderLeftColor = "#DC3545";
-        }
-
-        fbBox.style.display = 'block';
-        nextBtn.style.display = 'inline-block';
-
-        nextBtn.addEventListener('click', () => { currentQ++; renderQuiz(); });
+    function onAnswer(e) {
+        const btn = e.currentTarget, sel = +btn.dataset.id, q = quizData[currentQ];
+        const all = quizArea.querySelectorAll('.opt-btn');
+        all.forEach(b => b.disabled = true);
+        const fb = $('quiz-feedback');
+        if (sel === q.ans) { btn.classList.add('correct'); score++; showFb(fb, 'ok', '<strong>✓ Chính xác!</strong> ' + q.exp); }
+        else { btn.classList.add('wrong'); all[q.ans].classList.add('correct'); showFb(fb, 'bad', '<strong>✗ Chưa chính xác.</strong> ' + q.exp); }
+        $('btn-next-q').style.display = 'inline-flex';
     }
 
     function finishQuiz() {
-        if (quizProg) quizProg.style.width = '100%';
-        const pct = (score / quizData.length) * 100;
-        let msg = "";
-        if (pct === 100) msg = "Xuất sắc! Em đã nắm vững toàn bộ kiến thức.";
-        else if (pct >= 60) msg = "Khá tốt! Em hiểu bài, hãy xem lại những câu sai nhé.";
-        else msg = "Em cần ôn lại lý thuyết kỹ hơn một chút nhé.";
-
-        quizArea.innerHTML =
-            '<div style="text-align:center; padding: 2rem;">' +
-            '<h3 style="margin-top:0; border:none; font-size:1.5rem;">HOÀN THÀNH BÀI TẬP!</h3>' +
-            '<div style="font-size: 3.5rem; color: var(--primary); font-weight: bold; line-height: 1;">' + score + '/' + quizData.length + '</div>' +
-            '<p style="font-size: 1.1rem; margin: 1.5rem 0;">' + msg + '</p>' +
-            '<button type="button" id="btn-retry" class="btn btn-secondary">Làm lại bài kiểm tra ↺</button>' +
-            '</div>';
-
-        const resBoard = document.getElementById('result-board');
-        if (resBoard) {
-            resBoard.innerHTML =
-                '<h3 style="margin-top:0; border:none; color: var(--text-main);">Điểm số của em: <span style="color:var(--primary);">' + score + '/' + quizData.length + '</span></h3>' +
-                '<p>' + msg + '</p>';
-        }
-
-        const retryBtn = document.getElementById('btn-retry');
-        if (retryBtn) {
-            retryBtn.addEventListener('click', () => { currentQ = 0; score = 0; renderQuiz(); });
-        }
+        quizProg.style.width = '100%';
+        const pct = score / quizData.length * 100;
+        const msg = pct === 100 ? 'Xuất sắc! Em đã nắm vững toàn bộ kiến thức.'
+                  : pct >= 70 ? 'Khá tốt! Hãy xem lại những câu em làm sai nhé.'
+                  : pct >= 50 ? 'Đạt yêu cầu. Em nên xem lại mục Biểu thức lôgic và Lệnh if.'
+                  : 'Em cần ôn lại lí thuyết kĩ hơn, rồi làm lại bài nhé.';
+        quizArea.innerHTML = '<div style="text-align:center; padding:2rem;">' +
+            '<h3 style="margin-top:0; border:none; font-size:1.4rem;">HOÀN THÀNH!</h3>' +
+            '<div style="font-size:3.5rem; color:var(--primary); font-weight:bold; line-height:1;">' + score + '/' + quizData.length + '</div>' +
+            '<p style="font-size:1.1rem; margin:1.5rem 0;">' + msg + '</p>' +
+            '<button type="button" id="btn-retry" class="btn btn-secondary">Làm lại ↺</button></div>';
+        $('result-board').innerHTML = '<h3 style="margin-top:0; border:none; color:var(--text-main);">Điểm trắc nghiệm: <span style="color:var(--primary);">' + score + '/' + quizData.length + '</span></h3><p style="margin:0;">' + msg + '</p>';
+        $('btn-retry').addEventListener('click', () => { currentQ = 0; score = 0; renderQuiz(); });
     }
-
     renderQuiz();
+
+    /* ---------- Tự đánh giá ---------- */
+    const KEY = 'bai19-tu-danh-gia';
+    const checks = Array.from(document.querySelectorAll('#self-check input'));
+    try {
+        const saved = JSON.parse(localStorage.getItem(KEY) || '[]');
+        checks.forEach((c, i) => { c.checked = !!saved[i]; });
+    } catch (e) {}
+    function checkMsg() {
+        const n = checks.filter(c => c.checked).length;
+        $('self-check-msg').textContent = n === checks.length ? 'Tuyệt vời! Em đã sẵn sàng cho Bài 20: Câu lệnh lặp for.' : 'Em đã đạt ' + n + '/' + checks.length + ' mục tiêu.';
+    }
+    checks.forEach(c => c.addEventListener('change', () => {
+        try { localStorage.setItem(KEY, JSON.stringify(checks.map(x => x.checked))); } catch (e) {}
+        checkMsg();
+    }));
+    checkMsg();
 });
 </script>
 
