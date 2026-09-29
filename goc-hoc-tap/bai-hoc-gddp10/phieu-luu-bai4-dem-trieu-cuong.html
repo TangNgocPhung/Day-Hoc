@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phiêu lưu · Đêm triều cường Sài Gòn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --ink:#1E2A27; --ink-soft:#48584F;
+    --paper:#ECEFE1; --paper-2:#F7F8EF; --line:#D6D9C4;
+    --dusk:#12262C; --dusk-2:#1D4750; --dusk-3:#265861;
+    --rain:#5AA6B4; --rain-soft:#CDE6E3; --rain-ink:#0E3A40;
+    --sun:#E4A23B; --sun-soft:#F5DCA9; --sun-ink:#5A3B0E;
+    --ember:#B5533A; --good:#2F7D5B; --good-soft:#D4EDDF; --bad:#B5533A; --bad-soft:#F6DED6;
+    --backdrop:#D6DAC6; --shadow:0 40px 70px -30px rgba(8,18,16,0.5);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{
+    padding:clamp(1rem,4vw,3rem) 1rem; background:var(--backdrop); color:var(--ink);
+    font-family:'Be Vietnam Pro','Segoe UI',system-ui,sans-serif;
+    display:flex; justify-content:center; -webkit-font-smoothing:antialiased; min-height:100vh;
+  }
+  .sheet{ width:100%; max-width:820px; background:var(--paper); border-radius:22px; overflow:hidden; box-shadow:var(--shadow); align-self:flex-start; }
+
+  .hero{
+    background: radial-gradient(120% 140% at 85% 5%, color-mix(in srgb, var(--sun) 32%, transparent), transparent 55%),
+                linear-gradient(160deg, var(--dusk) 0%, var(--dusk-2) 62%, var(--dusk-3) 100%);
+    color:var(--paper-2); padding:clamp(1.5rem,4vw,2.4rem);
+  }
+  .kicker{ display:block; font-family:'IBM Plex Mono',monospace; font-size:.7rem; font-weight:600; letter-spacing:.16em; color:var(--rain-soft); margin-bottom:.6rem; }
+  .hero h1{ font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:clamp(1.7rem,5vw,2.6rem); line-height:1.08; margin:0 0 .6rem; text-wrap:balance; }
+  .hero h1 em{ font-style:italic; font-weight:500; color:var(--sun-soft); }
+  .hero-sub{ margin:0; max-width:52ch; font-size:.92rem; line-height:1.6; color:color-mix(in srgb, var(--paper-2) 82%, transparent); }
+
+  .screen{ display:none; }
+  .screen.on{ display:block; animation:fade .35s ease; }
+  @keyframes fade{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:none; } }
+  .pad{ padding:clamp(1.1rem,3.5vw,2rem); }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem; padding:.75rem 1.4rem; border-radius:999px;
+    border:1px solid transparent; font-family:'IBM Plex Mono',monospace; font-size:.78rem; font-weight:700; letter-spacing:.04em;
+    cursor:pointer; text-decoration:none; transition:transform .12s ease, background .15s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn--primary{ background:var(--sun); color:var(--dusk); box-shadow:0 12px 24px -14px rgba(180,120,20,.9); }
+  .btn--dark{ background:var(--dusk-2); color:var(--paper-2); }
+  .btn--ghost{ background:transparent; border-color:var(--line); color:var(--ink-soft); }
+  .btn--ghost:hover{ background:var(--paper-2); }
+  .btn-row{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; }
+  .icon-btn{ border:1px solid var(--line); background:var(--paper); width:2.1rem; height:2.1rem; border-radius:50%; cursor:pointer; font-size:.95rem; display:inline-flex; align-items:center; justify-content:center; }
+
+  .rules{ margin-top:1.3rem; background:var(--paper-2); border:1px dashed color-mix(in srgb, var(--rain-ink) 35%, var(--line)); border-radius:14px; padding:.9rem 1.05rem; }
+  .rules h3{ font-family:'Fraunces',Georgia,serif; font-size:.98rem; margin:0 0 .45rem; }
+  .rules ul{ margin:0; padding-left:1.1rem; }
+  .rules li{ font-size:.82rem; line-height:1.6; color:var(--ink-soft); }
+  .story{ font-size:.95rem; line-height:1.7; color:var(--ink); margin:0 0 1.2rem; }
+
+  /* ---------- HUD ---------- */
+  .hud{ display:flex; flex-wrap:wrap; gap:.6rem 1rem; align-items:center; justify-content:space-between; padding:.75rem clamp(1.1rem,3.5vw,2rem); background:var(--paper-2); border-bottom:1px solid var(--line); }
+  .hud-group{ display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; }
+  .hearts{ font-size:1.1rem; letter-spacing:.1em; }
+  .hud-chip{ font-family:'IBM Plex Mono',monospace; font-size:.68rem; font-weight:700; letter-spacing:.05em; padding:.32rem .6rem; border-radius:999px; background:var(--rain-soft); color:var(--rain-ink); }
+  .hud-chip.kt{ background:var(--sun-soft); color:var(--sun-ink); }
+  .hud-chip.xh{ background:var(--bad-soft); color:#7a2f1c; }
+  .hud-chip.boss{ background:var(--dusk); color:var(--sun-soft); }
+
+  /* ---------- BẢN ĐỒ ---------- */
+  .map{
+    position:relative; width:100%; aspect-ratio:700/430; overflow:hidden;
+    background: radial-gradient(90% 60% at 80% 0%, color-mix(in srgb, var(--sun) 22%, transparent), transparent 60%),
+                linear-gradient(180deg, #1a3a44 0%, #1D4750 55%, #265861 100%);
+  }
+  .map svg.route{ position:absolute; inset:0; width:100%; height:100%; }
+  .map .sea{ position:absolute; left:0; right:0; bottom:0; height:16%; background:linear-gradient(180deg, rgba(90,166,180,.35), rgba(90,166,180,.7)); }
+  .map .sea::before{ content:""; position:absolute; left:-10%; right:-10%; top:-12px; height:24px; background:radial-gradient(circle at 12px 24px, rgba(90,166,180,.7) 12px, transparent 13px) 0 0/24px 24px repeat-x; animation:wave 4s linear infinite; }
+  @keyframes wave{ to{ transform:translateX(24px);} }
+  .node{
+    position:absolute; transform:translate(-50%,-50%); width:clamp(2.6rem,8vw,3.5rem); height:clamp(2.6rem,8vw,3.5rem);
+    border-radius:50%; border:2px solid rgba(255,255,255,.35); background:rgba(18,38,44,.85); color:#fff; font-size:clamp(1.1rem,3.6vw,1.6rem);
+    display:flex; align-items:center; justify-content:center; cursor:default; font-family:inherit; padding:0;
+  }
+  .node .lbl{ position:absolute; top:100%; margin-top:.3rem; white-space:nowrap; font-family:'IBM Plex Mono',monospace; font-size:clamp(.5rem,1.7vw,.66rem); font-weight:700; color:var(--rain-soft); text-shadow:0 1px 3px #000; letter-spacing:.03em; }
+  .node.locked{ opacity:.45; filter:grayscale(.8); }
+  .node.done{ background:var(--good); border-color:#bff0d6; }
+  .node.now{ background:var(--sun); border-color:#fff; cursor:pointer; animation:pulse 1.4s ease infinite; }
+  .node.boss{ background:var(--ember); border-color:#ffd2c4; }
+  .node.boss.locked{ background:rgba(18,38,44,.85); }
+  @keyframes pulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(228,162,59,.7);} 50%{ box-shadow:0 0 0 14px rgba(228,162,59,0);} }
+  .node .stars{ position:absolute; bottom:-2px; right:-6px; font-size:.6rem; background:var(--dusk); border-radius:999px; padding:.05rem .3rem; color:var(--sun-soft); }
+  .avatar{ position:absolute; transform:translate(-50%,-135%); font-size:clamp(1.3rem,4vw,1.9rem); transition:left .8s ease, top .8s ease; pointer-events:none; filter:drop-shadow(0 4px 4px rgba(0,0,0,.5)); animation:bob 1.2s ease-in-out infinite; }
+  @keyframes bob{ 50%{ margin-top:-5px; } }
+  .map-foot{ padding:1rem clamp(1.1rem,3.5vw,2rem) 1.4rem; }
+  .map-foot p{ margin:0 0 .9rem; font-size:.88rem; line-height:1.6; color:var(--ink-soft); }
+  .map-foot b{ color:var(--ink); }
+
+  /* ---------- CẢNH ---------- */
+  .stage{ position:relative; overflow:hidden; min-height:150px; color:#fff;
+    background:linear-gradient(180deg, #2b5b66 0%, #1D4750 70%); display:flex; align-items:center; justify-content:center; text-align:center; }
+  .stage.boss{ background:linear-gradient(180deg, #0c1a1f 0%, #1a3040 70%); }
+  .stage .art{ position:relative; z-index:2; font-size:clamp(2.2rem,9vw,3.6rem); letter-spacing:.15em; text-shadow:0 6px 14px rgba(0,0,0,.4); padding:1.2rem 0 2.2rem; }
+  .stage .water{ position:absolute; left:0; right:0; bottom:0; height:14%; z-index:3; background:linear-gradient(180deg, rgba(90,166,180,.65), rgba(58,130,150,.9)); transition:height .8s ease; }
+  .stage .water::before{ content:""; position:absolute; left:-10%; right:-10%; top:-10px; height:20px; background:radial-gradient(circle at 10px 20px, rgba(90,166,180,.75) 10px, transparent 11px) 0 0/20px 20px repeat-x; animation:wave 3s linear infinite; }
+  .timer-track{ height:5px; background:color-mix(in srgb, var(--line) 60%, transparent); }
+  .timer-fill{ height:100%; width:100%; background:var(--rain); transition:width .25s linear; }
+  .timer-fill.warn{ background:var(--ember); }
+
+  .panel{ display:none; }
+  .panel.on{ display:block; animation:fade .3s ease; }
+  .place{ font-family:'Fraunces',Georgia,serif; font-size:clamp(1.3rem,4vw,1.8rem); font-weight:700; margin:0 0 .5rem; }
+  .bubble{ background:var(--paper-2); border:1px solid var(--line); border-left:4px solid var(--sun); border-radius:12px; padding:.85rem 1rem; font-size:.92rem; line-height:1.7; margin-bottom:1.2rem; }
+  .qmeta{ font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.08em; color:var(--ink-soft); margin-bottom:.7rem; display:flex; justify-content:space-between; gap:.6rem; flex-wrap:wrap; }
+  .qtext{ font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:clamp(1.1rem,3.2vw,1.45rem); line-height:1.3; margin:0 0 1.1rem; text-wrap:balance; }
+  .answers{ display:grid; gap:.6rem; }
+  .ans{
+    display:flex; align-items:flex-start; gap:.75rem; text-align:left; background:var(--paper-2); border:1.5px solid var(--line);
+    border-radius:14px; padding:.8rem .95rem; font-family:inherit; font-size:.92rem; line-height:1.5; color:var(--ink); cursor:pointer;
+    transition:transform .12s ease, border-color .15s ease, background .15s ease;
+  }
+  .ans:hover:not(:disabled){ transform:translateX(3px); border-color:var(--rain); }
+  .ans:disabled{ cursor:default; }
+  .ans .key{ flex:0 0 auto; width:1.55rem; height:1.55rem; border-radius:8px; background:var(--rain-soft); color:var(--rain-ink); font-family:'IBM Plex Mono',monospace; font-size:.76rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .ans.correct{ background:var(--good-soft); border-color:var(--good); }
+  .ans.correct .key{ background:var(--good); color:#fff; }
+  .ans.wrong{ background:var(--bad-soft); border-color:var(--bad); animation:shake .4s ease; }
+  .ans.wrong .key{ background:var(--bad); color:#fff; }
+  .ans.dim{ opacity:.5; }
+  .ans.gone{ visibility:hidden; }
+  @keyframes shake{ 0%,100%{ transform:translateX(0);} 20%{ transform:translateX(-7px);} 40%{ transform:translateX(6px);} 60%{ transform:translateX(-4px);} 80%{ transform:translateX(3px);} }
+  .lifeline{ margin-top:.9rem; }
+  .feedback{ margin-top:1rem; border-radius:14px; padding:.9rem 1.05rem; display:none; }
+  .feedback.on{ display:block; animation:fade .3s ease; }
+  .feedback.ok{ background:var(--good-soft); border:1px solid color-mix(in srgb, var(--good) 45%, transparent); }
+  .feedback.no{ background:var(--bad-soft); border:1px solid color-mix(in srgb, var(--bad) 45%, transparent); }
+  .feedback h4{ font-family:'Fraunces',Georgia,serif; font-size:1rem; margin:0 0 .35rem; }
+  .feedback p{ margin:0; font-size:.86rem; line-height:1.6; color:var(--ink-soft); }
+  .next-row{ margin-top:1rem; display:flex; justify-content:flex-end; }
+
+  .result-box{ text-align:center; }
+  .result-box .big{ font-size:3.4rem; line-height:1; animation:pop .5s cubic-bezier(.2,1.4,.5,1); }
+  @keyframes pop{ from{ transform:scale(.3) rotate(-15deg); opacity:0;} to{ transform:none; opacity:1; } }
+  .result-box h2{ font-family:'Fraunces',Georgia,serif; font-size:clamp(1.3rem,4vw,1.8rem); margin:.5rem 0 .3rem; }
+  .result-box p{ margin:0 auto 1rem; max-width:50ch; font-size:.9rem; line-height:1.6; color:var(--ink-soft); }
+  .reward{ display:inline-flex; gap:.5rem; align-items:center; background:var(--sun-soft); color:var(--sun-ink); border-radius:999px; padding:.4rem .9rem; font-family:'IBM Plex Mono',monospace; font-size:.74rem; font-weight:700; margin-bottom:1rem; }
+
+  .score-strip{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border-radius:14px; overflow:hidden; margin:1.3rem 0; }
+  .score-cell{ background:var(--paper-2); padding:.85rem .5rem; text-align:center; }
+  .score-cell b{ display:block; font-family:'IBM Plex Mono',monospace; font-size:clamp(1rem,3vw,1.3rem); color:var(--rain-ink); }
+  .score-cell span{ display:block; margin-top:.25rem; font-size:.65rem; color:var(--ink-soft); }
+  .review h3{ font-family:'Fraunces',Georgia,serif; font-size:1.05rem; margin:0 0 .6rem; }
+  .review-item{ background:var(--paper-2); border:1px solid var(--line); border-left:3px solid var(--ember); border-radius:12px; padding:.7rem .9rem; margin-bottom:.55rem; }
+  .review-item p{ margin:0; font-size:.84rem; line-height:1.55; }
+  .review-item .q{ font-weight:600; margin-bottom:.3rem; }
+  .review-item .a{ color:var(--good); font-weight:600; }
+  .review-item .e{ color:var(--ink-soft); margin-top:.25rem; font-size:.8rem; }
+  .perfect{ background:var(--good-soft); border:1px dashed var(--good); border-radius:14px; padding:1rem; text-align:center; font-size:.9rem; color:var(--ink-soft); }
+
+  .site-footer{ border-top:1px solid var(--line); padding:.9rem clamp(1.1rem,3.5vw,2rem); font-family:'IBM Plex Mono',monospace; font-size:.62rem; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:.4rem 1rem; justify-content:space-between; background:var(--paper-2); }
+  .site-footer a{ color:var(--rain-ink); text-decoration:none; }
+  #confetti{ position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:50; }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<main class="sheet">
+
+  <!-- ============ MỞ ĐẦU ============ -->
+  <section class="screen on" id="screen-start">
+    <div class="hero">
+      <span class="kicker">TRÒ CHƠI PHIÊU LƯU · GIÁO DỤC ĐỊA PHƯƠNG 10 · BÀI 4</span>
+      <h1>Đêm <em>triều cường</em> Sài Gòn</h1>
+      <p class="hero-sub">Bạn là tình nguyện viên trẻ của đội ứng phó thiên tai. Đi qua 6 địa điểm trên bản đồ thành phố, giữ vững từng trạm bằng kiến thức của Bài 4, rồi đối mặt với đỉnh triều 1,78m lúc nửa đêm!</p>
+    </div>
+    <div class="pad">
+      <p class="story">🌧️ <b>19 giờ tối.</b> Bản tin cảnh báo: đêm nay triều cường có thể vượt mốc lịch sử. Trung tâm điều phối gọi bạn: "Em hãy đến các điểm nóng, hiểu rõ thiên tai đang gây ra tác động gì, để đội kịp thời hỗ trợ bà con."</p>
+      <div class="btn-row">
+        <button class="btn btn--primary" id="btn-start" type="button">🧭 Bắt đầu hành trình</button>
+        <button class="icon-btn" id="btn-sound" type="button" title="Bật/tắt âm thanh" aria-label="Bật hoặc tắt âm thanh">🔊</button>
+      </div>
+      <div class="rules">
+        <h3>Cách chơi</h3>
+        <ul>
+          <li>Bấm vào <b>điểm sáng</b> trên bản đồ để đến trạm tiếp theo. Mỗi trạm có <b>3 thử thách</b>.</li>
+          <li>Bạn có <b>3 ❤️</b>. Trả lời sai mất 1 tim, nước dâng cao dần. Cứu trợ xong một trạm với ít nhất 2 câu đúng được hồi 1 tim.</li>
+          <li>Trả lời đúng cả 3 câu của một trạm nhận <b>🛟 phao cứu sinh</b> — dùng để loại 2 đáp án sai ở bất kì câu nào.</li>
+          <li>Đêm triều cường cuối cùng có <b>tính giờ 20 giây</b> mỗi câu. Hết tim thì được đưa về nơi an toàn để thử lại.</li>
+          <li>Phím <b>1 · 2 · 3 · 4</b> để chọn đáp án, <b>Enter</b> để tiếp tục.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BẢN ĐỒ ============ -->
+  <section class="screen" id="screen-map">
+    <div class="hud">
+      <div class="hud-group"><span class="hud-chip">BẢN ĐỒ HÀNH TRÌNH</span><span class="hearts" id="map-hearts"></span></div>
+      <div class="hud-group"><span class="hud-chip kt" id="map-life">🛟 0</span><span class="hud-chip" id="map-stars">⭐ 0 / 18</span>
+        <button class="icon-btn" id="btn-quit-map" type="button" title="Thoát" aria-label="Thoát">✕</button></div>
+    </div>
+    <div class="map" id="map">
+      <svg class="route" viewBox="0 0 700 430" preserveAspectRatio="none" aria-hidden="true">
+        <path id="route-path" d="" fill="none" stroke="rgba(245,220,169,.55)" stroke-width="3" stroke-dasharray="7 8" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="sea"></div>
+      <div class="avatar" id="avatar">🧑‍🎓</div>
+    </div>
+    <div class="map-foot">
+      <p id="map-hint">—</p>
+      <div class="btn-row"><button class="btn btn--primary" id="btn-go" type="button">▶ Đến trạm tiếp theo</button></div>
+    </div>
+  </section>
+
+  <!-- ============ CẢNH / THỬ THÁCH ============ -->
+  <section class="screen" id="screen-scene">
+    <div class="hud">
+      <div class="hud-group"><span class="hud-chip" id="sc-chip">—</span><span class="hearts" id="sc-hearts"></span></div>
+      <div class="hud-group"><span class="hud-chip kt" id="sc-life">🛟 0</span><button class="icon-btn" id="btn-quit-scene" type="button" title="Về bản đồ" aria-label="Về bản đồ">🗺️</button></div>
+    </div>
+    <div class="stage" id="stage"><div class="art" id="art">🌊</div><div class="water" id="water"></div></div>
+    <div class="timer-track" id="timer-track" style="display:none;"><div class="timer-fill" id="timer"></div></div>
+
+    <div class="pad">
+      <div class="panel on" id="p-intro">
+        <h2 class="place" id="in-name">—</h2>
+        <div class="bubble" id="in-story">—</div>
+        <div class="btn-row"><button class="btn btn--primary" id="btn-enter" type="button">⚔️ Nhận thử thách</button></div>
+      </div>
+
+      <div class="panel" id="p-q">
+        <div class="qmeta"><span id="q-count">—</span><span id="q-tag">—</span></div>
+        <h2 class="qtext" id="qtext">—</h2>
+        <div class="answers" id="answers"></div>
+        <div class="lifeline"><button class="btn btn--ghost" id="btn-life" type="button">🛟 Dùng phao cứu sinh (loại 2 đáp án sai)</button></div>
+        <div class="feedback" id="feedback"><h4 id="fb-title">—</h4><p id="fb-text">—</p></div>
+        <div class="next-row"><button class="btn btn--dark" id="btn-next" type="button" style="display:none;">Tiếp tục →</button></div>
+      </div>
+
+      <div class="panel" id="p-result">
+        <div class="result-box">
+          <div class="big" id="rs-emoji">🏅</div>
+          <h2 id="rs-title">—</h2>
+          <p id="rs-text">—</p>
+          <div class="reward" id="rs-reward">—</div><br>
+          <button class="btn btn--primary" id="btn-back-map" type="button">🗺️ Về bản đồ</button>
+        </div>
+      </div>
+
+      <div class="panel" id="p-over">
+        <div class="result-box">
+          <div class="big">🚑</div>
+          <h2>Nước dâng quá cao!</h2>
+          <p id="over-text">Bạn được đội cứu hộ đưa về nơi an toàn. Đọc kĩ phần giải thích rồi thử lại nhé — chỉ trạm này làm lại, các trạm khác vẫn giữ nguyên.</p>
+          <button class="btn btn--primary" id="btn-retry" type="button">💪 Hồi sức và thử lại</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ KẾT THÚC ============ -->
+  <section class="screen" id="screen-end">
+    <div class="hero">
+      <span class="kicker">KẾT THÚC HÀNH TRÌNH</span>
+      <h1 id="end-title">Bình minh sau đêm triều cường</h1>
+      <p class="hero-sub" id="end-sub">—</p>
+    </div>
+    <div class="pad">
+      <div class="result-box"><div class="big" id="end-medal">🏆</div><h2 id="end-rank">—</h2><p id="end-rank-sub">—</p></div>
+      <div class="score-strip">
+        <div class="score-cell"><b id="e-stars">0</b><span>Sao thu được</span></div>
+        <div class="score-cell"><b id="e-hearts">0</b><span>Tim còn lại</span></div>
+        <div class="score-cell"><b id="e-wrong">0</b><span>Câu cần ôn lại</span></div>
+      </div>
+      <div class="review" id="review"></div>
+      <div class="btn-row" style="margin-top:1.3rem;">
+        <button class="btn btn--primary" id="btn-again" type="button">↻ Chơi lại từ đầu</button>
+        <a class="btn btn--ghost" href="bai4-tac-dong-thien-tai-tphcm.html">Xem lại Bài 4</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <span>GIÁO DỤC ĐỊA PHƯƠNG 10 · CHỦ ĐỀ 1 · PHIÊU LƯU BÀI 4</span>
+    <span><a href="index.html">← Thư viện bài giảng</a> · GV: TĂNG NGỌC PHỤNG</span>
+  </footer>
+</main>
+
+<script>
+/* ============================================================
+   DỮ LIỆU: 6 ĐỊA ĐIỂM + BOSS. Trong mỗi câu, a[0] luôn là đáp án đúng
+   (được xáo trộn khi chơi). e: giải thích, bám nội dung Bài 4.
+   ============================================================ */
+const LOCS = [
+  { name:"Rừng ngập mặn Cần Giờ", short:"Cần Giờ", icon:"🌳", art:"🌳🌊🦀🌳", dom:"tn", tag:"TỰ NHIÊN – MÔI TRƯỜNG", pos:[11,78],
+    story:"Xuồng máy đưa bạn vào giữa rừng đước. Sóng vỗ mạnh hơn mọi năm, bùn đất ở mép rừng bị cuốn đi từng mảng. Chú kiểm lâm chỉ ra bờ nước mặn và nói: “Lá phổi xanh của thành phố đang bị thử thách, cháu ạ.”",
+    reward:"🌿 Lá chắn xanh",
+    qs:[
+      { q:"Rừng ngập mặn Cần Giờ đang chịu sức ép từ những yếu tố nào?",
+        a:["Nước biển dâng, sóng và xói lở","Băng tuyết tan chảy","Mùa đông lạnh kéo dài","Động đất và núi lửa"],
+        e:"Rừng ngập mặn Cần Giờ chịu sức ép từ nước biển dâng, sóng và xói lở; nhiều loài sinh vật phải thay đổi nơi sống." },
+      { q:"Vào mùa khô, nước mặn theo sông Sài Gòn – Đồng Nai đi sâu vào đất liền. Hiện tượng đó gọi là gì?",
+        a:["Xâm nhập mặn","Triều cường","Đảo nhiệt đô thị","Sạt lở bờ sông"],
+        e:"Xâm nhập mặn diễn ra theo sông Sài Gòn – Đồng Nai trong mùa khô, làm nhiễm mặn nguồn nước và đất." },
+      { q:"Đất nông nghiệp ven biển thường trở nên thế nào sau khi bị mặn xâm nhập?",
+        a:["Nhiễm mặn, nhiễm phèn","Màu mỡ hơn","Được bồi đắp thêm phù sa","Không thay đổi gì"],
+        e:"Sạt lở làm mất đất, còn đất nông nghiệp thì bị nhiễm mặn, nhiễm phèn — đều là tác động đến tự nhiên." }
+    ] },
+  { name:"Ao tôm Nhà Bè", short:"Nhà Bè", icon:"🦐", art:"🦐🌾🌊🏚️", dom:"kt", tag:"KINH TẾ – NÔNG NGHIỆP, THUỶ SẢN", pos:[27,58],
+    story:"Ở Nhà Bè, một bác nông dân đứng lặng bên ao tôm nổi trắng xác tôm chết. “Độ mặn với nhiệt độ nước đổi đột ngột quá, cháu ơi, cả vụ coi như mất!” — bác nói. Bạn ghi lại ngay để báo cáo.",
+    reward:"🦐 Sổ tay nhà nông",
+    qs:[
+      { q:"Tôm, cá nuôi ở Cần Giờ, Nhà Bè chết hàng loạt khi độ mặn và nhiệt độ nước thay đổi đột ngột. Đây là tác động đến lĩnh vực nào?",
+        a:["Kinh tế (nông nghiệp – thuỷ sản)","Tự nhiên (ô nhiễm không khí)","Xã hội (di dời dân cư)","Không thuộc lĩnh vực nào"],
+        e:"Thuỷ sản chết làm người nuôi mất thu nhập nên thuộc tác động đến kinh tế." },
+      { q:"Ruộng lúa và rau màu ở vùng ven thiệt hại chủ yếu vì nguyên nhân nào?",
+        a:["Mặn và hạn","Băng giá","Cháy rừng","Tuyết rơi"],
+        e:"Lúa, rau màu thiệt hại vì mặn và hạn; tôm cá chết khi độ mặn, nhiệt độ nước đổi đột ngột." },
+      { q:"Bờ sông sạt lở ăn vào vườn nhà, làm mất dần đất ven sông. Đây chủ yếu là tác động đến lĩnh vực nào?",
+        a:["Tự nhiên – môi trường (đất đai)","Kinh tế (giao thông)","Xã hội (y tế)","Chính trị"],
+        e:"Mất đất do sạt lở là thay đổi của môi trường tự nhiên; nhà ven sông có thể bị cuốn trôi nên còn gây hệ quả xã hội." }
+    ] },
+  { name:"Phố ngập Bình Thạnh", short:"Phố ngập", icon:"🚗", art:"🚗🚧⚡🌧️", dom:"kt", tag:"KINH TẾ – GIAO THÔNG, HẠ TẦNG", pos:[45,76],
+    story:"Nước triều tràn lên mặt đường, hàng chục chiếc xe máy chết máy nằm dọc lề. Một cửa hàng tạp hoá vội kê hàng lên cao nhưng nước vẫn ngấm vào. Đèn đường phía xa chợt tắt phụt.",
+    reward:"🚧 Bờ bao tạm",
+    qs:[
+      { q:"Đường phố ngập sâu gây ra hậu quả trực tiếp nào cho giao thông?",
+        a:["Ùn tắc, xe chết máy, mặt đường nhanh hư hỏng","Đường rộng ra và xe chạy nhanh hơn","Người dân không phải đi làm nữa","Không có hậu quả gì"],
+        e:"Đường ngập gây ùn tắc, xe chết máy; mặt đường, cống, bờ kè cũng nhanh hư hỏng." },
+      { q:"Sét đánh và cây đổ sau dông lốc thường gây ra sự cố nào?",
+        a:["Mất điện","Tăng lượng mưa","Nước biển dâng","Nhiệt độ tăng thêm 10°C"],
+        e:"Sét và cây đổ làm mất điện, ảnh hưởng sản xuất và sinh hoạt." },
+      { q:"Thành phố phải chi hàng chục nghìn tỉ đồng cho đê bao, cống ngăn triều, nâng đường. Điều này đáng lo vì:",
+        a:["Nguồn tiền đó lẽ ra có thể dành cho trường học, bệnh viện","Chi phí rất nhỏ, không cần quan tâm","Người dân tự trả hoàn toàn","Chỉ dùng một lần rồi bỏ"],
+        e:"Chi phí khắc phục rất lớn — vì vậy phòng ngừa từ sớm luôn ít tốn kém hơn khắc phục về sau." }
+    ] },
+  { name:"Trường học ngày nước dâng", short:"Trường học", icon:"🏫", art:"🏫🎒🌊📚", dom:"xh", tag:"XÃ HỘI – HỌC TẬP, SINH HOẠT", pos:[63,58],
+    story:"Sân trường loang loáng nước. Vài bạn xắn quần lội vào lớp, một bạn phải nghỉ vì nhà bị ngập. Thầy cô lo lắng kê lại bàn ghế lên cao. “Nước rút rồi cũng còn nhiều thứ phải dọn”, cô nói.",
+    reward:"📚 Cặp sách chống nước",
+    qs:[
+      { q:"Học sinh lội nước, đến trường muộn hoặc phải nghỉ học là tác động thuộc lĩnh vực nào?",
+        a:["Xã hội – đời sống","Kinh tế","Tự nhiên – môi trường","Không phải tác động của thiên tai"],
+        e:"Việc học và sinh hoạt bị ảnh hưởng là tác động đến xã hội – đời sống; nhà cửa, đồ đạc hư hỏng, nước sinh hoạt gián đoạn." },
+      { q:"Sau những đợt ngập kéo dài, dịch bệnh nào dễ bùng phát?",
+        a:["Sốt xuất huyết, bệnh ngoài da, bệnh tiêu hoá","Chỉ có bệnh cảm lạnh do băng giá","Bệnh do thiếu ánh nắng","Không có bệnh nào"],
+        e:"Sau ngập dễ bùng phát sốt xuất huyết, bệnh ngoài da và tiêu hoá." },
+      { q:"Khi thành phố ngập và có dông lốc, người dân có thể gặp những nguy cơ mất an toàn nào?",
+        a:["Điện giật, đuối nước, cây đổ, sét đánh","Cháy rừng và động đất","Tuyết lở và băng trôi","Hoàn toàn không có nguy cơ"],
+        e:"Ngập và dông lốc làm tăng nguy cơ điện giật, đuối nước, cây đổ, sét đánh." }
+    ] },
+  { name:"Trạm y tế giữa mùa nắng", short:"Trạm y tế", icon:"🏥", art:"🏥☀️🌡️🧊", dom:"xh", tag:"XÃ HỘI – SỨC KHOẺ", pos:[80,36],
+    story:"Buổi trưa 37°C, phòng chờ của trạm y tế đông kín người: có bác xe ôm ngất vì say nắng, có bà cụ khó thở. Nhân viên y tế đưa cho bạn cốc nước mát: “Giúp chú ghi lại số ca hôm nay nhé.”",
+    reward:"🧊 Bình nước mát",
+    qs:[
+      { q:"Nắng nóng gay gắt có thể gây ra những vấn đề sức khoẻ nào?",
+        a:["Say nắng, sốc nhiệt, làm nặng bệnh tim mạch – hô hấp","Chỉ gây cảm lạnh","Giúp mọi người khoẻ mạnh hơn","Chỉ ảnh hưởng động vật"],
+        e:"Nắng nóng gây say nắng, sốc nhiệt và làm nặng thêm bệnh tim mạch – hô hấp." },
+      { q:"Nhiệt độ nắng nóng cao điểm mùa khô ở TP.HCM khoảng bao nhiêu?",
+        a:["35–37°C","20–22°C","10–12°C","50–52°C"],
+        e:"Nắng nóng cao điểm mùa khô khoảng 35–37°C, tập trung vào tháng 3 – 5." },
+      { q:"Nắng nóng kéo dài còn ảnh hưởng thế nào đến sản xuất và điện năng?",
+        a:["Giảm năng suất lao động và tăng tiêu thụ điện","Tăng năng suất và giảm tiêu thụ điện","Không ảnh hưởng gì","Chỉ ảnh hưởng vào ban đêm"],
+        e:"Nắng nóng làm giảm năng suất lao động và tăng tiêu thụ điện (làm mát)." }
+    ] },
+  { name:"Xóm ven sông", short:"Xóm ven sông", icon:"🏘️", art:"🏘️🛶👵🌊", dom:"xh", tag:"XÃ HỘI – NHÓM DỄ BỊ TỔN THƯƠNG", pos:[62,15],
+    story:"Xóm nhỏ ven sông đã ngập tới thềm nhà. Bà cụ ngồi co ro trên chiếc ghế kê cao, bên cạnh là chị bán hàng rong mất một ngày thu nhập. Bạn nhận ra: thiên tai không “chia đều” thiệt hại cho mọi người.",
+    reward:"🤝 Túi cứu trợ",
+    qs:[
+      { q:"Nhóm nào sau đây thường khó ứng phó và mất mát nhiều hơn khi thiên tai xảy ra?",
+        a:["Người cao tuổi, trẻ nhỏ, lao động ngoài trời, hộ vùng trũng ven sông, hộ thu nhập thấp","Chỉ những hộ giàu có","Chỉ người ở nhà cao tầng","Mọi người thiệt hại đúng như nhau"],
+        e:"Thiên tai không “chia đều” thiệt hại; các nhóm dễ bị tổn thương khó ứng phó và mất mát nhiều hơn." },
+      { q:"Shipper, công nhân xây dựng, người bán hàng rong thuộc nhóm nào dễ bị tổn thương?",
+        a:["Lao động ngoài trời","Hộ ở nhà cao tầng","Người làm việc văn phòng có máy lạnh","Không thuộc nhóm nào"],
+        e:"Lao động ngoài trời chịu nắng nóng và mưa ngập trực tiếp, lại mất thu nhập những ngày ngập." },
+      { q:"Vì sao hộ thu nhập thấp thường ứng phó thiên tai khó hơn?",
+        a:["Ít điều kiện nâng nền, sửa nhà, chữa bệnh","Vì họ không sống ở thành phố","Vì họ không bị ngập","Vì thiên tai tránh né họ"],
+        e:"Hộ thu nhập thấp ít điều kiện nâng nền, sửa nhà và chữa bệnh nên khó phục hồi." }
+    ] }
+];
+
+const BOSS = {
+  name:"Đêm triều cường lịch sử", short:"Đêm triều", icon:"🌕", art:"🌕🌊🌊🌊🏙️", dom:"boss", tag:"THỬ THÁCH CUỐI · TÍNH GIỜ", pos:[35,20],
+  story:"22 giờ 30. Đỉnh triều đang dâng lên, nước tràn qua bờ bao, mưa lớn ập xuống cùng lúc. Trung tâm điều phối gọi: “Em hãy dùng tất cả những gì đã học — từng câu trả lời đúng sẽ đẩy nước lùi lại!”",
+  reward:"🌅 Bình minh an toàn",
+  qs:[
+    { q:"Triều cường ở TP.HCM thường dâng cao vào thời điểm nào trong năm?",
+      a:["Cuối năm, khoảng tháng 9 – 12 âm lịch","Đầu năm, khoảng tháng 1 – 3 dương lịch","Giữa mùa khô, tháng 3 – 4","Quanh năm, không theo mùa"],
+      e:"Triều cường dâng cao vào cuối năm (khoảng tháng 9 – 12 âm lịch), tràn qua bờ bao vào khu dân cư ven sông." },
+    { q:"Đỉnh triều kỷ lục ghi nhận tháng 11/2025 tại TP.HCM là bao nhiêu?",
+      a:["1,78m","1,30m","1,50m","2,15m"],
+      e:"Đỉnh triều 1,78m (11/2025) là kỷ lục, vượt xa mức báo động 3 tại trạm Phú An." },
+    { q:"Ngập lụt ở TP.HCM có thể do những nguyên nhân nào?",
+      a:["Mưa lớn, triều cường và lũ từ thượng nguồn — nhiều khi cả ba cùng lúc","Chỉ do mưa lớn","Chỉ do bão đổ bộ trực tiếp","Chỉ do nước biển bốc hơi"],
+      e:"Thành phố ở hạ lưu, địa hình thấp và giáp biển nên có thể hứng chịu cả ba nguyên nhân cùng lúc." },
+    { q:"Ý nào mô tả đúng nhất “vòng sóng” tác động của một trận thiên tai?",
+      a:["Lan từ tự nhiên sang kinh tế rồi đến đời sống, nối thành chuỗi","Chỉ dừng ở môi trường tự nhiên","Chỉ ảnh hưởng đúng nơi thiên tai xảy ra","Chỉ tác động đến người giàu"],
+      e:"Tác động nối thành chuỗi: một thiên tai lan từ tự nhiên sang kinh tế rồi đến đời sống người dân." },
+    { q:"Biến đổi khí hậu làm cho thiên tai ở thành phố thay đổi ra sao?",
+      a:["Thường xuyên hơn, mạnh hơn và khó đoán hơn","Ít hơn và nhẹ hơn","Không thay đổi","Chỉ xảy ra ở miền núi"],
+      e:"Biến đổi khí hậu khiến thiên tai thường xuyên, dữ dội và khó dự báo hơn." },
+    { q:"Nguyên tắc nào đúng khi nói về phòng, chống thiên tai?",
+      a:["Phòng ngừa từ sớm ít tốn kém hơn khắc phục về sau","Chỉ cần khắc phục sau khi thiên tai xảy ra","Phòng ngừa luôn tốn kém hơn khắc phục","Không cần chuẩn bị vì thiên tai hiếm gặp"],
+      e:"Vì tác động lan thành chuỗi, ngăn ngừa từ đầu giúp giảm thiệt hại dây chuyền và tiết kiệm chi phí." }
+  ]
+};
+
+/* ============================================================ */
+const MAX_HP = 3, TIME_LIMIT = 20, MAX_STARS = LOCS.length * 3;
+const $ = (id) => document.getElementById(id);
+const shuffle = (arr) => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+const S = { sound:true, hp:MAX_HP, life:0, progress:0, stars:[], wrong:[], loc:null, deck:[], qi:0, right:0, miss:0, locked:false, timeLeft:TIME_LIMIT, ticker:null, boss:false };
+
+/* ---------- ÂM THANH ---------- */
+let audioCtx = null;
+function beep(freqs, dur, type) {
+  if (!S.sound) return;
+  dur = dur || 0.12; type = type || 'sine';
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    freqs.forEach((f, i) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = type; o.frequency.value = f;
+      const t0 = audioCtx.currentTime + i * dur;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.16, t0 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g).connect(audioCtx.destination); o.start(t0); o.stop(t0 + dur + 0.02);
+    });
+  } catch (e) {}
+}
+const sndGood = () => beep([660, 880, 1180], 0.11, 'triangle');
+const sndBad  = () => beep([220, 165], 0.16, 'sawtooth');
+const sndTick = () => beep([440], 0.05, 'square');
+const sndWin  = () => beep([523, 659, 784, 1047], 0.13, 'triangle');
+const sndStep = () => beep([392, 523], 0.08, 'triangle');
+
+/* ---------- PHÁO GIẤY ---------- */
+const canvas = $('confetti'), ctx = canvas.getContext('2d');
+let pieces = [], rafId = null;
+function sizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+sizeCanvas(); window.addEventListener('resize', sizeCanvas);
+function burst(n, oy) {
+  n = n || 60; oy = oy || 0.35;
+  const colors = ['#E4A23B', '#5AA6B4', '#B5533A', '#2F7D5B', '#F5DCA9', '#CDE6E3'];
+  for (let i = 0; i < n; i++) pieces.push({
+    x: canvas.width / 2 + (Math.random() - 0.5) * canvas.width * 0.5, y: canvas.height * oy,
+    vx: (Math.random() - 0.5) * 9, vy: Math.random() * -9 - 3, g: 0.28 + Math.random() * 0.15,
+    w: 5 + Math.random() * 7, h: 8 + Math.random() * 8, rot: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
+    color: colors[Math.floor(Math.random() * colors.length)], life: 90 + Math.random() * 40 });
+  if (!rafId) rafId = requestAnimationFrame(drawConfetti);
+}
+function drawConfetti() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  pieces = pieces.filter(p => p.life > 0 && p.y < canvas.height + 40);
+  pieces.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.vy += p.g; p.rot += p.vr; p.life--;
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.color;
+    ctx.globalAlpha = Math.max(0, Math.min(1, p.life / 40)); ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+  });
+  if (pieces.length) rafId = requestAnimationFrame(drawConfetti);
+  else { ctx.clearRect(0, 0, canvas.width, canvas.height); rafId = null; }
+}
+
+/* ---------- ĐIỀU HƯỚNG ---------- */
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  $(id).classList.add('on');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function panel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  $(id).classList.add('on');
+}
+const heartsText = () => '❤️'.repeat(S.hp) + '🖤'.repeat(MAX_HP - S.hp);
+const totalStars = () => S.stars.reduce((a, b) => a + b, 0);
+$('btn-sound').addEventListener('click', () => { S.sound = !S.sound; $('btn-sound').textContent = S.sound ? '🔊' : '🔇'; if (S.sound) beep([660], 0.08); });
+
+/* ---------- BẢN ĐỒ ---------- */
+const STOPS = LOCS.concat([BOSS]);
+function buildMap() {
+  const map = $('map');
+  map.querySelectorAll('.node').forEach(n => n.remove());
+  // đường đi mượt qua các điểm
+  const pts = STOPS.map(l => [l.pos[0] * 7, l.pos[1] * 4.3]);
+  let d = 'M' + pts[0][0] + ',' + pts[0][1];
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], mx = (x0 + x1) / 2;
+    d += ' C' + mx + ',' + y0 + ' ' + mx + ',' + y1 + ' ' + x1 + ',' + y1;
+  }
+  $('route-path').setAttribute('d', d);
+  STOPS.forEach((l, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'node' + (i === STOPS.length - 1 ? ' boss' : '');
+    b.style.left = l.pos[0] + '%'; b.style.top = l.pos[1] + '%';
+    b.dataset.i = i;
+    b.innerHTML = l.icon + '<span class="lbl">' + esc(l.short) + '</span><span class="stars" style="display:none"></span>';
+    b.addEventListener('click', () => { if (i === S.progress) goNode(i); });
+    map.appendChild(b);
+  });
+}
+function renderMap() {
+  $('map-hearts').textContent = heartsText();
+  $('map-life').textContent = '🛟 ' + S.life;
+  $('map-stars').textContent = '⭐ ' + totalStars() + ' / ' + MAX_STARS;
+  document.querySelectorAll('.node').forEach((n) => {
+    const i = +n.dataset.i;
+    n.classList.remove('locked', 'done', 'now');
+    const st = n.querySelector('.stars');
+    if (i < S.progress) { n.classList.add('done'); st.style.display = ''; st.textContent = '⭐'.repeat(S.stars[i] || 0) || '·'; }
+    else if (i === S.progress) n.classList.add('now');
+    else n.classList.add('locked');
+  });
+  const cur = STOPS[Math.min(S.progress, STOPS.length - 1)];
+  const av = $('avatar');
+  av.style.left = cur.pos[0] + '%'; av.style.top = cur.pos[1] + '%';
+  $('map-hint').innerHTML = S.progress < LOCS.length
+    ? 'Trạm tiếp theo: <b>' + esc(cur.name) + '</b> — ' + cur.tag.toLowerCase() + '. Bấm vào điểm đang sáng hoặc nút bên dưới.'
+    : '🌕 Mọi trạm đã giữ vững! Đêm triều cường đang chờ bạn ở cuối đường.';
+  $('btn-go').textContent = S.progress < LOCS.length ? '▶ Đến ' + cur.short : '🌊 Đối mặt triều cường';
+}
+function showMap() { renderMap(); show('screen-map'); }
+$('btn-go').addEventListener('click', () => goNode(S.progress));
+
+/* ---------- BẮT ĐẦU / RESET ---------- */
+function newGame() {
+  S.hp = MAX_HP; S.life = 0; S.progress = 0; S.stars = []; S.wrong = [];
+  buildMap();
+  showMap();
+}
+$('btn-start').addEventListener('click', () => { beep([520, 660], 0.08, 'triangle'); newGame(); });
+$('btn-again').addEventListener('click', newGame);
+$('btn-quit-map').addEventListener('click', () => show('screen-start'));
+$('btn-quit-scene').addEventListener('click', () => { stopTimer(); showMap(); });
+
+/* ---------- VÀO MỘT ĐỊA ĐIỂM ---------- */
+function goNode(i) {
+  sndStep();
+  const l = STOPS[i];
+  S.loc = i; S.boss = (i === STOPS.length - 1);
+  S.deck = shuffle(l.qs).map(q => {
+    const opts = shuffle(q.a);
+    return { q: q.q, e: q.e, opts: opts, ci: opts.indexOf(q.a[0]), correctText: q.a[0] };
+  });
+  S.qi = 0; S.right = 0; S.miss = 0;
+  $('sc-chip').textContent = l.tag;
+  $('sc-chip').className = 'hud-chip ' + (l.dom === 'kt' ? 'kt' : l.dom === 'xh' ? 'xh' : l.dom === 'boss' ? 'boss' : '');
+  $('stage').className = 'stage' + (S.boss ? ' boss' : '');
+  $('art').textContent = l.art;
+  setWater(S.boss ? 45 : 14);
+  $('timer-track').style.display = 'none';
+  $('in-name').textContent = l.icon + ' ' + l.name;
+  $('in-story').textContent = l.story;
+  $('btn-enter').textContent = S.boss ? '🌊 Chống lại triều cường!' : '⚔️ Nhận thử thách';
+  updateSceneHud();
+  panel('p-intro');
+  show('screen-scene');
+}
+function updateSceneHud() {
+  $('sc-hearts').textContent = heartsText();
+  $('sc-life').textContent = '🛟 ' + S.life;
+  $('btn-life').style.display = (S.life > 0 && !S.locked) ? '' : 'none';
+}
+function setWater(p) { $('water').style.height = Math.max(8, Math.min(90, p)) + '%'; }
+let waterPct = 14;
+function bumpWater(delta) { waterPct = Math.max(8, Math.min(90, waterPct + delta)); setWater(waterPct); }
+$('btn-enter').addEventListener('click', () => {
+  waterPct = S.boss ? 45 : 14; setWater(waterPct);
+  renderQuestion();
+});
+
+/* ---------- ĐỒNG HỒ (chỉ ở màn cuối) ---------- */
+function stopTimer() { if (S.ticker) { clearInterval(S.ticker); S.ticker = null; } }
+function startTimer() {
+  stopTimer();
+  $('timer').classList.remove('warn'); $('timer').style.width = '100%';
+  if (!S.boss) { $('timer-track').style.display = 'none'; return; }
+  $('timer-track').style.display = '';
+  S.timeLeft = TIME_LIMIT;
+  let last = TIME_LIMIT;
+  S.ticker = setInterval(() => {
+    S.timeLeft -= 0.1;
+    $('timer').style.width = Math.max(0, S.timeLeft / TIME_LIMIT) * 100 + '%';
+    if (S.timeLeft <= 5) {
+      $('timer').classList.add('warn');
+      const sec = Math.ceil(S.timeLeft);
+      if (sec > 0 && sec < last) { last = sec; sndTick(); }
+    }
+    if (S.timeLeft <= 0) { stopTimer(); resolve(-1); }
+  }, 100);
+}
+
+/* ---------- CÂU HỎI ---------- */
+function renderQuestion() {
+  const q = S.deck[S.qi];
+  S.locked = false;
+  $('q-count').textContent = 'THỬ THÁCH ' + (S.qi + 1) + ' / ' + S.deck.length;
+  $('q-tag').textContent = S.boss ? 'NƯỚC ĐANG DÂNG — TRẢ LỜI ĐÚNG ĐỂ ĐẨY LÙI!' : 'MỖI CÂU SAI: NƯỚC DÂNG, MẤT 1 ❤️';
+  $('qtext').textContent = q.q;
+  const wrap = $('answers');
+  wrap.innerHTML = '';
+  q.opts.forEach((t, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'ans';
+    b.innerHTML = '<span class="key">' + (i + 1) + '</span><span>' + esc(t) + '</span>';
+    b.addEventListener('click', () => resolve(i));
+    wrap.appendChild(b);
+  });
+  $('feedback').className = 'feedback';
+  $('btn-next').style.display = 'none';
+  updateSceneHud();
+  panel('p-q');
+  startTimer();
+}
+$('btn-life').addEventListener('click', () => {
+  if (S.locked || S.life <= 0) return;
+  const q = S.deck[S.qi];
+  const wrongIdx = shuffle(q.opts.map((_, i) => i).filter(i => i !== q.ci)).slice(0, 2);
+  wrongIdx.forEach(i => { const b = $('answers').children[i]; b.classList.add('gone'); b.disabled = true; });
+  S.life--; beep([700, 900], 0.07, 'triangle');
+  updateSceneHud();
+});
+
+function resolve(i) {
+  if (S.locked) return;
+  S.locked = true; stopTimer();
+  const q = S.deck[S.qi];
+  Array.prototype.forEach.call($('answers').children, (b, k) => {
+    b.disabled = true;
+    if (k === q.ci) b.classList.add('correct');
+    else if (k === i) b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+  if (i === q.ci) {
+    S.right++; sndGood(); burst(40, 0.3);
+    if (S.boss) bumpWater(-10);
+    $('feedback').className = 'feedback on ok';
+    $('fb-title').textContent = ['Chính xác! 🎉', 'Quá chuẩn! 👏', 'Tuyệt vời! ⭐', 'Đúng rồi! 💪'][Math.floor(Math.random() * 4)];
+  } else {
+    S.miss++; S.hp--; sndBad(); bumpWater(S.boss ? 14 : 16);
+    S.wrong.push(q);
+    $('feedback').className = 'feedback on no';
+    $('fb-title').textContent = (i === -1 ? '⏰ Hết giờ! ' : 'Chưa đúng — ') + 'đáp án là: ' + q.correctText;
+  }
+  $('fb-text').textContent = q.e;
+  $('sc-hearts').textContent = heartsText();
+  updateSceneHud();
+  const last = S.qi === S.deck.length - 1;
+  $('btn-next').style.display = 'inline-flex';
+  $('btn-next').textContent = S.hp <= 0 ? 'Tiếp tục →' : (last ? (S.boss ? 'Xem điều gì xảy ra →' : 'Hoàn thành trạm →') : 'Thử thách tiếp →');
+  $('btn-next').focus();
+}
+$('btn-next').addEventListener('click', () => {
+  if (S.hp <= 0) return gameOver();
+  if (S.qi < S.deck.length - 1) { S.qi++; renderQuestion(); }
+  else finishNode();
+});
+
+/* ---------- HẾT TIM / THỬ LẠI ---------- */
+function gameOver() {
+  stopTimer();
+  // câu sai của lượt thất bại vẫn nằm trong sổ ôn tập
+  $('over-text').textContent = 'Bạn được đội cứu hộ đưa về nơi an toàn. Đọc lại giải thích ở trên rồi thử lại nhé — chỉ ' + (S.boss ? 'thử thách này' : 'trạm này') + ' làm lại, các trạm khác vẫn giữ nguyên.';
+  panel('p-over');
+}
+$('btn-retry').addEventListener('click', () => { S.hp = 2; goNode(S.loc); });
+
+/* ---------- HOÀN THÀNH ĐỊA ĐIỂM ---------- */
+function finishNode() {
+  stopTimer();
+  $('timer-track').style.display = 'none';
+  const l = STOPS[S.loc];
+  if (S.boss) return finishGame();
+  S.stars[S.loc] = S.right;
+  S.progress = S.loc + 1;
+  const healed = S.right >= 2 && S.hp < MAX_HP;
+  if (healed) S.hp++;
+  const perfect = S.right === 3;
+  if (perfect) S.life++;
+  $('rs-emoji').textContent = perfect ? '🏅' : (S.right === 2 ? '🥈' : '🥉');
+  $('rs-title').textContent = perfect ? 'Trạm được giữ vững tuyệt đối!' : (S.right >= 2 ? 'Trạm đã an toàn!' : 'Trạm vẫn còn nguy hiểm…');
+  $('rs-text').textContent = 'Bạn trả lời đúng ' + S.right + '/3 câu tại ' + l.name + '. ' +
+    (perfect ? 'Đội tặng bạn một phao cứu sinh 🛟 để dùng khi gặp câu khó.' : (S.right >= 2 ? 'Bạn được hồi sức, tiếp tục hành trình nhé.' : 'Dù vậy bạn vẫn tiến tiếp — nhớ đọc lại phần giải thích ở cuối hành trình.')) +
+    (healed ? ' (+1 ❤️)' : '');
+  $('rs-reward').textContent = 'Nhận: ' + l.reward + '  ·  ' + '⭐'.repeat(S.right) + (S.right ? '' : 'chưa có sao');
+  panel('p-result');
+  if (S.right >= 2) { sndWin(); burst(perfect ? 140 : 80, 0.25); }
+}
+$('btn-back-map').addEventListener('click', showMap);
+
+/* ---------- KẾT THÚC ---------- */
+function finishGame() {
+  const stars = totalStars();
+  const bossPerfect = S.right === BOSS.qs.length;
+  let medal = '🌱', rank = 'Tình nguyện viên tập sự', sub = 'Bạn đã sống sót qua đêm triều cường! Đọc lại phần ôn tập bên dưới rồi thử hành trình lần nữa để nhận nhiều sao hơn.';
+  if (stars >= 16 && S.hp >= 2) { medal = '🏆'; rank = 'Người hùng của thành phố'; sub = 'Xuất sắc! Bạn hiểu rõ vòng sóng tác động của thiên tai và dẫn dắt cả đội vượt qua đêm triều cường.'; }
+  else if (stars >= 12) { medal = '🥇'; rank = 'Chỉ huy đội ứng phó'; sub = 'Rất tốt! Bạn nắm chắc phần lớn nội dung, chỉ cần ôn thêm vài chi tiết nhỏ.'; }
+  else if (stars >= 8) { medal = '🥈'; rank = 'Cứu hộ viên'; sub = 'Khá ổn! Xem lại các câu sai để vững hơn ở lần sau.'; }
+  $('end-title').textContent = 'Bình minh sau đêm triều cường';
+  $('end-sub').textContent = 'Nước đã rút. ' + (bossPerfect ? 'Bạn đẩy lùi đỉnh triều mà không sai câu nào!' : 'Thành phố bình yên trở lại nhờ nỗ lực của cả đội.') + ' Bạn thu được ' + stars + '/' + MAX_STARS + ' sao.';
+  $('end-medal').textContent = medal;
+  $('end-rank').textContent = rank;
+  $('end-rank-sub').textContent = sub;
+  $('e-stars').textContent = stars + '/' + MAX_STARS;
+  $('e-hearts').textContent = S.hp;
+  $('e-wrong').textContent = S.wrong.length;
+  $('review').innerHTML = S.wrong.length === 0
+    ? '<div class="perfect">🎯 Không sai câu nào trong cả hành trình — bạn thật sự nắm chắc Bài 4!</div>'
+    : '<h3>Sổ tay ôn tập: ' + S.wrong.length + ' câu cần xem lại</h3>' + S.wrong.map(q =>
+        '<div class="review-item"><p class="q">' + esc(q.q) + '</p><p class="a">✓ ' + esc(q.correctText) + '</p><p class="e">' + esc(q.e) + '</p></div>').join('');
+  show('screen-end');
+  sndWin(); burst(160, 0.25); setTimeout(() => burst(100, 0.3), 400);
+}
+
+/* ---------- BÀN PHÍM ---------- */
+document.addEventListener('keydown', (ev) => {
+  if (!$('screen-scene').classList.contains('on')) return;
+  if (['1', '2', '3', '4'].indexOf(ev.key) !== -1 && $('p-q').classList.contains('on')) {
+    const b = $('answers').children[+ev.key - 1];
+    if (b && !b.disabled) b.click();
+  } else if (ev.key === 'Enter') {
+    if ($('p-intro').classList.contains('on')) $('btn-enter').click();
+    else if ($('p-q').classList.contains('on') && $('btn-next').style.display !== 'none') { ev.preventDefault(); $('btn-next').click(); }
+    else if ($('p-result').classList.contains('on')) $('btn-back-map').click();
+    else if ($('p-over').classList.contains('on')) $('btn-retry').click();
+  }
+});
+</script>
+</body>
+</html>
