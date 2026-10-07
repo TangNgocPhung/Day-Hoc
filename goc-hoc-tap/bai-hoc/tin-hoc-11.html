@@ -204,6 +204,12 @@
   }
   .lesson-status--link:hover { transform: translateY(-1px); }
   .lesson-status--link svg { width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .lesson-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+  .lesson-status--file {
+    background: transparent; color: var(--accent-1); text-decoration: none; border: 1px solid var(--accent-1);
+    transition: transform 0.14s ease;
+  }
+  .lesson-status--file:hover { transform: translateY(-1px); }
   .lesson-status--pending {
     color: var(--ink-faint); background: transparent; border: 1px dashed var(--border); font-style: italic; font-weight: 500;
   }
@@ -456,7 +462,11 @@
               <p class="lesson-meta">07-12/12/2026  ·  Tiết 25, 26</p>
             </div>
           </div>
-          <span class="lesson-status lesson-status--pending">Sắp có</span>
+          <div class="lesson-actions">
+            <a class="lesson-status lesson-status--file" href="../bai-tap/thuc-hanh-sql-mymusic-tin-hoc-11.html" target="_blank" rel="noopener">Thực hành SQL: MyMusic</a>
+            <a class="lesson-status lesson-status--file" href="../bai-tap/thuc-hanh-sql-huyentinh-tin-hoc-11.html" target="_blank" rel="noopener">Thực hành SQL: huyện – tỉnh</a>
+            <span class="lesson-status lesson-status--pending">Bài giảng sắp có</span>
+          </div>
         </li>
         <li class="marker-row">
           <span>Ôn tập và Trường KTTT</span>
