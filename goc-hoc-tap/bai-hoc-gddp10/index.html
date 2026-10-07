@@ -221,6 +221,12 @@
   }
   .lesson-status--link:hover { transform: translateY(-1px); }
   .lesson-status--link svg { width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .lesson-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+  .lesson-status--file {
+    background: transparent; color: var(--accent-1); text-decoration: none; border: 1px solid var(--accent-1);
+    transition: transform 0.14s ease;
+  }
+  .lesson-status--file:hover { transform: translateY(-1px); }
   .lesson-status--pending {
     color: var(--ink-faint); background: transparent; border: 1px dashed var(--border); font-style: italic; font-weight: 500;
   }
@@ -418,7 +424,11 @@
               <p class="lesson-meta">Tuần 6/Hk1  ·  Tiết 6</p>
             </div>
           </div>
-          <a class="lesson-status lesson-status--link" href="bai5-truyen-thong-khi-hau-tphcm.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+          <div class="lesson-actions">
+            <a class="lesson-status lesson-status--link" href="bai5-truyen-thong-khi-hau-tphcm.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+            <a class="lesson-status lesson-status--file" href="bai5-truyen-thong-khi-hau-tphcm.pptx" download>↓ Slide</a>
+            <a class="lesson-status lesson-status--file" href="phieu-hoc-tap-truyen-thong-khi-hau-tphcm.docx" download>↓ Phiếu học tập</a>
+          </div>
         </li>
         <li class="lesson-row">
           <div class="lesson-row-main">
@@ -429,7 +439,11 @@
               <p class="lesson-meta">Tuần 7/Hk1  ·  Tiết 7</p>
             </div>
           </div>
-          <a class="lesson-status lesson-status--link" href="bai6-nghi-le-uong-nuoc-nho-nguon.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+          <div class="lesson-actions">
+            <a class="lesson-status lesson-status--link" href="bai6-nghi-le-uong-nuoc-nho-nguon.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+            <a class="lesson-status lesson-status--file" href="bai6-nghi-le-uong-nuoc-nho-nguon.pptx" download>↓ Slide</a>
+            <a class="lesson-status lesson-status--file" href="phieu-hoc-tap-nghi-le-uong-nuoc-nho-nguon.docx" download>↓ Phiếu học tập</a>
+          </div>
         </li>
         <li class="exam-row">
           <span class="exam-row-label">ÔN TẬP KIỂM TRA GIỮA KỲ I</span>
