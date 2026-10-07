@@ -20,6 +20,7 @@
 
     --accent-1: #5E4F96;
     --exam: #A33B3B;
+    --cd: #1F6F6B;
 
     --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
     --font-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -42,6 +43,7 @@
 
       --accent-1: #B7A5EE;
       --exam: #E58A8A;
+      --cd: #6FD0C8;
 
       --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
     }
@@ -60,6 +62,7 @@
 
     --accent-1: #B7A5EE;
     --exam: #E58A8A;
+    --cd: #6FD0C8;
 
     --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
   }
@@ -214,6 +217,27 @@
     color: var(--ink-faint); background: transparent; border: 1px dashed var(--border); font-style: italic; font-weight: 500;
   }
 
+  .cd-group { margin-top: 1.5rem; }
+  .cd-group-head {
+    display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin: 0 0 0.7rem;
+  }
+  .cd-group-head h3 { margin: 0; font-size: 1rem; font-weight: 700; color: var(--cd); }
+  .cd-group-note { margin: 0 0 0.75rem; font-size: 0.84rem; color: var(--ink-muted); }
+  .cd-badge {
+    display: inline-block; font-family: var(--font-mono); font-size: 0.64rem; font-weight: 600;
+    letter-spacing: 0.06em; color: var(--cd); border: 1px solid var(--cd); border-radius: 999px;
+    padding: 0.05rem 0.55rem; text-transform: uppercase; white-space: nowrap;
+  }
+  .lesson-row--cd {
+    border-left: 4px solid var(--cd);
+    background: color-mix(in srgb, var(--cd) 7%, var(--surface-2));
+  }
+  .lesson-row--cd .lesson-num {
+    background: color-mix(in srgb, var(--cd) 16%, var(--surface)); color: var(--cd);
+  }
+  .lesson-row--cd .lesson-topic-tag { color: var(--cd); }
+  .lesson-row--cd .lesson-topic-tag .cd-badge { margin-right: 0.35rem; }
+
   .exam-row {
     display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
     padding: 0.75rem 1.05rem; border-radius: 12px;
@@ -263,10 +287,11 @@
   <header class="masthead">
     <span class="masthead-eyebrow">THƯ VIỆN BÀI GIẢNG</span>
     <h1 class="masthead-title">Bài giảng Tin học 11</h1>
-    <p class="masthead-sub">Danh sách toàn bộ 29 bài học trong năm, chia theo Học kỳ 1 và Học kỳ 2 theo đúng kế hoạch bài dạy. Bài nào đã có bài giảng tương tác sẽ hiện nút "Mở bài giảng"; các bài còn lại đang được biên soạn dần.</p>
+    <p class="masthead-sub">Danh sách toàn bộ 29 bài học trong năm, chia theo Học kỳ 1 và Học kỳ 2 theo đúng kế hoạch bài dạy. Bài nào đã có bài giảng tương tác sẽ hiện nút "Mở bài giảng"; các bài còn lại đang được biên soạn dần. Ngày và số tiết ở các bài chung ghi theo lịch lớp thường; các bài gắn thẻ <span class="cd-badge">Chuyên đề</span> chỉ dành cho lớp chuyên đề 11L3, 11L4.</p>
     <div class="summary-strip">
       <span class="summary-pill">Học kỳ 1 · <strong>15 bài</strong></span>
       <span class="summary-pill">Học kỳ 2 · <strong>14 bài</strong></span>
+      <span class="summary-pill">Chuyên đề (11L3, 11L4) · <strong>15 bài</strong></span>
       <span class="summary-pill">Đã có bài giảng · <strong id="lesson-progress">4 / 29</strong></span>
     </div>
   </header>
@@ -394,20 +419,20 @@
           </div>
           <a class="lesson-status lesson-status--link" href="Bai18_K11.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
         </li>
-        <li class="exam-row">
-          <span class="exam-row-label">Ôn tập và kiểm tra giữa học kỳ 1</span>
-          <span class="exam-row-date">26-31/10/2026  ·  Tiết 13, 14</span>
-        </li>
         <li class="lesson-row">
           <div class="lesson-row-main">
             <span class="lesson-num">19</span>
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH">Chủ đề F</span>
               <h3>Bài 19: Thực hành tạo lập cơ sở dữ liệu và các bảng</h3>
-              <p class="lesson-meta">02-07/11/2026  ·  Tiết 15, 16</p>
+              <p class="lesson-meta">19-24/10/2026  ·  Tiết 13, 14</p>
             </div>
           </div>
           <a class="lesson-status lesson-status--link" href="Bai19_K11.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        </li>
+        <li class="exam-row">
+          <span class="exam-row-label">Ôn tập và kiểm tra giữa học kỳ 1</span>
+          <span class="exam-row-date">26-31/10/2026  ·  Tiết 15, 16</span>
         </li>
         <li class="lesson-row">
           <div class="lesson-row-main">
@@ -415,7 +440,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH">Chủ đề F</span>
               <h3>Bài 20: Thực hành tạo lập các bảng có khóa ngoại</h3>
-              <p class="lesson-meta">09-14/11/2026  ·  Tiết 17, 18</p>
+              <p class="lesson-meta">02-07/11/2026  ·  Tiết 17, 18</p>
             </div>
           </div>
           <a class="lesson-status lesson-status--link" href="Bai20_K11.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
@@ -426,7 +451,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH">Chủ đề F</span>
               <h3>Bài 14: SQL - Ngôn ngữ truy vấn có cấu trúc</h3>
-              <p class="lesson-meta">16-21/11/2026  ·  Tiết 19, 20</p>
+              <p class="lesson-meta">09-14/11/2026  ·  Tiết 19, 20</p>
             </div>
           </div>
           <a class="lesson-status lesson-status--link" href="Bai14_K11.html" target="_blank" rel="noopener">Mở bài giảng<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
@@ -437,7 +462,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH">Chủ đề F</span>
               <h3>Bài 21: Thực hành cập nhật và truy xuất dữ liệu các bảng</h3>
-              <p class="lesson-meta">23-28/11/2026  ·  Tiết 21, 22</p>
+              <p class="lesson-meta">16-21/11/2026  ·  Tiết 21, 22</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -448,7 +473,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH">Chủ đề F</span>
               <h3>Bài 22: Thực hành cập nhật bảng dữ liệu có tham chiếu</h3>
-              <p class="lesson-meta">30/11-05/12/2026  ·  Tiết 23, 24</p>
+              <p class="lesson-meta">23-28/11/2026  ·  Tiết 23, 24</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -459,7 +484,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH">Chủ đề F</span>
               <h3>Bài 23: Thực hành truy xuất dữ liệu qua liên kết các bảng · Bài 24: Thực hành sao lưu dữ liệu</h3>
-              <p class="lesson-meta">07-12/12/2026  ·  Tiết 25, 26</p>
+              <p class="lesson-meta">30/11-05/12/2026  ·  Tiết 25, 26</p>
             </div>
           </div>
           <div class="lesson-actions">
@@ -468,24 +493,24 @@
             <span class="lesson-status lesson-status--pending">Bài giảng sắp có</span>
           </div>
         </li>
-        <li class="marker-row">
-          <span>Ôn tập và Trường KTTT</span>
-          <span class="marker-row-date">14-19/12/2026</span>
-        </li>
-        <li class="exam-row">
-          <span class="exam-row-label">Ôn tập và kiểm tra học kỳ 1</span>
-          <span class="exam-row-date">21-26/12/2026  ·  Tiết 29, 30</span>
-        </li>
         <li class="lesson-row">
           <div class="lesson-row-main">
             <span class="lesson-num">15</span>
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="GIẢI QUYẾT VẤN ĐỀ VỚI SỰ TRỢ GIÚP CỦA MÁY TÍNH">Chủ đề F</span>
               <h3>Bài 15: Bảo mật và an toàn hệ cơ sở dữ liệu</h3>
-              <p class="lesson-meta">28/12/2026-02/01/2027  ·  Tiết 31, 32</p>
+              <p class="lesson-meta">07-12/12/2026  ·  Tiết 27, 28</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="marker-row">
+          <span>Ôn tập và Trường KTTT</span>
+          <span class="marker-row-date">14-19/12/2026  ·  Tiết 29, 30</span>
+        </li>
+        <li class="exam-row">
+          <span class="exam-row-label">Ôn tập và kiểm tra học kỳ 1</span>
+          <span class="exam-row-date">21-26/12/2026  ·  Tiết 31, 32</span>
         </li>
         <li class="lesson-row">
           <div class="lesson-row-main">
@@ -493,7 +518,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="HƯỚNG NGHIỆP VỚI TIN HỌC">Chủ đề G</span>
               <h3>Bài 16: Công việc quản trị cơ sở dữ liệu</h3>
-              <p class="lesson-meta">04-09/01/2027  ·  Tiết 33, 34</p>
+              <p class="lesson-meta">28/12/2026-02/01/2027  ·  Tiết 33, 34</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -504,12 +529,77 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="ỨNG DỤNG TIN HỌC">Chủ đề E</span>
               <h3>Bài 25: Phần mềm chỉnh sửa ảnh</h3>
-              <p class="lesson-meta">11-16/01/2027  ·  Tiết 35, 36</p>
+              <p class="lesson-meta">04-09/01/2027  ·  Tiết 35, 36</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
         </li>
+        <li class="marker-row">
+          <span>Ôn tập thực hành làm quen phần mềm chỉnh sửa ảnh (dự trữ)</span>
+          <span class="marker-row-date">11-16/01/2027  ·  Tiết 71, 72</span>
+        </li>
     </ul>
+    <div class="cd-group">
+      <div class="cd-group-head"><span class="cd-badge">Chuyên đề</span><h3>Chuyên đề 1: Phần mềm trang trí</h3></div>
+      <p class="cd-group-note">Chỉ học ở lớp chuyên đề (11L3, 11L4); ngày và số tiết theo lịch riêng của lớp chuyên đề.</p>
+      <ul class="lesson-list">
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">1</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 1</span></span>
+              <h3>Bài 1: Giới thiệu phần mềm trang trí</h3>
+              <p class="lesson-meta">16-21/11/2026  ·  Tiết 31</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">2</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 1</span></span>
+              <h3>Bài 2: Làm việc với đối tượng hình khối</h3>
+              <p class="lesson-meta">16-21/11/2026  ·  Tiết 32</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">3</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 1</span></span>
+              <h3>Bài 3: Tạo các đối tượng đường</h3>
+              <p class="lesson-meta">16-28/11/2026  ·  Tiết 33, 34</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">4</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 1</span></span>
+              <h3>Bài 4: Chỉnh sửa, ghép nối, kết nối các đối tượng đồ họa (kèm kiểm tra thường xuyên)</h3>
+              <p class="lesson-meta">23-28/11/2026  ·  Tiết 35, 36</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">5</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 1</span></span>
+              <h3>Bài 5: Thiết kế sản phẩm trang trí hoàn chỉnh</h3>
+              <p class="lesson-meta">30/11-05/12/2026  ·  Tiết 37, 38, 39</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+      </ul>
+    </div>
   </section>
 
   <section class="semester-block" id="hk2">
@@ -541,8 +631,8 @@
           <span class="lesson-status lesson-status--pending">Sắp có</span>
         </li>
         <li class="marker-row">
-          <span>NGHỈ TẾT</span>
-          <span class="marker-row-date">01-06/02/2027</span>
+          <span>Bài tập thực hành</span>
+          <span class="marker-row-date">01-06/02/2027  ·  Tiết 41, 42</span>
         </li>
         <li class="marker-row">
           <span>NGHỈ TẾT</span>
@@ -554,7 +644,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="ỨNG DỤNG TIN HỌC">Chủ đề E</span>
               <h3>Bài 28: Tạo ảnh động</h3>
-              <p class="lesson-meta">15-20/02/2027  ·  Tiết 41, 42</p>
+              <p class="lesson-meta">15-20/02/2027  ·  Tiết 43, 44</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -565,7 +655,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="ỨNG DỤNG TIN HỌC">Chủ đề E</span>
               <h3>Bài 29: Khám phá phần mềm làm phim</h3>
-              <p class="lesson-meta">22-27/2/2027  ·  Tiết 43, 44</p>
+              <p class="lesson-meta">22-27/2/2027  ·  Tiết 45, 46</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -576,14 +666,14 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="ỨNG DỤNG TIN HỌC">Chủ đề E</span>
               <h3>Bài 30: Biên tập phim</h3>
-              <p class="lesson-meta">1-6/3/2027  ·  Tiết 45, 46</p>
+              <p class="lesson-meta">1-6/3/2027  ·  Tiết 47, 48</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
         </li>
         <li class="exam-row">
           <span class="exam-row-label">Ôn tập và Kiểm tra giữa học kỳ 2</span>
-          <span class="exam-row-date">8-13/3/2027  ·  Tiết 47, 48</span>
+          <span class="exam-row-date">8-13/3/2027  ·  Tiết 49, 50</span>
         </li>
         <li class="lesson-row">
           <div class="lesson-row-main">
@@ -591,7 +681,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="ỨNG DỤNG TIN HỌC">Chủ đề E</span>
               <h3>Bài 31: Thực hành tạo phim hoạt hình</h3>
-              <p class="lesson-meta">15-20/03/2027  ·  Tiết 49, 50</p>
+              <p class="lesson-meta">15-20/03/2027  ·  Tiết 51, 52</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -602,7 +692,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="MÁY TÍNH VÀ XÃ HỘI TRI THỨC">Chủ đề A</span>
               <h3>Bài 1: Hệ điều hành · Bài 2: Thực hành sử dụng hệ điều hành</h3>
-              <p class="lesson-meta">22-27/03/2027  ·  Tiết 51, 52</p>
+              <p class="lesson-meta">22-27/03/2027  ·  Tiết 53, 54</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -613,7 +703,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="MÁY TÍNH VÀ XÃ HỘI TRI THỨC">Chủ đề A</span>
               <h3>Bài 3: Phần mềm nguồn mở và phần mềm chạy trên Internet</h3>
-              <p class="lesson-meta">29/03-03/04/2027  ·  Tiết 53, 54</p>
+              <p class="lesson-meta">29/03-03/04/2027  ·  Tiết 55, 56</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -624,7 +714,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="MÁY TÍNH VÀ XÃ HỘI TRI THỨC">Chủ đề A</span>
               <h3>Bài 4: Bên trong máy tính</h3>
-              <p class="lesson-meta">05-10/04/2027  ·  Tiết 55, 56</p>
+              <p class="lesson-meta">05-10/04/2027  ·  Tiết 57, 58</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -635,18 +725,18 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="MÁY TÍNH VÀ XÃ HỘI TRI THỨC">Chủ đề A</span>
               <h3>Bài 5: Kết nối máy tính với các thiết bị số</h3>
-              <p class="lesson-meta">12-17/04/2027  ·  Tiết 57, 58</p>
+              <p class="lesson-meta">12-17/04/2027  ·  Tiết 59, 60</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
         </li>
         <li class="marker-row">
           <span>Ôn tập &amp; Trường KTTT</span>
-          <span class="marker-row-date">19-24/04/2027</span>
+          <span class="marker-row-date">19-24/04/2027  ·  Tiết 61, 62</span>
         </li>
         <li class="exam-row">
           <span class="exam-row-label">Ôn tập &amp; Kiểm tra cuối học kỳ 2</span>
-          <span class="exam-row-date">26-29/04/2027  ·  Tiết 61, 62</span>
+          <span class="exam-row-date">26-29/04/2027  ·  Tiết 63, 64</span>
         </li>
         <li class="lesson-row">
           <div class="lesson-row-main">
@@ -654,7 +744,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="ĐẠO ĐỨC, PHÁP LUẬT VÀ VĂN HÓA TRONG MỘI TRƯỜNG SỐ">Chủ đề D</span>
               <h3>Bài 9: Giao tiếp an toàn trên Internet</h3>
-              <p class="lesson-meta">03-08/05/2027  ·  Tiết 63, 64</p>
+              <p class="lesson-meta">03-08/05/2027  ·  Tiết 65, 66</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -665,7 +755,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="TỔ CHỨC LƯU TRỮ, TÌM KIẾM VÀ TRAO ĐỔI THÔNG TIN">Chủ đề C</span>
               <h3>Bài 6: Lưu trữ và chia sẻ tệp tin trên Internet</h3>
-              <p class="lesson-meta">10-15/05/2027  ·  Tiết 65, 66</p>
+              <p class="lesson-meta">10-15/05/2027  ·  Tiết 67, 68</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -676,7 +766,7 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="TỔ CHỨC LƯU TRỮ, TÌM KIẾM VÀ TRAO ĐỔI THÔNG TIN">Chủ đề C</span>
               <h3>Bài 7: Thực hành tìm kiếm thông tin trên Internet</h3>
-              <p class="lesson-meta">17-22/05/2027  ·  Tiết 67, 68</p>
+              <p class="lesson-meta">17-22/05/2027  ·  Tiết 69</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
@@ -687,12 +777,139 @@
             <div class="lesson-info">
               <span class="lesson-topic-tag" title="TỔ CHỨC LƯU TRỮ, TÌM KIẾM VÀ TRAO ĐỔI THÔNG TIN">Chủ đề C</span>
               <h3>Bài 8: Thực hành nâng cao sử dụng thư điện tử và mạng xã hội</h3>
-              <p class="lesson-meta">24-29/05/2027  ·  Tiết 69, 70</p>
+              <p class="lesson-meta">17-22/05/2027  ·  Tiết 70</p>
             </div>
           </div>
           <span class="lesson-status lesson-status--pending">Sắp có</span>
         </li>
+        <li class="marker-row">
+          <span>Bài tập thực hành (dự trữ)</span>
+          <span class="marker-row-date">24-29/05/2027  ·  Tiết 75, 76</span>
+        </li>
     </ul>
+    <div class="cd-group">
+      <div class="cd-group-head"><span class="cd-badge">Chuyên đề</span><h3>Chuyên đề 3: Ảnh động</h3></div>
+      <p class="cd-group-note">Chỉ học ở lớp chuyên đề (11L3, 11L4); ngày và số tiết theo lịch riêng của lớp chuyên đề.</p>
+      <ul class="lesson-list">
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">11</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 3</span></span>
+              <h3>Bài 11: Thao tác với các lớp ảnh</h3>
+              <p class="lesson-meta">18-23/01/2027  ·  Tiết 55</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">12</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 3</span></span>
+              <h3>Bài 12: Tạo ảnh động</h3>
+              <p class="lesson-meta">18-23/01/2027  ·  Tiết 56</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">13</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 3</span></span>
+              <h3>Bài 13: Điều chỉnh thời gian trễ và tạo chữ động</h3>
+              <p class="lesson-meta">18-23/01/2027  ·  Tiết 57</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">14</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 3</span></span>
+              <h3>Bài 14: Tạo hiệu ứng cho ảnh động</h3>
+              <p class="lesson-meta">25-30/01/2027  ·  Tiết 58</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">15</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 3</span></span>
+              <h3>Bài 15: Thực hành biên tập ảnh động</h3>
+              <p class="lesson-meta">25-30/01/2027  ·  Tiết 59, 60</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="cd-group">
+      <div class="cd-group-head"><span class="cd-badge">Chuyên đề</span><h3>Chuyên đề 2: Phim hoạt hình</h3></div>
+      <p class="cd-group-note">Chỉ học ở lớp chuyên đề (11L3, 11L4); ngày và số tiết theo lịch riêng của lớp chuyên đề.</p>
+      <ul class="lesson-list">
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">6</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 2</span></span>
+              <h3>Bài 6: Làm quen với phần mềm làm phim hoạt hình</h3>
+              <p class="lesson-meta">1-6/3/2027  ·  Tiết 70, 71, 72</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">7</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 2</span></span>
+              <h3>Bài 7: Thiết kế nhân vật hoạt hình</h3>
+              <p class="lesson-meta">15-20/03/2027  ·  Tiết 76, 77, 78</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">8</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 2</span></span>
+              <h3>Bài 8: Thực hành sản xuất phim hoạt hình</h3>
+              <p class="lesson-meta">22-27/03/2027  ·  Tiết 79, 80, 81</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">9</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 2</span></span>
+              <h3>Bài 9: Tạo các nguồn dữ liệu khác nhau cho phim hoạt hình</h3>
+              <p class="lesson-meta">17-22/05/2027  ·  Tiết 103, 104</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+        <li class="lesson-row lesson-row--cd">
+          <div class="lesson-row-main">
+            <span class="lesson-num">10</span>
+            <div class="lesson-info">
+              <span class="lesson-topic-tag"><span class="cd-badge">Chuyên đề 2</span></span>
+              <h3>Bài 10: Ra mắt phim hoạt hình của em</h3>
+              <p class="lesson-meta">17-22/05/2027  ·  Tiết 105</p>
+            </div>
+          </div>
+          <span class="lesson-status lesson-status--pending">Sắp có</span>
+        </li>
+      </ul>
+    </div>
   </section>
 </div>
 
@@ -704,8 +921,8 @@
 </footer>
 
 <script>
-  const lessonRows = document.querySelectorAll('.lesson-row');
-  const availableLessons = document.querySelectorAll('.lesson-row .lesson-status--link');
+  const lessonRows = document.querySelectorAll('.lesson-row:not(.lesson-row--cd)');
+  const availableLessons = document.querySelectorAll('.lesson-row:not(.lesson-row--cd) .lesson-status--link');
   document.getElementById('lesson-progress').textContent = `${availableLessons.length} / ${lessonRows.length}`;
 </script>
 
