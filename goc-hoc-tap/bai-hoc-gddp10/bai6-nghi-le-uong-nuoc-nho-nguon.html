@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nghi Lễ Uống Nước Nhớ Nguồn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --ink:#2A1F1A;
+    --ink-soft:#5E4E44;
+    --paper:#F2ECDF;
+    --paper-2:#FBF8F0;
+    --line:#E0D5C0;
+    --dusk:#27130E;
+    --dusk-2:#451C14;
+    --dusk-3:#64281B;
+    --lac:#9A3022;
+    --lac-soft:#F3D5CC;
+    --gold:#C99A3B;
+    --gold-soft:#F1DDA8;
+    --gold-ink:#5A3F0E;
+    --jade:#3D7563;
+    --jade-soft:#D3E6DD;
+    --backdrop:#DCD1BD;
+    --shadow: 0 40px 70px -30px rgba(30,12,6,0.5);
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    padding:clamp(1.5rem,5vw,3.5rem) 1rem;
+    background:var(--backdrop);
+    color:var(--ink);
+    font-family:'Be Vietnam Pro','Segoe UI',system-ui,sans-serif;
+    display:flex; justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .sheet{
+    width:100%; max-width:760px;
+    background:var(--paper);
+    border-radius:22px; overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:
+      radial-gradient(110% 130% at 85% 0%, color-mix(in srgb, var(--gold) 34%, transparent), transparent 55%),
+      linear-gradient(160deg, var(--dusk) 0%, var(--dusk-2) 60%, var(--dusk-3) 100%);
+    color:var(--paper-2);
+    padding:clamp(1.6rem,4vw,2.6rem) clamp(1.6rem,4vw,2.6rem) 1.4rem;
+  }
+  .hero-top{ display:flex; flex-wrap:wrap; gap:1.5rem 2rem; align-items:flex-start; }
+  .hero-copy{ flex:1 1 300px; min-width:0; }
+  .kicker{
+    display:block; font-family:'IBM Plex Mono',monospace;
+    font-size:0.7rem; font-weight:600; letter-spacing:0.16em;
+    color:var(--gold-soft); margin-bottom:0.65rem;
+  }
+  .eyebrow{
+    display:block; font-family:'IBM Plex Mono',monospace;
+    font-size:0.68rem; font-weight:600; letter-spacing:0.1em;
+    color:color-mix(in srgb, var(--paper-2) 62%, transparent); margin-bottom:0.9rem;
+  }
+  .hero h1{
+    font-family:'Fraunces',Georgia,serif; font-weight:700;
+    font-size:clamp(1.7rem,4.6vw,2.45rem); line-height:1.08;
+    margin:0 0 0.7rem; text-wrap:balance;
+  }
+  .hero h1 em{ font-style:italic; font-weight:500; color:var(--gold-soft); }
+  .hero-sub{ margin:0; max-width:40ch; font-size:0.92rem; line-height:1.55; color:color-mix(in srgb, var(--paper-2) 78%, transparent); }
+  .hero-actions{ display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:1.1rem; }
+  .hero-btn{
+    display:inline-flex; align-items:center; gap:0.4rem;
+    padding:0.55rem 0.9rem; border-radius:999px;
+    font-family:'IBM Plex Mono',monospace; font-size:0.7rem; font-weight:600;
+    text-decoration:none; border:1px solid transparent;
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .hero-btn svg{ width:0.85rem; height:0.85rem; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .hero-btn:hover{ transform:translateY(-1px); }
+  .hero-btn--primary{ background:var(--gold); color:var(--dusk); }
+  .hero-btn--primary svg{ fill:currentColor; stroke:none; }
+  .hero-btn--ghost{
+    background:color-mix(in srgb, var(--paper-2) 10%, transparent);
+    border-color:color-mix(in srgb, var(--paper-2) 35%, transparent);
+    color:var(--paper-2);
+  }
+  .hero-btn--ghost:hover{ background:color-mix(in srgb, var(--paper-2) 18%, transparent); }
+
+  .dial-wrap{ flex:0 0 auto; width:min(280px,100%); margin:0 auto; }
+  .dial-wrap svg{ width:100%; height:auto; display:block; }
+
+  /* ---------- STAT STRIP ---------- */
+  .stat-strip{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line);
+    margin:0 clamp(1.2rem,3.5vw,2rem);
+    transform:translateY(-1.1rem);
+    border-radius:14px; overflow:hidden;
+    box-shadow:0 14px 30px -18px rgba(40,15,8,0.35);
+  }
+  .stat{ background:var(--paper-2); padding:0.85rem 0.6rem; text-align:center; }
+  .stat b{
+    display:block; font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;
+    font-size:clamp(1.05rem,3vw,1.35rem); font-weight:700; color:var(--lac); line-height:1.1;
+  }
+  .stat span{ display:block; margin-top:0.3rem; font-size:0.66rem; line-height:1.35; color:var(--ink-soft); }
+  @media (max-width:520px){ .stat-strip{ grid-template-columns:repeat(2,1fr); } }
+
+  /* ---------- KHỞI ĐỘNG ---------- */
+  .warmup{
+    margin:0 clamp(1.2rem,3.5vw,2rem) 0.4rem;
+    padding:0.9rem 1rem; border-radius:14px;
+    background:color-mix(in srgb, var(--gold) 15%, var(--paper-2));
+    border:1px solid color-mix(in srgb, var(--gold) 45%, var(--line));
+    display:flex; gap:0.8rem; align-items:flex-start;
+  }
+  .warmup .tag{
+    flex:0 0 auto; font-family:'IBM Plex Mono',monospace; font-size:0.62rem; font-weight:700; letter-spacing:0.08em;
+    color:var(--paper-2); background:var(--gold-ink); padding:0.25rem 0.5rem; border-radius:6px; margin-top:0.1rem;
+  }
+  .warmup p{ margin:0; font-size:0.86rem; line-height:1.55; }
+
+  /* ---------- PHÂN ĐOẠN ---------- */
+  .part-rule{ display:flex; align-items:center; gap:0.8rem; padding:1.5rem clamp(1.4rem,4vw,2.4rem) 0.2rem; }
+  .part-rule .pill{
+    font-family:'IBM Plex Mono',monospace; font-size:0.66rem; font-weight:700; letter-spacing:0.14em;
+    color:var(--paper-2); background:var(--lac); padding:0.3rem 0.65rem; border-radius:999px; white-space:nowrap;
+  }
+  .part-rule.jade .pill{ background:var(--jade); }
+  .part-rule.gold .pill{ background:var(--gold-ink); }
+  .part-rule h3{ margin:0; font-family:'Fraunces',Georgia,serif; font-size:1.02rem; font-weight:700; }
+  .part-rule .line{ flex:1 1 auto; height:1px; background:var(--line); }
+
+  /* ---------- THẺ TỤC NGỮ ---------- */
+  .proverb{ padding:0.8rem clamp(1.2rem,3.5vw,2rem) 0.4rem; }
+  .proverb-quote{
+    text-align:center; margin:0.4rem 0 1rem;
+    font-family:'Fraunces',Georgia,serif; font-style:italic; font-weight:600;
+    font-size:clamp(1.4rem,4vw,1.9rem); color:var(--lac);
+  }
+  .proverb-quote small{ display:block; font-family:'IBM Plex Mono',monospace; font-style:normal; font-size:0.66rem; letter-spacing:0.1em; color:var(--ink-soft); margin-top:0.3rem; }
+  .flip-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:0.6rem; }
+  @media (max-width:600px){ .flip-row{ grid-template-columns:1fr; } }
+  .flip{
+    font:inherit; text-align:left; cursor:pointer;
+    border-radius:14px; border:1px solid var(--line);
+    background:var(--paper-2); padding:0.9rem 0.9rem 1rem;
+    min-height:8.2rem; position:relative;
+    transition:transform .15s ease, background .2s ease, border-color .2s ease;
+    color:var(--ink);
+  }
+  .flip:hover{ transform:translateY(-2px); border-color:var(--gold); }
+  .flip .front{ display:flex; flex-direction:column; gap:0.35rem; }
+  .flip .front b{ font-family:'Fraunces',Georgia,serif; font-size:1.25rem; color:var(--lac); }
+  .flip .front span{ font-size:0.76rem; color:var(--ink-soft); }
+  .flip .back{ display:none; font-size:0.84rem; line-height:1.55; }
+  .flip .back b{ display:block; font-family:'IBM Plex Mono',monospace; font-size:0.62rem; letter-spacing:0.1em; color:var(--gold-ink); margin-bottom:0.3rem; }
+  .flip.open{ background:color-mix(in srgb, var(--gold) 14%, var(--paper-2)); border-color:var(--gold); }
+  .flip.open .front{ display:none; }
+  .flip.open .back{ display:block; }
+  .flip:focus-visible{ outline:2px solid var(--lac); outline-offset:2px; }
+
+  /* ---------- SECTIONS ---------- */
+  .sections{ padding:0.3rem clamp(1.2rem,3.5vw,2rem) 0.5rem; display:flex; flex-direction:column; }
+  .topic{ display:grid; grid-template-columns:2.7rem 1fr; column-gap:1rem; padding:1.15rem 0; border-top:1px solid var(--line); }
+  .topic:first-child{ border-top:none; }
+  .topic > div:last-child{ min-width:0; }
+  .topic-badge{ display:flex; flex-direction:column; align-items:center; gap:0.35rem; padding-top:0.15rem; }
+  .topic-badge .num{ font-family:'IBM Plex Mono',monospace; font-size:0.62rem; font-weight:600; color:var(--ink-soft); }
+  .topic-badge .icon-ring{
+    width:2.7rem; height:2.7rem; border-radius:50%;
+    background:var(--lac-soft); display:flex; align-items:center; justify-content:center;
+  }
+  .topic-badge .icon-ring svg{ width:1.35rem; height:1.35rem; stroke:var(--lac); fill:none; }
+  .topic.jade .icon-ring{ background:var(--jade-soft); }
+  .topic.jade .icon-ring svg{ stroke:var(--jade); }
+  .topic h2{ font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.12rem; margin:0.05rem 0 0.55rem; }
+  .topic h2 small{ font-family:'Be Vietnam Pro',sans-serif; font-weight:600; font-size:0.78rem; color:var(--ink-soft); }
+  .topic p.lead{ margin:0 0 0.6rem; font-size:0.87rem; line-height:1.6; color:var(--ink-soft); }
+  .topic ul{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:0.4rem; }
+  .topic li{ position:relative; padding-left:0.95rem; font-size:0.87rem; line-height:1.55; color:var(--ink-soft); }
+  .topic li::before{ content:""; position:absolute; left:0; top:0.55em; width:0.4rem; height:0.4rem; border-radius:50%; background:var(--gold); }
+  .topic b{ color:var(--ink); font-weight:700; }
+  h4.sub{ margin:0.95rem 0 0.45rem; font-size:0.9rem; font-weight:700; color:var(--lac); }
+
+  .fn3{ display:grid; grid-template-columns:repeat(3,1fr); gap:0.45rem; margin-top:0.2rem; }
+  .fn3 div{ background:var(--paper-2); border:1px solid var(--line); border-radius:10px; padding:0.55rem 0.65rem; font-size:0.76rem; line-height:1.45; color:var(--ink-soft); }
+  .fn3 b{ display:block; font-size:0.82rem; color:var(--lac); margin-bottom:0.1rem; }
+  @media (max-width:560px){ .fn3{ grid-template-columns:1fr; } }
+
+  .lehoi{ display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-top:0.2rem; }
+  .lehoi div{ border-radius:12px; padding:0.65rem 0.75rem; font-size:0.8rem; line-height:1.5; color:var(--ink-soft); }
+  .lehoi .le{ background:color-mix(in srgb, var(--lac) 9%, var(--paper-2)); border:1px solid color-mix(in srgb, var(--lac) 30%, var(--line)); }
+  .lehoi .hoi{ background:color-mix(in srgb, var(--gold) 16%, var(--paper-2)); border:1px solid color-mix(in srgb, var(--gold) 45%, var(--line)); }
+  .lehoi span{ display:block; font-family:'IBM Plex Mono',monospace; font-size:0.62rem; font-weight:700; letter-spacing:0.1em; margin-bottom:0.25rem; }
+  .lehoi .le span{ color:var(--lac); }
+  .lehoi .hoi span{ color:var(--gold-ink); }
+  @media (max-width:520px){ .lehoi{ grid-template-columns:1fr; } }
+
+  .example{
+    margin-top:0.7rem; padding:0.6rem 0.8rem; background:var(--paper-2);
+    border:1px dashed color-mix(in srgb, var(--lac) 35%, var(--line)); border-radius:10px;
+    display:flex; gap:0.55rem; align-items:flex-start;
+  }
+  .example .tag{
+    flex:0 0 auto; font-family:'IBM Plex Mono',monospace; font-size:0.6rem; font-weight:700; letter-spacing:0.06em;
+    color:var(--gold-ink); background:var(--gold-soft); padding:0.15rem 0.4rem; border-radius:5px; margin-top:0.1rem;
+  }
+  .example p{ margin:0; font-size:0.82rem; line-height:1.55; color:var(--ink-soft); }
+
+  .verse{
+    margin:0.8rem 0 0; padding:0.8rem 1rem;
+    border-left:3px solid var(--lac); background:var(--paper-2); border-radius:0 12px 12px 0;
+    font-family:'Fraunces',Georgia,serif; font-style:italic; font-size:1.02rem; line-height:1.6; color:var(--ink);
+  }
+  .verse cite{ display:block; margin-top:0.3rem; font-family:'IBM Plex Mono',monospace; font-style:normal; font-size:0.64rem; color:var(--ink-soft); }
+
+  /* bảng so sánh */
+  .compare-wrap{ overflow-x:auto; margin-top:0.9rem; border:1px solid var(--line); border-radius:12px; }
+  table.cmp{ width:100%; border-collapse:collapse; font-size:0.78rem; min-width:480px; background:var(--paper-2); }
+  .cmp th, .cmp td{ padding:0.55rem 0.65rem; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); line-height:1.45; }
+  .cmp thead th{ font-family:'IBM Plex Mono',monospace; font-size:0.64rem; letter-spacing:0.08em; color:var(--paper-2); background:var(--dusk-2); }
+  .cmp tbody th{ font-weight:700; color:var(--lac); width:6.5rem; }
+  .cmp td{ color:var(--ink-soft); }
+  .cmp tr:last-child th, .cmp tr:last-child td{ border-bottom:none; }
+
+  /* ---------- LỊCH NGHI LỄ ---------- */
+  .calendar{
+    margin:0.6rem clamp(1.2rem,3.5vw,2rem) 1.6rem;
+    background:var(--paper-2); border:1px solid var(--line); border-radius:16px;
+    padding:1.2rem clamp(1rem,3vw,1.5rem) 1.4rem;
+  }
+  .block-head{ margin-bottom:0.9rem; }
+  .block-head .kicker{ color:var(--lac); margin-bottom:0.4rem; }
+  .block-head h2{ font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:clamp(1.1rem,3vw,1.3rem); margin:0 0 0.3rem; }
+  .block-head p{ margin:0; font-size:0.82rem; color:var(--ink-soft); line-height:1.5; max-width:56ch; }
+  .rite-tabs{ display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:1rem; }
+  .rite-tab{
+    font:inherit; font-size:0.74rem; font-weight:600; color:var(--ink-soft); background:var(--paper);
+    border:1px solid var(--line); border-radius:999px; padding:0.38rem 0.8rem; cursor:pointer;
+    transition:background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .rite-tab:hover{ border-color:var(--gold); }
+  .rite-tab[aria-selected="true"]{ background:var(--lac); color:var(--paper-2); border-color:var(--lac); }
+  .rite-tab:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+  .rite-card{ display:grid; grid-template-columns:8.5rem 1fr; gap:0 1rem; align-items:start; }
+  @media (max-width:560px){ .rite-card{ grid-template-columns:1fr; } }
+  .rite-date{
+    border-radius:14px; overflow:hidden; text-align:center;
+    border:1px solid var(--line); background:var(--paper);
+    margin-bottom:0.8rem;
+  }
+  .rite-date .top{ background:var(--lac); color:var(--paper-2); font-family:'IBM Plex Mono',monospace; font-size:0.6rem; font-weight:700; letter-spacing:0.12em; padding:0.35rem; }
+  .rite-date .big{ font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.5rem; color:var(--ink); padding:0.5rem 0.4rem 0.15rem; line-height:1.1; }
+  .rite-date .small{ font-size:0.7rem; color:var(--ink-soft); padding:0 0.5rem 0.6rem; line-height:1.35; }
+  .rite-body h3{ margin:0 0 0.5rem; font-family:'Fraunces',Georgia,serif; font-size:1.15rem; }
+  .rite-body dl{ margin:0; display:grid; grid-template-columns:max-content 1fr; gap:0.4rem 0.8rem; font-size:0.82rem; line-height:1.5; }
+  .rite-body dt{ font-family:'IBM Plex Mono',monospace; font-size:0.62rem; font-weight:700; letter-spacing:0.06em; color:var(--ink-soft); padding-top:0.2rem; }
+  .rite-body dd{ margin:0; color:var(--ink); }
+  .rite-body .heart{
+    margin-top:0.8rem; padding:0.6rem 0.75rem; border-radius:10px;
+    background:color-mix(in srgb, var(--gold) 16%, var(--paper)); border:1px solid color-mix(in srgb, var(--gold) 45%, var(--line));
+    font-size:0.82rem; line-height:1.5;
+  }
+  .rite-body .heart b{ color:var(--lac); }
+  @media (max-width:440px){ .rite-body dl{ grid-template-columns:1fr; gap:0.1rem; } .rite-body dd{ margin-bottom:0.4rem; } }
+
+  /* ---------- HOẠT ĐỘNG NHÓM ---------- */
+  .group{ padding:clamp(1.4rem,4vw,2.2rem); border-top:1px solid var(--line); }
+  .group-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:0.7rem; margin-top:0.9rem; }
+  .group-card{ border:1px solid var(--line); border-radius:14px; padding:0.85rem 0.9rem; background:var(--paper-2); }
+  .group-card .tag{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:0.6rem; font-weight:700; letter-spacing:0.12em;
+    color:var(--paper-2); background:var(--lac); padding:0.2rem 0.5rem; border-radius:4px; margin-bottom:0.5rem;
+  }
+  .group-card h4{ margin:0 0 0.35rem; font-size:0.9rem; font-weight:700; }
+  .group-card p{ margin:0; font-size:0.79rem; line-height:1.5; color:var(--ink-soft); }
+  .practice{ margin-top:1.1rem; padding:0.9rem 1rem; border-radius:12px; background:var(--paper-2); border:1px solid var(--line); }
+  .practice h4{ margin:0 0 0.4rem; font-family:'IBM Plex Mono',monospace; font-size:0.66rem; letter-spacing:0.1em; color:var(--jade); }
+  .practice ol{ margin:0; padding-left:1.2rem; font-size:0.84rem; line-height:1.6; color:var(--ink); }
+
+  /* ---------- GAME CTA ---------- */
+  .game-cta{
+    padding:clamp(1.2rem,3.5vw,1.6rem) clamp(1.4rem,4vw,2.2rem);
+    background:linear-gradient(120deg, var(--dusk), var(--dusk-3));
+    color:var(--paper-2);
+    display:flex; flex-wrap:wrap; align-items:center; gap:0.9rem 1.3rem;
+  }
+  .game-cta .emoji{ font-size:2rem; line-height:1; }
+  .game-cta div{ flex:1 1 260px; min-width:0; }
+  .game-cta h3{ margin:0 0 0.2rem; font-family:'Fraunces',Georgia,serif; font-size:1.1rem; }
+  .game-cta p{ margin:0; font-size:0.82rem; line-height:1.5; color:color-mix(in srgb, var(--paper-2) 78%, transparent); }
+  .game-cta a{
+    font-family:'IBM Plex Mono',monospace; font-size:0.74rem; font-weight:700;
+    background:var(--gold); color:var(--dusk); text-decoration:none;
+    padding:0.6rem 1rem; border-radius:999px; white-space:nowrap;
+  }
+
+  /* ---------- VIDEO ---------- */
+  .videos{ padding:clamp(1.4rem,4vw,2.2rem); background:var(--paper-2); border-top:1px solid var(--line); }
+  .videos .kicker{ color:var(--lac); margin-bottom:0.4rem; }
+  .videos h2{ margin:0 0 0.3rem; font-family:'Fraunces',Georgia,serif; font-size:clamp(1.1rem,3vw,1.35rem); font-weight:700; }
+  .videos > p{ margin:0 0 0.8rem; font-size:0.8rem; color:var(--ink-soft); }
+  .video-list{ display:grid; gap:0.55rem; }
+  .video-item{
+    display:flex; align-items:flex-start; gap:0.7rem; text-decoration:none; color:inherit;
+    border:1px solid var(--line); border-radius:12px; padding:0.7rem 0.8rem; background:var(--paper);
+    transition:border-color .12s ease, transform .12s ease;
+  }
+  .video-item:hover{ border-color:var(--lac); transform:translateY(-1px); }
+  .video-item .play{ flex:0 0 auto; width:1.9rem; height:1.9rem; border-radius:50%; background:var(--lac); display:grid; place-items:center; }
+  .video-item .play svg{ width:0.7rem; height:0.7rem; fill:var(--paper-2); }
+  .video-item b{ display:block; font-size:0.85rem; font-weight:700; line-height:1.4; }
+  .video-item span{ display:block; font-size:0.72rem; color:var(--ink-soft); margin-top:0.15rem; }
+
+  /* ---------- GHI NHỚ ---------- */
+  .ghinho{
+    position:relative; margin:1.6rem clamp(1.2rem,3.5vw,2rem) 1.2rem;
+    background-color:var(--paper-2);
+    background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 27px,
+      color-mix(in srgb, var(--gold) 38%, transparent) 27px, color-mix(in srgb, var(--gold) 38%, transparent) 28px);
+    border:1px solid var(--line); border-radius:16px;
+    padding:1.3rem clamp(1.1rem,3vw,1.6rem) 1.4rem clamp(2.5rem,7vw,3.1rem);
+    overflow:hidden;
+  }
+  .ghinho::before{ content:""; position:absolute; left:clamp(1.7rem,5vw,2.2rem); top:0; bottom:0; width:1.5px; background:color-mix(in srgb, var(--lac) 65%, transparent); }
+  .ghinho-head{ display:flex; align-items:baseline; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.2rem; }
+  .ghinho-head h2{ font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.2rem; margin:0; }
+  .ghinho-head .pencil{ font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--ink-soft); }
+  .ghinho ol{ margin:0.7rem 0 0; padding:0; list-style:none; counter-reset:g; display:flex; flex-direction:column; gap:0.35rem; }
+  .ghinho li{ counter-increment:g; position:relative; padding-left:1.6rem; font-size:0.9rem; line-height:1.95; }
+  .ghinho li::before{ content:counter(g) "."; position:absolute; left:0; top:0; font-family:'Fraunces',Georgia,serif; font-weight:700; color:var(--lac); }
+  .ghinho .hl{ color:var(--lac); font-weight:700; }
+
+  .source-note{ margin:0 clamp(1.2rem,3.5vw,2rem) 1.4rem; font-size:0.7rem; line-height:1.5; color:var(--ink-soft); }
+
+  /* ---------- FOOTER ---------- */
+  .colophon{ background:var(--dusk); color:color-mix(in srgb, var(--paper-2) 72%, transparent); padding:1.1rem clamp(1.2rem,3.5vw,2rem) 1.3rem; }
+  .gold-rule{ display:flex; gap:0.5rem; margin-bottom:0.75rem; }
+  .gold-rule span{ flex:1; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); opacity:0.6; }
+  .colophon-row{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.4rem 1rem; font-family:'IBM Plex Mono',monospace; font-size:0.64rem; letter-spacing:0.03em; }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <div class="hero-top">
+      <div class="hero-copy">
+        <span class="kicker">HỒ SƠ VĂN HOÁ ĐỊA PHƯƠNG</span>
+        <span class="eyebrow">GIÁO DỤC ĐỊA PHƯƠNG 10 · CHỦ ĐỀ 2 · BÀI 6</span>
+        <h1>“Uống nước nhớ nguồn” qua <em>nghi lễ dân gian</em> ở TP.HCM</h1>
+        <p class="hero-sub">Giữa phố thị ồn ào vẫn còn gần 300 ngôi đình, hơn 400 ngôi miếu và rất nhiều đền thờ — nơi người Sài Gòn mỗi năm trở về để nói lời biết ơn với những người đi trước.</p>
+        <div class="hero-actions">
+          <a class="hero-btn hero-btn--primary" href="tro-choi-bai6-hanh-trinh-ve-nguon.html" target="_blank" rel="noopener">
+            <svg aria-hidden="true" viewBox="0 0 20 20"><polygon points="6,4 15,10 6,16"></polygon></svg>
+            Trò chơi: Hành trình về nguồn
+          </a>
+          <a class="hero-btn hero-btn--ghost" href="#calendar">
+            <svg aria-hidden="true" viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="13" rx="2"></rect><path d="M3 8h14M7 2v4M13 2v4"></path></svg>
+            Lịch nghi lễ
+          </a>
+          <a class="hero-btn hero-btn--ghost" href="index.html">
+            <svg aria-hidden="true" viewBox="0 0 20 20"><polyline points="12,4 6,10 12,16"></polyline></svg>
+            Thư viện bài giảng
+          </a>
+        </div>
+      </div>
+      <div class="dial-wrap">
+        <svg viewBox="0 0 300 280" role="img" aria-label="Hình minh hoạ mái đình với câu Cây có cội, nước có nguồn">
+          <text x="150" y="26" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="rgba(251,248,240,0.72)" letter-spacing="1.5">CÂY CÓ CỘI · NƯỚC CÓ NGUỒN</text>
+          <circle cx="150" cy="128" r="74" fill="none" stroke="var(--gold)" stroke-width="1.2" stroke-dasharray="3 5" opacity="0.7"></circle>
+          <!-- mái trên -->
+          <path d="M70 108 Q150 84 230 108 L246 96 L240 112 Q150 98 60 112 L54 96 Z" fill="var(--lac)" stroke="var(--gold)" stroke-width="1.2"></path>
+          <rect x="104" y="112" width="92" height="20" fill="var(--dusk)" stroke="var(--gold)" stroke-width="1"></rect>
+          <!-- mái dưới -->
+          <path d="M48 150 Q150 124 252 150 L268 138 L262 156 Q150 140 38 156 L32 138 Z" fill="var(--lac)" stroke="var(--gold)" stroke-width="1.2"></path>
+          <!-- lưỡng long chầu nhật -->
+          <circle cx="150" cy="84" r="7" fill="var(--gold)"></circle>
+          <path d="M138 90 q-10 -8 -20 0 M162 90 q10 -8 20 0" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"></path>
+          <!-- thân đình -->
+          <rect x="66" y="156" width="168" height="62" fill="var(--dusk-2)" stroke="var(--gold)" stroke-width="1"></rect>
+          <g fill="var(--gold)" opacity="0.85">
+            <rect x="80" y="156" width="6" height="62"></rect><rect x="122" y="156" width="6" height="62"></rect>
+            <rect x="172" y="156" width="6" height="62"></rect><rect x="214" y="156" width="6" height="62"></rect>
+          </g>
+          <rect x="134" y="176" width="32" height="42" rx="2" fill="var(--dusk)" stroke="var(--gold)" stroke-width="1"></rect>
+          <!-- đèn lồng -->
+          <g>
+            <line x1="100" y1="156" x2="100" y2="168" stroke="var(--gold)"></line>
+            <ellipse cx="100" cy="176" rx="7" ry="9" fill="var(--lac)" stroke="var(--gold)"></ellipse>
+            <line x1="200" y1="156" x2="200" y2="168" stroke="var(--gold)"></line>
+            <ellipse cx="200" cy="176" rx="7" ry="9" fill="var(--lac)" stroke="var(--gold)"></ellipse>
+          </g>
+          <rect x="44" y="218" width="212" height="10" fill="var(--gold)" opacity="0.9"></rect>
+          <rect x="30" y="228" width="240" height="8" fill="var(--gold)" opacity="0.55"></rect>
+          <!-- khói hương -->
+          <path d="M150 170 q-6 -10 0 -18 q6 -8 0 -16" fill="none" stroke="var(--gold-soft)" stroke-width="1.2" opacity="0.7"></path>
+          <text x="150" y="262" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8.5" font-weight="700" fill="var(--gold-soft)" letter-spacing="1">ĐÌNH · MIẾU · ĐỀN · NHÀ THỜ TỔ</text>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <section class="stat-strip">
+    <div class="stat"><b>299</b><span>Ngôi đình còn hoạt động tín ngưỡng</span></div>
+    <div class="stat"><b>53</b><span>Đình được xếp hạng di tích</span></div>
+    <div class="stat"><b>448</b><span>Ngôi miếu trên địa bàn thành phố</span></div>
+    <div class="stat"><b>285</b><span>Miếu thờ Ngũ Hành Nương Nương</span></div>
+  </section>
+
+  <div class="warmup">
+    <span class="tag">KHỞI ĐỘNG</span>
+    <p>Hãy kể tên một số nghi lễ dân gian thể hiện đạo lí “Uống nước nhớ nguồn” ở Thành phố Hồ Chí Minh mà em biết. <b>Em thích nhất nghi lễ nào? Vì sao?</b></p>
+  </div>
+
+  <div class="part-rule gold">
+    <span class="pill">PHẦN A</span>
+    <h3>“Uống nước nhớ nguồn” nghĩa là gì?</h3>
+    <span class="line"></span>
+  </div>
+
+  <section class="proverb">
+    <p class="proverb-quote">Uống nước nhớ nguồn<small>BẤM VÀO TỪNG THẺ ĐỂ GIẢI NGHĨA</small></p>
+    <div class="flip-row">
+      <button class="flip" type="button" aria-expanded="false">
+        <span class="front"><b>Uống nước</b><span>Ta đang “uống” những gì?</span></span>
+        <span class="back"><b>UỐNG NƯỚC</b>Sự thừa hưởng, sử dụng những <strong>thành quả lao động về vật chất và tinh thần</strong> của các thế hệ trước.</span>
+      </button>
+      <button class="flip" type="button" aria-expanded="false">
+        <span class="front"><b>Nhớ nguồn</b><span>“Nguồn” là ai?</span></span>
+        <span class="back"><b>NHỚ NGUỒN</b>Sự <strong>tri ân, giữ gìn, phát huy</strong> những thành quả của những người đi trước.</span>
+      </button>
+      <button class="flip" type="button" aria-expanded="false">
+        <span class="front"><b>Ý nghĩa</b><span>Câu tục ngữ dạy ta điều gì?</span></span>
+        <span class="back"><b>Ý NGHĨA</b>Bài học về nhân cách làm người: dạy con người <strong>lòng biết ơn</strong> — truyền thống sâu sắc của người Việt Nam.</span>
+      </button>
+    </div>
+  </section>
+
+  <div class="part-rule">
+    <span class="pill">PHẦN B</span>
+    <h3>Nghi lễ cộng đồng: thờ cúng tại đình, miếu, đền</h3>
+    <span class="line"></span>
+  </div>
+
+  <main class="sections">
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10 Q12 5 22 10"/><path d="M3 10l-1-2M21 10l1-2"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span>
+        <span class="num">01</span>
+      </div>
+      <div>
+        <h2>Đình – thờ Thành Hoàng làng</h2>
+        <ul>
+          <li>Trong quá trình Nam tiến, cư dân khai khẩn vùng đất Nam Bộ; khi làng xã ổn định, họ cùng góp đất, tiền, công sức <b>dựng một ngôi đình</b>. Theo truyền thống, <b>mỗi làng chỉ có một đình</b>.</li>
+          <li>Đình thờ <b>Thành Hoàng</b> — vị thần được sắc phong, phù hộ cư dân một làng; ngoài ra còn thờ thần linh, danh nhân lịch sử, <b>Tiền hiền, Hậu hiền</b> (những người có công lập làng, xây dựng làng).</li>
+          <li>Đình ở TP.HCM có tuổi từ 100 đến hơn 300 năm, thường dựng ở nơi cao ráo, tiện đi lại. Bình Chánh nhiều nhất (60 đình), Phú Nhuận chỉ có 1 đình.</li>
+        </ul>
+        <h4 class="sub">Ba chức năng của đình làng xưa</h4>
+        <div class="fn3">
+          <div><b>Tín ngưỡng</b>Thờ Thành Hoàng, tổ chức lễ Kỳ yên và lễ hội của làng.</div>
+          <div><b>Hành chính</b>Nơi hội họp, làm việc của hương chức; dân làng nghe phổ biến chủ trương.</div>
+          <div><b>Văn hoá</b>Nơi dân làng sinh hoạt cộng đồng, diễn tuồng, vui chơi ngày hội.</div>
+        </div>
+        <h4 class="sub">Lễ Kỳ yên — lễ cầu an lớn nhất năm của đình</h4>
+        <p class="lead">Mỗi đình có ngày cúng riêng; lễ thường kéo dài <b>3 ngày</b>, cầu mưa thuận gió hoà, xóm làng yên ổn, mùa màng bội thu.</p>
+        <div class="lehoi">
+          <div class="le"><span>PHẦN LỄ</span>Nghi thức tế thần Thành Hoàng được tiến hành <b>trang trọng</b>.</div>
+          <div class="hoi"><span>PHẦN HỘI</span>Sôi động, đông vui nhất: diễn trò, diễn tuồng, chọi gà, <b>kéo co</b>, thi bắt vịt, đấu vật…</div>
+        </div>
+        <h4 class="sub">Ý nghĩa của việc thờ Thành Hoàng</h4>
+        <ul>
+          <li>Thể hiện <b>lòng biết ơn</b> những người có công với làng xã; ôn lại truyền thống ông cha khai hoang lập ấp.</li>
+          <li>Giữ gìn luật lệ, nề nếp của làng; là “sợi dây vô hình” giúp dân làng <b>đoàn kết</b>, gắn bó cộng đồng.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 Q12 6 19 11"/><path d="M7 11v8h10v-8"/><path d="M11 19v-4h2v4"/><path d="M3 21h18"/></svg></span>
+        <span class="num">02</span>
+      </div>
+      <div>
+        <h2>Miếu (miễu) – thờ các vị thần</h2>
+        <ul>
+          <li>Quy mô <b>nhỏ hơn đình và đền</b>; tên miếu thường gọi theo vị được thờ: miếu Cô, miếu Cậu, miếu Sơn thần, miếu Hà Bá (Thuỷ thần)…</li>
+          <li>TP.HCM có <b>448 ngôi miếu</b>, ngoại thành nhiều hơn nội thành; <b>285 miếu thờ Ngũ Hành Nương Nương</b> — nữ thần hợp với mọi ngành nghề, mọi lứa tuổi; 29 miếu thờ Chúa Xứ Thánh Mẫu.</li>
+          <li>Miếu thường dựng trên gò cao, bờ sông, đầu làng hoặc cuối làng — nơi yên tĩnh.</li>
+          <li><b>Lễ cúng miếu</b>: đa số cúng 1 lần/năm, trong 1 ngày; có nơi rước thần từ miếu về đình tế lễ rồi rước về miếu.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="topic">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6H9z"/><path d="M6 8h12"/><path d="M7 8v12M17 8v12M12 8v12"/><path d="M4 21h16"/></svg></span>
+        <span class="num">03</span>
+      </div>
+      <div>
+        <h2>Đền – thờ danh nhân, anh hùng dân tộc</h2>
+        <ul>
+          <li>Đền là công trình thờ một vị Thánh hoặc <b>nhân vật lịch sử</b> được tôn sùng như thần thánh: đền thờ Vua Hùng, đền thờ Trần Hưng Đạo, đền thờ Đức Lễ Thành Hầu <b>Nguyễn Hữu Cảnh</b> (Thủ Đức)…</li>
+          <li><b>Thờ cúng anh hùng liệt sĩ</b> gắn với truyền thống yêu nước, thể hiện đạo lí “Uống nước nhớ nguồn”, “Ăn quả nhớ kẻ trồng cây”. Sau năm 1975, Thành phố xây dựng nhiều đền thờ liệt sĩ.</li>
+          <li><b>Đền tưởng niệm liệt sĩ Bến Dược</b> (Củ Chi) tưởng nhớ đồng bào, chiến sĩ đã hi sinh trên đất Sài Gòn – Gia Định trong hai cuộc kháng chiến chống Pháp và Mỹ.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">EM CÓ BIẾT?</span>
+          <p>Ngày 18/12/1946, Chủ tịch Hồ Chí Minh kí <b>Sắc lệnh số 22</b> quy định các ngày lễ chính thức của đất nước, trong đó có ngày giỗ <b>Trần Hưng Đạo</b> (20 tháng 8 âm lịch) — người ba lần lãnh đạo quân dân đánh thắng quân Mông – Nguyên.</p>
+        </div>
+
+        <div class="compare-wrap">
+          <table class="cmp">
+            <thead><tr><th></th><th>ĐÌNH</th><th>MIẾU</th><th>ĐỀN</th></tr></thead>
+            <tbody>
+              <tr><th>Thờ ai?</th><td>Thành Hoàng làng, Tiền hiền, Hậu hiền</td><td>Các vị thần: Ngũ Hành Nương Nương, Chúa Xứ, Thuỷ thần…</td><td>Thánh, danh nhân, anh hùng dân tộc, liệt sĩ</td></tr>
+              <tr><th>Quy mô</th><td>Lớn, mỗi làng một đình</td><td>Nhỏ nhất</td><td>Tuỳ đền, có đền rất lớn</td></tr>
+              <tr><th>Lễ chính</th><td>Lễ Kỳ yên (cầu an)</td><td>Lễ cúng miếu, ngày giỗ thần</td><td>Lễ giỗ, dâng hương tưởng niệm</td></tr>
+              <tr><th>Ví dụ</th><td>Đình Phong Phú, đình Trường Thọ (Thủ Đức), đình Bình Đông (Q.8)</td><td>Miếu Bà xã đảo Thạnh An (Cần Giờ)</td><td>Đền thờ Đức Thánh Trần (Q.1), Đền Bến Dược (Củ Chi)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <div class="part-rule jade">
+    <span class="pill">PHẦN C</span>
+    <h3>Nghi lễ thờ cúng tại gia đình</h3>
+    <span class="line"></span>
+  </div>
+
+  <div class="sections">
+
+    <article class="topic jade">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V11h14v10"/><path d="M8 11V8M12 11V6M16 11V8"/><path d="M12 6c-1-1-1-2 0-3"/></svg></span>
+        <span class="num">04</span>
+      </div>
+      <div>
+        <h2>Thờ cúng tổ tiên</h2>
+        <ul>
+          <li>“<b>Cây có cội, nước có nguồn, con người có tổ tiên dòng tộc</b>” — niềm tin thấm sâu trong đời sống tâm linh của nhiều thế hệ cư dân Thành phố.</li>
+          <li>Thờ cúng tổ tiên không chỉ là tín ngưỡng mà còn là <b>đạo đức</b>: thể hiện lòng biết ơn công <b>sinh thành, dưỡng dục</b> của cha mẹ, ông bà, tổ tiên.</li>
+          <li>Nơi thờ: <b>gia đình</b> và <b>nhà thờ họ tộc</b>. Thời điểm: mồng một, ngày rằm, lễ tết, khi có việc lớn (sinh con, cưới hỏi, làm nhà, lập nghiệp…) và <b>ngày giỗ</b> — ngày mất (kị nhật), tính theo âm lịch.</li>
+        </ul>
+        <blockquote class="verse">Thà đui mà giữ đạo nhà<br>Còn hơn sáng mắt cha ông không thờ.<cite>— Lục Vân Tiên, Nguyễn Đình Chiểu</cite></blockquote>
+      </div>
+    </article>
+
+    <article class="topic jade">
+      <div class="topic-badge">
+        <span class="icon-ring"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></span>
+        <span class="num">05</span>
+      </div>
+      <div>
+        <h2>Thờ cúng Tổ nghề</h2>
+        <ul>
+          <li>Người lao động tin vào sự phù hộ của <b>Tổ sư nghề nghiệp</b>; thờ Tổ nghề để <b>nhớ ơn người khai sáng, cải tiến nghề</b> đã truyền lại cách mưu sinh.</li>
+          <li>Nhiều Tổ nghề được lập đền thờ: Tổ nghề kim hoàn, thợ bạc, thợ may, thợ mộc, sân khấu…</li>
+          <li>Họ cũng cầu Tổ nghề che chở để công việc thuận lợi, suôn sẻ, tránh rủi ro.</li>
+        </ul>
+        <div class="example">
+          <span class="tag">EM CÓ BIẾT?</span>
+          <p><b>Lễ giỗ Tổ nghề kim hoàn</b> diễn ra từ ngày 6 đến 8 tháng 2 âm lịch tại <b>Hội quán Lệ Châu</b> (Quận 5), thu hút hàng nghìn nghệ nhân kim hoàn khắp Nam Bộ; tối 7 tháng 2 có chương trình cải lương do nghệ sĩ và chính những người thợ biểu diễn.</p>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <section class="calendar" id="calendar">
+    <div class="block-head">
+      <span class="kicker">LỊCH NGHI LỄ · CHỌN MỘT NGHI LỄ</span>
+      <h2>Mỗi nghi lễ tri ân ai?</h2>
+      <p>Chọn từng nghi lễ để xem thời gian, địa điểm, phần lễ – phần hội và “nguồn” mà người dân tưởng nhớ. Dùng khi ôn tập hoặc khi các nhóm chuẩn bị thuyết trình.</p>
+    </div>
+    <div class="rite-tabs" id="riteTabs" role="tablist" aria-label="Chọn nghi lễ"></div>
+    <div class="rite-card" id="riteCard" role="tabpanel" aria-live="polite"></div>
+  </section>
+
+  <section class="group">
+    <div class="block-head">
+      <span class="kicker">VẬN DỤNG · 4 NHÓM · 15 PHÚT</span>
+      <h2>Hướng dẫn viên nhí của thành phố</h2>
+      <p>Mỗi nhóm đóng vai hướng dẫn viên du lịch, giới thiệu một nghi lễ cho “đoàn khách” là cả lớp trong 2 phút: <b>nguồn gốc – các hoạt động chính – ý nghĩa</b>. Có thể dùng Lịch nghi lễ ở trên làm tư liệu.</p>
+    </div>
+    <div class="group-grid">
+      <div class="group-card"><span class="tag">NHÓM 1</span><h4>Lễ Kỳ yên ở đình làng</h4><p>Thành Hoàng là ai? Lễ có những phần nào? Vì sao đây là “ngày hội đông vui nhất của làng”?</p></div>
+      <div class="group-card"><span class="tag">NHÓM 2</span><h4>Lễ giỗ Tổ Hùng Vương</h4><p>Tổ chức ở đâu tại TP.HCM? Phần hội có gì? Lễ giỗ nhắc ta nhớ đến “nguồn” nào?</p></div>
+      <div class="group-card"><span class="tag">NHÓM 3</span><h4>Lễ giỗ Đức Thánh Trần</h4><p>Đền ở đâu, có nghi thức gì đặc biệt (nam tế, nữ tế, hát chầu văn)? Công lao của Trần Hưng Đạo?</p></div>
+      <div class="group-card"><span class="tag">NHÓM 4</span><h4>Thờ cúng tổ tiên &amp; Tổ nghề</h4><p>Gia đình em cúng ông bà vào những dịp nào? Giới thiệu lễ giỗ Tổ nghề kim hoàn ở Hội quán Lệ Châu.</p></div>
+    </div>
+    <div class="practice">
+      <h4>LUYỆN TẬP · TRẢ LỜI VÀO VỞ</h4>
+      <ol>
+        <li>Em hiểu như thế nào về câu nói “Uống nước nhớ nguồn”?</li>
+        <li>Đình là gì? Nêu chức năng của một ngôi đình và ý nghĩa của việc thờ Thành Hoàng.</li>
+        <li>Trình bày hiểu biết của em về việc thờ cúng tổ tiên của cư dân Thành phố Hồ Chí Minh.</li>
+        <li>Hãy nêu sự phong phú, đa dạng của các nghi lễ dân gian ở TP.HCM thể hiện đạo lí “Uống nước nhớ nguồn”.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="game-cta">
+    <span class="emoji" aria-hidden="true">🏮</span>
+    <div>
+      <h3>Trò chơi ôn tập: Hành trình về nguồn</h3>
+      <p>Ba màn chơi không trắc nghiệm: lật thẻ ghép đôi, xếp “ai được thờ ở đâu” vào đình – miếu – đền – nhà thờ tổ, và giải ô chữ tìm từ khoá bí mật.</p>
+    </div>
+    <a href="tro-choi-bai6-hanh-trinh-ve-nguon.html" target="_blank" rel="noopener">▶ Chơi ngay</a>
+  </section>
+
+  <section class="videos">
+    <span class="kicker">TƯ LIỆU THAM KHẢO</span>
+    <h2>Tìm video cho tiết học</h2>
+    <p>Các liên kết mở kết quả tìm kiếm trên YouTube — thầy cô chọn video phù hợp với lớp.</p>
+    <div class="video-list">
+      <a class="video-item" href="https://www.youtube.com/results?search_query=l%E1%BB%85+K%E1%BB%B3+Y%C3%AAn+%C4%91%C3%ACnh+l%C3%A0ng+S%C3%A0i+G%C3%B2n" target="_blank" rel="noopener">
+        <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><polygon points="6,4 15,10 6,16"></polygon></svg></span>
+        <span><b>Lễ Kỳ yên ở đình làng Sài Gòn</b><span>Dùng cho mục 01 – Đình và Thành Hoàng</span></span>
+      </a>
+      <a class="video-item" href="https://www.youtube.com/results?search_query=gi%E1%BB%97+T%E1%BB%95+H%C3%B9ng+V%C6%B0%C6%A1ng+TP.HCM" target="_blank" rel="noopener">
+        <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><polygon points="6,4 15,10 6,16"></polygon></svg></span>
+        <span><b>Giỗ Tổ Hùng Vương tại TP.HCM</b><span>Dùng cho mục 03 – Đền và nhóm 2</span></span>
+      </a>
+      <a class="video-item" href="https://www.youtube.com/results?search_query=%C4%91%E1%BB%81n+th%E1%BB%9D+%C4%90%E1%BB%A9c+Th%C3%A1nh+Tr%E1%BA%A7n+V%C3%B5+Th%E1%BB%8B+S%C3%A1u+gi%E1%BB%97" target="_blank" rel="noopener">
+        <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><polygon points="6,4 15,10 6,16"></polygon></svg></span>
+        <span><b>Lễ giỗ Đức Thánh Trần, đường Võ Thị Sáu</b><span>Dùng cho mục 03 và nhóm 3</span></span>
+      </a>
+      <a class="video-item" href="https://www.youtube.com/results?search_query=gi%E1%BB%97+T%E1%BB%95+ngh%E1%BB%81+kim+ho%C3%A0n+H%E1%BB%99i+qu%C3%A1n+L%E1%BB%87+Ch%C3%A2u" target="_blank" rel="noopener">
+        <span class="play"><svg viewBox="0 0 20 20" aria-hidden="true"><polygon points="6,4 15,10 6,16"></polygon></svg></span>
+        <span><b>Giỗ Tổ nghề kim hoàn ở Hội quán Lệ Châu</b><span>Dùng cho mục 05 và nhóm 4</span></span>
+      </a>
+    </div>
+  </section>
+
+  <section class="ghinho">
+    <div class="ghinho-head">
+      <h2>Ghi nhớ</h2>
+      <span class="pencil">✎ Chép nội dung dưới đây vào vở</span>
+    </div>
+    <ol>
+      <li><b>“Uống nước nhớ nguồn”:</b> thừa hưởng thành quả của thế hệ trước thì phải <span class="hl">biết ơn, tri ân, giữ gìn và phát huy</span> thành quả ấy.</li>
+      <li><b>Đình</b> thờ Thành Hoàng làng, Tiền hiền, Hậu hiền; có 3 chức năng tín ngưỡng – hành chính – văn hoá; lễ lớn nhất là <span class="hl">lễ Kỳ yên</span> (phần lễ và phần hội).</li>
+      <li><b>Miếu</b> thờ các vị thần (nhiều nhất là Ngũ Hành Nương Nương); <b>Đền</b> thờ danh nhân, anh hùng dân tộc, liệt sĩ (Vua Hùng, Trần Hưng Đạo, Bến Dược…).</li>
+      <li><b>Tại gia đình:</b> thờ cúng <span class="hl">tổ tiên</span> (biết ơn công sinh thành, dưỡng dục) và thờ cúng <span class="hl">Tổ nghề</span> (nhớ ơn người khai sáng nghề).</li>
+      <li>Các nghi lễ dân gian ở TP.HCM <b>phong phú, đa dạng</b>, đều chung một ý nghĩa: giáo dục lòng biết ơn, gắn kết cộng đồng, hướng về cội nguồn.</li>
+    </ol>
+  </section>
+
+  <p class="source-note">Nguồn nội dung: Tài liệu Giáo dục địa phương Thành phố Hồ Chí Minh – Lớp 10, Chủ đề 2. Tên quận, huyện, thành phố Thủ Đức được giữ theo tài liệu (trước khi sắp xếp đơn vị hành chính năm 2025).</p>
+
+  <footer class="colophon">
+    <div class="gold-rule"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="colophon-row">
+      <span>GIÁO DỤC ĐỊA PHƯƠNG 10 · CHỦ ĐỀ 2: ĐẠO LÍ “UỐNG NƯỚC NHỚ NGUỒN” QUA CÁC NGHI LỄ DÂN GIAN Ở TP.HCM</span>
+      <span>GV: TĂNG NGỌC PHỤNG · THPT NGUYỄN KHUYẾN</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.flip').forEach(f => f.addEventListener('click', () => {
+    const open = f.classList.toggle('open');
+    f.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }));
+})();
+
+(function(){
+  const RITES = [
+    { name:'Lễ Kỳ yên', top:'MỖI ĐÌNH MỘT NGÀY', big:'3 ngày', small:'Hằng năm, ngày cúng riêng của từng đình',
+      where:'Đình làng — VD: đình Bình Đông (Quận 8), đình Phong Phú (Thủ Đức)',
+      who:'Thần Thành Hoàng, Tiền hiền, Hậu hiền',
+      le:'Nghi thức tế thần Thành Hoàng trang trọng',
+      hoi:'Diễn tuồng, chọi gà, kéo co, thi bắt vịt, đấu vật…',
+      heart:'Ôn lại truyền thống ông cha <b>khai hoang lập ấp</b>; biết ơn các vị phúc thần và tiền nhân đã dựng nên cơ nghiệp cho con cháu.' },
+    { name:'Lễ cúng miếu', top:'THƯỜNG LỆ', big:'1 ngày', small:'Đa số cúng một lần mỗi năm',
+      where:'Miếu trên gò cao, bờ sông, đầu làng — VD: Miếu Bà xã đảo Thạnh An (Cần Giờ)',
+      who:'Các vị thần: Ngũ Hành Nương Nương, Chúa Xứ Thánh Mẫu, Thuỷ thần…',
+      le:'Cúng tế tại miếu; vào ngày giỗ thần có nơi rước thần về đình rồi rước về miếu',
+      hoi:'Có nơi mở hội, nghinh rước thần',
+      heart:'Tri ân các vị thần mà người dân tin đã <b>che chở</b> cho cuộc sống, nghề nghiệp của mình.' },
+    { name:'Giỗ Tổ Hùng Vương', top:'ÂM LỊCH', big:'10/3', small:'Mùng 10 tháng 3 âm lịch',
+      where:'Đền tưởng niệm các Vua Hùng (Thủ Đức); đền thờ Vua Hùng ở Thảo Cầm Viên (Quận 1)',
+      who:'Các Vua Hùng — những người có công dựng nước',
+      le:'Lễ dâng hương, dâng hoa',
+      hoi:'Thi gói, nấu bánh chưng; hội trại “Tự hào nòi giống Tiên Rồng”; múa rồng, võ cổ truyền, trò chơi dân gian',
+      heart:'Tưởng nhớ <b>công dựng nước</b> của các Vua Hùng; giáo dục lòng yêu nước, hướng về cội nguồn dân tộc.' },
+    { name:'Giỗ Trần Hưng Đạo', top:'ÂM LỊCH', big:'20/8', small:'Ngày 20 tháng 8 âm lịch',
+      where:'Đền thờ Đức Thánh Trần Hưng Đạo, 36 Võ Thị Sáu, Quận 1',
+      who:'Hưng Đạo đại vương Trần Quốc Tuấn (1228 – 1300)',
+      le:'Nam tế, nữ tế; hát chầu văn ca ngợi công đức',
+      hoi:'Thu hút đông đảo người dân, du khách trong và ngoài nước',
+      heart:'Ghi nhớ vị anh hùng <b>ba lần đánh thắng quân Mông – Nguyên</b>, giữ vững độc lập cho đất nước.' },
+    { name:'Giỗ Tổ nghề kim hoàn', top:'ÂM LỊCH', big:'6–8/2', small:'Từ ngày 6 đến 8 tháng 2 âm lịch',
+      where:'Hội quán Lệ Châu (Quận 5)',
+      who:'Tổ sư nghề kim hoàn; các bậc Tiền hiền, Hậu hiền của nghề',
+      le:'Tế Tổ; tế các bậc Tiền hiền, Hậu hiền',
+      hoi:'Tối 7/2 âm lịch có cải lương do nghệ sĩ và thợ kim hoàn biểu diễn',
+      heart:'Nhớ ơn <b>người khai sáng nghề</b> đã truyền lại cách mưu sinh; cầu công việc thuận lợi, suôn sẻ.' },
+    { name:'Giỗ ông bà, tổ tiên', top:'ÂM LỊCH', big:'Kị nhật', small:'Ngày mất của người thân, tính theo âm lịch',
+      where:'Bàn thờ gia đình, nhà thờ họ tộc',
+      who:'Ông bà, cha mẹ, tổ tiên cùng huyết thống',
+      le:'Thắp hương, dâng cúng trước bàn thờ',
+      hoi:'Con cháu sum họp, cùng tưởng nhớ người đã khuất',
+      heart:'Biết ơn công <b>sinh thành, dưỡng dục</b>; “Cây có cội, nước có nguồn, con người có tổ tiên dòng tộc”.' }
+  ];
+  const tabs = document.getElementById('riteTabs');
+  const card = document.getElementById('riteCard');
+  const btns = RITES.map((r, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'rite-tab'; b.textContent = r.name;
+    b.setAttribute('role', 'tab');
+    b.addEventListener('click', () => show(i));
+    b.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        const j = (i + (e.key === 'ArrowRight' ? 1 : RITES.length - 1)) % RITES.length;
+        show(j); btns[j].focus();
+      }
+    });
+    tabs.appendChild(b);
+    return b;
+  });
+  function show(i){
+    const r = RITES[i];
+    btns.forEach((b, j) => { b.setAttribute('aria-selected', j === i ? 'true' : 'false'); b.tabIndex = j === i ? 0 : -1; });
+    card.innerHTML =
+      '<div class="rite-date"><div class="top">' + r.top + '</div><div class="big">' + r.big + '</div><div class="small">' + r.small + '</div></div>' +
+      '<div class="rite-body"><h3>' + r.name + '</h3><dl>' +
+      '<dt>Ở ĐÂU</dt><dd>' + r.where + '</dd>' +
+      '<dt>THỜ / TƯỞNG NHỚ</dt><dd>' + r.who + '</dd>' +
+      '<dt>PHẦN LỄ</dt><dd>' + r.le + '</dd>' +
+      '<dt>PHẦN HỘI</dt><dd>' + r.hoi + '</dd>' +
+      '</dl><p class="heart">💛 <b>Uống nước nhớ nguồn:</b> ' + r.heart + '</p></div>';
+  }
+  show(0);
+})();
+</script>
+</html>

@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hành trình về nguồn · Trò chơi Bài 6</title>
+<meta name="description" content="Trò chơi ôn tập Bài 6 Giáo dục địa phương 10 TP.HCM: nghi lễ dân gian thể hiện đạo lí Uống nước nhớ nguồn.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --lac:#7B1F18; --lac-2:#561310; --lac-3:#9C3022;
+    --gold:#C8983A; --gold-2:#E3BF6B; --gold-soft:#F2E3B8; --gold-ink:#5B3E0E;
+    --paper:#F5EDDC; --paper-2:#FBF7EE; --paper-3:#F1E5CC; --line:#E2D3B5;
+    --wood:#2B1A12; --wood-2:#4A2B1C; --wood-3:#6E432A; --ochre:#8C5A1E;
+    --ink:#2A1C15; --ink-soft:#6B5649;
+    --jade:#2E6B53; --jade-soft:#D8EBDF; --bad:#A8361F; --bad-soft:#F6DCD2;
+    --backdrop:#E4D6BC; --shadow:0 40px 70px -30px rgba(43,26,18,.55);
+    --cell:clamp(18px, calc((min(100vw, 1000px) - 84px) / 12.4), 46px);
+    --serif:'Fraunces',Georgia,serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{ box-sizing:border-box; }
+  [hidden]{ display:none !important; }
+  html,body{ margin:0; }
+  body{
+    padding:clamp(1rem,3vw,2.4rem) 1rem; color:var(--ink); min-height:100vh;
+    background:var(--backdrop) radial-gradient(circle at 1px 1px, rgba(110,67,42,.12) 1px, transparent 1.5px) 0 0/18px 18px;
+    font-family:'Be Vietnam Pro','Segoe UI',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+    display:flex; justify-content:center;
+  }
+  .sheet{ width:100%; max-width:1000px; background:var(--paper); border-radius:22px; overflow:hidden; box-shadow:var(--shadow); align-self:flex-start; }
+  button{ font:inherit; color:inherit; }
+  :focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; color:var(--paper-2); padding:clamp(1.5rem,4vw,2.6rem);
+    background: radial-gradient(110% 130% at 88% 0%, color-mix(in srgb, var(--gold) 30%, transparent), transparent 55%),
+                linear-gradient(155deg, var(--lac-2) 0%, var(--lac) 55%, var(--lac-3) 100%);
+  }
+  .hero::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:8px;
+    background: repeating-linear-gradient(90deg, var(--gold) 0 10px, transparent 10px 14px, var(--gold-2) 14px 18px, transparent 18px 22px); opacity:.8; }
+  .hero-frame{ border:1px solid color-mix(in srgb, var(--gold-2) 55%, transparent); border-radius:14px; padding:clamp(1rem,3vw,1.6rem); box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--lac-2) 60%, transparent), inset 0 0 0 5px color-mix(in srgb, var(--gold) 35%, transparent); }
+  .kicker{ display:block; font-family:var(--mono); font-size:.68rem; font-weight:700; letter-spacing:.16em; color:var(--gold-2); margin-bottom:.6rem; }
+  .hero h1{ font-family:var(--serif); font-weight:700; font-size:clamp(1.9rem,6vw,3.1rem); line-height:1.05; margin:0 0 .6rem; text-wrap:balance; }
+  .hero h1 em{ font-style:italic; font-weight:500; color:var(--gold-2); }
+  .hero-sub{ margin:0; max-width:56ch; font-size:.92rem; line-height:1.6; color:color-mix(in srgb, var(--paper-2) 85%, transparent); }
+
+  .screen{ display:none; }
+  .screen.on{ display:block; animation:fade .35s ease; }
+  @keyframes fade{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:none; } }
+  .pad{ padding:clamp(1.1rem,3.5vw,2rem); }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem; padding:.75rem 1.35rem; border-radius:999px;
+    border:1px solid transparent; font-family:var(--mono); font-size:.78rem; font-weight:700; letter-spacing:.04em;
+    cursor:pointer; text-decoration:none; transition:transform .12s ease, background .15s ease; min-height:44px;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+  .btn--primary{ background:var(--gold); color:var(--wood); box-shadow:0 12px 24px -14px rgba(140,90,20,.95); }
+  .btn--primary:hover{ background:var(--gold-2); }
+  .btn--red{ background:var(--lac); color:var(--gold-soft); }
+  .btn--ghost{ background:transparent; border-color:var(--line); color:var(--ink-soft); }
+  .btn--ghost:hover{ background:var(--paper-2); }
+  .btn-row{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; }
+
+  .story{ font-size:.97rem; line-height:1.72; margin:0 0 1.1rem; }
+  .duo{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:var(--line); border-radius:14px; overflow:hidden; margin:0 0 1.2rem; }
+  .duo div{ background:var(--paper-2); padding:.8rem .95rem; }
+  .duo b{ display:block; font-family:var(--serif); font-size:1.05rem; color:var(--lac); margin-bottom:.2rem; }
+  .duo span{ font-size:.82rem; line-height:1.5; color:var(--ink-soft); }
+  .legs{ list-style:none; margin:0 0 1.3rem; padding:0; display:grid; gap:.55rem; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); }
+  .legs li{ background:var(--paper-2); border:1px solid var(--line); border-top:3px solid var(--lac); border-radius:12px; padding:.75rem .9rem; }
+  .legs small{ font-family:var(--mono); font-size:.62rem; font-weight:700; letter-spacing:.1em; color:var(--gold-ink); }
+  .legs strong{ display:block; font-family:var(--serif); font-size:1.02rem; margin:.15rem 0 .2rem; }
+  .legs span{ font-size:.8rem; color:var(--ink-soft); line-height:1.5; }
+
+  /* ---------- HUD ---------- */
+  .hud{ display:flex; flex-wrap:wrap; gap:.5rem 1rem; align-items:center; justify-content:space-between; padding:.7rem clamp(1.1rem,3.5vw,2rem); background:var(--wood); color:var(--gold-soft); }
+  .hud[hidden]{ display:none; }
+  .steps{ list-style:none; margin:0; padding:0; display:flex; align-items:center; gap:.3rem; }
+  .steps li{ display:flex; align-items:center; gap:.35rem; font-size:.7rem; color:color-mix(in srgb, var(--gold-soft) 60%, transparent); }
+  .steps li + li::before{ content:""; width:clamp(.6rem,3vw,1.6rem); height:2px; background:color-mix(in srgb, var(--gold) 35%, transparent); margin-right:.15rem; }
+  .steps span{ width:1.55rem; height:1.55rem; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-family:var(--mono); font-weight:700; font-size:.72rem; border:1.5px solid color-mix(in srgb, var(--gold) 50%, transparent); }
+  .steps li.now{ color:var(--gold-soft); }
+  .steps li.now span{ background:var(--gold); color:var(--wood); border-color:var(--gold); box-shadow:0 0 0 4px color-mix(in srgb, var(--gold) 25%, transparent); }
+  .steps li.done span{ background:var(--jade); border-color:var(--jade); color:#fff; }
+  .steps em{ font-style:normal; }
+  @media (max-width:520px){ .steps em{ display:none; } }
+  .chip{ font-family:var(--mono); font-size:.7rem; font-weight:700; letter-spacing:.04em; padding:.35rem .7rem; border-radius:999px; background:var(--paper-3); color:var(--gold-ink); white-space:nowrap; }
+  .chip b{ font-size:.85rem; }
+  .hud .chip{ background:var(--gold); color:var(--wood); }
+  .chip--red{ background:var(--bad-soft); color:var(--lac-2); }
+  .chip--jade{ background:var(--jade-soft); color:var(--jade); }
+
+  /* ---------- ROUND HEAD ---------- */
+  .rhead{ display:flex; flex-wrap:wrap; gap:.6rem 1rem; justify-content:space-between; align-items:flex-end; margin-bottom:1rem; }
+  .rhead .kicker{ color:var(--lac-3); margin-bottom:.25rem; }
+  .rhead h2{ font-family:var(--serif); font-size:clamp(1.35rem,4.2vw,2rem); margin:0; line-height:1.1; }
+  .how{ margin:0 0 1rem; font-size:.86rem; line-height:1.6; color:var(--ink-soft); background:var(--paper-2); border-left:3px solid var(--gold); border-radius:0 10px 10px 0; padding:.6rem .85rem; }
+  .how b{ color:var(--ink); }
+  .stats{ display:flex; flex-wrap:wrap; gap:.4rem; }
+  .pdots{ display:flex; flex-wrap:wrap; gap:5px; margin:0 0 1rem; }
+  .pdots i{ width:12px; height:12px; border-radius:50%; border:1.5px solid var(--gold); background:transparent; transition:background .3s; }
+  .pdots i.on{ background:var(--gold); }
+
+  @keyframes shake{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(3px)} }
+  @keyframes pop{ 0%{ transform:scale(.4); opacity:0;} 70%{ transform:scale(1.12); opacity:1;} 100%{ transform:none; } }
+  @keyframes bounce{ 0%{transform:translateY(0)} 30%{transform:translateY(-14px)} 55%{transform:translateY(0)} 75%{transform:translateY(-5px)} 100%{transform:none} }
+  @keyframes glow{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb, var(--gold-2) 90%, transparent);} 100%{ box-shadow:0 0 0 14px transparent;} }
+
+  /* ---------- MÀN 1: LẬT THẺ ---------- */
+  .mgrid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(.35rem,1.4vw,.8rem); max-width:820px; margin:0 auto; }
+  .mcard{ position:relative; aspect-ratio:3/4; padding:0; border:0; background:none; cursor:pointer; perspective:900px; border-radius:12px; }
+  @media (min-width:720px){ .mcard{ aspect-ratio:4/3; } }
+  .mc-inner{ position:absolute; inset:0; transition:transform .45s cubic-bezier(.3,.7,.3,1); transform-style:preserve-3d; }
+  .mcard.open .mc-inner, .mcard.done .mc-inner{ transform:rotateY(180deg); }
+  .mc-back,.mc-front{ position:absolute; inset:0; border-radius:12px; backface-visibility:hidden; -webkit-backface-visibility:hidden; display:flex; flex-direction:column; overflow:hidden; }
+  .mc-back{ align-items:center; justify-content:center; color:var(--gold-2); font-family:var(--serif); font-size:clamp(1.3rem,5vw,2.2rem);
+    background: radial-gradient(circle at 50% 45%, var(--lac-3), var(--lac-2) 75%); border:2px solid var(--gold);
+    box-shadow: inset 0 0 0 4px var(--lac-2), inset 0 0 0 5px var(--gold-2), 0 6px 14px -8px rgba(43,26,18,.7); }
+  .mcard:hover .mc-back{ filter:brightness(1.1); }
+  .mc-front{ transform:rotateY(180deg); background:var(--paper-2); border:1.5px solid var(--line); box-shadow:0 6px 14px -10px rgba(43,26,18,.6); }
+  .mc-tag{ font-family:var(--mono); font-size:clamp(.46rem,1.6vw,.66rem); font-weight:700; letter-spacing:.02em; padding:.28rem .3rem; background:var(--lac); color:var(--gold-soft); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .mc-text{ flex:1; display:flex; align-items:center; justify-content:center; text-align:center; padding:.25rem .3rem; font-size:clamp(.62rem,2.5vw,1.05rem); line-height:1.25; font-weight:600; overflow-wrap:anywhere; }
+  .side-a .mc-text{ font-family:var(--serif); font-size:clamp(.74rem,3vw,1.3rem); font-weight:700; color:var(--lac-2); }
+  .side-b .mc-front{ background:var(--paper-3); }
+  .side-b .mc-tag{ background:var(--wood-2); color:var(--gold-2); }
+  .mcard.done .mc-front{ border-color:var(--jade); box-shadow:0 0 0 2px var(--jade-soft); }
+  .mcard.done .mc-tag{ background:var(--jade); color:#fff; }
+  .mcard.done{ cursor:default; }
+  .mcard.miss .mc-front{ border-color:var(--bad); background:var(--bad-soft); }
+  .mcard.miss{ animation:shake .4s; }
+  .mcard.match{ animation:pop .45s; }
+
+  /* ---------- MÀN 2: PHÂN LOẠI ---------- */
+  .bgrid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.6rem; margin-bottom:1rem; }
+  @media (min-width:760px){ .bgrid{ grid-template-columns:repeat(4,minmax(0,1fr)); } }
+  .bld{ border:0; padding:.65rem .5rem .75rem; border-radius:14px; color:var(--gold-soft); cursor:pointer; text-align:center; display:flex; flex-direction:column; align-items:center; gap:.25rem; min-height:9.5rem;
+    background:linear-gradient(180deg, var(--bc,var(--lac)), color-mix(in srgb, var(--bc,var(--lac)) 70%, #000));
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--gold) 60%, transparent), 0 10px 20px -14px rgba(43,26,18,.8); transition:transform .15s; }
+  .bld svg{ width:72%; max-width:130px; height:auto; color:var(--gold-2); }
+  .bld-name{ font-family:var(--serif); font-weight:700; font-size:clamp(.88rem,3vw,1.2rem); letter-spacing:.03em; color:#fff; line-height:1.15; }
+  .bld-sub{ font-size:.66rem; line-height:1.35; opacity:.85; }
+  .bld-stack{ display:flex; flex-wrap:wrap; gap:.25rem; justify-content:center; margin-top:.2rem; }
+  .bld-stack span{ font-size:.62rem; font-weight:600; background:var(--gold-soft); color:var(--gold-ink); border-radius:6px; padding:.15rem .35rem; animation:pop .35s; }
+  .bgrid.armed .bld{ outline:2px dashed var(--gold-2); outline-offset:3px; }
+  .bgrid.armed .bld:hover, .bld.over{ transform:translateY(-3px); }
+  .bld.nope{ animation:shake .45s; }
+  .bld.yes{ animation:glow .7s; }
+  .tray-label{ font-family:var(--mono); font-size:.66rem; font-weight:700; letter-spacing:.12em; color:var(--ink-soft); margin:0 0 .4rem; }
+  .tray{ display:flex; flex-wrap:wrap; gap:.5rem; justify-content:center; padding:.85rem; border:1.5px dashed var(--line); border-radius:14px; background:var(--paper-2); min-height:4rem; }
+  .tile{ border:1.5px solid var(--line); background:#fff; border-radius:10px; padding:.55rem .75rem; font-weight:600; font-size:clamp(.8rem,2.8vw,1.02rem); cursor:pointer; box-shadow:0 3px 0 var(--line); transition:transform .12s, box-shadow .12s; touch-action:manipulation; }
+  .tile:hover{ transform:translateY(-1px); }
+  .tile[aria-pressed="true"]{ background:var(--gold-soft); border-color:var(--gold); transform:translateY(-3px); box-shadow:0 5px 0 var(--gold); }
+  .tile.bounce{ animation:bounce .55s; border-color:var(--bad); }
+  .tray-empty{ font-size:.85rem; color:var(--jade); font-weight:600; }
+
+  /* ---------- MÀN 3: Ô CHỮ ---------- */
+  .cw-wrap{ max-width:100%; overflow-x:auto; padding:.4rem 0 .8rem; }
+  .cw{ display:grid; grid-template-columns:repeat(var(--cols,12), var(--cell)); grid-auto-rows:var(--cell); gap:2px; justify-content:center; }
+  .cell{ display:flex; align-items:center; justify-content:center; border:1.5px solid var(--wood-3); background:#fff; border-radius:4px; cursor:pointer;
+    font-family:var(--mono); font-weight:700; font-size:calc(var(--cell) * .56); color:var(--wood); transition:background .2s; }
+  .cell.key{ background:var(--gold-soft); border-color:var(--gold); }
+  .cell.sel{ border-color:var(--lac-3); box-shadow:inset 0 0 0 1.5px var(--lac-3); }
+  .cell.typed{ color:color-mix(in srgb, var(--ink-soft) 75%, transparent); }
+  .cell.hint{ color:var(--lac); }
+  .cell.ok{ background:var(--jade-soft); border-color:var(--jade); }
+  .cell.key.ok, .cell.key.kw{ background:var(--gold-2); border-color:var(--gold-ink); color:var(--wood); }
+  .cell.pop{ animation:pop .4s both; }
+  .cell.kw{ animation:glow .9s both; }
+  .cw .shake{ animation:shake .4s; }
+  .num{ border:0; padding:0; border-radius:50%; background:var(--lac); color:var(--gold-soft); font-family:var(--mono); font-weight:700; font-size:calc(var(--cell) * .45); cursor:pointer; width:var(--cell); height:var(--cell); }
+  .num.done{ background:var(--jade); color:#fff; }
+  .num.sel{ box-shadow:0 0 0 3px var(--gold-2); }
+  .cw-key{ text-align:center; font-family:var(--mono); font-size:.66rem; font-weight:700; letter-spacing:.14em; color:var(--gold-ink); margin:.2rem 0 0; }
+
+  .panel{ background:var(--paper-2); border:1px solid var(--line); border-radius:14px; padding:.9rem 1rem; margin-bottom:.9rem; }
+  .panel h3{ font-family:var(--serif); font-size:1.02rem; margin:0 0 .35rem; }
+  .clue-now{ font-size:.98rem; line-height:1.55; margin:0 0 .7rem; font-weight:500; }
+  .clue-meta{ font-family:var(--mono); font-size:.66rem; font-weight:700; letter-spacing:.1em; color:var(--lac-3); display:block; margin-bottom:.25rem; }
+  .ans-row{ display:flex; flex-wrap:wrap; gap:.5rem; }
+  .ans-row input{ flex:1 1 11rem; min-width:0; font-family:var(--mono); font-size:max(16px, 1.05rem); font-weight:700; letter-spacing:.18em; text-transform:uppercase; padding:.65rem .8rem; border-radius:10px; border:1.5px solid var(--wood-3); background:#fff; color:var(--wood); min-height:44px; }
+  .ans-row input:focus{ outline:3px solid var(--gold); outline-offset:1px; }
+  .ans-row input.shake{ animation:shake .4s; border-color:var(--bad); }
+  .ans-row input:disabled{ background:var(--paper-3); }
+  .clues{ list-style:none; margin:0; padding:0; display:grid; gap:.35rem; }
+  .clues button{ width:100%; text-align:left; display:flex; gap:.6rem; align-items:flex-start; border:1px solid var(--line); background:#fff; border-radius:10px; padding:.55rem .7rem; cursor:pointer; font-size:.84rem; line-height:1.45; }
+  .clues button b{ flex:none; width:1.5rem; height:1.5rem; border-radius:50%; background:var(--lac); color:var(--gold-soft); font-family:var(--mono); font-size:.72rem; display:inline-flex; align-items:center; justify-content:center; }
+  .clues button.sel{ border-color:var(--gold); background:var(--gold-soft); }
+  .clues button.done{ color:var(--ink-soft); }
+  .clues button.done b{ background:var(--jade); color:#fff; }
+  .clues small{ font-family:var(--mono); color:var(--ink-soft); white-space:nowrap; }
+  .kwbox{ border:1.5px solid var(--gold); background:linear-gradient(180deg, var(--paper-2), var(--gold-soft)); }
+  .proverb{ display:none; text-align:center; border-radius:14px; padding:1.1rem 1rem; margin-bottom:.9rem; color:var(--gold-soft); background:linear-gradient(155deg, var(--lac-2), var(--lac)); box-shadow:inset 0 0 0 1px var(--gold); }
+  .proverb.on{ display:block; animation:pop .5s; }
+  .proverb .big{ font-family:var(--serif); font-size:clamp(1.7rem,6vw,2.6rem); font-weight:700; color:#fff; letter-spacing:.06em; margin:0; }
+  .proverb .say{ font-family:var(--serif); font-style:italic; font-size:clamp(1rem,3.2vw,1.3rem); color:var(--gold-2); margin:.2rem 0 .5rem; }
+  .proverb p{ margin:0 auto; max-width:60ch; font-size:.88rem; line-height:1.6; }
+  .two{ display:grid; gap:0 1rem; }
+  @media (min-width:820px){ .two{ grid-template-columns:1.1fr .9fr; } }
+
+  /* ---------- INTERLUDE + FINAL ---------- */
+  .center{ text-align:center; }
+  .seal{ width:5.2rem; height:5.2rem; margin:0 auto .6rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-size:2rem; font-weight:700; color:var(--gold-soft);
+    background:radial-gradient(circle at 40% 35%, var(--lac-3), var(--lac-2)); box-shadow:0 0 0 3px var(--paper), 0 0 0 5px var(--gold), 0 14px 26px -12px rgba(86,19,16,.8); animation:pop .5s; }
+  .center h2{ font-family:var(--serif); font-size:clamp(1.4rem,4.5vw,2.1rem); margin:.2rem 0 .3rem; }
+  .center .lead{ max-width:52ch; margin:0 auto 1rem; font-size:.92rem; line-height:1.6; color:var(--ink-soft); }
+  .reward{ display:inline-flex; gap:.5rem; align-items:center; background:var(--gold-soft); color:var(--gold-ink); border-radius:999px; padding:.45rem 1rem; font-family:var(--mono); font-size:.85rem; font-weight:700; margin-bottom:1rem; }
+  .next-card{ text-align:left; max-width:560px; margin:0 auto 1.2rem; }
+  .score-strip{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; background:var(--line); border-radius:14px; overflow:hidden; margin:1.1rem 0; }
+  .score-cell{ background:var(--paper-2); padding:.8rem .4rem; text-align:center; }
+  .score-cell b{ display:block; font-family:var(--mono); font-size:clamp(1rem,3vw,1.35rem); color:var(--lac); }
+  .score-cell span{ display:block; margin-top:.2rem; font-size:.66rem; color:var(--ink-soft); }
+  .total{ font-family:var(--serif); font-size:clamp(2.6rem,9vw,4rem); font-weight:700; color:var(--lac); line-height:1; margin:.2rem 0; }
+  .rank{ display:inline-block; font-family:var(--mono); font-size:.72rem; font-weight:700; letter-spacing:.14em; color:var(--gold-ink); background:var(--gold-soft); padding:.35rem .8rem; border-radius:999px; }
+  .verse{ font-family:var(--serif); font-style:italic; font-size:1rem; line-height:1.55; color:var(--lac-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:.8rem 0; margin:1.2rem auto; max-width:30rem; text-align:center; }
+  .verse small{ display:block; font-family:var(--mono); font-style:normal; font-size:.64rem; letter-spacing:.08em; color:var(--ink-soft); margin-top:.3rem; }
+  .memo{ background:var(--paper-2); border:1px solid var(--line); border-radius:16px; padding:1rem 1.1rem; margin-bottom:1.2rem; }
+  .memo h3{ font-family:var(--serif); font-size:1.15rem; margin:0 0 .6rem; color:var(--lac); }
+  .memo ul{ margin:0; padding:0; list-style:none; display:grid; gap:.55rem; }
+  .memo li{ position:relative; padding-left:1.4rem; font-size:.88rem; line-height:1.6; }
+  .memo li::before{ content:"❖"; position:absolute; left:0; top:0; color:var(--gold); }
+  .memo b{ color:var(--lac-2); }
+
+  .toast{ position:fixed; left:50%; bottom:1rem; z-index:40; width:min(560px, calc(100vw - 2rem)); transform:translate(-50%, 140%); opacity:0;
+    background:var(--wood); color:var(--paper-2); border-left:5px solid var(--gold); border-radius:12px; padding:.75rem 1rem; font-size:.88rem; line-height:1.5;
+    box-shadow:0 18px 40px -16px rgba(0,0,0,.6); transition:transform .3s ease, opacity .3s ease; cursor:pointer; }
+  .toast.on{ transform:translate(-50%,0); opacity:1; }
+  .toast.good{ border-left-color:#5BB08A; }
+  .toast.bad{ border-left-color:#E07A5F; }
+
+  .site-footer{ border-top:1px solid var(--line); padding:.9rem clamp(1.1rem,3.5vw,2rem); font-family:var(--mono); font-size:.62rem; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:.4rem 1rem; justify-content:space-between; background:var(--paper-2); }
+  .site-footer a{ color:var(--lac); text-decoration:none; font-weight:700; }
+  .site-footer a:hover{ text-decoration:underline; }
+  .sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  @media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<main class="sheet">
+  <header class="hero">
+    <div class="hero-frame">
+      <span class="kicker">GDĐP 10 · CHỦ ĐỀ 2 · TRÒ CHƠI ÔN TẬP BÀI 6</span>
+      <h1>Hành trình <em>về nguồn</em></h1>
+      <p class="hero-sub">Một số nghi lễ dân gian thể hiện đạo lí “Uống nước nhớ nguồn” ở Thành phố Hồ Chí Minh.</p>
+    </div>
+  </header>
+
+  <div class="hud" id="hud" hidden>
+    <ol class="steps" aria-label="Tiến trình 3 màn chơi">
+      <li data-s="0"><span>1</span><em>Ghép đôi</em></li>
+      <li data-s="1"><span>2</span><em>Ai thờ ở đâu</em></li>
+      <li data-s="2"><span>3</span><em>Ô chữ</em></li>
+    </ol>
+    <span class="chip" aria-live="polite">TỔNG ĐIỂM <b id="hud-total">0</b></span>
+  </div>
+
+  <!-- ========== GIỚI THIỆU ========== -->
+  <section class="screen on pad" id="s-intro" aria-labelledby="intro-h">
+    <h2 class="sr" id="intro-h">Giới thiệu</h2>
+    <p class="story">Hôm nay, một đoàn khách muốn tìm hiểu nét đẹp tâm linh của Sài Gòn – và <b>em là hướng dẫn viên nhí</b>! Em sẽ dẫn đoàn qua <b>ngôi đình</b> làng, ghé <b>ngôi miếu</b> nhỏ bên bờ sông, dừng chân ở <b>ngôi đền</b> thờ các bậc anh hùng, rồi cùng nhau <b>về thăm nhà thờ tổ</b>. Vượt qua 3 chặng thử thách để chứng minh em hiểu vì sao người Việt luôn nhắc nhau:</p>
+    <div class="duo">
+      <div><b>“Uống nước”</b><span>Thừa hưởng thành quả lao động vật chất và tinh thần của thế hệ trước.</span></div>
+      <div><b>“Nhớ nguồn”</b><span>Tri ân, giữ gìn, phát huy thành quả của người đi trước.</span></div>
+    </div>
+    <ol class="legs">
+      <li><small>CHẶNG 1 · CỔNG ĐÌNH LÀNG</small><strong>Lật thẻ ghép đôi</strong><span>Lật 16 thẻ, ghép 8 cặp nơi thờ – nghi lễ với ý nghĩa, thời gian.</span></li>
+      <li><small>CHẶNG 2 · ĐÌNH – MIẾU – ĐỀN</small><strong>Ai được thờ ở đâu?</strong><span>Đưa 12 vị thần, nhân vật, nghi lễ về đúng công trình.</span></li>
+      <li><small>CHẶNG 3 · VỀ THĂM NHÀ THỜ TỔ</small><strong>Ô chữ cội nguồn</strong><span>Giải 8 hàng ngang, tìm từ khoá bí ẩn ở cột dọc.</span></li>
+    </ol>
+    <div class="btn-row">
+      <button class="btn btn--primary" id="btn-start" type="button">Lên đường ▸</button>
+    </div>
+  </section>
+
+  <!-- ========== MÀN 1 ========== -->
+  <section class="screen pad" id="s-r0" aria-labelledby="r0-h">
+    <div class="rhead">
+      <div><span class="kicker">MÀN 1 · CỔNG ĐÌNH LÀNG</span><h2 id="r0-h">Lật thẻ ghép đôi</h2></div>
+      <div class="stats"><span class="chip">LƯỢT <b id="m-moves">0</b></span><span class="chip">⏱ <b id="m-time">0:00</b></span><span class="chip chip--red">ĐIỂM <b id="m-score">120</b></span></div>
+    </div>
+    <p class="how">Mỗi lượt lật <b>2 thẻ</b>. Ghép thẻ đỏ <b>NƠI · LỄ</b> với thẻ nâu <b>GIẢI NGHĨA</b> tương ứng. Càng ít lượt lật, điểm càng cao (tối đa 120).</p>
+    <div class="pdots" id="m-dots" aria-label="Số cặp đã ghép"></div>
+    <div class="mgrid" id="mgrid"></div>
+  </section>
+
+  <!-- ========== MÀN 2 ========== -->
+  <section class="screen pad" id="s-r1" aria-labelledby="r1-h">
+    <div class="rhead">
+      <div><span class="kicker">MÀN 2 · ĐÌNH – MIẾU – ĐỀN</span><h2 id="r1-h">Ai được thờ ở đâu?</h2></div>
+      <div class="stats"><span class="chip">CÒN <b id="g-left">12</b></span><span class="chip chip--red">ĐIỂM <b id="g-score">0</b></span></div>
+    </div>
+    <p class="how"><b>Chạm một thẻ</b> bên dưới, rồi <b>chạm vào công trình</b> phù hợp (trên máy tính có thể kéo thả). Đúng <b>+10</b>, sai <b>−3</b> và nhận gợi ý.</p>
+    <div class="pdots" id="g-dots" aria-label="Số thẻ đã xếp"></div>
+    <div class="bgrid" id="bgrid"></div>
+    <p class="tray-label">THẺ CẦN XẾP</p>
+    <div class="tray" id="tray"></div>
+  </section>
+
+  <!-- ========== MÀN 3 ========== -->
+  <section class="screen pad" id="s-r2" aria-labelledby="r2-h">
+    <div class="rhead">
+      <div><span class="kicker">MÀN 3 · VỀ THĂM NHÀ THỜ TỔ</span><h2 id="r2-h">Ô chữ cội nguồn</h2></div>
+      <div class="stats"><span class="chip">HÀNG <b id="c-done">0</b>/8</span><span class="chip chip--red">ĐIỂM <b id="c-score">0</b></span></div>
+    </div>
+    <p class="how">Chọn một hàng, gõ đáp án <b>KHÔNG DẤU, VIẾT LIỀN</b> (ví dụ: CUCHI). Mỗi hàng đúng <b>+15</b>, gợi ý một chữ <b>−5</b>. Các ô vàng ghép thành <b>từ khoá</b> – đoán đúng sớm được thưởng lớn!</p>
+    <div class="cw-wrap"><div class="cw" id="cw" role="group" aria-label="Lưới ô chữ"></div></div>
+    <p class="cw-key">TỪ KHOÁ: <span id="kw-strip"></span></p>
+    <div class="proverb" id="proverb" role="status">
+      <p class="big">CỘI NGUỒN</p>
+      <p class="say">“Cây có cội, nước có nguồn”</p>
+      <p>Cây xanh tốt nhờ có cội rễ, dòng sông chảy mãi nhờ có nguồn. Con người cũng vậy: những gì ta có hôm nay là thành quả của ông bà, tổ tiên và các thế hệ đi trước – vì thế phải biết ơn, giữ gìn và phát huy.</p>
+    </div>
+    <div class="two">
+      <div>
+        <div class="panel" id="clue-panel">
+          <span class="clue-meta" id="clue-meta">HÀNG 1 · 5 CHỮ CÁI</span>
+          <p class="clue-now" id="clue-now"></p>
+          <div class="ans-row">
+            <label class="sr" for="ans">Đáp án hàng đang chọn</label>
+            <input id="ans" type="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" placeholder="GÕ ĐÁP ÁN">
+            <button class="btn btn--red" id="btn-check" type="button">Kiểm tra</button>
+            <button class="btn btn--ghost" id="btn-hint" type="button">Gợi ý −5</button>
+          </div>
+        </div>
+        <div class="panel kwbox">
+          <h3>Đoán từ khoá</h3>
+          <div class="ans-row">
+            <label class="sr" for="kw">Từ khoá hàng dọc</label>
+            <input id="kw" type="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" placeholder="8 CHỮ CÁI">
+            <button class="btn btn--primary" id="btn-kw" type="button">Đoán</button>
+          </div>
+          <p class="how" style="margin:.6rem 0 0;font-size:.78rem">Đúng: <b>+30</b> và thêm <b>+5</b> cho mỗi hàng chưa giải. Sai: <b>−5</b>.</p>
+        </div>
+        <div class="btn-row" style="margin-bottom:1rem">
+          <button class="btn btn--primary" id="btn-finish" type="button" hidden>Hoàn thành hành trình ▸</button>
+          <button class="btn btn--ghost" id="btn-reveal" type="button">Lật toàn bộ đáp án</button>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:var(--serif);font-size:1rem;margin:0 0 .5rem">Các câu hỏi hàng ngang</h3>
+        <ol class="clues" id="clues"></ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== GIỮA MÀN ========== -->
+  <section class="screen pad center" id="s-inter" aria-labelledby="it-title">
+    <div class="seal" aria-hidden="true">✓</div>
+    <span class="kicker" id="it-kicker" style="color:var(--lac-3)"></span>
+    <h2 id="it-title"></h2>
+    <p class="lead" id="it-note"></p>
+    <div class="reward" id="it-score"></div>
+    <div class="panel next-card" id="it-next"></div>
+    <div class="btn-row" style="justify-content:center"><button class="btn btn--primary" id="btn-next" type="button"></button></div>
+  </section>
+
+  <!-- ========== KẾT QUẢ ========== -->
+  <section class="screen pad" id="s-final" aria-labelledby="fin-h">
+    <div class="center">
+      <div class="seal" aria-hidden="true" id="fin-seal">❖</div>
+      <span class="kicker" style="color:var(--lac-3)">HOÀN THÀNH HÀNH TRÌNH VỀ NGUỒN</span>
+      <div class="total" id="fin-total">0</div>
+      <span class="rank">DANH HIỆU</span>
+      <h2 id="fin-h"></h2>
+      <p class="lead" id="fin-note"></p>
+    </div>
+    <div class="score-strip">
+      <div class="score-cell"><b id="fs0">0</b><span>Màn 1 · Ghép đôi</span></div>
+      <div class="score-cell"><b id="fs1">0</b><span>Màn 2 · Ai thờ ở đâu</span></div>
+      <div class="score-cell"><b id="fs2">0</b><span>Màn 3 · Ô chữ</span></div>
+    </div>
+    <div class="memo">
+      <h3>Ghi nhớ</h3>
+      <ul>
+        <li><b>“Uống nước nhớ nguồn”</b>: biết ơn, tri ân, giữ gìn và phát huy thành quả của người đi trước.</li>
+        <li><b>Nghi lễ cộng đồng</b>: Đình thờ Thành Hoàng (lễ Kỳ yên); Miếu thờ các vị thần (Ngũ Hành Nương Nương…); Đền thờ danh nhân, anh hùng (Vua Hùng, Trần Hưng Đạo, liệt sĩ).</li>
+        <li><b>Nghi lễ gia đình</b>: thờ cúng tổ tiên; thờ cúng tổ nghề.</li>
+        <li>Mỗi nghi lễ thường có <b>phần lễ</b> (trang nghiêm) và <b>phần hội</b> (vui tươi, gắn kết cộng đồng).</li>
+      </ul>
+    </div>
+    <p class="verse">“Thà đui mà giữ đạo nhà<br>Còn hơn sáng mắt cha ông không thờ”<small>NGUYỄN ĐÌNH CHIỂU · LỤC VÂN TIÊN</small></p>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn btn--primary" id="btn-again" type="button">↻ Chơi lại</button>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <span>GIÁO DỤC ĐỊA PHƯƠNG 10 · CHỦ ĐỀ 2 · TRÒ CHƠI BÀI 6</span>
+    <span><a href="index.html">← Về thư viện bài giảng</a> · GV: TĂNG NGỌC PHỤNG</span>
+  </footer>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   DỮ LIỆU – bám sát Tài liệu GDĐP TP.HCM lớp 10, Chủ đề 2, Bài 6
+   ============================================================ */
+const PAIRS = [
+  { a:'Đình', b:'Thờ Thành Hoàng làng', e:'Đình thờ Thành Hoàng – vị thần phù hộ cư dân một làng, được sắc phong. Mỗi làng chỉ có một đình.' },
+  { a:'Lễ Kỳ yên', b:'Lễ cầu an lớn nhất năm của đình', e:'Lễ Kỳ yên thường kéo dài 3 ngày, có phần lễ và phần hội; cầu mưa thuận gió hoà, xóm làng yên ổn.' },
+  { a:'Miếu', b:'Thờ Ngũ Hành Nương Nương, các vị thần', e:'TP.HCM có 448 miếu, trong đó 285 miếu thờ Ngũ Hành Nương Nương.' },
+  { a:'Đền', b:'Thờ danh nhân, anh hùng dân tộc', e:'Đền thờ một vị Thánh hoặc nhân vật lịch sử được tôn sùng như thần thánh.' },
+  { a:'Giỗ Tổ Hùng Vương', b:'Mùng 10 tháng 3 âm lịch', e:'Giỗ Tổ Hùng Vương được tổ chức ở Đền tưởng niệm các Vua Hùng (Thủ Đức) và đền thờ Vua Hùng ở Thảo Cầm Viên (Quận 1).' },
+  { a:'Giỗ Trần Hưng Đạo', b:'20 tháng 8 âm lịch', e:'Giỗ Đức Thánh Trần ở đền 36 Võ Thị Sáu, Quận 1; có nam tế, nữ tế, hát chầu văn.' },
+  { a:'Giỗ Tổ nghề kim hoàn', b:'Hội quán Lệ Châu, Quận 5', e:'Lễ giỗ Tổ nghề kim hoàn diễn ra từ mùng 6 đến mùng 8 tháng 2 âm lịch tại Hội quán Lệ Châu.' },
+  { a:'Bến Dược, Củ Chi', b:'Đền tưởng niệm liệt sĩ', e:'Đền Bến Dược tưởng nhớ đồng bào, chiến sĩ đã hi sinh trong hai cuộc kháng chiến.' }
+];
+
+const BUILDINGS = [
+  { id:'dinh', name:'ĐÌNH', sub:'Mỗi làng chỉ có một đình', c:'#7B1F18' },
+  { id:'mieu', name:'MIẾU', sub:'Quy mô nhỏ hơn đình, đền', c:'#6E432A' },
+  { id:'den',  name:'ĐỀN',  sub:'Tôn thờ như thần thánh', c:'#4A2B1C' },
+  { id:'nha',  name:'GIA ĐÌNH & GIỚI NGHỀ', sub:'Nhà thờ họ · hội quán nghề', c:'#8C5A1E' }
+];
+const SVG = {
+  dinh:'<path d="M6 30C14 30 20 26 26 16H94C100 26 106 30 114 30L108 34H12Z"/><path d="M26 16C22 9 17 8 13 10M94 16C98 9 103 8 107 10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="60" cy="10" r="4.5"/><rect x="22" y="34" width="5" height="26"/><rect x="42" y="34" width="5" height="26"/><rect x="73" y="34" width="5" height="26"/><rect x="93" y="34" width="5" height="26"/><rect x="12" y="60" width="96" height="6" rx="1"/>',
+  mieu:'<path d="M8 66Q60 40 112 66Z" opacity=".45"/><path d="M34 36C41 36 46 32 50 25H70C74 32 79 36 86 36L82 40H38Z"/><rect x="45" y="40" width="30" height="16"/><rect x="55" y="45" width="10" height="11" fill="#2B1A12" opacity=".55"/><circle cx="60" cy="21" r="3"/>',
+  den:'<circle cx="60" cy="7" r="3.5"/><path d="M28 22C35 22 40 18 44 11H76C80 18 85 22 92 22L88 26H32Z"/><rect x="44" y="26" width="32" height="6"/><path d="M6 40C14 40 21 36 27 30H93C99 36 106 40 114 40L108 44H12Z"/><rect x="24" y="44" width="5" height="17"/><rect x="46" y="44" width="5" height="17"/><rect x="69" y="44" width="5" height="17"/><rect x="91" y="44" width="5" height="17"/><rect x="12" y="61" width="96" height="6" rx="1"/>',
+  nha:'<path d="M12 34L60 9L108 34L101 37L60 16L19 37Z"/><rect x="24" y="36" width="72" height="28" opacity=".25"/><rect x="38" y="48" width="44" height="5" rx="1"/><rect x="42" y="53" width="4" height="11"/><rect x="74" y="53" width="4" height="11"/><rect x="53" y="41" width="14" height="7" rx="2"/><path d="M56 41L55 30M60 41V28M64 41L65 30" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'
+};
+
+const ITEMS = [
+  { t:'Thành Hoàng làng', b:'dinh', h:'Vị thần phù hộ cư dân một làng, được sắc phong – mỗi làng chỉ có một nơi thờ như vậy.', ok:'Đình thờ Thành Hoàng làng.' },
+  { t:'Tiền hiền, Hậu hiền', b:'dinh', h:'Họ là những người có công lập làng, được thờ cùng Thành Hoàng.', ok:'Tiền hiền, Hậu hiền – người có công lập làng – được thờ ở đình.' },
+  { t:'Nơi tổ chức lễ Kỳ yên', b:'dinh', h:'Kỳ yên là lễ tế thần Thành Hoàng lớn nhất trong năm.', ok:'Lễ Kỳ yên là lễ cầu an lớn nhất năm của đình.' },
+  { t:'Ngũ Hành Nương Nương', b:'mieu', h:'TP.HCM có 285 công trình nhỏ (nhỏ hơn đình, đền) thờ vị thần này.', ok:'285 trong 448 ngôi miếu ở TP.HCM thờ Ngũ Hành Nương Nương.' },
+  { t:'Chúa Xứ Thánh Mẫu', b:'mieu', h:'Có 29 nơi thờ ở TP.HCM – công trình nhỏ, thường trên gò cao, bờ sông.', ok:'29 ngôi miếu ở TP.HCM thờ Chúa Xứ Thánh Mẫu.' },
+  { t:'Thuỷ thần (Hà Bá)', b:'mieu', h:'Vị thần sông nước – thờ ở công trình nhỏ, thường dựng ở bờ sông, đầu hoặc cuối làng.', ok:'Miếu thờ các vị thần đa dạng: Sơn thần, Hà Bá (Thuỷ thần), miếu Cô, miếu Cậu…' },
+  { t:'Các Vua Hùng', b:'den', h:'Nhân vật lịch sử được tôn sùng như thần thánh – có nơi thờ ở Thủ Đức và Thảo Cầm Viên.', ok:'Đền tưởng niệm các Vua Hùng (Thủ Đức), đền thờ Vua Hùng ở Thảo Cầm Viên.' },
+  { t:'Đức Thánh Trần Hưng Đạo', b:'den', h:'Anh hùng 3 lần đánh thắng quân Mông – Nguyên, được tôn là Đức Thánh.', ok:'Đền thờ Đức Thánh Trần ở 36 Võ Thị Sáu, Quận 1.' },
+  { t:'Nguyễn Hữu Cảnh', b:'den', h:'Nhân vật lịch sử được tôn sùng như thần thánh – có nơi thờ riêng ở Thủ Đức.', ok:'Đền thờ Nguyễn Hữu Cảnh ở Thủ Đức.' },
+  { t:'Ông bà, tổ tiên', b:'nha', h:'Thờ để nhớ công sinh thành, dưỡng dục – ngay trong mỗi nhà và nhà thờ họ tộc.', ok:'Thờ cúng tổ tiên ở gia đình và nhà thờ họ tộc.' },
+  { t:'Tổ nghề kim hoàn', b:'nha', h:'Người khai sáng nghề – giới thợ giỗ Tổ ở Hội quán Lệ Châu (Quận 5).', ok:'Giới kim hoàn giỗ Tổ nghề mùng 6–8 tháng 2 âm lịch ở Hội quán Lệ Châu.' },
+  { t:'Tổ nghề sân khấu', b:'nha', h:'Người khai sáng nghề được chính giới nghề nhớ ơn, thờ cúng.', ok:'Thờ cúng tổ nghề: nhớ ơn người khai sáng nghề.' }
+];
+
+const CW = [
+  { a:'CUCHI', k:0, q:'Đền tưởng niệm liệt sĩ Bến Dược nằm ở huyện nào?' },
+  { a:'TOTIEN', k:1, q:'Thờ cúng … thể hiện lòng biết ơn công sinh thành, dưỡng dục.' },
+  { a:'TIENHIEN', k:1, q:'Những người có công lập làng được thờ ở đình gồm … và Hậu hiền.' },
+  { a:'KYYEN', k:4, q:'Lễ cầu an, lễ tế thần Thành Hoàng lớn nhất năm của đình.' },
+  { a:'HUNGVUONG', k:3, q:'Mùng 10 tháng 3 âm lịch là ngày giỗ Tổ …' },
+  { a:'NGUHANH', k:2, q:'… Nương Nương được thờ ở 285 ngôi miếu ở TP.HCM.' },
+  { a:'KEOCO', k:2, q:'Trò chơi dân gian hai đội cùng kéo dây trong phần hội lễ Kỳ yên.' },
+  { a:'THANHHOANG', k:3, q:'Vị thần phù hộ cư dân một làng, được thờ ở đình.' }
+];
+const KEY = 'COINGUON';
+const KC = Math.max(...CW.map(r => r.k));                       // cột khoá (tính theo chữ)
+const COLS = Math.max(...CW.map(r => KC - r.k + r.a.length)) + 1; // +1 cho ô số thứ tự
+
+const RANKS = [
+  { min:300, name:'Đại sứ cội nguồn', icon:'✦', note:'Em không chỉ nhớ mà còn đủ hiểu biết để lan toả đạo lí “Uống nước nhớ nguồn” tới mọi người.' },
+  { min:200, name:'Hướng dẫn viên di sản', icon:'❖', note:'Em đã dẫn đoàn vững vàng qua đình, miếu, đền và nhà thờ tổ. Chỉ còn vài chi tiết cần ôn lại!' },
+  { min:0,   name:'Người con biết ơn', icon:'♥', note:'Em đã bước vào hành trình về nguồn. Hãy chơi lại để hiểu sâu hơn ý nghĩa từng nghi lễ nhé.' }
+];
+
+/* ============================================================
+   TIỆN ÍCH
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const shuffle = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const norm = s => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[đĐ]/g, 'D').toUpperCase().replace(/[^A-Z]/g, '');
+const replay = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+const fmt = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+
+const S = { scores:[0,0,0], round:-1 };
+let toastT;
+function toast(msg, kind){
+  const t = $('#toast'); t.textContent = msg; t.className = 'toast on ' + (kind || '');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 4200);
+}
+$('#toast').addEventListener('click', e => e.currentTarget.classList.remove('on'));
+/* gỡ các lớp hiệu ứng tạm sau khi chạy xong để lần sau phát lại được */
+document.addEventListener('animationend', e => { e.target.classList && e.target.classList.remove('shake', 'bounce', 'nope', 'yes', 'match', 'pop'); });
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id));
+  $('#hud').hidden = (id === 's-intro' || id === 's-final');
+  window.scrollTo({ top:0, behavior: reduce ? 'auto' : 'smooth' });
+}
+function hud(){
+  $('#hud-total').textContent = S.scores.reduce((a, b) => a + b, 0);
+  document.querySelectorAll('.steps li').forEach(li => {
+    const n = +li.dataset.s;
+    li.classList.toggle('done', n < S.round || (n === S.round && S.roundDone));
+    li.classList.toggle('now', n === S.round && !S.roundDone);
+  });
+}
+function dots(el, n, total){
+  if (el.children.length !== total) el.innerHTML = '<i></i>'.repeat(total);
+  [...el.children].forEach((d, i) => d.classList.toggle('on', i < n));
+  el.setAttribute('aria-label', n + '/' + total);
+}
+
+/* ============================================================
+   MÀN 1 – LẬT THẺ GHÉP ĐÔI
+   ============================================================ */
+let M = {};
+const memScore = m => Math.max(30, 120 - 5 * Math.max(0, m - 12));
+const TAG = { a:'NƠI · LỄ', b:'GIẢI NGHĨA' };
+
+function startMemory(){
+  clearInterval(M.timer);
+  M = { first:null, lock:false, moves:0, found:0, sec:0, timer:null };
+  const deck = shuffle(PAIRS.flatMap((p, i) => [{ i, s:'a', t:p.a }, { i, s:'b', t:p.b }]));
+  $('#mgrid').innerHTML = deck.map((c, k) =>
+    `<button type="button" class="mcard side-${c.s}" data-i="${c.i}" data-tag="${TAG[c.s]}" data-t="${c.t}" aria-label="Thẻ úp số ${k + 1}">` +
+    `<span class="mc-inner" aria-hidden="true"><span class="mc-back">❖</span>` +
+    `<span class="mc-front"><span class="mc-tag">${TAG[c.s]}</span><span class="mc-text">${c.t}</span></span></span></button>`).join('');
+  memStats();
+}
+function memStats(){
+  $('#m-moves').textContent = M.moves; $('#m-time').textContent = fmt(M.sec);
+  S.scores[0] = memScore(M.moves); $('#m-score').textContent = S.scores[0];
+  dots($('#m-dots'), M.found, PAIRS.length); hud();
+}
+function flip(b, open){
+  b.classList.toggle('open', open);
+  b.setAttribute('aria-label', open ? b.dataset.tag + ': ' + b.dataset.t : 'Thẻ úp');
+}
+$('#mgrid').addEventListener('click', e => {
+  const b = e.target.closest('.mcard');
+  if (!b || M.lock || b.classList.contains('open') || b.classList.contains('done') || M.found === PAIRS.length) return;
+  if (!M.timer) M.timer = setInterval(() => { M.sec++; $('#m-time').textContent = fmt(M.sec); }, 1000);
+  flip(b, true);
+  if (!M.first){ M.first = b; return; }
+  const a = M.first; M.first = null; M.moves++;
+  if (a.dataset.i === b.dataset.i){
+    [a, b].forEach(x => { x.classList.remove('open'); x.classList.add('done'); x.setAttribute('aria-label', 'Đã ghép: ' + x.dataset.t); replay(x, 'match'); });
+    M.found++;
+    toast('✓ ' + PAIRS[+a.dataset.i].e, 'good');
+    if (M.found === PAIRS.length){
+      clearInterval(M.timer); S.roundDone = true; memStats();
+      setTimeout(() => interlude(0, `Ghép đủ 8 cặp sau ${M.moves} lượt lật, trong ${fmt(M.sec)}.`), reduce ? 600 : 1500);
+      return;
+    }
+  } else {
+    M.lock = true; a.classList.add('miss'); b.classList.add('miss');
+    setTimeout(() => { [a, b].forEach(x => { x.classList.remove('miss'); flip(x, false); }); M.lock = false; }, 1000);
+  }
+  memStats();
+});
+
+/* ============================================================
+   MÀN 2 – AI ĐƯỢC THỜ Ở ĐÂU?
+   ============================================================ */
+let G = {};
+$('#bgrid').innerHTML = BUILDINGS.map(b =>
+  `<button type="button" class="bld" data-b="${b.id}" style="--bc:${b.c}" aria-label="Đặt vào ${b.name}">` +
+  `<svg viewBox="0 0 120 70" fill="currentColor" aria-hidden="true">${SVG[b.id]}</svg>` +
+  `<span class="bld-name">${b.name}</span><span class="bld-sub">${b.sub}</span><span class="bld-stack"></span></button>`).join('');
+
+function startSort(){
+  G = { sel:null, left:ITEMS.length, score:0, wrong:0 };
+  document.querySelectorAll('.bld-stack').forEach(s => s.innerHTML = '');
+  $('#tray').innerHTML = shuffle(ITEMS.map((_, i) => i)).map(i =>
+    `<button type="button" class="tile" draggable="true" data-i="${i}" aria-pressed="false">${ITEMS[i].t}</button>`).join('');
+  sortStats(); arm(null);
+}
+function sortStats(){
+  S.scores[1] = Math.max(0, G.score); $('#g-score').textContent = S.scores[1]; $('#g-left').textContent = G.left;
+  dots($('#g-dots'), ITEMS.length - G.left, ITEMS.length); hud();
+}
+function arm(i){
+  G.sel = i;
+  document.querySelectorAll('.tile').forEach(t => t.setAttribute('aria-pressed', String(+t.dataset.i === i)));
+  $('#bgrid').classList.toggle('armed', i !== null);
+}
+function place(i, bid){
+  const it = ITEMS[i], tile = $(`.tile[data-i="${i}"]`), bEl = $(`.bld[data-b="${bid}"]`);
+  if (!tile) return;
+  if (it.b === bid){
+    G.score += 10; G.left--; tile.remove(); arm(null);
+    const chip = document.createElement('span'); chip.textContent = it.t; bEl.querySelector('.bld-stack').appendChild(chip);
+    replay(bEl, 'yes'); toast('✓ Đúng rồi! ' + it.ok, 'good');
+    if (!G.left){
+      $('#tray').innerHTML = '<span class="tray-empty">Đã xếp xong tất cả các thẻ!</span>';
+      S.roundDone = true; sortStats();
+      setTimeout(() => interlude(1, G.wrong ? `Xếp đúng 12 thẻ, có ${G.wrong} lần đặt nhầm.` : 'Xếp đúng cả 12 thẻ ngay lần đầu – tuyệt vời!'), reduce ? 600 : 1400);
+      return;
+    }
+  } else {
+    G.score -= 3; G.wrong++;
+    replay(tile, 'bounce'); replay(bEl, 'nope');
+    toast('✗ Chưa đúng (−3). Gợi ý: ' + it.h, 'bad');
+  }
+  sortStats();
+}
+$('#tray').addEventListener('click', e => {
+  const t = e.target.closest('.tile'); if (!t) return;
+  const i = +t.dataset.i; arm(G.sel === i ? null : i);
+});
+$('#tray').addEventListener('dragstart', e => {
+  const t = e.target.closest('.tile'); if (!t) return;
+  e.dataTransfer.setData('text/plain', t.dataset.i); e.dataTransfer.effectAllowed = 'move'; arm(+t.dataset.i);
+});
+$('#bgrid').addEventListener('click', e => {
+  const b = e.target.closest('.bld'); if (!b) return;
+  if (G.sel === null){ toast('Hãy chạm chọn một thẻ ở khay bên dưới trước nhé!'); return; }
+  place(G.sel, b.dataset.b);
+});
+$('#bgrid').addEventListener('dragover', e => { const b = e.target.closest('.bld'); if (b){ e.preventDefault(); b.classList.add('over'); } });
+$('#bgrid').addEventListener('dragleave', e => { const b = e.target.closest('.bld'); if (b) b.classList.remove('over'); });
+$('#bgrid').addEventListener('drop', e => {
+  const b = e.target.closest('.bld'); if (!b) return; e.preventDefault(); b.classList.remove('over');
+  const i = parseInt(e.dataTransfer.getData('text/plain'), 10); if (!isNaN(i)) place(i, b.dataset.b);
+});
+
+/* ============================================================
+   MÀN 3 – Ô CHỮ CỘI NGUỒN
+   ============================================================ */
+let C = {};
+const ansEl = $('#ans'), kwEl = $('#kw');
+
+function buildCW(){
+  const cw = $('#cw'); cw.style.setProperty('--cols', COLS);
+  let h = '';
+  CW.forEach((r, ri) => {
+    const off = KC - r.k;                     // cột của ô số thứ tự
+    for (let c = 0; c < COLS; c++){
+      const li = c - off - 1;
+      if (c === off) h += `<button type="button" class="num" data-r="${ri}" aria-label="Chọn hàng ${ri + 1}">${ri + 1}</button>`;
+      else if (li >= 0 && li < r.a.length) h += `<div class="cell${li === r.k ? ' key' : ''}" data-r="${ri}" id="c${ri}-${li}"></div>`;
+      else h += '<div aria-hidden="true"></div>';
+    }
+  });
+  cw.innerHTML = h;
+  $('#clues').innerHTML = CW.map((r, i) => `<li><button type="button" data-r="${i}"><b>${i + 1}</b><span>${r.q} <small>(${r.a.length})</small></span></button></li>`).join('');
+}
+function startCW(){
+  C = { sel:0, solved:CW.map(() => false), hints:CW.map(() => new Set()), kw:false, score:0, gaveUp:false, typed:'', armReveal:false };
+  ansEl.value = ''; kwEl.value = ''; kwEl.disabled = false; $('#btn-kw').disabled = false;
+  $('#proverb').classList.remove('on'); $('#btn-finish').hidden = true;
+  $('#btn-reveal').hidden = false; $('#btn-reveal').textContent = 'Lật toàn bộ đáp án';
+  document.querySelectorAll('#cw .cell').forEach(c => c.classList.remove('kw', 'pop', 'ok'));
+  selRow(0, false);
+}
+function renderRow(ri){
+  const r = CW[ri], typed = (ri === C.sel && !C.solved[ri]) ? C.typed : '';
+  for (let li = 0; li < r.a.length; li++){
+    const el = $('#c' + ri + '-' + li); let ch = '', cls = '';
+    if (C.solved[ri]) ch = r.a[li];
+    else if (C.hints[ri].has(li)) { ch = r.a[li]; cls = 'hint'; }
+    else if (li === r.k && C.kw) ch = r.a[li];
+    else if (typed[li]) { ch = typed[li]; cls = 'typed'; }
+    el.textContent = ch;
+    el.classList.toggle('ok', C.solved[ri]);
+    el.classList.toggle('hint', cls === 'hint'); el.classList.toggle('typed', cls === 'typed');
+    el.classList.toggle('sel', ri === C.sel && !C.solved[ri]);
+  }
+  const n = $(`.num[data-r="${ri}"]`); n.classList.toggle('done', C.solved[ri]); n.classList.toggle('sel', ri === C.sel);
+}
+function cwStats(){
+  CW.forEach((_, i) => renderRow(i));
+  const done = C.solved.filter(Boolean).length;
+  $('#c-done').textContent = done; S.scores[2] = Math.max(0, C.score); $('#c-score').textContent = S.scores[2];
+  $('#kw-strip').textContent = CW.map((r, i) => (C.solved[i] || C.kw) ? r.a[r.k] : '?').join(' ');
+  document.querySelectorAll('#clues button').forEach(b => {
+    const i = +b.dataset.r; b.classList.toggle('sel', i === C.sel); b.classList.toggle('done', C.solved[i]);
+    b.setAttribute('aria-pressed', String(i === C.sel));
+  });
+  hud();
+}
+function selRow(ri, focus){
+  C.sel = ri; C.typed = ''; ansEl.value = '';
+  const r = CW[ri], solved = C.solved[ri];
+  $('#clue-meta').textContent = `HÀNG ${ri + 1} · ${r.a.length} CHỮ CÁI` + (solved ? ' · ĐÃ GIẢI ✓' : '');
+  $('#clue-now').textContent = r.q;
+  ansEl.disabled = solved; $('#btn-check').disabled = solved; $('#btn-hint').disabled = solved;
+  ansEl.maxLength = r.a.length + 6;
+  ansEl.placeholder = solved ? r.a : 'GÕ ' + r.a.length + ' CHỮ CÁI';
+  cwStats();
+  if (focus && !solved) ansEl.focus({ preventScroll:false });
+}
+function nextUnsolved(from){
+  for (let k = 1; k <= CW.length; k++){ const i = (from + k) % CW.length; if (!C.solved[i]) return i; }
+  return -1;
+}
+function checkRow(){
+  const ri = C.sel, r = CW[ri]; if (C.solved[ri]) return;
+  const v = norm(ansEl.value);
+  if (!v){ toast('Hãy gõ đáp án trước khi kiểm tra nhé!'); return; }
+  if (v === r.a){
+    C.solved[ri] = true; C.score += 15;
+    cwStats();
+    for (let li = 0; li < r.a.length; li++){ const el = $('#c' + ri + '-' + li); el.style.animationDelay = (li * 55) + 'ms'; replay(el, 'pop'); }
+    toast(`✓ Chính xác: ${r.a} (+15)`, 'good');
+    if (C.solved.every(Boolean)){
+      if (!C.kw){ revealKW(); toast('Giải xong cả 8 hàng – từ khoá CỘI NGUỒN đã lộ diện!', 'good'); }
+      selRow(ri, false); return;
+    }
+    const n = nextUnsolved(ri); selRow(n, false);
+  } else {
+    replay(ansEl, 'shake');
+    for (let li = 0; li < r.a.length; li++) { const el = $('#c' + ri + '-' + li); el.style.animationDelay = '0ms'; replay(el, 'shake'); }
+    toast(v.length !== r.a.length ? `Chưa đúng – đáp án có ${r.a.length} chữ cái.` : 'Chưa đúng, thử lại nhé!', 'bad');
+  }
+}
+function hint(){
+  const ri = C.sel, r = CW[ri]; if (C.solved[ri]) return;
+  const free = [...r.a].map((_, i) => i).filter(i => !C.hints[ri].has(i));
+  if (free.length <= 1){ toast('Chỉ còn 1 chữ cái – em tự đoán nhé!'); return; }
+  const pick = free[Math.floor(Math.random() * free.length)];
+  C.hints[ri].add(pick); C.score -= 5; cwStats();
+  const el = $('#c' + ri + '-' + pick); el.style.animationDelay = '0ms'; replay(el, 'pop');
+  toast(`Gợi ý: chữ thứ ${pick + 1} là “${r.a[pick]}” (−5)`);
+}
+function revealKW(){
+  C.kw = true; kwEl.disabled = true; $('#btn-kw').disabled = true; kwEl.value = 'CỘI NGUỒN';
+  CW.forEach((r, i) => { const el = $('#c' + i + '-' + r.k); el.style.animationDelay = (i * 90) + 'ms'; replay(el, 'kw'); });
+  $('#proverb').classList.add('on'); $('#btn-finish').hidden = false;
+  cwStats();
+}
+function guessKW(){
+  if (C.kw) return;
+  const v = norm(kwEl.value);
+  if (!v){ toast('Hãy gõ từ khoá em đoán.'); return; }
+  if (v === KEY){
+    const left = C.solved.filter(x => !x).length, bonus = 30 + 5 * left;
+    C.score += bonus; revealKW();
+    toast(`✦ Tuyệt vời! Từ khoá là CỘI NGUỒN (+${bonus}).` + (left ? ' Em vẫn có thể giải tiếp các hàng còn lại.' : ''), 'good');
+    $('#proverb').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'center' });
+  } else {
+    C.score -= 5; replay(kwEl, 'shake'); cwStats();
+    toast('✗ Chưa phải từ khoá (−5). Giải thêm hàng ngang để lộ thêm ô vàng!', 'bad');
+  }
+}
+ansEl.addEventListener('input', () => { C.typed = norm(ansEl.value).slice(0, CW[C.sel].a.length); renderRow(C.sel); });
+ansEl.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); checkRow(); } });
+kwEl.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); guessKW(); } });
+$('#btn-check').addEventListener('click', checkRow);
+$('#btn-hint').addEventListener('click', hint);
+$('#btn-kw').addEventListener('click', guessKW);
+$('#cw').addEventListener('click', e => { const t = e.target.closest('[data-r]'); if (t) selRow(+t.dataset.r, true); });
+$('#clues').addEventListener('click', e => { const t = e.target.closest('button[data-r]'); if (t) selRow(+t.dataset.r, true); });
+$('#btn-reveal').addEventListener('click', e => {
+  if (!C.armReveal){ C.armReveal = true; e.currentTarget.textContent = 'Chắc chắn? Bấm lần nữa'; return; }
+  C.gaveUp = true; C.solved = CW.map(() => true); e.currentTarget.hidden = true;
+  if (!C.kw) revealKW(); selRow(C.sel, false);
+  toast('Đã lật toàn bộ đáp án. Các hàng chưa giải không được tính điểm.');
+});
+$('#btn-finish').addEventListener('click', () => { S.roundDone = true; hud(); finish(); });
+
+/* ============================================================
+   ĐIỀU PHỐI
+   ============================================================ */
+const NEXT = [
+  null,
+  { k:'MÀN 2 · ĐÌNH – MIẾU – ĐỀN', t:'Ai được thờ ở đâu?', d:'Đoàn khách đã vào tới sân đình. Hãy giúp họ biết mỗi vị thần, nhân vật, nghi lễ thuộc về ĐÌNH, MIẾU, ĐỀN hay GIA ĐÌNH & GIỚI NGHỀ.' },
+  { k:'MÀN 3 · VỀ THĂM NHÀ THỜ TỔ', t:'Ô chữ cội nguồn', d:'Chặng cuối: về thăm nhà thờ tổ. Giải 8 hàng ngang (gõ không dấu) để tìm từ khoá ẩn trong cột vàng.' }
+];
+function interlude(r, note){
+  const titles = ['Qua cổng đình!', 'Đình – Miếu – Đền đã rõ!'];
+  $('#it-kicker').textContent = `HOÀN THÀNH MÀN ${r + 1}/3`;
+  $('#it-title').textContent = titles[r];
+  $('#it-note').textContent = note;
+  $('#it-score').textContent = `+${S.scores[r]} điểm · Tổng ${S.scores.reduce((a, b) => a + b, 0)}`;
+  const n = NEXT[r + 1];
+  $('#it-next').innerHTML = `<span class="clue-meta">TIẾP THEO · ${n.k}</span><h3>${n.t}</h3><p style="margin:0;font-size:.86rem;line-height:1.6;color:var(--ink-soft)">${n.d}</p>`;
+  $('#btn-next').textContent = `Bắt đầu Màn ${r + 2} ▸`;
+  $('#btn-next').onclick = () => startRound(r + 1);
+  show('s-inter'); $('#btn-next').focus({ preventScroll:true });
+}
+function startRound(r){
+  S.round = r; S.roundDone = false;
+  if (r === 0) startMemory(); else if (r === 1) startSort(); else startCW();
+  show('s-r' + r); hud();
+}
+function finish(){
+  const total = S.scores.reduce((a, b) => a + b, 0);
+  const rk = RANKS.find(x => total >= x.min);
+  $('#fin-total').textContent = total;
+  $('#fin-h').textContent = rk.name; $('#fin-seal').textContent = rk.icon;
+  $('#fin-note').textContent = rk.note + (C.gaveUp ? ' (Màn 3 có dùng “Lật toàn bộ đáp án”.)' : '');
+  S.scores.forEach((s, i) => $('#fs' + i).textContent = s);
+  show('s-final'); $('#btn-again').focus({ preventScroll:true });
+}
+function startGame(){ S.scores = [0, 0, 0]; startRound(0); }
+
+buildCW();
+$('#btn-start').addEventListener('click', startGame);
+$('#btn-again').addEventListener('click', startGame);
+</script>
+</body>
+</html>

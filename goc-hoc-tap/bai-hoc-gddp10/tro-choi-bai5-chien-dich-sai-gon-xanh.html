@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chiến dịch Sài Gòn Xanh · Trò chơi ôn tập Bài 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --ink:#14302A; --ink-soft:#4B635B;
+    --paper:#EEF4EA; --paper-2:#F9FBF4; --card:#FFFFFF; --line:#D2DECF;
+    --forest:#0E3B34; --forest-2:#15574B; --forest-3:#1E7062;
+    --teal:#1E7F70; --teal-soft:#CFEAE3;
+    --leaf:#3F9B5E; --leaf-soft:#D6EEDC; --sky:#2F7FA3; --sky-soft:#D3E8F1;
+    --sun:#F2A93B; --sun-2:#FFC86B; --sun-soft:#FCE6BC; --sun-ink:#5C3A08;
+    --good:#2E8A5A; --good-soft:#D6F0E0; --bad:#C9553A; --bad-soft:#F8DED5;
+    --backdrop:#CFE0D3; --shadow:0 40px 70px -30px rgba(6,30,24,.45);
+    --mono:'IBM Plex Mono',ui-monospace,monospace; --serif:'Fraunces',Georgia,serif;
+  }
+  *{ box-sizing:border-box; }
+  [hidden]{ display:none !important; }
+  html,body{ margin:0; }
+  body{
+    padding:clamp(.6rem,3vw,2.4rem) clamp(.5rem,2vw,1rem); background:var(--backdrop); color:var(--ink);
+    background-image:radial-gradient(60% 50% at 100% 0%, color-mix(in srgb,var(--sun) 25%,transparent), transparent 70%);
+    font-family:'Be Vietnam Pro','Segoe UI',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+    display:flex; justify-content:center; min-height:100vh; overflow-x:hidden;
+  }
+  .sheet{ width:100%; max-width:1040px; background:var(--paper); border-radius:22px; overflow:hidden; box-shadow:var(--shadow); align-self:flex-start; position:relative; overflow:clip; }
+  :focus-visible{ outline:3px solid var(--sun); outline-offset:3px; }
+  button{ font:inherit; color:inherit; }
+
+  .topbar{ display:flex; justify-content:space-between; align-items:center; gap:.5rem; padding:.55rem clamp(1rem,3.5vw,2rem); background:var(--forest); color:var(--teal-soft); font-family:var(--mono); font-size:.66rem; letter-spacing:.06em; }
+  .topbar a{ color:var(--sun-2); text-decoration:none; font-weight:700; }
+  .topbar a:hover{ text-decoration:underline; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; color:var(--paper-2); padding:clamp(1.4rem,4vw,2.6rem) clamp(1.1rem,4vw,2.6rem) 0;
+    background:radial-gradient(70% 90% at 88% 0%, color-mix(in srgb,var(--sun) 45%,transparent), transparent 60%),
+               linear-gradient(165deg,var(--forest) 0%,var(--forest-2) 60%,var(--forest-3) 100%);
+  }
+  .kicker{ display:block; font-family:var(--mono); font-size:.68rem; font-weight:600; letter-spacing:.14em; color:var(--sun-2); margin-bottom:.6rem; }
+  .hero h1{ font-family:var(--serif); font-weight:700; font-size:clamp(2rem,6.5vw,3.6rem); line-height:1.02; margin:0 0 .6rem; text-wrap:balance; }
+  .hero h1 em{ font-style:italic; font-weight:500; color:var(--sun-2); }
+  .hero-sub{ margin:0; max-width:56ch; font-size:clamp(.88rem,2vw,1rem); line-height:1.6; color:color-mix(in srgb,var(--paper-2) 85%,transparent); }
+  .skyline{ display:block; width:100%; height:auto; margin-top:1.2rem; }
+  .skyline .sunc{ transform-origin:560px 70px; animation:glow 5s ease-in-out infinite; }
+  @keyframes glow{ 50%{ transform:scale(1.06); } }
+
+  .screen{ display:none; }
+  .screen.on{ display:block; animation:fade .35s ease; }
+  @keyframes fade{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:none; } }
+  .pad{ padding:clamp(1rem,3.5vw,2.2rem); }
+  h2.title{ font-family:var(--serif); font-size:clamp(1.4rem,4vw,2.1rem); margin:0 0 .5rem; line-height:1.15; }
+  h2.title:focus{ outline:none; }
+  .story{ font-size:clamp(.94rem,2vw,1.08rem); line-height:1.7; margin:0 0 1.3rem; max-width:68ch; }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem; padding:.8rem 1.4rem; border-radius:999px; min-height:44px;
+    border:1px solid transparent; font-family:var(--mono); font-size:.8rem; font-weight:700; letter-spacing:.04em;
+    cursor:pointer; text-decoration:none; transition:transform .12s ease, background .15s ease, opacity .15s;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+  .btn--primary{ background:var(--sun); color:var(--forest); box-shadow:0 12px 24px -14px rgba(180,120,20,.9); }
+  .btn--dark{ background:var(--forest-2); color:var(--paper-2); }
+  .btn--ghost{ background:transparent; border-color:var(--line); color:var(--ink-soft); }
+  .btn--ghost:hover{ background:var(--paper-2); }
+  .btn-row{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin-top:1.2rem; }
+
+  .rounds{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:.8rem; margin:0 0 1.4rem; padding:0; list-style:none; }
+  .rounds li{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:1rem 1.05rem; position:relative; overflow:hidden; }
+  .rounds li::after{ content:attr(data-n); position:absolute; right:.6rem; top:-.6rem; font-family:var(--serif); font-size:4.2rem; font-weight:700; color:color-mix(in srgb,var(--teal) 13%,transparent); }
+  .rounds .ico{ font-size:1.6rem; }
+  .rounds b{ display:block; font-family:var(--serif); font-size:1.08rem; margin:.3rem 0 .2rem; }
+  .rounds .mech{ font-family:var(--mono); font-size:.64rem; letter-spacing:.06em; color:var(--teal); font-weight:700; text-transform:uppercase; }
+  .rounds p{ margin:.35rem 0 0; font-size:.84rem; line-height:1.5; color:var(--ink-soft); }
+
+  /* ---------- HUD ---------- */
+  .hud{ position:sticky; top:0; z-index:20; background:var(--paper-2); border-bottom:1px solid var(--line); padding:.6rem clamp(1rem,3.5vw,2rem) .5rem; }
+  .hud-row{ display:flex; align-items:center; justify-content:space-between; gap:.6rem; }
+  .hud-title{ font-family:var(--serif); font-weight:700; font-size:clamp(.95rem,2.6vw,1.25rem); line-height:1.2; min-width:0; }
+  .chip{ display:inline-block; font-family:var(--mono); font-size:.66rem; font-weight:700; letter-spacing:.05em; padding:.3rem .6rem; border-radius:999px; background:var(--teal-soft); color:var(--forest); white-space:nowrap; }
+  .chip.score{ background:var(--forest); color:var(--sun-2); font-size:.78rem; padding:.4rem .75rem; }
+  .chip.bump{ animation:bump .4s ease; }
+  @keyframes bump{ 40%{ transform:scale(1.18); } }
+  .stepper{ display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin-top:.5rem; }
+  .stepper i{ height:5px; border-radius:9px; background:var(--line); transition:background .3s; }
+  .stepper i.done{ background:var(--leaf); } .stepper i.cur{ background:var(--sun); }
+
+  .howto{ background:var(--paper-2); border:1px dashed color-mix(in srgb,var(--teal) 40%,var(--line)); border-radius:14px; padding:.8rem 1rem; margin:0 0 1rem; }
+  .howto ul{ margin:0; padding-left:1.1rem; } .howto li{ font-size:clamp(.84rem,1.8vw,.98rem); line-height:1.6; color:var(--ink-soft); }
+  .mini{ font-size:.82rem; color:var(--ink-soft); margin:0 0 .8rem; }
+
+  /* ---------- MÀN 1 ---------- */
+  .r1-stats{ display:flex; justify-content:space-between; align-items:center; gap:.5rem; font-family:var(--mono); font-size:.78rem; font-weight:600; margin-bottom:.45rem; }
+  .combo{ padding:.25rem .6rem; border-radius:999px; background:var(--line); color:var(--ink-soft); transition:background .2s; }
+  .combo.hot{ background:var(--sun); color:var(--forest); animation:bump .4s ease; }
+  .timebar{ height:9px; border-radius:9px; background:var(--line); overflow:hidden; }
+  .timebar i{ display:block; height:100%; width:100%; background:linear-gradient(90deg,var(--leaf),var(--sun)); transform-origin:left; transition:transform .1s linear; }
+  .timebar.low i{ background:var(--bad); }
+  .stage{ position:relative; min-height:clamp(200px,32vh,280px); display:flex; align-items:center; justify-content:center; margin:1rem 0; }
+  .card{
+    width:min(100%,460px); background:var(--card); border:1px solid var(--line); border-radius:20px; padding:1.3rem 1.2rem; text-align:center;
+    box-shadow:0 22px 40px -24px rgba(6,40,30,.55); touch-action:pan-y; user-select:none; cursor:grab;
+    transition:transform .38s cubic-bezier(.5,-.2,.6,1), opacity .38s; animation:pop .35s ease;
+  }
+  .card.dragging{ transition:none; cursor:grabbing; }
+  .card .c-ico{ font-size:2.6rem; display:block; }
+  .card p{ font-size:clamp(1.05rem,2.8vw,1.45rem); font-weight:600; line-height:1.4; margin:.5rem 0 0; }
+  .card .hint{ display:block; font-family:var(--mono); font-size:.62rem; letter-spacing:.08em; color:var(--ink-soft); margin-top:.8rem; }
+  .card.fly-l{ transform:translate(-45%,90%) scale(.25) rotate(-18deg); opacity:0; }
+  .card.fly-r{ transform:translate(45%,90%) scale(.25) rotate(18deg); opacity:0; }
+  @keyframes pop{ from{ opacity:0; transform:scale(.85) translateY(10px);} to{ opacity:1; transform:none; } }
+  .baskets{ display:grid; grid-template-columns:1fr 1fr; gap:.7rem; }
+  .basket{
+    border-radius:18px; border:2px solid transparent; padding:1rem .6rem; cursor:pointer; text-align:center; min-height:110px;
+    display:flex; flex-direction:column; align-items:center; gap:.2rem; transition:transform .15s, box-shadow .2s;
+  }
+  .basket .b-ico{ font-size:1.8rem; }
+  .basket b{ font-family:var(--mono); font-size:clamp(.82rem,2.4vw,1.05rem); letter-spacing:.06em; }
+  .basket small{ font-size:clamp(.72rem,1.8vw,.85rem); line-height:1.35; opacity:.85; }
+  .basket.gt{ background:var(--leaf-soft); border-color:var(--leaf); color:#173f26; }
+  .basket.tu{ background:var(--sky-soft); border-color:var(--sky); color:#123b52; }
+  .basket:hover:not(:disabled), .basket.near{ transform:translateY(-3px); box-shadow:0 14px 24px -16px rgba(0,0,0,.5); }
+  .basket:disabled{ cursor:default; }
+  .basket.hit{ animation:hit .5s ease; box-shadow:0 0 0 5px color-mix(in srgb,var(--good) 40%,transparent); }
+  .basket.miss{ animation:shake .45s ease; box-shadow:0 0 0 5px color-mix(in srgb,var(--bad) 40%,transparent); }
+  @keyframes hit{ 40%{ transform:scale(1.06); } }
+  @keyframes shake{ 20%,60%{ transform:translateX(-7px);} 40%,80%{ transform:translateX(7px);} }
+  .fb{ width:min(100%,560px); border-radius:18px; padding:1.1rem 1.2rem; animation:pop .3s ease; border:2px solid; }
+  .fb.ok{ background:var(--good-soft); border-color:var(--good); } .fb.no{ background:var(--bad-soft); border-color:var(--bad); }
+  .fb .fb-h{ font-weight:700; font-size:clamp(1rem,2.6vw,1.25rem); margin:0 0 .35rem; }
+  .fb.ok .fb-h{ color:var(--good); } .fb.no .fb-h{ color:#8f3420; }
+  .fb .fb-q{ font-size:.85rem; color:var(--ink-soft); margin:0 0 .4rem; font-style:italic; }
+  .fb .fb-e{ font-size:clamp(.9rem,2vw,1.05rem); line-height:1.6; margin:0 0 .8rem; }
+
+  /* ---------- MÀN 2 ---------- */
+  .r2-stats{ font-family:var(--mono); font-size:.8rem; font-weight:600; margin-bottom:.8rem; display:flex; justify-content:space-between; gap:.5rem; flex-wrap:wrap; }
+  .board{ position:relative; display:grid; grid-template-columns:1fr 1fr; column-gap:clamp(1.3rem,6vw,4rem); }
+  .board svg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible; }
+  .board svg path{ fill:none; stroke-width:3.5; stroke-linecap:round; }
+  .board svg path.anim{ stroke-dasharray:1; animation:draw .6s ease forwards; }
+  @keyframes draw{ from{ stroke-dashoffset:1; } to{ stroke-dashoffset:0; } }
+  .col{ display:flex; flex-direction:column; gap:.55rem; min-width:0; }
+  .col h3{ font-family:var(--mono); font-size:.66rem; letter-spacing:.1em; color:var(--teal); margin:0 0 .1rem; text-transform:uppercase; }
+  .m-item{
+    position:relative; display:flex; align-items:center; gap:.5rem; text-align:left; width:100%; min-height:58px;
+    background:var(--card); border:2px solid var(--line); border-radius:14px; padding:.6rem .7rem; cursor:pointer;
+    font-size:clamp(.78rem,1.9vw,.98rem); line-height:1.35; transition:border-color .15s, background .15s, transform .15s;
+  }
+  .m-item:hover:not(.done){ border-color:var(--teal); }
+  .m-item .m-ico{ font-size:1.35rem; flex:none; }
+  .m-item.sel{ border-color:var(--sun); background:var(--sun-soft); transform:scale(1.02); box-shadow:0 0 0 3px color-mix(in srgb,var(--sun) 35%,transparent); }
+  .m-item.done{ border-color:var(--pc); background:color-mix(in srgb,var(--pc) 13%,var(--card)); cursor:default; }
+  .m-item .m-tag{ display:none; position:absolute; top:-9px; right:-7px; width:22px; height:22px; border-radius:50%; background:var(--pc); color:#fff; font-family:var(--mono); font-size:.7rem; font-weight:700; align-items:center; justify-content:center; }
+  .m-item.done .m-tag{ display:flex; animation:pop .3s ease; }
+  .m-item.wrong{ border-color:var(--bad); background:var(--bad-soft); animation:shake .45s ease; }
+  .r2-fb{ margin-top:1rem; min-height:3.2rem; }
+  .r2-fb .fb{ width:100%; }
+  .log{ list-style:none; margin:.8rem 0 0; padding:0; display:grid; gap:.4rem; }
+  .log li{ font-size:.82rem; line-height:1.5; padding:.45rem .7rem; border-left:4px solid var(--pc); background:var(--paper-2); border-radius:8px; }
+
+  /* ---------- MÀN 3 ---------- */
+  .panel{ position:sticky; top:var(--hud-h,86px); z-index:10; background:var(--forest); color:var(--paper-2); border-radius:18px; padding:.85rem 1rem; margin-bottom:1rem; box-shadow:0 18px 30px -22px rgba(0,0,0,.6); }
+  .panel.done{ position:static; }
+  .result{ scroll-margin-top:var(--hud-h,86px); }
+  .meters{ display:grid; grid-template-columns:2fr 1fr 1fr 1.3fr; gap:.7rem 1rem; align-items:end; }
+  .meter .lbl{ display:block; font-family:var(--mono); font-size:.6rem; letter-spacing:.08em; color:var(--teal-soft); text-transform:uppercase; }
+  .meter .val{ font-family:var(--mono); font-weight:700; font-size:clamp(1rem,2.8vw,1.35rem); color:var(--sun-2); }
+  .meter .val.pw{ color:#fff; }
+  .bar{ height:8px; border-radius:8px; background:rgba(255,255,255,.15); overflow:hidden; margin-top:.25rem; }
+  .bar i{ display:block; height:100%; width:0; background:var(--sun); transition:width .3s ease; }
+  .bar.l i{ background:#7FD3C2; } .bar.g i{ background:#9BD97A; }
+  .bar.full i{ background:#FF8A6B; }
+  .panel .btn{ margin-top:.75rem; width:100%; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(225px,1fr)); gap:.75rem; }
+  .ac{
+    position:relative; display:flex; flex-direction:column; gap:.45rem; text-align:left; background:var(--card); border:2px solid var(--line); border-radius:16px;
+    padding:.8rem .85rem; cursor:pointer; transition:transform .15s, border-color .15s, background .15s, opacity .2s;
+  }
+  .ac:hover:not(:disabled){ transform:translateY(-2px); border-color:var(--teal); }
+  .ac[aria-pressed="true"]{ border-color:var(--sun); background:color-mix(in srgb,var(--sun-soft) 70%,var(--card)); }
+  .ac.cant{ opacity:.5; }
+  .ac.shake{ animation:shake .45s ease; border-color:var(--bad); }
+  .ac:disabled{ cursor:default; }
+  .ac-top{ display:flex; justify-content:space-between; gap:.4rem; align-items:flex-start; }
+  .tag{ font-family:var(--mono); font-size:.6rem; font-weight:700; letter-spacing:.04em; padding:.22rem .5rem; border-radius:999px; background:color-mix(in srgb,var(--tc) 16%,var(--card)); color:color-mix(in srgb,var(--tc) 75%,#000); border:1px solid color-mix(in srgb,var(--tc) 45%,transparent); }
+  .cost{ font-family:var(--mono); font-weight:700; font-size:.78rem; white-space:nowrap; color:var(--sun-ink); background:var(--sun-soft); border-radius:8px; padding:.15rem .45rem; }
+  .ac-t{ font-weight:600; font-size:clamp(.86rem,1.9vw,.98rem); line-height:1.4; }
+  .ac-m{ display:flex; justify-content:space-between; align-items:center; gap:.4rem; font-size:.72rem; color:var(--ink-soft); }
+  .pips{ display:inline-flex; gap:3px; } .pips i{ width:13px; height:13px; border-radius:4px; background:var(--line); }
+  .pips.l i.on{ background:var(--teal); } .pips.g i.on{ background:var(--leaf); }
+  .ac-check{ position:absolute; top:-9px; left:-9px; width:26px; height:26px; border-radius:50%; background:var(--sun); color:var(--forest); font-weight:700; display:none; align-items:center; justify-content:center; font-size:.85rem; }
+  .ac[aria-pressed="true"] .ac-check{ display:flex; animation:pop .25s ease; }
+  .ac-bad{ display:none; font-size:.78rem; line-height:1.45; color:#8f3420; background:var(--bad-soft); border-radius:8px; padding:.4rem .55rem; }
+  .ac.trap-show{ border-style:dashed; border-color:var(--bad); }
+  .ac.trap-show .ac-bad{ display:block; }
+  .ac.trap-show[aria-pressed="true"]{ background:var(--bad-soft); }
+
+  .result{ margin-top:1.4rem; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:clamp(1rem,3vw,1.6rem); animation:pop .4s ease; }
+  .bigscore{ display:flex; align-items:baseline; gap:.5rem; justify-content:center; }
+  .bigscore b{ font-family:var(--serif); font-size:clamp(3rem,10vw,4.6rem); color:var(--forest-2); line-height:1; }
+  .bigscore span{ font-family:var(--mono); color:var(--ink-soft); }
+  .formula{ text-align:center; font-family:var(--mono); font-size:.72rem; color:var(--ink-soft); margin:.4rem 0 1rem; }
+  .steps{ list-style:none; padding:0; margin:0 0 1rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:.45rem; }
+  .steps li{ border-radius:12px; padding:.55rem .7rem; font-size:.82rem; font-weight:600; opacity:0; animation:pop .35s ease forwards; display:flex; gap:.4rem; align-items:center; }
+  .steps li.y{ background:var(--good-soft); color:#1d5a3a; } .steps li.n{ background:var(--bad-soft); color:#8f3420; }
+  .lines{ margin:0; padding-left:1.1rem; } .lines li{ font-size:.9rem; line-height:1.6; margin-bottom:.3rem; }
+  details.sugg{ margin-top:1rem; background:var(--paper-2); border-radius:12px; padding:.6rem .9rem; font-size:.86rem; }
+  details.sugg summary{ cursor:pointer; font-weight:700; color:var(--teal); }
+  details.sugg ol{ margin:.5rem 0 0; padding-left:1.2rem; line-height:1.6; }
+
+  /* ---------- BRIEF + FINAL ---------- */
+  .done-box{ background:var(--good-soft); border:1px solid color-mix(in srgb,var(--good) 40%,transparent); border-radius:18px; padding:1rem 1.1rem; margin-bottom:1.3rem; }
+  .done-box .k{ font-family:var(--mono); font-size:.66rem; letter-spacing:.1em; color:var(--good); font-weight:700; }
+  .done-box .pts{ font-family:var(--serif); font-size:clamp(1.6rem,5vw,2.3rem); font-weight:700; color:var(--forest-2); margin:.2rem 0; }
+  .done-box p{ margin:.3rem 0 0; font-size:.9rem; line-height:1.6; }
+  .next-k{ font-family:var(--mono); font-size:.66rem; letter-spacing:.12em; color:var(--teal); font-weight:700; }
+  .final-hero{ text-align:center; padding:clamp(1.5rem,4vw,2.6rem) 1rem; color:var(--paper-2); background:radial-gradient(70% 90% at 50% 0%, color-mix(in srgb,var(--sun) 45%,transparent), transparent 65%), linear-gradient(165deg,var(--forest),var(--forest-2)); }
+  .stars{ font-size:clamp(2.4rem,9vw,3.6rem); letter-spacing:.15em; }
+  .stars span{ display:inline-block; color:rgba(255,255,255,.22); }
+  .stars span.on{ color:var(--sun-2); animation:star .5s ease backwards; text-shadow:0 0 18px rgba(255,200,107,.6); }
+  .stars span:nth-child(2){ animation-delay:.25s; } .stars span:nth-child(3){ animation-delay:.5s; }
+  @keyframes star{ from{ transform:scale(0) rotate(-90deg); } 70%{ transform:scale(1.3); } }
+  .rank{ font-family:var(--serif); font-size:clamp(1.6rem,5vw,2.5rem); font-weight:700; margin:.3rem 0; }
+  .final-hero p{ margin:.3rem auto 0; max-width:50ch; font-size:.95rem; line-height:1.6; color:color-mix(in srgb,var(--paper-2) 85%,transparent); }
+  .strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border-radius:14px; overflow:hidden; margin:0 0 1.4rem; }
+  .strip div{ background:var(--paper-2); padding:.8rem .4rem; text-align:center; }
+  .strip b{ display:block; font-family:var(--mono); font-size:clamp(1rem,3vw,1.35rem); color:var(--forest-2); }
+  .strip span{ display:block; margin-top:.2rem; font-size:.66rem; color:var(--ink-soft); line-height:1.3; }
+  .strip div:last-child{ background:var(--forest); } .strip div:last-child b{ color:var(--sun-2); } .strip div:last-child span{ color:var(--teal-soft); }
+  .memo{ background:var(--paper-2); border:1px solid var(--line); border-left:5px solid var(--leaf); border-radius:14px; padding:1rem 1.1rem; }
+  .memo h3{ font-family:var(--serif); margin:0 0 .5rem; font-size:1.15rem; }
+  .memo ul{ margin:0; padding-left:1.1rem; } .memo li{ font-size:clamp(.88rem,1.9vw,1rem); line-height:1.65; margin-bottom:.25rem; }
+
+  .pop{ position:fixed; z-index:60; pointer-events:none; font-family:var(--mono); font-weight:700; font-size:1.3rem; transform:translate(-50%,-50%); animation:rise .9s ease forwards; text-shadow:0 2px 0 #fff; }
+  .pop.g{ color:var(--good); } .pop.b{ color:var(--bad); }
+  @keyframes rise{ to{ transform:translate(-50%,-160%); opacity:0; } }
+  .toast{ position:fixed; left:50%; bottom:1.2rem; transform:translate(-50%,150%); background:var(--ink); color:#fff; padding:.7rem 1.1rem; border-radius:12px; font-size:.88rem; z-index:70; transition:transform .3s ease; max-width:calc(100vw - 2rem); text-align:center; }
+  .toast.on{ transform:translate(-50%,0); }
+  .foot{ border-top:1px solid var(--line); padding:.8rem clamp(1rem,3.5vw,2rem); font-family:var(--mono); font-size:.6rem; color:var(--ink-soft); display:flex; flex-wrap:wrap; justify-content:space-between; gap:.4rem 1rem; background:var(--paper-2); }
+  .foot a{ color:var(--teal); text-decoration:none; }
+
+  @media (max-width:640px){
+    .meters{ grid-template-columns:1fr 1fr; gap:.35rem .8rem; }
+    .panel{ padding:.6rem .8rem; } .panel .btn{ margin-top:.5rem; min-height:40px; padding:.55rem 1rem; }
+    .strip{ grid-template-columns:repeat(2,1fr); }
+    .m-item{ padding:.5rem .5rem; gap:.35rem; } .m-item .m-ico{ font-size:1.1rem; }
+    .topbar .mono-hide{ display:none; }
+  }
+  @media (min-width:1100px){ html{ font-size:17px; } }
+  @media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation:none !important; transition:none !important; } .steps li{ opacity:1; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="topbar">
+    <a href="index.html">← Về thư viện bài giảng</a>
+    <span class="mono-hide">GDĐP 10 · BÀI 5 · TRÒ CHƠI ÔN TẬP</span>
+  </div>
+
+  <header class="hud" id="hud" hidden>
+    <div class="hud-row">
+      <div style="min-width:0"><span class="chip" id="hudRound">MÀN 1/3</span> <span class="hud-title" id="hudTitle"></span></div>
+      <span class="chip score" id="hudScore" aria-live="polite">0 điểm</span>
+    </div>
+    <div class="stepper" aria-hidden="true"><i></i><i></i><i></i></div>
+  </header>
+
+  <!-- ============ MỞ ĐẦU ============ -->
+  <section class="screen on" id="s-intro">
+    <div class="hero">
+      <span class="kicker">TRÒ CHƠI ÔN TẬP · GIÁO DỤC ĐỊA PHƯƠNG 10 · BÀI 5</span>
+      <h1>Chiến dịch <em>Sài Gòn Xanh</em></h1>
+      <p class="hero-sub">Truyền thông giảm thiểu hiệu ứng nhà kính và ứng phó với biến đổi khí hậu ở Thành phố Hồ Chí Minh</p>
+      <svg class="skyline" viewBox="0 0 700 120" aria-hidden="true">
+        <circle class="sunc" cx="560" cy="70" r="42" fill="#FFC86B" opacity=".9"/>
+        <path d="M0 120V92h40V78h26v14h30V60h22v32h24V70h18l8-10 8 10v22h30V48l14-40 14 40v44h26V66h34v26h22V80h30v12h40V58h28v34h30V74h22l10-14 10 14v18h40V84h30v8h34V68h30v24h36v28Z" fill="#0B302A"/>
+        <path d="M0 108c40-8 80 8 120 0s80-8 120 0 80 8 120 0 80-8 120 0 80 8 120 0 80-8 100 0v12H0Z" fill="#2F7FA3" opacity=".55"/>
+        <g fill="#3F9B5E"><circle cx="84" cy="96" r="9"/><circle cx="300" cy="98" r="8"/><circle cx="470" cy="97" r="9"/><circle cx="640" cy="98" r="8"/></g>
+      </svg>
+    </div>
+    <div class="pad">
+      <p class="story">Thành phố đang nóng lên, triều cường mỗi năm một cao hơn. Đoàn trường phát động <b>Chiến dịch Sài Gòn Xanh</b> và chọn bạn làm <b>trưởng ban truyền thông</b>. Để nhận nhiệm vụ, bạn phải vượt qua 3 màn thử thách: phân biệt đúng các giải pháp, chọn đúng kênh cho từng nhóm người và tự tay lên kế hoạch cho cả chiến dịch.</p>
+      <ol class="rounds" id="roundList"></ol>
+      <div class="btn-row"><button class="btn btn--primary" id="btnStart" type="button">Bắt đầu chiến dịch →</button></div>
+    </div>
+  </section>
+
+  <!-- ============ GIỚI THIỆU / KẾT THÚC MÀN ============ -->
+  <section class="screen" id="s-brief">
+    <div class="pad">
+      <div id="briefDone"></div>
+      <span class="next-k" id="briefK"></span>
+      <h2 class="title" id="briefTitle" tabindex="-1"></h2>
+      <div class="howto"><ul id="briefHow"></ul></div>
+      <div class="btn-row"><button class="btn btn--primary" id="btnGo" type="button"></button></div>
+    </div>
+  </section>
+
+  <!-- ============ MÀN 1 ============ -->
+  <section class="screen" id="s-r1">
+    <div class="pad">
+      <p class="mini">Chạm vào giỏ để phân loại · vuốt thẻ sang trái/phải · bàn phím ← →</p>
+      <div class="r1-stats"><span>Thẻ <b id="r1Count">1/12</b></span><span class="combo" id="r1Combo">Combo ×0</span><span>⏱ <b id="r1Time">60</b>s</span></div>
+      <div class="timebar" id="r1TimeBar"><i id="r1Bar"></i></div>
+      <div class="stage" id="r1Stage" aria-live="polite"></div>
+      <div class="baskets">
+        <button class="basket gt" type="button" data-a="gt"><span class="b-ico" aria-hidden="true">🌿</span><b>GIẢM THIỂU</b><small>Cắt giảm phát thải khí nhà kính</small></button>
+        <button class="basket tu" type="button" data-a="tu"><span class="b-ico" aria-hidden="true">🛡️</span><b>THÍCH ỨNG</b><small>Sống chung, giảm thiệt hại do BĐKH</small></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MÀN 2 ============ -->
+  <section class="screen" id="s-r2">
+    <div class="pad">
+      <p class="mini">Chạm một <b>đối tượng</b> rồi chạm <b>kênh</b> phù hợp nhất để nối (chạm lại để bỏ chọn).</p>
+      <div class="r2-stats"><span>Đã nối <b id="r2Count">0/6</b></span><span>Nối sai: <b id="r2Wrong">0</b></span></div>
+      <div class="board" id="r2Board">
+        <svg id="r2Svg" aria-hidden="true"></svg>
+        <div class="col" id="r2L" role="group" aria-label="Đối tượng"></div>
+        <div class="col" id="r2R" role="group" aria-label="Kênh truyền thông"></div>
+      </div>
+      <div class="r2-fb" id="r2Fb" aria-live="polite"></div>
+      <ul class="log" id="r2Log"></ul>
+      <div class="btn-row" id="r2Done" hidden><button class="btn btn--primary" id="btnR2Done" type="button">Hoàn thành Màn 2 →</button></div>
+    </div>
+  </section>
+
+  <!-- ============ MÀN 3 ============ -->
+  <section class="screen" id="s-r3">
+    <div class="pad">
+      <p class="mini">Chạm vào thẻ để chọn / bỏ chọn. Ngân sách tối đa <b>100</b>. Gợi ý: nhớ lại các bước của một chiến dịch truyền thông!</p>
+      <div class="panel" id="r3Panel">
+        <div class="meters">
+          <div class="meter"><span class="lbl">Ngân sách đã dùng</span><span class="val" id="mB">0/100</span><div class="bar" id="mBb"><i></i></div></div>
+          <div class="meter"><span class="lbl">Lan toả</span><span class="val" id="mL">0</span><div class="bar l"><i id="mLb"></i></div></div>
+          <div class="meter"><span class="lbl">Giảm phát thải</span><span class="val" id="mG">0</span><div class="bar g"><i id="mGb"></i></div></div>
+          <div class="meter"><span class="lbl">Sức mạnh = L × G</span><span class="val pw" id="mP">0</span></div>
+        </div>
+        <button class="btn btn--primary" id="btnLaunch" type="button" disabled>📣 Phát động chiến dịch</button>
+      </div>
+      <div class="grid" id="r3Grid"></div>
+      <div id="r3Result"></div>
+    </div>
+  </section>
+
+  <!-- ============ KẾT QUẢ CHUNG CUỘC ============ -->
+  <section class="screen" id="s-final">
+    <div class="final-hero">
+      <span class="kicker">KẾT QUẢ CHIẾN DỊCH SÀI GÒN XANH</span>
+      <div class="stars" id="fStars" aria-hidden="true"></div>
+      <h2 class="rank" id="fRank" tabindex="-1"></h2>
+      <p id="fMsg"></p>
+    </div>
+    <div class="pad">
+      <div class="strip" id="fStrip"></div>
+      <div class="memo">
+        <h3>📌 Ghi nhớ</h3>
+        <ul>
+          <li>Hiệu ứng nhà kính tăng do khí nhà kính (CO₂, CH₄, N₂O...) từ giao thông, điện năng, công nghiệp, rác thải.</li>
+          <li><b>Giảm thiểu</b> = cắt giảm phát thải; <b>Thích ứng</b> = điều chỉnh để giảm thiệt hại. Cần làm cả hai.</li>
+          <li>Truyền thông hiệu quả theo 5 bước: Tìm hiểu vấn đề → Chọn đối tượng → Thiết kế thông điệp → Chọn kênh &amp; lan toả → Đánh giá kết quả.</li>
+          <li>Thông điệp tốt: ngắn gọn, đúng khoa học, có nguồn, tích cực, kêu gọi một hành động cụ thể, phù hợp đối tượng.</li>
+          <li>Không lan truyền tin giật gân, chưa kiểm chứng.</li>
+        </ul>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn--primary" id="btnAgain" type="button">↻ Chơi lại</button>
+        <button class="btn btn--ghost" id="btnHome" type="button">Màn hình đầu</button>
+        <a class="btn btn--ghost" href="index.html">← Về thư viện bài giảng</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>GIÁO DỤC ĐỊA PHƯƠNG 10 · BÀI 5 · CHIẾN DỊCH SÀI GÒN XANH</span>
+    <span><a href="index.html">← Thư viện bài giảng</a> · GV: TĂNG NGỌC PHỤNG</span>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+/* ================= DỮ LIỆU ================= */
+const ROUNDS = [
+  { ico:'🌿', name:'Giảm thiểu hay Thích ứng?', mech:'Phân loại nhanh · 60 giây · combo',
+    desc:'12 thẻ hành động lần lượt xuất hiện. Gửi mỗi thẻ vào đúng giỏ thật nhanh!',
+    how:['Mỗi lượt hiện 1 thẻ. Gửi thẻ vào giỏ <b>GIẢM THIỂU</b> (cắt giảm phát thải khí nhà kính) hoặc <b>THÍCH ỨNG</b> (sống chung, giảm thiệt hại).',
+         'Chạm vào giỏ — hoặc vuốt thẻ sang trái/phải, hay dùng phím ← →.',
+         'Đúng: <b>+10</b>. Đúng liên tiếp từ thẻ thứ 3 trở đi: thêm <b>+5 combo</b>.',
+         'Đồng hồ 60 giây chỉ chạy khi thẻ chờ bạn chọn (đọc giải thích không bị tính giờ). Xong sớm được thưởng điểm thời gian.'] },
+  { ico:'🔗', name:'Đúng người, đúng kênh', mech:'Nối cặp · 6 cặp',
+    desc:'Mỗi nhóm người nghe cần một kênh truyền thông riêng. Nối cho thật chuẩn!',
+    how:['Cột trái là <b>đối tượng</b>, cột phải là <b>kênh / hình thức</b> truyền thông.',
+         'Chạm 1 ô bên trái, rồi chạm 1 ô bên phải để nối (làm ngược lại cũng được).',
+         'Nối đúng: <b>+15</b>, hai ô được khoá cùng màu và có giải thích. Nối sai: <b>−3</b>.'] },
+  { ico:'📣', name:'Điều hành chiến dịch', mech:'Chiến lược · ngân sách 100',
+    desc:'Bạn cầm 100 điểm ngân sách. Chọn bộ hoạt động để chiến dịch thật bài bản và hiệu quả.',
+    how:['Bạn có <b>100 điểm ngân sách</b>. Chạm vào thẻ hoạt động để chọn / bỏ chọn; không được vượt ngân sách.',
+         'Mỗi thẻ có chi phí, mức <b>Lan toả</b> và mức <b>Giảm phát thải</b>. Sức mạnh chiến dịch = Lan toả × Giảm phát thải.',
+         'Một chiến dịch bài bản phải đi <b>đủ các bước</b> đã học. Cẩn thận những thẻ “trông hấp dẫn” nhưng là cách làm sai!',
+         'Bấm <b>Phát động chiến dịch</b> để xem kết quả (chỉ được phát động 1 lần).'] }
+];
+const TAKE = [
+  'Giảm thiểu = giảm nguồn phát thải (giao thông, điện, rác, chăn nuôi…). Thích ứng = điều chỉnh để giảm thiệt hại (ngập, triều cường, xâm nhập mặn…). TP.HCM cần làm cả hai.',
+  'Mỗi nhóm đối tượng có thói quen tiếp nhận thông tin khác nhau. Chọn đúng kênh và hình thức thì thông điệp mới “chạm” tới người nghe.',
+  'Chiến dịch tốt đi đủ 5 bước, dùng thông tin đúng khoa học và chính hoạt động truyền thông cũng phải “xanh”.'
+];
+
+const R1D = [
+  { a:'gt', i:'🚇', t:'Đi Metro số 1 Bến Thành – Suối Tiên thay xe máy', e:'Một đoàn tàu điện chở hàng trăm người, thay cho hàng trăm xe máy chạy xăng → cắt giảm CO₂ từ giao thông.' },
+  { a:'gt', i:'☀️', t:'Lắp điện mặt trời áp mái cho trường học', e:'Điện từ năng lượng mặt trời thay cho điện từ than, dầu, khí → giảm phát thải khí nhà kính khi sản xuất điện.' },
+  { a:'gt', i:'🚌', t:'Chuyển sang xe buýt điện', e:'Xe buýt điện không đốt xăng dầu, giảm CO₂ và khói bụi trên đường phố.' },
+  { a:'gt', i:'♻️', t:'Phân loại rác tại nguồn, giảm rác chôn lấp sinh khí mê-tan', e:'Rác hữu cơ chôn lấp phân huỷ sinh ra khí mê-tan (CH₄) – khí nhà kính rất mạnh. Phân loại, tái chế giúp giảm lượng rác phải chôn.' },
+  { a:'gt', i:'💡', t:'Tắt thiết bị điện khi không dùng, hưởng ứng Giờ Trái Đất', e:'Tiết kiệm điện = bớt nhiên liệu phải đốt để phát điện → giảm CO₂.' },
+  { a:'gt', i:'🌳', t:'Trồng thêm cây xanh đô thị hấp thụ CO₂', e:'Cây xanh hấp thụ CO₂ khi quang hợp → giảm khí nhà kính trong không khí (còn giúp làm mát đô thị).' },
+  { a:'gt', i:'🥗', t:'Ăn ít thịt đỏ, không lãng phí thức ăn', e:'Chăn nuôi gia súc phát thải nhiều CH₄; thức ăn thừa đem chôn lấp cũng sinh khí mê-tan.' },
+  { a:'tu', i:'🚧', t:'Xây cống ngăn triều, nâng cao bờ bao ven sông', e:'Công trình giúp thành phố chống chịu triều cường, nước dâng → giảm thiệt hại, chứ không làm giảm khí thải.' },
+  { a:'tu', i:'🏠', t:'Nâng nền nhà, kê cao đồ đạc ở vùng hay ngập', e:'Điều chỉnh nơi ở để “sống chung” với ngập, hạn chế hư hỏng tài sản.' },
+  { a:'tu', i:'🌿', t:'Trồng và bảo vệ rừng ngập mặn Cần Giờ làm “lá chắn” chống sóng, xói lở', e:'Rừng là “lá chắn xanh” chắn sóng, giảm xói lở bờ biển → THÍCH ỨNG. Lưu ý: rừng còn hấp thụ CO₂ nên cũng góp phần GIẢM THIỂU — vừa giảm thiểu vừa thích ứng!' },
+  { a:'tu', i:'🌾', t:'Trữ nước ngọt, chọn giống lúa chịu mặn ở vùng ven', e:'Giúp người dân vùng ven sông, ven biển ứng phó với xâm nhập mặn – thích nghi với điều kiện mới.' },
+  { a:'tu', i:'📅', t:'Theo dõi lịch triều cường, cảnh báo sớm cho người dân', e:'Cảnh báo sớm giúp người dân chủ động phòng tránh, giảm thiệt hại khi triều cường, ngập.' }
+];
+
+const R2D = [
+  { ai:'🎒', a:'Học sinh THPT', ci:'📱', c:'Video ngắn trên mạng xã hội (TikTok, Reels) có thử thách #ThửTháchXanh', e:'Học sinh dùng mạng xã hội nhiều; video ngắn, có thử thách dễ tham gia và dễ chia sẻ.' },
+  { ai:'👵', a:'Người cao tuổi trong khu phố', ci:'📢', c:'Loa phát thanh phường, buổi sinh hoạt tổ dân phố', e:'Người cao tuổi ít dùng mạng xã hội, quen nghe loa phường và gặp gỡ trực tiếp ở tổ dân phố.' },
+  { ai:'🧒', a:'Trẻ em mầm non, tiểu học', ci:'🎨', c:'Kịch ngắn, trò chơi, tranh vẽ nhiều màu sắc', e:'Trẻ nhỏ học qua chơi; hình ảnh, màu sắc sinh động dễ nhớ hơn chữ viết dài.' },
+  { ai:'🧺', a:'Tiểu thương ở chợ', ci:'📄', c:'Tờ rơi, bảng thông báo tại chợ kèm hướng dẫn túi thay thế ni-lông', e:'Thông tin đặt ngay nơi buôn bán, kèm giải pháp cụ thể (túi thay thế) để làm theo được ngay.' },
+  { ai:'👨‍👩‍👧', a:'Phụ huynh, gia đình', ci:'💬', c:'Nhóm Zalo lớp, thư ngỏ gửi gia đình', e:'Phụ huynh thường xuyên theo dõi nhóm Zalo lớp; thư ngỏ tạo sự tin cậy, gắn kết nhà trường – gia đình.' },
+  { ai:'🏫', a:'Toàn trường', ci:'🎪', c:'Ngày hội “Sống xanh” dưới cờ, triển lãm poster, đổi giấy vụn lấy cây', e:'Sự kiện tập trung, nhiều hoạt động trải nghiệm → lan toả tới mọi lớp cùng lúc.' }
+];
+const PC = ['#2E8A5A','#D9821A','#2F7FA3','#C2577A','#7A63B8','#1F8C8C'];
+
+const STEPS = ['Tìm hiểu vấn đề','Chọn đối tượng','Thiết kế thông điệp','Lan toả','Đánh giá kết quả'];
+const STEP_C = ['#2F7FA3','#7A63B8','#C2577A','#D9821A','#2E8A5A'];
+const STEP_MISS = [
+  'Chưa <b>tìm hiểu vấn đề</b> → dễ nói sai, nói chung chung, không trúng thực tế địa phương.',
+  'Chưa <b>chọn đối tượng</b> → thông điệp “nói với tất cả mọi người” thường không chạm tới ai.',
+  'Thiếu <b>thông điệp</b> rõ ràng → mọi người không biết cần làm gì.',
+  'Không có hoạt động <b>lan toả</b> → thông điệp hay mấy cũng không ai biết.',
+  'Không <b>đánh giá kết quả</b> → không biết chiến dịch có thành công không để rút kinh nghiệm.'
+];
+const BUDGET = 100;
+const R3D = [
+  { id:'ks', s:0, c:15, l:1, g:2, t:'Khảo sát thói quen đi lại của học sinh trong trường' },
+  { id:'pv', s:0, c:20, l:1, g:1, t:'Phỏng vấn cán bộ phường về các điểm hay ngập' },
+  { id:'dt', s:1, c:10, l:2, g:2, t:'Chọn nhóm mục tiêu: học sinh khối 10' },
+  { id:'kh', s:2, c:10, l:2, g:2, t:'Sáng tác khẩu hiệu ngắn: “Tắt một bóng đèn – Thêm một phần xanh”' },
+  { id:'ig', s:2, c:20, l:3, g:2, t:'Thiết kế infographic số liệu có nguồn rõ ràng' },
+  { id:'vd', s:3, c:25, l:5, g:3, t:'Chuỗi video 30 giây #ThửTháchXanh 7 ngày' },
+  { id:'nh', s:3, c:30, l:4, g:4, t:'Ngày hội đổi giấy vụn lấy cây' },
+  { id:'pk', s:4, c:10, l:1, g:1, t:'Phiếu khảo sát trước – sau chiến dịch' },
+  { id:'dx', s:4, c:15, l:1, g:2, t:'Đếm số bạn đi xe đạp/xe buýt sau 1 tháng' },
+  { id:'b1', s:3, c:10, l:5, g:2, trap:true, t:'Đăng lại tin “TP.HCM sẽ chìm hoàn toàn năm 2030” để có nhiều lượt xem', bad:'Tin giật gân, chưa kiểm chứng → gây hoang mang, mất uy tín cả chiến dịch.' },
+  { id:'b2', s:2, c:10, l:2, g:3, trap:true, t:'Khẩu hiệu dài 3 câu, toàn thuật ngữ khoa học', bad:'Dài, khó hiểu → người nghe không nhớ, không biết phải làm gì.' },
+  { id:'b3', s:3, c:30, l:5, g:2, trap:true, t:'In 5.000 tờ rơi phát tràn lan', bad:'Tốn giấy, phần lớn bị vứt bỏ → đi ngược mục tiêu sống xanh.' }
+];
+const R3_COV = 16, R3_EFF = 70, R3_TRAP = 20, R3_MAX = R3_COV * 5 + R3_EFF;
+/* Tìm phương án tối ưu (không bẫy) bằng vét cạn → dùng làm thang điểm và gợi ý */
+const OPT = (function(){
+  const pool = R3D.filter(c => !c.trap); let maxP = 0, best = null, bestKey = -1;
+  for (let m = 1; m < (1 << pool.length); m++) {
+    let cost = 0, L = 0, Gs = 0; const cov = new Set(), ids = [];
+    pool.forEach((c, k) => { if (m & (1 << k)) { cost += c.c; L += c.l; Gs += c.g; cov.add(c.s); ids.push(c.id); } });
+    if (cost > BUDGET) continue;
+    const P = L * Gs; if (P > maxP) maxP = P;
+    const key = cov.size * 10000 + P; if (key > bestKey) { bestKey = key; best = ids; }
+  }
+  return { maxP, ids: best };
+})();
+const MAX = [170, 90, R3_MAX];
+
+/* ================= TRẠNG THÁI CHUNG ================= */
+const G = { round: 0, scores: [0, 0, 0], info: ['', '', ''] };
+const total = () => G.scores.reduce((a, b) => a + b, 0);
+
+function show(id){
+  $$('.screen').forEach(s => s.classList.toggle('on', s.id === id));
+  $('#hud').hidden = !/^s-r\d/.test(id);
+  window.scrollTo(0, 0);
+  if (!$('#hud').hidden) document.documentElement.style.setProperty('--hud-h', ($('#hud').offsetHeight + 8) + 'px');
+}
+function setHud(){
+  const k = G.round - 1;
+  $('#hudRound').textContent = 'MÀN ' + G.round + '/3';
+  $('#hudTitle').textContent = ROUNDS[k].name;
+  $$('.stepper i').forEach((el, i) => { el.className = i < k ? 'done' : (i === k ? 'cur' : ''); });
+  renderScore();
+}
+function renderScore(){
+  const el = $('#hudScore'); el.textContent = total() + ' điểm';
+  el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+}
+function addScore(delta, el){
+  const k = G.round - 1, before = G.scores[k];
+  G.scores[k] = Math.max(0, before + delta);
+  const real = G.scores[k] - before;
+  if (el && delta) popAt(el, (delta > 0 ? '+' : '−') + Math.abs(delta), delta > 0);
+  renderScore(); return real;
+}
+function popAt(el, text, good){
+  if (RM) return;
+  const r = el.getBoundingClientRect(), p = document.createElement('span');
+  p.className = 'pop ' + (good ? 'g' : 'b'); p.textContent = text;
+  p.style.left = (r.left + r.width / 2) + 'px'; p.style.top = (r.top + r.height / 2) + 'px';
+  document.body.appendChild(p); setTimeout(() => p.remove(), 950);
+}
+let toastT;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2400);
+}
+
+/* ================= MỞ ĐẦU & GIỚI THIỆU MÀN ================= */
+$('#roundList').innerHTML = ROUNDS.map((r, i) =>
+  `<li data-n="${i + 1}"><span class="ico" aria-hidden="true">${r.ico}</span><b>Màn ${i + 1} · ${r.name}</b><span class="mech">${r.mech}</span><p>${r.desc}</p></li>`).join('');
+
+function brief(n){
+  const prev = n - 1;
+  $('#briefDone').innerHTML = prev >= 1 ? `<div class="done-box"><span class="k">✓ HOÀN THÀNH MÀN ${prev} · ${ROUNDS[prev - 1].name.toUpperCase()}</span>
+    <div class="pts">+${G.scores[prev - 1]} điểm <small style="font-size:.5em;font-family:var(--mono);color:var(--ink-soft)">· tổng ${total()}</small></div>
+    <p>${G.info[prev - 1]}</p><p>💡 ${TAKE[prev - 1]}</p></div>` : '';
+  const r = ROUNDS[n - 1];
+  $('#briefK').textContent = 'MÀN ' + n + '/3 · ' + r.mech.toUpperCase();
+  $('#briefTitle').textContent = r.ico + ' ' + r.name;
+  $('#briefHow').innerHTML = r.how.map(h => '<li>' + h + '</li>').join('');
+  $('#btnGo').textContent = 'Vào Màn ' + n + ' →';
+  $('#btnGo').onclick = () => [startR1, startR2, startR3][n - 1]();
+  $('#hud').hidden = true;
+  show('s-brief'); $('#briefTitle').focus({ preventScroll: true });
+}
+function newGame(){ G.scores = [0, 0, 0]; G.info = ['', '', '']; brief(1); }
+$('#btnStart').onclick = newGame;
+$('#btnAgain').onclick = newGame;
+$('#btnHome').onclick = () => show('s-intro');
+
+/* ================= MÀN 1: PHÂN LOẠI ================= */
+const R1_TIME = 60;
+let r1 = {};
+function startR1(){
+  G.round = 1; G.scores[0] = 0;
+  clearInterval(r1.timer);
+  r1 = { deck: shuffle(R1D), i: 0, streak: 0, best: 0, ok: 0, time: R1_TIME, paused: true, last: performance.now(), done: false, answered: false };
+  show('s-r1'); setHud(); r1Render(); r1UpdateTime(); r1Combo();
+  r1.paused = false; r1.last = performance.now();
+  r1.timer = setInterval(r1Tick, 100);
+}
+function r1Tick(){
+  const now = performance.now();
+  if (!r1.paused && !r1.done) {
+    r1.time = Math.max(0, r1.time - (now - r1.last) / 1000); r1UpdateTime();
+    if (r1.time <= 0) r1End(true);
+  }
+  r1.last = now;
+}
+function r1UpdateTime(){
+  $('#r1Time').textContent = Math.ceil(r1.time);
+  $('#r1Bar').style.transform = 'scaleX(' + (r1.time / R1_TIME) + ')';
+  $('#r1TimeBar').classList.toggle('low', r1.time <= 10);
+}
+function r1Combo(){
+  const c = $('#r1Combo'); c.textContent = 'Combo ×' + r1.streak; c.classList.toggle('hot', r1.streak >= 3);
+}
+function r1Render(){
+  const it = r1.deck[r1.i];
+  r1.answered = false;
+  $('#r1Count').textContent = (r1.i + 1) + '/' + r1.deck.length;
+  $('#r1Stage').innerHTML = `<div class="card" id="r1Card"><span class="c-ico" aria-hidden="true">${it.i}</span><p>${it.t}</p><span class="hint">← GIẢM THIỂU · VUỐT · THÍCH ỨNG →</span></div>`;
+  $$('.basket').forEach(b => b.disabled = false);
+  bindSwipe($('#r1Card'));
+}
+function r1Answer(choice){
+  if (r1.answered || r1.done) return;
+  r1.answered = true; r1.paused = true;
+  const it = r1.deck[r1.i], ok = choice === it.a;
+  const card = $('#r1Card'), basket = $('.basket.' + choice);
+  card.classList.remove('dragging'); card.style.transform = '';
+  card.classList.add(choice === 'gt' ? 'fly-l' : 'fly-r');
+  $$('.basket').forEach(b => { b.disabled = true; b.classList.remove('near'); });
+  basket.classList.add(ok ? 'hit' : 'miss'); setTimeout(() => basket.classList.remove('hit', 'miss'), 600);
+  let head;
+  if (ok) {
+    r1.streak++; r1.ok++; r1.best = Math.max(r1.best, r1.streak);
+    const gain = 10 + (r1.streak >= 3 ? 5 : 0);
+    addScore(gain, basket);
+    head = '✓ Chính xác! +' + gain + (r1.streak >= 3 ? ' · Combo ×' + r1.streak + ' 🔥' : '');
+  } else {
+    r1.streak = 0;
+    head = '✗ Chưa đúng — đây là giải pháp ' + (it.a === 'gt' ? 'GIẢM THIỂU' : 'THÍCH ỨNG');
+  }
+  r1Combo();
+  const last = r1.i >= r1.deck.length - 1;
+  setTimeout(() => {
+    if (r1.done) return;
+    $('#r1Stage').innerHTML = `<div class="fb ${ok ? 'ok' : 'no'}"><p class="fb-h">${head}</p><p class="fb-q">“${it.t}”</p><p class="fb-e">${it.e}</p>
+      <button class="btn btn--dark" id="r1Next" type="button">${last ? 'Xem kết quả Màn 1 →' : 'Thẻ tiếp theo →'}</button></div>`;
+    const nb = $('#r1Next'); nb.onclick = r1Next; nb.focus({ preventScroll: true });
+  }, RM ? 0 : 360);
+}
+function r1Next(){
+  r1.i++;
+  if (r1.i >= r1.deck.length) return r1End(false);
+  r1Render(); r1.paused = false; r1.last = performance.now();
+}
+function r1End(timeout){
+  if (r1.done) return;
+  r1.done = true; clearInterval(r1.timer);
+  let bonus = 0;
+  if (!timeout) { bonus = Math.floor(r1.time / 3); if (bonus) addScore(bonus); }
+  G.info[0] = `Phân loại đúng <b>${r1.ok}/${r1.deck.length}</b> thẻ · combo dài nhất ×${r1.best} · ` +
+    (timeout ? `⏰ hết giờ khi còn ${r1.deck.length - r1.i} thẻ.` : `thưởng thời gian +${bonus}.`);
+  if (timeout) { $$('.basket').forEach(b => b.disabled = true); toast('⏰ Hết giờ!'); setTimeout(() => brief(2), RM ? 300 : 1100); }
+  else brief(2);
+}
+$$('.basket').forEach(b => b.addEventListener('click', () => r1Answer(b.dataset.a)));
+function bindSwipe(card){
+  let x0 = null, y0 = 0, dx = 0, id = null;
+  card.addEventListener('pointerdown', e => {
+    if (r1.answered) return;
+    x0 = e.clientX; y0 = e.clientY; dx = 0; id = e.pointerId;
+    try { card.setPointerCapture(id); } catch (_) {}
+    card.classList.add('dragging');
+  });
+  card.addEventListener('pointermove', e => {
+    if (x0 === null || e.pointerId !== id) return;
+    dx = e.clientX - x0; const dy = (e.clientY - y0) * 0.3;
+    card.style.transform = `translate(${dx}px,${dy}px) rotate(${dx / 14}deg)`;
+    $('.basket.gt').classList.toggle('near', dx < -70); $('.basket.tu').classList.toggle('near', dx > 70);
+  });
+  const end = () => {
+    if (x0 === null) return; x0 = null;
+    if (dx < -70) r1Answer('gt'); else if (dx > 70) r1Answer('tu');
+    else { card.classList.remove('dragging'); card.style.transform = ''; $$('.basket').forEach(b => b.classList.remove('near')); }
+  };
+  card.addEventListener('pointerup', end); card.addEventListener('pointercancel', end);
+}
+document.addEventListener('keydown', e => {
+  if (!$('#s-r1').classList.contains('on') || r1.answered || r1.done) return;
+  if (e.key === 'ArrowLeft') { e.preventDefault(); r1Answer('gt'); }
+  else if (e.key === 'ArrowRight') { e.preventDefault(); r1Answer('tu'); }
+});
+
+/* ================= MÀN 2: NỐI CẶP ================= */
+let r2 = {};
+function startR2(){
+  G.round = 2; G.scores[1] = 0;
+  r2 = { sel: { l: null, r: null }, matched: [], wrong: 0, busy: false };
+  const idx = R2D.map((_, i) => i);
+  const item = (side, i) => { const d = R2D[i];
+    return `<button class="m-item" type="button" data-side="${side}" data-i="${i}" aria-pressed="false"><span class="m-ico" aria-hidden="true">${side === 'l' ? d.ai : d.ci}</span><span>${side === 'l' ? d.a : d.c}</span><span class="m-tag" aria-hidden="true"></span></button>`; };
+  $('#r2L').innerHTML = '<h3>Đối tượng</h3>' + shuffle(idx).map(i => item('l', i)).join('');
+  $('#r2R').innerHTML = '<h3>Kênh / hình thức</h3>' + shuffle(idx).map(i => item('r', i)).join('');
+  $('#r2Fb').innerHTML = ''; $('#r2Log').innerHTML = ''; $('#r2Done').hidden = true;
+  r2Stats(); show('s-r2'); setHud(); drawLinks();
+}
+function r2Stats(){ $('#r2Count').textContent = r2.matched.length + '/6'; $('#r2Wrong').textContent = r2.wrong; }
+$('#r2Board').addEventListener('click', e => {
+  const b = e.target.closest('.m-item');
+  if (!b || b.classList.contains('done') || r2.busy) return;
+  const side = b.dataset.side, cur = r2.sel[side];
+  if (cur) { cur.classList.remove('sel'); cur.setAttribute('aria-pressed', 'false'); }
+  if (cur === b) { r2.sel[side] = null; return; }
+  r2.sel[side] = b; b.classList.add('sel'); b.setAttribute('aria-pressed', 'true');
+  if (r2.sel.l && r2.sel.r) r2Try();
+});
+function r2Try(){
+  const l = r2.sel.l, r = r2.sel.r; r2.sel = { l: null, r: null };
+  [l, r].forEach(x => { x.classList.remove('sel'); x.setAttribute('aria-pressed', 'false'); });
+  const i = +l.dataset.i, d = R2D[i];
+  if (i === +r.dataset.i) {
+    const n = r2.matched.length, col = PC[n];
+    r2.matched.push({ i, col });
+    [l, r].forEach(x => { x.classList.add('done'); x.style.setProperty('--pc', col); x.querySelector('.m-tag').textContent = n + 1; x.setAttribute('aria-disabled', 'true'); });
+    addScore(15, r);
+    $('#r2Fb').innerHTML = `<div class="fb ok"><p class="fb-h">✓ Nối đúng! +15</p><p class="fb-e" style="margin:0"><b>${d.a}</b> ↔ ${d.c}. ${d.e}</p></div>`;
+    $('#r2Log').insertAdjacentHTML('afterbegin', `<li style="--pc:${col}"><b>${n + 1}. ${d.a}</b> → ${d.c}</li>`);
+    drawLinks(n); r2Stats();
+    if (r2.matched.length === R2D.length) {
+      G.info[1] = `Nối đúng <b>6/6</b> cặp · số lần nối sai: <b>${r2.wrong}</b>.`;
+      $('#r2Done').hidden = false; toast('🎉 Hoàn thành tất cả các cặp!');
+      setTimeout(() => $('#btnR2Done').focus({ preventScroll: true }), 50);
+    }
+  } else {
+    r2.wrong++; r2.busy = true; r2Stats();
+    addScore(-3, r);
+    [l, r].forEach(x => x.classList.add('wrong'));
+    $('#r2Fb').innerHTML = `<div class="fb no"><p class="fb-h">✗ Chưa phù hợp! −3</p><p class="fb-e" style="margin:0">Kênh này khó đến được với <b>${d.a.toLowerCase()}</b>. Hãy nghĩ: nhóm này thường nhận thông tin ở đâu, thích hình thức nào?</p></div>`;
+    setTimeout(() => { [l, r].forEach(x => x.classList.remove('wrong')); r2.busy = false; }, 480);
+  }
+}
+function drawLinks(animIdx){
+  const svg = $('#r2Svg'), board = $('#r2Board');
+  if (!r2.matched || !board.offsetParent) return;
+  const br = board.getBoundingClientRect(); let s = '';
+  r2.matched.forEach((m, k) => {
+    const a = $(`.m-item[data-side="l"][data-i="${m.i}"]`).getBoundingClientRect();
+    const b = $(`.m-item[data-side="r"][data-i="${m.i}"]`).getBoundingClientRect();
+    const x1 = a.right - br.left, y1 = a.top + a.height / 2 - br.top, x2 = b.left - br.left, y2 = b.top + b.height / 2 - br.top;
+    const dx = Math.max(8, (x2 - x1) / 2);
+    s += `<path${k === animIdx ? ' class="anim" pathLength="1"' : ''} d="M${x1} ${y1}C${x1 + dx} ${y1} ${x2 - dx} ${y2} ${x2} ${y2}" stroke="${m.col}"/><circle cx="${x1}" cy="${y1}" r="4.5" fill="${m.col}"/><circle cx="${x2}" cy="${y2}" r="4.5" fill="${m.col}"/>`;
+  });
+  svg.setAttribute('viewBox', `0 0 ${br.width} ${br.height}`); svg.innerHTML = s;
+}
+let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => {
+  if ($('#s-r2').classList.contains('on')) drawLinks();
+  if (!$('#hud').hidden) document.documentElement.style.setProperty('--hud-h', ($('#hud').offsetHeight + 8) + 'px');
+}, 120); });
+$('#btnR2Done').onclick = () => brief(3);
+
+/* ================= MÀN 3: ĐIỀU HÀNH CHIẾN DỊCH ================= */
+let r3 = {};
+const pips = (n, cls, lbl) => `<span class="pips ${cls}" role="img" aria-label="${lbl} ${n}/5">` + [0,1,2,3,4].map(k => `<i class="${k < n ? 'on' : ''}"></i>`).join('') + '</span>';
+function startR3(){
+  G.round = 3; G.scores[2] = 0;
+  r3 = { sel: new Set(), launched: false };
+  $('#r3Grid').innerHTML = shuffle(R3D).map(c => `<button class="ac" type="button" data-id="${c.id}" aria-pressed="false">
+    <span class="ac-check" aria-hidden="true">✓</span>
+    <span class="ac-top"><span class="tag" style="--tc:${STEP_C[c.s]}">${STEPS[c.s]}</span><span class="cost">${c.c} 💰</span></span>
+    <span class="ac-t">${c.t}</span>
+    <span class="ac-m"><span>📣 Lan toả</span>${pips(c.l, 'l', 'Lan toả')}</span>
+    <span class="ac-m"><span>🌱 Giảm phát thải</span>${pips(c.g, 'g', 'Giảm phát thải')}</span>
+    ${c.trap ? `<span class="ac-bad">⚠ Bẫy! ${c.bad}</span>` : ''}</button>`).join('');
+  $('#r3Result').innerHTML = ''; $('#r3Panel').classList.remove('done');
+  show('s-r3'); setHud(); r3Update();
+}
+const byId = id => R3D.find(c => c.id === id);
+function r3Sums(){
+  let B = 0, L = 0, Gs = 0;
+  r3.sel.forEach(id => { const c = byId(id); B += c.c; L += c.l; Gs += c.g; });
+  return { B, L, Gs };
+}
+function r3Update(){
+  const { B, L, Gs } = r3Sums();
+  $('#mB').textContent = B + '/' + BUDGET;
+  $('#mBb i').style.width = (B / BUDGET * 100) + '%'; $('#mBb').classList.toggle('full', B >= BUDGET);
+  $('#mL').textContent = L; $('#mLb').style.width = Math.min(100, L / 20 * 100) + '%';
+  $('#mG').textContent = Gs; $('#mGb').style.width = Math.min(100, Gs / 20 * 100) + '%';
+  $('#mP').textContent = L * Gs;
+  $('#btnLaunch').disabled = r3.sel.size === 0 || r3.launched;
+  $$('#r3Grid .ac').forEach(el => {
+    const c = byId(el.dataset.id), on = r3.sel.has(c.id);
+    el.setAttribute('aria-pressed', on ? 'true' : 'false');
+    el.classList.toggle('cant', !on && !r3.launched && B + c.c > BUDGET);
+  });
+}
+$('#r3Grid').addEventListener('click', e => {
+  const el = e.target.closest('.ac'); if (!el || r3.launched) return;
+  const c = byId(el.dataset.id);
+  if (r3.sel.has(c.id)) r3.sel.delete(c.id);
+  else if (r3Sums().B + c.c > BUDGET) {
+    el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+    toast('💰 Vượt ngân sách! Bỏ bớt một hoạt động để chọn thẻ này.'); return;
+  } else r3.sel.add(c.id);
+  r3Update();
+});
+$('#btnLaunch').onclick = () => {
+  if (r3.launched || !r3.sel.size) return;
+  r3.launched = true;
+  const chosen = R3D.filter(c => r3.sel.has(c.id)), good = chosen.filter(c => !c.trap), traps = chosen.filter(c => c.trap);
+  const covered = STEPS.map((_, k) => good.some(c => c.s === k)), nCov = covered.filter(Boolean).length;
+  const L = good.reduce((a, c) => a + c.l, 0), Gs = good.reduce((a, c) => a + c.g, 0), P = L * Gs;
+  const cov = nCov * R3_COV, eff = Math.round(R3_EFF * Math.min(1, P / OPT.maxP)), pen = traps.length * R3_TRAP;
+  const score = Math.max(0, cov + eff - pen), used = r3Sums().B;
+  G.scores[2] = score; renderScore();
+  $$('#r3Grid .ac').forEach(el => { el.disabled = true; if (byId(el.dataset.id).trap) el.classList.add('trap-show'); });
+  $('#btnLaunch').disabled = true; $('#r3Panel').classList.add('done'); r3Update();
+
+  const lines = [];
+  if (nCov === 5) lines.push('✅ Chiến dịch đi đủ <b>5 bước</b> – bài bản như một chiến dịch thật!');
+  covered.forEach((ok, k) => { if (!ok) lines.push('❌ ' + STEP_MISS[k]); });
+  traps.forEach(c => lines.push(`⚠️ <b>${c.t}</b>: ${c.bad} <b>(−${R3_TRAP} điểm uy tín, chỉ số của thẻ bị loại)</b>`));
+  if (P >= OPT.maxP) lines.push('🏆 Sức mạnh chiến dịch đạt mức tối đa – bạn đã tìm ra phương án tối ưu!');
+  else if (P >= OPT.maxP * 0.8) lines.push('💪 Sức lan toả và tác động giảm phát thải rất mạnh!');
+  else if (P < OPT.maxP * 0.5) lines.push('📉 Tác động còn yếu – thử chọn thêm hoạt động lan toả mạnh và tạo hành động xanh thật.');
+  if (BUDGET - used >= 20) lines.push(`💰 Còn dư ${BUDGET - used} điểm ngân sách – có thể đầu tư thêm cho lan toả.`);
+  const sugg = OPT.ids.map(id => { const c = byId(id); return `<li>${c.t} <small>(${STEPS[c.s]} · ${c.c})</small></li>`; }).join('');
+
+  $('#r3Result').innerHTML = `<div class="result" role="status">
+    <div class="bigscore"><b id="r3Big">0</b><span>/ ${R3_MAX} điểm</span></div>
+    <p class="formula">Đủ bước ${nCov}×${R3_COV} = ${cov} · Sức mạnh ${L}×${Gs} = ${P} → ${eff}/${R3_EFF}${pen ? ' · Bẫy −' + pen : ''}</p>
+    <ul class="steps">${STEPS.map((s, k) => `<li class="${covered[k] ? 'y' : 'n'}" style="animation-delay:${0.15 * k + 0.2}s">${covered[k] ? '✓' : '✗'} ${s}</li>`).join('')}</ul>
+    <ul class="lines">${lines.map(x => '<li>' + x + '</li>').join('')}</ul>
+    <details class="sugg"><summary>Xem một phương án gợi ý (${BUDGET} ngân sách)</summary><ol>${sugg}</ol></details>
+    <div class="btn-row"><button class="btn btn--primary" id="btnFinal" type="button">Xem kết quả chung cuộc →</button></div></div>`;
+  G.info[2] = `Đi được ${nCov}/5 bước · sức mạnh ${P} · ${traps.length} bẫy.`;
+  $('#btnFinal').onclick = finalScreen;
+  const big = $('#r3Big');
+  if (RM) big.textContent = score;
+  else { const t0 = performance.now(); const tick = now => { const k = Math.min(1, (now - t0) / 900); big.textContent = Math.round(score * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); }; requestAnimationFrame(tick); }
+  $('#r3Result .result').scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' });
+};
+
+/* ================= KẾT QUẢ CHUNG CUỘC ================= */
+function finalScreen(){
+  const T = total(), M = MAX.reduce((a, b) => a + b, 0), pct = T / M;
+  const st = pct >= 0.8 ? 3 : pct >= 0.55 ? 2 : 1;
+  const RANK = [
+    ['Tình nguyện viên xanh', 'Khởi đầu tốt! Ôn lại phần Ghi nhớ và thử chơi lại để lên hạng nhé.'],
+    ['Đội trưởng truyền thông', 'Bạn nắm khá vững kiến thức. Xem lại phần Ghi nhớ để trở thành Đại sứ khí hậu!'],
+    ['Đại sứ khí hậu Sài Gòn', 'Xuất sắc! Bạn hiểu sâu và biết cách lan toả hành động xanh. Thành phố cần những người như bạn!']
+  ][st - 1];
+  $('#fStars').innerHTML = [1, 2, 3].map(k => `<span class="${k <= st ? 'on' : ''}">★</span>`).join('');
+  $('#fRank').textContent = RANK[0];
+  $('#fMsg').textContent = RANK[1];
+  $('#fStrip').innerHTML = ROUNDS.map((r, i) => `<div><b>${G.scores[i]}</b><span>Màn ${i + 1}<br>${r.name}</span></div>`).join('') +
+    `<div><b>${T}</b><span>Tổng điểm<br>${st}/3 sao</span></div>`;
+  show('s-final'); $('#fRank').focus({ preventScroll: true });
+}
+})();
+</script>
+</body>
+</html>
