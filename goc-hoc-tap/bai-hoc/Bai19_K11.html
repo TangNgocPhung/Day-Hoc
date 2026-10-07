@@ -1,0 +1,2185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bài học tương tác Tin học 11 – Bài 19: Thực hành tạo lập cơ sở dữ liệu và các bảng với HeidiSQL, Chủ đề F.">
+  <meta name="theme-color" content="#173F5F">
+  <title>Bài 19: Thực hành tạo lập cơ sở dữ liệu và các bảng – Tin học 11</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173F5F'/%3E%3Cellipse cx='32' cy='17' rx='18' ry='8' fill='%2335C0CD'/%3E%3Cpath d='M14 17v15c0 4.4 8.1 8 18 8s18-3.6 18-8V17M14 32v15c0 4.4 8.1 8 18 8s18-3.6 18-8V32' fill='none' stroke='white' stroke-width='4'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --navy: #173F5F;
+      --navy-dark: #0e2b42;
+      --navy-soft: #eaf1f5;
+      --cyan: #35C0CD;
+      --cyan-dark: #158f9b;
+      --cyan-soft: #e7f9fb;
+      --ink: #182b3a;
+      --muted: #607485;
+      --paper: #ffffff;
+      --page: #f3f7f9;
+      --line: #d7e2e8;
+      --success: #16805d;
+      --success-soft: #e8f8f1;
+      --warning: #b66a00;
+      --warning-soft: #fff5df;
+      --danger: #b64040;
+      --danger-soft: #fff0f0;
+      --purple: #7458b3;
+      --shadow: 0 16px 42px rgba(23, 63, 95, .11);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 96% 2%, rgba(53, 192, 205, .14), transparent 18rem),
+        var(--page);
+      font-family: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+    button, input, textarea, select { font: inherit; }
+    button, [role="button"] { touch-action: manipulation; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 12px;
+      top: -80px;
+      padding: 10px 14px;
+      color: #fff;
+      background: var(--navy-dark);
+      border-radius: 9px;
+    }
+    .skip-link:focus { top: 12px; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background: linear-gradient(125deg, var(--navy-dark), var(--navy) 62%, #176f83);
+    }
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border: 2px solid rgba(255,255,255,.1);
+      border-radius: 50%;
+    }
+    .hero::before { width: 320px; height: 320px; right: -85px; top: -170px; }
+    .hero::after { width: 200px; height: 200px; right: 45px; top: -120px; }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1160px, calc(100% - 32px));
+      margin: auto;
+      padding: 38px 0 34px;
+    }
+    .breadcrumb { margin: 0 0 16px; color: #bfeff2; font-size: .88rem; font-weight: 600; }
+    .lesson-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      color: var(--navy-dark);
+      background: var(--cyan);
+      border-radius: 999px;
+      font-size: .84rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .lesson-mark svg { width: 19px; height: 19px; }
+    h1 {
+      max-width: 860px;
+      margin: 0;
+      font-size: clamp(2.15rem, 6vw, 4.6rem);
+      line-height: 1.08;
+      letter-spacing: -.045em;
+    }
+    .hero-subtitle { max-width: 760px; margin: 16px 0 0; color: #d8eef4; font-size: 1.03rem; }
+
+    .lesson-nav-wrap {
+      position: sticky;
+      z-index: 30;
+      top: 0;
+      background: rgba(255,255,255,.95);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 5px 18px rgba(23,63,95,.07);
+      backdrop-filter: blur(12px);
+    }
+    .lesson-nav {
+      display: flex;
+      gap: 7px;
+      width: min(1160px, calc(100% - 24px));
+      margin: auto;
+      padding: 10px 0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .nav-link {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--navy); background: var(--navy-soft); }
+    .nav-link[aria-current="page"] { color: #fff; background: var(--navy); }
+    .nav-link:focus-visible,
+    .btn:focus-visible,
+    .map-node:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible { outline: 3px solid rgba(53,192,205,.4); outline-offset: 2px; }
+
+    main { width: min(1160px, calc(100% - 28px)); margin: 28px auto 70px; }
+    .lesson-panel { margin-bottom: 28px; scroll-margin-top: 88px; }
+    .js-enabled .lesson-panel:not(.active) { display: none; }
+    .js-enabled .lesson-panel.active { display: block; animation: panelIn .24s ease both; }
+    @keyframes panelIn { from { opacity: .2; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    .section-heading { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+    .section-no {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 48px;
+      height: 48px;
+      color: #fff;
+      background: var(--navy);
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      box-shadow: 0 7px 16px rgba(23,63,95,.18);
+    }
+    .section-heading h2 { margin: 0; color: var(--navy); font-size: clamp(1.55rem, 4vw, 2.25rem); line-height: 1.2; }
+    .section-heading p { margin: 5px 0 0; color: var(--muted); }
+    h3 { color: var(--navy); line-height: 1.3; }
+    .card {
+      padding: clamp(20px, 4vw, 30px);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .callout {
+      padding: 17px 19px;
+      background: var(--cyan-soft);
+      border-left: 5px solid var(--cyan);
+      border-radius: 0 14px 14px 0;
+    }
+    .callout p { margin: 0; }
+    .callout strong { color: var(--navy); }
+    .mini-label { display: block; margin-bottom: 6px; color: var(--cyan-dark); font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 47px;
+      padding: 10px 17px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .15s, background .15s, border-color .15s, box-shadow .15s;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .btn:disabled { cursor: not-allowed; opacity: .52; }
+    .btn-primary { color: #fff; background: var(--navy); box-shadow: 0 8px 18px rgba(23,63,95,.18); }
+    .btn-primary:hover:not(:disabled) { background: #205477; }
+    .btn-accent { color: var(--navy-dark); background: var(--cyan); }
+    .btn-accent:hover:not(:disabled) { background: #5bd1da; }
+    .btn-secondary { color: var(--navy); background: #fff; border-color: #b9cbd5; }
+    .btn-secondary:hover:not(:disabled) { background: var(--navy-soft); }
+    .btn-danger { color: var(--danger); background: #fff; border-color: #e0aaaa; }
+    .button-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+
+    .scenario-card { display: grid; grid-template-columns: 1.2fr .8fr; gap: 26px; align-items: center; }
+    .scenario-card h2 { margin-top: 0; font-size: clamp(1.7rem,4vw,2.5rem); }
+    .scenario-visual {
+      position: relative;
+      min-height: 280px;
+      padding: 26px;
+      background: linear-gradient(145deg, var(--navy-dark), var(--navy));
+      border-radius: 18px;
+      color: #fff;
+      overflow: hidden;
+    }
+    .search-bar { display: flex; gap: 8px; padding: 10px; background: #fff; border-radius: 11px; color: var(--muted); }
+    .search-dot { width: 22px; height: 22px; border: 3px solid var(--cyan); border-radius: 50%; position: relative; }
+    .search-dot::after { content: ""; position: absolute; width: 8px; height: 3px; right: -7px; bottom: -3px; background: var(--cyan); transform: rotate(45deg); }
+    .music-result { margin-top: 15px; padding: 13px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16); border-radius: 11px; }
+    .music-result small { color: #bdeff1; }
+    .pulse-line { height: 7px; margin-top: 9px; background: linear-gradient(90deg,var(--cyan) 65%,rgba(255,255,255,.15) 65%); border-radius: 9px; }
+    .prediction-box { margin-top: 20px; padding: 17px; background: #f7fafc; border: 1px solid var(--line); border-radius: 14px; }
+    .prediction-box fieldset { margin: 0; padding: 0; border: 0; }
+    .prediction-box legend { margin-bottom: 10px; font-weight: 700; }
+    .choice-line { display: flex; gap: 9px; align-items: flex-start; margin: 8px 0; cursor: pointer; }
+    .choice-line input { width: 19px; height: 19px; margin-top: 3px; accent-color: var(--cyan-dark); }
+    .feedback { display: none; margin-top: 13px; padding: 12px 14px; border-radius: 10px; }
+    .feedback.show { display: block; }
+    .feedback.success { color: #0f6044; background: var(--success-soft); border: 1px solid #93d2b8; }
+    .feedback.hint { color: #7a4a00; background: var(--warning-soft); border: 1px solid #e7c482; }
+
+    .goal-card { min-height: 190px; }
+    .goal-icon { display: grid; place-items: center; width: 43px; height: 43px; margin-bottom: 13px; color: var(--navy); background: var(--cyan-soft); border-radius: 12px; font-weight: 800; }
+    .goal-card h3 { margin: 0 0 7px; font-size: 1.05rem; }
+    .goal-card p { margin: 0; color: var(--muted); font-size: .93rem; }
+
+    .data-story { margin-bottom: 22px; }
+    .data-tables { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 20px 0; overflow-x: auto; }
+    .table-card { min-width: 180px; overflow: hidden; border: 1px solid #bdd0d9; border-radius: 12px; }
+    .table-title { padding: 8px 10px; color: #fff; background: var(--navy); font-size: .9rem; font-weight: 800; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .data-table th, .data-table td { padding: 7px 8px; border-bottom: 1px solid #dce7eb; text-align: left; white-space: nowrap; }
+    .data-table th { color: var(--navy-dark); background: #dff6f7; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .key-tag { display: inline-block; margin-left: 4px; padding: 1px 5px; color: #5b3b00; background: #ffe39d; border-radius: 5px; font-size: .68rem; font-weight: 800; vertical-align: 1px; }
+    .foreign-tag { color: #4c337c; background: #ede7fb; }
+    .definition { margin: 20px 0; padding: 22px; color: #fff; background: linear-gradient(125deg,var(--navy),#205f7e); border-radius: 16px; }
+    .definition p { margin: 0; font-size: 1.07rem; }
+    .concept-card { padding: 18px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--cyan); border-radius: 14px; }
+    .concept-card h3 { margin: 0 0 6px; font-size: 1rem; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: .91rem; }
+    .schema-example { overflow-x: auto; margin: 20px 0; }
+    .schema-example table { width: 100%; min-width: 670px; border-collapse: collapse; }
+    .schema-example caption { margin-bottom: 9px; color: var(--navy); font-weight: 700; text-align: left; }
+    .schema-example th, .schema-example td { padding: 9px 11px; border: 1px solid var(--line); text-align: left; }
+    .schema-example th { background: var(--navy); color: #fff; }
+    .schema-example tbody tr:nth-child(even) { background: #f1f9fa; }
+    .quiz-shell { max-width: 820px; margin: auto; }
+    .quiz-top { display: flex; align-items: center; gap: 13px; margin-bottom: 18px; }
+    .quiz-count { color: var(--navy); font-weight: 800; white-space: nowrap; }
+    .quiz-progress { flex: 1; height: 11px; background: #e1eaee; border-radius: 999px; overflow: hidden; }
+    .quiz-progress-fill { width: 20%; height: 100%; background: linear-gradient(90deg,var(--cyan),var(--cyan-dark)); transition: width .25s; }
+    .quiz-card h3 { margin: 0 0 17px; font-size: 1.2rem; }
+    .quiz-options { display: grid; gap: 10px; }
+    .quiz-option { position: relative; display: grid; grid-template-columns: 34px 1fr; gap: 11px; padding: 13px 14px; background: #f7fafb; border: 1.5px solid #d3e0e5; border-radius: 12px; cursor: pointer; }
+    .quiz-option:hover { border-color: var(--cyan-dark); }
+    .quiz-option input { position: absolute; opacity: 0; }
+    .option-letter { display: grid; place-items: center; width: 30px; height: 30px; color: var(--navy); background: #fff; border: 1px solid #aebfc8; border-radius: 50%; font-weight: 800; }
+    .quiz-option:has(input:checked) { background: var(--cyan-soft); border-color: var(--cyan-dark); }
+    .quiz-option:has(input:checked) .option-letter { color: #fff; background: var(--cyan-dark); border-color: var(--cyan-dark); }
+    .quiz-option.correct { background: var(--success-soft); border-color: var(--success); }
+    .quiz-option.wrong { background: var(--danger-soft); border-color: var(--danger); }
+    .quiz-feedback { display: none; margin-top: 14px; padding: 13px 15px; border-radius: 11px; }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.correct { color: #0e6548; background: var(--success-soft); border-left: 4px solid var(--success); }
+    .quiz-feedback.wrong { color: #794000; background: var(--warning-soft); border-left: 4px solid var(--warning); }
+    .quiz-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 17px; }
+    .quiz-result { display: none; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-disc { display: grid; place-items: center; width: 150px; height: 150px; margin: 0 auto 18px; color: #fff; background: var(--navy); border: 12px solid var(--cyan); border-radius: 50%; }
+    .score-disc strong { font-size: 2.4rem; line-height: 1; }
+    .score-disc span { display: block; font-size: .8rem; }
+
+    .summary-map { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; align-items: stretch; }
+    .summary-node { position: relative; padding: 17px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--cyan); border-radius: 13px; }
+    .summary-node:not(:last-child)::after { content: "→"; position: absolute; right: -15px; top: 42%; z-index: 2; color: var(--cyan-dark); font-weight: 800; }
+    .summary-node strong { display: block; color: var(--navy); margin-bottom: 5px; }
+    .summary-node span { color: var(--muted); font-size: .87rem; }
+    .final-score { margin-top: 22px; padding: 20px; color: #fff; background: linear-gradient(120deg,var(--navy),#1b657a); border-radius: 15px; }
+    .final-score h3 { margin: 0 0 5px; color: #fff; }
+    .final-score p { margin: 0; color: #d8f4f5; }
+
+    dialog { width: min(680px, calc(100% - 28px)); padding: 0; border: 0; border-radius: 18px; box-shadow: 0 24px 70px rgba(0,0,0,.28); }
+    dialog::backdrop { background: rgba(8,28,42,.65); backdrop-filter: blur(3px); }
+    .dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; color: #fff; background: var(--navy); }
+    .dialog-head h2 { margin: 0; font-size: 1.2rem; }
+    .dialog-close { width: 42px; height: 42px; color: #fff; background: transparent; border: 1px solid rgba(255,255,255,.3); border-radius: 10px; cursor: pointer; }
+    .dialog-body { padding: 20px; }
+    .dialog-body dl { display: grid; grid-template-columns: 140px 1fr; gap: 10px 16px; margin: 0; }
+    .dialog-body dt { color: var(--navy); font-weight: 800; }
+    .dialog-body dd { margin: 0; color: var(--muted); }
+    .noscript-note { margin: 20px auto; padding: 14px; color: #704900; background: var(--warning-soft); border: 1px solid #e3c078; border-radius: 10px; }
+    footer { padding: 24px 16px; color: #bdd4df; background: var(--navy-dark); text-align: center; font-size: .86rem; }
+
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .data-tables { grid-template-columns: repeat(2,minmax(220px,1fr)); }
+      .map-layout, .three-layout, .code-layout { grid-template-columns: 1fr; }
+      .map-detail { min-height: auto; }
+      .three-controls { order: -1; }
+      .summary-map { grid-template-columns: 1fr 1fr; }
+      .summary-node::after { display: none; }
+    }
+    @media (max-width: 680px) {
+      body { font-size: 16px; }
+      .hero-inner { padding-top: 27px; }
+      .scenario-card, .grid-2, .grid-3, .simulation-grid { grid-template-columns: 1fr; }
+      .scenario-visual { min-height: 240px; }
+      .data-tables { grid-template-columns: repeat(4,210px); }
+      .map-board { min-height: 600px; padding: 14px; }
+      .map-grid { grid-template: repeat(4,1fr) / 1fr; min-height: 565px; }
+      #map-node-nhacsi { grid-area: 1 / 1; }
+      #map-node-bannhac { grid-area: 2 / 1; }
+      #map-node-casi { grid-area: 3 / 1; }
+      #map-node-banthuam { grid-area: 4 / 1; }
+      .map-lines { display: none; }
+      .three-stage { min-height: 390px; }
+      .schema-world { transform: translate(-50%,-50%) rotateX(-18deg) rotateY(28deg) scale(.72); }
+      .bar-row { grid-template-columns: 115px 1fr 28px; font-size: .82rem; }
+      .summary-map { grid-template-columns: 1fr; }
+      .quiz-actions .btn, .code-actions .btn { flex: 1 1 140px; }
+      .dialog-body dl { grid-template-columns: 1fr; gap: 3px; }
+      .dialog-body dd { margin-bottom: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+    @media print {
+      body { background: #fff; }
+      .hero { print-color-adjust: exact; }
+      .lesson-nav-wrap, .button-row, .code-actions, .quiz-actions { display: none !important; }
+      .lesson-panel { display: block !important; break-before: page; }
+      .lesson-panel:first-of-type { break-before: auto; }
+      .card { box-shadow: none; }
+      .three-stage { min-height: 330px; print-color-adjust: exact; }
+    }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+    .compare-card { padding: 18px; border: 1px solid var(--line); border-radius: 15px; background: #fff; }
+    .compare-card.manual { border-top: 4px solid #b66a00; }
+    .compare-card.computer { border-top: 4px solid var(--cyan); }
+    .compare-card h3 { margin: 0 0 8px; font-size: 1.02rem; }
+    .compare-card ul { margin: 0; padding-left: 19px; color: var(--muted); font-size: .93rem; }
+    .compare-card li { margin: 4px 0; }
+
+    .benefit-list { display: grid; gap: 12px; margin-top: 16px; }
+    .benefit-item { display: grid; grid-template-columns: 40px 1fr; gap: 13px; align-items: start; padding: 14px 16px; background: #f7fafb; border-radius: 13px; }
+    .benefit-item .benefit-icon { display: grid; place-items: center; width: 40px; height: 40px; color: var(--navy); background: var(--cyan-soft); border-radius: 11px; font-weight: 800; }
+    .benefit-item strong { color: var(--navy); }
+    .benefit-item p { margin: 3px 0 0; color: var(--muted); font-size: .93rem; }
+
+    .step-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; margin-top: 16px; }
+    .step-card { padding: 16px; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--cyan); border-radius: 13px; }
+    .step-card span.step-no { display: inline-block; margin-bottom: 7px; padding: 2px 9px; color: #fff; background: var(--navy); border-radius: 999px; font-size: .78rem; font-weight: 800; }
+    .step-card h3 { margin: 0 0 5px; font-size: .98rem; }
+    .step-card p { margin: 0; color: var(--muted); font-size: .9rem; }
+    code.inline { padding: 2px 6px; background: var(--navy-soft); border-radius: 6px; color: var(--navy); font-family: Consolas, "Courier New", monospace; font-size: .92em; }
+
+    .console-shot { margin-top: 16px; padding: 14px 16px; color: #dbf4f5; background: #08151f; border: 1px solid #2a4a5f; border-radius: 12px; font-family: Consolas, "Courier New", monospace; font-size: .88rem; white-space: pre-wrap; }
+    .console-shot .prompt-line { color: #8ce7ed; }
+    figure { margin: 20px 0 0; }
+    figcaption { margin-top: 9px; color: var(--muted); font-size: .87rem; text-align: center; }
+    .mindmap-wrap { margin-top: 18px; overflow-x: auto; }
+    .mindmap-wrap svg { min-width: 640px; }
+
+    /* ==== Bổ sung chung cho Bài 18 – 20 ==== */
+    [hidden] { display: none !important; }
+    .scenario-card > *, .mock-step > *, .lab-grid > *, .grid-2 > *, .grid-3 > *, .heidi-layout > * { min-width: 0; }
+    .ui-shot { overflow-x: auto; }
+    .stack > * + * { margin-top: 18px; }
+    .lead { font-size: 1.04rem; }
+    .muted { color: var(--muted); }
+    .task-banner { display: grid; grid-template-columns: 54px 1fr; gap: 14px; align-items: start; padding: 18px 20px; background: #f4effc; border: 1px solid #d9cdf2; border-left: 5px solid var(--purple); border-radius: 0 16px 16px 0; }
+    .task-banner .task-icon { display: grid; place-items: center; width: 54px; height: 54px; color: #fff; background: var(--purple); border-radius: 50%; font-weight: 800; font-size: 1.3rem; }
+    .task-banner strong { display: block; color: #4c337c; font-size: 1.05rem; }
+    .task-banner p { margin: 4px 0 0; }
+    .schema-line { display: block; margin: 8px 0; padding: 10px 14px; overflow-x: auto; color: var(--ink); background: #f7fafb; border: 1px solid var(--line); border-radius: 10px; font: 600 .98rem/1.6 Consolas, "Courier New", monospace; white-space: nowrap; }
+    .schema-line b { color: var(--navy); }
+    .pk { color: #b35a00; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
+    .fk { color: #6b3fb8; }
+    .fk2 { color: #158f9b; }
+    .uq { color: #b64040; }
+    .sgk-table-wrap { overflow-x: auto; margin: 16px 0; }
+    .sgk-table { width: 100%; min-width: 420px; border-collapse: collapse; font-size: .92rem; }
+    .sgk-table caption { margin-bottom: 8px; color: var(--navy); font-weight: 700; text-align: left; }
+    .sgk-table caption em { color: var(--muted); font-weight: 500; }
+    .sgk-table th, .sgk-table td { padding: 7px 10px; border: 1px solid #fff; text-align: left; }
+    .sgk-table th { color: var(--navy-dark); background: #ffe7c2; }
+    .sgk-table td { background: #e3f3fa; }
+    .sgk-table td.num, .sgk-table th.num { text-align: center; }
+    .sgk-table tr.hl td { background: #fff2c9; }
+    .sgk-table td.dup { background: #ffd9d4; color: #8a2121; font-weight: 700; }
+    .sgk-table td.link-id { color: #6b3fb8; font-weight: 700; }
+    .table-row-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; align-items: start; }
+    .mini-table-card { overflow: hidden; background: #fff; border: 1px solid #bdd0d9; border-radius: 12px; }
+    .mini-table-card .table-title { display: flex; justify-content: space-between; gap: 8px; }
+    .mini-table-card .table-title small { color: #bdeff1; font-weight: 600; }
+    .mini-table-card .data-table td.dup { background: #ffd9d4; color: #8a2121; font-weight: 700; }
+    .mini-table-card .data-table td.new-id { color: #6b3fb8; font-weight: 700; }
+    .mini-table-wrap { max-height: 340px; overflow: auto; }
+    .stepper { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+    .stepper button { min-height: 42px; padding: 8px 13px; color: var(--navy); background: #fff; border: 1.5px solid #b9cbd5; border-radius: 999px; font-weight: 700; cursor: pointer; }
+    .stepper button[aria-pressed="true"] { color: #fff; background: var(--navy); border-color: var(--navy); }
+    .stat-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 14px 0; }
+    .stat { padding: 14px; background: #f4f8fa; border: 1px solid var(--line); border-radius: 12px; }
+    .stat strong { display: block; color: var(--navy); font-size: 1.5rem; line-height: 1.1; }
+    .stat span { color: var(--muted); font-size: .86rem; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .field-toggle { min-height: 42px; padding: 8px 13px; color: var(--navy); background: #fff; border: 1.5px dashed #9fb6c2; border-radius: 10px; font: 600 .92rem Consolas, "Courier New", monospace; cursor: pointer; }
+    .field-toggle[aria-pressed="true"] { color: #fff; background: var(--cyan-dark); border-style: solid; border-color: var(--cyan-dark); }
+    .verdict { margin-top: 12px; padding: 12px 14px; border-radius: 10px; background: var(--navy-soft); }
+    .verdict.ok { color: #0f6044; background: var(--success-soft); border: 1px solid #93d2b8; }
+    .verdict.bad { color: #8a2121; background: var(--danger-soft); border: 1px solid #e7b1b1; }
+    .verdict.warn { color: #7a4a00; background: var(--warning-soft); border: 1px solid #e7c482; }
+    .key-legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 10px 0 0; color: var(--muted); font-size: .88rem; }
+    .key-legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 6px; border-radius: 3px; vertical-align: -1px; background: currentColor; }
+    .schema-svg-wrap { overflow-x: auto; padding: 8px 0; }
+    .schema-svg-wrap svg { min-width: 720px; width: 100%; height: auto; }
+    .schema-svg-wrap .fk-link { cursor: pointer; }
+    .schema-svg-wrap .fk-link path { transition: stroke-width .15s; }
+    .schema-svg-wrap .fk-link:hover path, .schema-svg-wrap .fk-link.on path { stroke-width: 5; }
+    .schema-svg-wrap .fk-link:focus { outline: none; }
+    .schema-svg-wrap .fk-link:focus-visible path { stroke-width: 5; }
+    .info-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    .info-table th, .info-table td { padding: 9px 11px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .info-table th { color: #fff; background: var(--navy); }
+    .info-table tbody tr:nth-child(even) { background: #f4f8fa; }
+    .info-table code { font-family: Consolas, "Courier New", monospace; color: var(--navy); font-weight: 700; }
+    .lab-grid { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 20px; }
+    .lab-form { display: grid; gap: 10px; }
+    .lab-form label { display: grid; gap: 4px; font-weight: 700; font-size: .9rem; }
+    .lab-form input, .lab-form select { min-height: 44px; padding: 8px 11px; border: 1px solid #b8cbd4; border-radius: 10px; background: #fff; font-weight: 500; }
+    .reveal-box { margin-top: 12px; padding: 14px 16px; background: #f7fafb; border: 1px dashed #b9cbd5; border-radius: 12px; }
+    .reveal-box p:first-child { margin-top: 0; }
+    .reveal-box p:last-child { margin-bottom: 0; }
+    .exercise { padding: 18px 20px; background: #fff; border: 1px solid var(--line); border-left: 5px solid #d9534f; border-radius: 0 14px 14px 0; }
+    .exercise.apply { border-left-color: #2a7fd4; }
+    .exercise h3 { margin: 0 0 6px; font-size: 1.02rem; }
+    .exercise p { margin: 0 0 6px; }
+    .mock-step { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; padding: 18px; background: #fff; border: 1px solid var(--line); border-radius: 15px; }
+    .mock-step + .mock-step { margin-top: 14px; }
+    .mock-step h4 { margin: 0 0 6px; color: var(--navy); font-size: 1.02rem; }
+    .mock-step ol, .mock-step ul { margin: 6px 0 0; padding-left: 20px; }
+    .mock-step li { margin: 4px 0; }
+    .kbd, kbd { display: inline-block; padding: 1px 7px; color: var(--navy-dark); background: #fff; border: 1px solid #b9cbd5; border-bottom-width: 3px; border-radius: 6px; font: 700 .82rem Consolas, monospace; }
+    .ui-word { color: var(--navy-dark); font-weight: 800; }
+    .sql-mini { margin: 10px 0 0; padding: 11px 13px; overflow-x: auto; color: #dbf4f5; background: #0b1b28; border-radius: 10px; font: 500 .84rem/1.55 Consolas, "Courier New", monospace; white-space: pre; }
+    .sql-mini .kw { color: #8ce7ed; font-weight: 700; }
+    .sql-mini .cm { color: #8eabbc; }
+    .pitfall-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+    .pitfall { padding: 14px 16px; background: var(--danger-soft); border: 1px solid #efc7c7; border-radius: 12px; }
+    .pitfall strong { display: block; color: var(--danger); margin-bottom: 3px; }
+    .pitfall p { margin: 0; font-size: .92rem; }
+    .pitfall code { font-family: Consolas, monospace; font-size: .86rem; }
+
+    /* Ảnh minh hoạ giao diện HeidiSQL dựng bằng HTML */
+    .ui-shot { overflow: hidden; background: #f0f0f0; border: 1px solid #a9b4bb; border-radius: 8px; font: 12px/1.4 "Segoe UI", Tahoma, Arial, sans-serif; color: #1b1b1b; box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+    .ui-shot .shot-title { display: flex; justify-content: space-between; padding: 5px 10px; background: #fff; border-bottom: 1px solid #d6d6d6; }
+    .ui-shot .shot-body { padding: 10px; }
+    .ui-shot .shot-row { display: grid; grid-template-columns: 80px 1fr; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .ui-shot .shot-input { padding: 3px 6px; background: #fff; border: 1px solid #7a9cc6; border-radius: 2px; min-height: 22px; }
+    .ui-shot .shot-btns { display: flex; gap: 6px; justify-content: flex-end; margin-top: 8px; }
+    .ui-shot .shot-btn { padding: 3px 14px; background: #e1e1e1; border: 1px solid #adadad; border-radius: 2px; }
+    .ui-shot .shot-btn.hl, .ui-shot .hl { background: #fff36b; }
+    .ui-shot table { width: 100%; border-collapse: collapse; background: #fff; }
+    .ui-shot th, .ui-shot td { padding: 3px 6px; border: 1px solid #e3e3e3; text-align: left; white-space: nowrap; }
+    .ui-shot th { background: #f7f7f7; font-weight: 600; }
+    .ui-shot .shot-code { padding: 6px; background: #fff; border: 1px solid #c8c8c8; color: #1f3fbf; font-family: Consolas, monospace; font-size: 11px; white-space: pre-wrap; }
+    .ui-shot .shot-menu { display: inline-block; min-width: 190px; background: #f2f2f2; border: 1px solid #a0a0a0; box-shadow: 2px 3px 8px rgba(0,0,0,.18); }
+    .ui-shot .shot-menu div { padding: 3px 12px; }
+    .ui-shot .shot-menu .sel { background: #cce4f7; }
+    .ui-shot .shot-menu hr { margin: 3px 0; border: 0; border-top: 1px solid #d0d0d0; }
+    .ui-shot .key-gold { color: #d79b00; }
+    .ui-shot .key-red { color: #c62828; }
+    .ui-shot .key-green { color: #2e7d32; }
+    .shot-cap { margin: 6px 0 0; color: var(--muted); font-size: .84rem; font-style: italic; text-align: center; }
+
+    @media (max-width: 900px) {
+      .lab-grid, .mock-step, .pitfall-grid { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 680px) {
+      .stat-row { grid-template-columns: 1fr; }
+      .task-banner { grid-template-columns: 1fr; }
+    }
+
+    /* ==== Phòng máy mô phỏng HeidiSQL ==== */
+    .heidi-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+    .heidi { position: relative; min-width: 0; }
+    .hs-window { position: relative; overflow: hidden; color: #1b1b1b; background: #f0f0f0; border: 1px solid #8f9ba3; border-radius: 10px; box-shadow: var(--shadow); font: 13px/1.4 "Segoe UI", Tahoma, Arial, sans-serif; }
+    .hs-titlebar { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: #fff; border-bottom: 1px solid #d9d9d9; }
+    .hs-titlebar .hs-logo { display: grid; place-items: center; width: 18px; height: 18px; color: #fff; background: #3c78b5; border-radius: 50%; font-size: 10px; font-weight: 800; }
+    .hs-titlebar .hs-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hs-titlebar .hs-winbtns { color: #666; letter-spacing: 14px; }
+    .hs-menubar { display: flex; flex-wrap: wrap; gap: 14px; padding: 4px 10px; background: #fff; border-bottom: 1px solid #e3e3e3; color: #333; }
+    .hs-toolbar { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 8px; background: #f7f7f7; border-bottom: 1px solid #d6d6d6; }
+    .hs-btn { display: inline-flex; align-items: center; gap: 5px; min-height: 32px; padding: 4px 10px; color: #1b1b1b; background: #fdfdfd; border: 1px solid #b9b9b9; border-radius: 4px; font: inherit; cursor: pointer; }
+    .hs-btn:hover:not(:disabled) { background: #e5f1fb; border-color: #3c8dd6; }
+    .hs-btn:disabled { color: #9a9a9a; cursor: not-allowed; }
+    .hs-btn.primary { background: #e5f1fb; border-color: #3c8dd6; font-weight: 700; }
+    .hs-btn.pulse { animation: hsPulse 1.4s ease-in-out infinite; }
+    @keyframes hsPulse { 50% { box-shadow: 0 0 0 4px rgba(255, 214, 0, .55); } }
+    .hs-btn .ico-add { color: #2e9d3a; font-weight: 900; }
+    .hs-btn .ico-del { color: #d23b3b; font-weight: 900; }
+    .hs-body { display: grid; grid-template-columns: 210px minmax(0, 1fr); min-height: 430px; }
+    .hs-tree { padding: 6px 4px; overflow: auto; background: #fff; border-right: 1px solid #d6d6d6; }
+    .hs-tree:focus-visible { outline: 2px solid #3c8dd6; outline-offset: -2px; }
+    .hs-node { display: flex; align-items: center; gap: 5px; width: 100%; min-height: 28px; padding: 3px 6px; color: inherit; background: transparent; border: 0; border-radius: 3px; text-align: left; font: inherit; cursor: pointer; }
+    .hs-node:hover { background: #e5f1fb; }
+    .hs-node.selected { background: #cce4f7; }
+    .hs-node.sys { color: #8a8a8a; }
+    .hs-node .size { margin-left: auto; padding: 0 4px; color: #555; background: #eef1f4; border-radius: 2px; font-size: 11px; }
+    .hs-node.lvl1 { padding-left: 18px; }
+    .hs-node.lvl2 { padding-left: 34px; }
+    .hs-ico { flex: 0 0 auto; display: inline-block; width: 15px; height: 13px; border-radius: 2px; }
+    .hs-ico.server { background: linear-gradient(#4a8bd0, #2b5f95); }
+    .hs-ico.db { width: 13px; height: 14px; background: radial-gradient(ellipse at 50% 18%, #9fd18f 30%, #4f9a3e 32%); border-radius: 6px / 4px; }
+    .hs-ico.db.sys { filter: grayscale(1) opacity(.6); }
+    .hs-ico.table { background: linear-gradient(#3c8dd6 0 30%, #fff 30%); border: 1px solid #3c8dd6; }
+    .hs-main { display: flex; flex-direction: column; min-width: 0; background: #f0f0f0; }
+    .hs-toptabs { display: flex; flex-wrap: wrap; gap: 2px; padding: 4px 6px 0; background: #f0f0f0; border-bottom: 1px solid #c9c9c9; }
+    .hs-toptab { padding: 4px 10px; color: #333; background: #e6e6e6; border: 1px solid #c9c9c9; border-bottom: 0; border-radius: 4px 4px 0 0; white-space: nowrap; }
+    .hs-toptab.on { background: #fff; font-weight: 600; }
+    .hs-subtabs { display: flex; flex-wrap: wrap; gap: 2px; padding: 6px 8px 0; }
+    .hs-subtab { min-height: 30px; padding: 4px 10px; color: #333; background: #e9e9e9; border: 1px solid #c9c9c9; border-bottom: 0; border-radius: 4px 4px 0 0; font: inherit; cursor: pointer; }
+    .hs-subtab.on { background: #fff; font-weight: 700; }
+    .hs-subtab.hint { background: #fff36b; }
+    .hs-pane { margin: 0 8px; padding: 10px; min-height: 120px; background: #fff; border: 1px solid #c9c9c9; }
+    .hs-field { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 8px; align-items: center; margin-bottom: 6px; }
+    .hs-field input, .hs-field select { min-height: 30px; padding: 3px 7px; border: 1px solid #7a9cc6; border-radius: 2px; font: inherit; background: #fff; }
+    .hs-input-hl { background: #fffbd1 !important; }
+    .hs-colbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px; }
+    .hs-colbar .lbl { margin-right: 4px; color: #333; }
+    .hs-grid-wrap { margin: 0 8px; overflow: auto; background: #fff; border: 1px solid #c9c9c9; }
+    .hs-grid { width: 100%; min-width: 640px; border-collapse: collapse; }
+    .hs-grid th, .hs-grid td { padding: 2px 4px; border-right: 1px solid #ececec; border-bottom: 1px solid #ececec; text-align: left; white-space: nowrap; }
+    .hs-grid th { padding: 5px 6px; background: #f7f7f7; font-weight: 600; }
+    .hs-grid tr.sel td { background: #cce4f7; }
+    .hs-grid td.rowno { width: 52px; color: #555; cursor: pointer; }
+    .hs-grid td.rowno label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    .hs-grid td.center { text-align: center; }
+    .hs-grid input[type="text"], .hs-grid select { width: 100%; min-width: 70px; min-height: 28px; padding: 2px 5px; border: 1px solid transparent; background: transparent; font: inherit; }
+    .hs-grid input[type="text"]:hover, .hs-grid select:hover { border-color: #b9b9b9; background: #fff; }
+    .hs-grid input[type="text"]:focus, .hs-grid select:focus { border-color: #3c8dd6; background: #fff; outline: none; }
+    .hs-grid select[data-f="type"] { min-width: 104px; }
+    .hs-grid input.len { width: 64px; min-width: 64px; }
+    .hs-grid input[type="checkbox"] { width: 16px; height: 16px; accent-color: #3c8dd6; }
+    .hs-grid .col-name { font-weight: 600; }
+    .hs-defbtn { min-height: 28px; padding: 2px 6px; min-width: 120px; color: #1b1b1b; background: transparent; border: 1px solid transparent; text-align: left; font: inherit; cursor: pointer; }
+    .hs-defbtn:hover { border-color: #b9b9b9; background: #fff; }
+    .hs-defbtn.auto { color: #1f3fbf; font-weight: 700; }
+    .hs-keys { display: inline-flex; gap: 1px; min-width: 18px; }
+    .hs-key { width: 14px; height: 14px; }
+    .hs-key.pk { color: #d79b00; }
+    .hs-key.uq { color: #c62828; }
+    .hs-key.ix { color: #2e7d32; }
+    .hs-key.fk { color: #3c8dd6; }
+    .hs-actions { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; }
+    .hs-actions .grow { flex: 1; }
+    .hs-dirty { align-self: center; color: #b05a00; font-weight: 600; }
+    .hs-log { max-height: 128px; overflow: auto; padding: 4px 0; background: #fff; border-top: 1px solid #c9c9c9; font: 12px/1.5 Consolas, "Courier New", monospace; }
+    .hs-log div { display: grid; grid-template-columns: 36px 1fr; padding: 0 8px; white-space: pre-wrap; word-break: break-word; }
+    .hs-log div span:first-child { color: #9a9a9a; }
+    .hs-log .c-kw { color: #1f3fbf; font-weight: 700; }
+    .hs-log .c-cm { color: #6b7d6b; font-style: italic; }
+    .hs-log .c-err { color: #c62828; }
+    .hs-status { display: flex; flex-wrap: wrap; gap: 14px; padding: 4px 10px; color: #333; background: #f0f0f0; border-top: 1px solid #d6d6d6; font-size: 12px; }
+    .hs-status .dot { display: inline-block; width: 8px; height: 8px; margin-right: 4px; background: #2e9d3a; border-radius: 50%; }
+    .hs-empty { padding: 26px 20px; color: #555; }
+    .hs-empty h4 { margin: 0 0 8px; color: #1b1b1b; font-size: 15px; }
+    .hs-empty ul { margin: 6px 0 0; padding-left: 18px; }
+    .hs-tablelist { width: 100%; border-collapse: collapse; background: #fff; }
+    .hs-tablelist th, .hs-tablelist td { padding: 5px 8px; border: 1px solid #e3e3e3; text-align: left; }
+    .hs-tablelist th { background: #f7f7f7; }
+    .hs-ix-row, .hs-fk-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px; border-bottom: 1px solid #eee; }
+    .hs-ix-row select, .hs-fk-row select, .hs-fk-row input { min-height: 28px; padding: 2px 5px; border: 1px solid #b9b9b9; border-radius: 2px; font: inherit; background: #fff; }
+    .hs-ix-type { min-width: 120px; font-weight: 700; }
+    .hs-fk-table { width: 100%; min-width: 620px; border-collapse: collapse; }
+    .hs-fk-table th, .hs-fk-table td { padding: 3px 5px; border: 1px solid #e3e3e3; text-align: left; }
+    .hs-fk-table th { background: #f7f7f7; font-weight: 600; white-space: nowrap; }
+    .hs-fk-table select, .hs-fk-table input { width: 100%; min-height: 28px; padding: 2px 4px; border: 1px solid #b9b9b9; border-radius: 2px; font: inherit; background: #fff; }
+    .hs-fk-wrap { overflow-x: auto; }
+    .hs-fk-table input[data-f="fkname"] { min-width: 160px; }
+    .hs-code { margin: 0; padding: 8px; max-height: 230px; overflow: auto; color: #1f3fbf; background: #fff; font: 12px/1.5 Consolas, "Courier New", monospace; white-space: pre; }
+    .hs-note { margin: 6px 0 0; color: #555; font-size: 12px; }
+    .hs-menu { position: fixed; z-index: 200; min-width: 230px; padding: 3px 0; background: #f2f2f2; border: 1px solid #a0a0a0; box-shadow: 2px 4px 12px rgba(0,0,0,.22); font: 13px/1.4 "Segoe UI", Tahoma, Arial, sans-serif; }
+    .hs-menu button { display: flex; justify-content: space-between; gap: 18px; width: 100%; min-height: 30px; padding: 4px 14px; color: #1b1b1b; background: transparent; border: 0; text-align: left; font: inherit; cursor: pointer; }
+    .hs-menu button:hover:not(:disabled), .hs-menu button:focus-visible { background: #cce4f7; outline: none; }
+    .hs-menu button:disabled { color: #9a9a9a; cursor: default; }
+    .hs-menu button small { color: #777; }
+    .hs-menu hr { margin: 3px 0; border: 0; border-top: 1px solid #d0d0d0; }
+    .hs-pop { position: absolute; z-index: 60; width: 230px; padding: 8px 10px; background: #fff; border: 1px solid #8f9ba3; box-shadow: 2px 4px 14px rgba(0,0,0,.2); }
+    .hs-pop label { display: flex; align-items: center; gap: 6px; min-height: 28px; cursor: pointer; }
+    .hs-pop input[type="text"] { width: 100%; min-height: 28px; margin: 2px 0 6px; padding: 2px 6px; border: 1px solid #7a9cc6; font: inherit; }
+    .hs-pop .auto-opt { font-weight: 700; }
+    .hs-pop .row { display: flex; justify-content: flex-end; gap: 6px; margin-top: 6px; }
+    .hs-overlay { position: absolute; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; background: rgba(30, 40, 50, .35); }
+    .hs-dialog { width: min(470px, 100%); background: #f0f0f0; border: 1px solid #8f9ba3; box-shadow: 0 12px 34px rgba(0,0,0,.3); }
+    .hs-dialog .hd { display: flex; justify-content: space-between; padding: 7px 10px; background: #fff; border-bottom: 1px solid #ddd; font-weight: 600; }
+    .hs-dialog .bd { padding: 12px 14px; }
+    .hs-dialog .bd textarea { width: 100%; min-height: 64px; padding: 6px; color: #1f3fbf; border: 1px solid #c8c8c8; font: 12px/1.45 Consolas, monospace; resize: vertical; }
+    .hs-dialog .err-head { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+    .hs-dialog .err-ico { display: grid; place-items: center; width: 32px; height: 32px; color: #fff; background: #d23b3b; border-radius: 50%; font-weight: 900; }
+    .hs-dialog .err-ico.ok { background: #2e9d3a; }
+    .hs-dialog .err-ico.q { background: #3c78b5; }
+    .hs-dialog .explain { margin-top: 10px; padding: 9px 11px; color: #4b3500; background: #fff7d6; border: 1px solid #ecd27a; font-size: 13px; }
+    .hs-dialog .ft { display: flex; justify-content: flex-end; gap: 6px; padding: 8px 12px 12px; }
+    .hs-toast { position: absolute; left: 50%; bottom: 46px; z-index: 70; max-width: 90%; padding: 8px 14px; color: #fff; background: rgba(23, 63, 95, .95); border-radius: 8px; transform: translateX(-50%); font-size: 13px; pointer-events: none; animation: toastIn .2s ease both; }
+    .hs-toast.ok { background: rgba(22, 128, 93, .96); }
+    .hs-toast.warn { background: rgba(182, 106, 0, .96); }
+    @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+    .task-panel { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow: auto; padding: 18px; }
+    .task-panel h3 { margin: 0 0 4px; font-size: 1.08rem; }
+    .task-tabs { display: grid; gap: 6px; margin: 10px 0 12px; }
+    .task-tab { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 42px; padding: 7px 11px; color: var(--navy); background: #f4f8fa; border: 1.5px solid var(--line); border-radius: 10px; font-weight: 700; text-align: left; cursor: pointer; }
+    .task-tab[aria-pressed="true"] { background: var(--cyan-soft); border-color: var(--cyan-dark); }
+    .task-tab .badge { padding: 1px 8px; color: var(--muted); background: #fff; border: 1px solid var(--line); border-radius: 999px; font-size: .78rem; white-space: nowrap; }
+    .task-tab .badge.done { color: #fff; background: var(--success); border-color: var(--success); }
+    .task-group { margin: 6px 0 0; color: var(--purple); font-size: .76rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+    .task-desc { margin: 0 0 10px; color: var(--ink); font-size: .93rem; }
+    .check-list { display: grid; gap: 5px; margin: 0; padding: 0; list-style: none; }
+    .check-list li { display: grid; grid-template-columns: 22px 1fr; gap: 6px; padding: 5px 8px; background: #f7fafb; border-radius: 8px; font-size: .88rem; line-height: 1.4; }
+    .check-list li::before { content: "○"; color: #9fb0ba; font-weight: 800; text-align: center; }
+    .check-list li.ok { background: var(--success-soft); }
+    .check-list li.ok::before { content: "✓"; color: var(--success); }
+    .check-list code { font-family: Consolas, monospace; color: var(--navy); font-weight: 700; }
+    .task-done { margin-top: 10px; padding: 10px 12px; color: #0f6044; background: var(--success-soft); border: 1px solid #93d2b8; border-radius: 10px; font-weight: 600; }
+    .task-panel details { margin-top: 10px; border: 1px solid var(--line); border-radius: 10px; }
+    .task-panel summary { padding: 9px 11px; color: var(--navy); font-weight: 700; cursor: pointer; }
+    .task-panel details ol { margin: 0; padding: 0 12px 10px 30px; font-size: .88rem; }
+    .task-panel details li { margin: 4px 0; }
+    .task-progress { margin-top: 12px; color: var(--muted); font-size: .86rem; }
+
+    @media (max-width: 1100px) {
+      .heidi-layout { grid-template-columns: 1fr; }
+      .task-panel { position: static; order: -1; max-height: none; }
+    }
+    @media (max-width: 760px) {
+      .hs-body { grid-template-columns: 1fr; }
+      .hs-tree { max-height: 190px; border-right: 0; border-bottom: 1px solid #d6d6d6; }
+      .hs-menubar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Bỏ qua điều hướng</a>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="breadcrumb">Chủ đề F · Giải quyết vấn đề với sự trợ giúp của máy tính · Tin học 11</p>
+      <span class="lesson-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3"></path><path d="M18 15v6M15 18h6"></path></svg>
+        Bài 19 · Thực hành
+      </span>
+      <h1>Tạo lập cơ sở dữ liệu và các bảng</h1>
+      <p class="hero-subtitle">Đưa bản thiết kế ở Bài 18 lên máy: tạo CSDL <code style="font-family:Consolas,monospace;">mymusic</code> bằng HeidiSQL, khai báo bảng, trường, kiểu dữ liệu, khoá chính và khoá cấm trùng lặp – rồi tự tay làm trong phòng máy mô phỏng.</p>
+    </div>
+  </header>
+
+  <div class="lesson-nav-wrap">
+    <nav class="lesson-nav" aria-label="Các phần của bài học">
+      <a class="nav-link" href="#khoi-dong" data-panel="khoi-dong" aria-current="page">Khởi động</a>
+      <a class="nav-link" href="#muc-tieu" data-panel="muc-tieu">Mục tiêu</a>
+      <a class="nav-link" href="#tao-csdl" data-panel="tao-csdl">1. Tạo CSDL</a>
+      <a class="nav-link" href="#tao-bang" data-panel="tao-bang">2. Tạo bảng &amp; khoá</a>
+      <a class="nav-link" href="#phong-may" data-panel="phong-may">Phòng máy HeidiSQL</a>
+      <a class="nav-link" href="#luyen-tap" data-panel="luyen-tap">Luyện tập</a>
+      <a class="nav-link" href="#van-dung" data-panel="van-dung">Vận dụng</a>
+      <a class="nav-link" href="#bai-tap-sbt" data-panel="bai-tap-sbt">Bài tập SBT</a>
+      <a class="nav-link" href="#tong-ket" data-panel="tong-ket">Tổng kết</a>
+    </nav>
+  </div>
+
+  <noscript>
+    <p class="noscript-note">Trình duyệt đang tắt JavaScript. Nội dung hướng dẫn vẫn hiển thị; riêng phòng máy mô phỏng HeidiSQL và câu hỏi tương tác sẽ không hoạt động.</p>
+  </noscript>
+
+  <main id="main-content">
+    <!-- KHỞI ĐỘNG -->
+    <section class="lesson-panel active" id="khoi-dong">
+      <div class="card scenario-card">
+        <div>
+          <span class="mini-label">Khởi động</span>
+          <h2>Từ bản thiết kế đến CSDL thật</h2>
+          <p>Việc đầu tiên để làm việc với một CSDL là <strong>tạo lập</strong>. Với HeidiSQL, việc tạo lập CSDL và các bảng đơn giản được thực hiện như thế nào?</p>
+          <p>Ở Bài 18 em đã có bản thiết kế bốn bảng của CSDL âm nhạc:</p>
+          <code class="schema-line"><b>casi</b>(<span class="pk">idCasi</span>, tenCasi)</code>
+          <code class="schema-line"><b>nhacsi</b>(<span class="pk">idNhacsi</span>, tenNhacsi)</code>
+          <code class="schema-line"><b>bannhac</b>(<span class="pk">idBannhac</span>, tenBannhac, <span class="fk">idNhacsi</span>)</code>
+          <code class="schema-line"><b>banthuam</b>(<span class="pk">idBanthuam</span>, <span class="fk2">idBannhac</span>, <span class="fk">idCasi</span>)</code>
+          <div class="prediction-box">
+            <fieldset>
+              <legend>Dự đoán trước khi học</legend>
+              <p style="margin:0 0 10px;color:#607485;font-size:.93rem;">Khi tạo các bảng trên máy, nên tạo những bảng nào trước?</p>
+              <label class="choice-line"><input type="radio" name="warmup" value="a"><span>Bảng <code class="inline">banthuam</code> trước, vì nó là bảng chính của website.</span></label>
+              <label class="choice-line"><input type="radio" name="warmup" value="b"><span>Các bảng <code class="inline">nhacsi</code>, <code class="inline">casi</code> trước, vì chúng không có khoá ngoài.</span></label>
+              <label class="choice-line"><input type="radio" name="warmup" value="c"><span>Thứ tự nào cũng được.</span></label>
+            </fieldset>
+            <div class="button-row">
+              <button class="btn btn-primary" type="button" id="warmup-check">Kiểm tra dự đoán</button>
+              <button class="btn btn-secondary" type="button" data-panel="tao-csdl">Vào bài học</button>
+            </div>
+            <p class="feedback" id="warmup-feedback" role="status"></p>
+          </div>
+        </div>
+        <div class="scenario-visual" aria-hidden="true">
+          <div class="search-bar"><span class="search-dot"></span><span>HeidiSQL · 127.0.0.1</span></div>
+          <div class="music-result"><strong>Bài 19 · bảng không có khoá ngoài</strong><small>Tạo CSDL mymusic · bảng nhacsi · bảng casi</small><div class="pulse-line"></div></div>
+          <div class="music-result"><strong>Bài 20 · bảng có khoá ngoài</strong><small>bannhac · banthuam (tham chiếu đến bảng đã có)</small><div class="pulse-line" style="background:linear-gradient(90deg,#9b87d6 40%,rgba(255,255,255,.15) 40%)"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MỤC TIÊU -->
+    <section class="lesson-panel" id="muc-tieu">
+      <div class="section-heading">
+        <span class="section-no">2</span>
+        <div><h2>Mục tiêu bài học</h2><p>Sau bài học này em sẽ:</p></div>
+      </div>
+      <div class="task-banner" style="margin-bottom:20px;">
+        <span class="task-icon">!</span>
+        <div><strong>Nhiệm vụ. Tạo lập CSDL mới tên là mymusic, khởi tạo bảng nhacsi, khai báo các khoá cho bảng này như thiết kế ở Bài 18.</strong><p>Bảng: <code class="inline">nhacsi(idNhacsi, tenNhacsi)</code> – <code class="inline">idNhacsi</code> kiểu INT, <code class="inline">tenNhacsi</code> kiểu VARCHAR(255).</p></div>
+      </div>
+      <div class="grid-3">
+        <div class="card goal-card"><div class="goal-icon">01</div><h3>Tạo mới một CSDL</h3><p>Thực hiện qua giao diện phần mềm khách HeidiSQL: đặt tên, chọn bảng mã đối chiếu utf8mb4_general_ci.</p></div>
+        <div class="card goal-card"><div class="goal-icon">02</div><h3>Tạo bảng không có khoá ngoài</h3><p>Khai báo tên bảng, các trường, kiểu dữ liệu, Allow NULL, giá trị mặc định, AUTO_INCREMENT.</p></div>
+        <div class="card goal-card"><div class="goal-icon">03</div><h3>Chỉ định khoá</h3><p>Khai báo khoá chính (PRIMARY) cho mỗi bảng, khoá cấm trùng lặp (UNIQUE) cho trường không được trùng; biết sửa khoá chính khai báo nhầm.</p></div>
+      </div>
+      <div class="button-row">
+        <button class="btn btn-accent" type="button" data-open-glossary>Mở bảng thuật ngữ</button>
+        <button class="btn btn-secondary" type="button" data-panel="tao-csdl">Bắt đầu học</button>
+      </div>
+    </section>
+
+    <!-- 1. TẠO LẬP CSDL -->
+    <section class="lesson-panel" id="tao-csdl">
+      <div class="section-heading">
+        <span class="section-no">3</span>
+        <div><h2>Tạo lập CSDL mymusic</h2><p>Mục 1 trong SGK.</p></div>
+      </div>
+      <div class="mock-step">
+        <div>
+          <h4>Các bước thực hiện</h4>
+          <ol>
+            <li><strong>Nháy nút phải chuột</strong> ở vùng danh sách các CSDL đã có (cây bên trái của HeidiSQL).</li>
+            <li>Chọn thẻ <span class="ui-word">Tạo mới</span>, chọn <span class="ui-word">Cơ sở dữ liệu</span>.</li>
+            <li>Nhập tên <code class="inline">mymusic</code>, chọn <span class="ui-word">OK</span>.</li>
+          </ol>
+          <p>Bộ mã kí tự mặc định là <strong>Unicode 4 byte: utf8mb4</strong>, đối chiếu so sánh xâu theo <strong>utf8mb4_general_ci</strong> – lưu được đầy đủ tiếng Việt có dấu.</p>
+          <p>Ở vùng <em>mã CREATE</em> phía dưới sẽ xuất hiện câu truy vấn SQL tương ứng:</p>
+          <pre class="sql-mini"><span class="kw">CREATE DATABASE</span> `mymusic` <span class="cm">/*!40100 COLLATE 'utf8mb4_general_ci' */</span></pre>
+        </div>
+        <div>
+          <div class="ui-shot" aria-label="Minh hoạ hộp thoại Tạo cơ sở dữ liệu">
+            <div class="shot-title"><span>Tạo cơ sở dữ liệu…</span><span>✕</span></div>
+            <div class="shot-body">
+              <div class="shot-row"><span>Tên:</span><span class="shot-input hl">mymusic</span></div>
+              <div class="shot-row"><span>Đối chiếu:</span><span class="shot-input">utf8mb4_general_ci ▾</span></div>
+              <div class="shot-row"><span></span><span style="color:#555;">Máy chủ mặc định: utf8mb4_general_ci</span></div>
+              <div class="shot-btns"><span class="shot-btn hl">OK</span><span class="shot-btn">Hủy</span></div>
+              <div style="margin-top:8px;">mã CREATE:</div>
+              <div class="shot-code">CREATE DATABASE `mymusic` /*!40100 COLLATE …</div>
+            </div>
+          </div>
+          <p class="shot-cap">Hình 19.1. Tạo lập CSDL mymusic (minh hoạ)</p>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:16px;"><p><strong>Kết quả.</strong> Tên <code class="inline">mymusic</code> xuất hiện trong cây CSDL bên trái, dung lượng 0 B vì chưa có bảng nào.</p></div>
+      <div class="button-row">
+        <button class="btn btn-secondary" type="button" data-panel="phong-may">Thử ngay trong phòng máy</button>
+        <button class="btn btn-primary" type="button" data-panel="tao-bang">Tiếp: Tạo lập bảng →</button>
+      </div>
+    </section>
+
+    <!-- 2. TẠO LẬP BẢNG -->
+    <section class="lesson-panel" id="tao-bang">
+      <div class="section-heading">
+        <span class="section-no">4</span>
+        <div><h2>Tạo lập bảng nhacsi</h2><p>Mục 2 trong SGK: khai báo bảng, các trường, kiểu dữ liệu; khai báo khoá chính; lưu kết quả.</p></div>
+      </div>
+
+      <div class="card data-story">
+        <span class="mini-label">a) Khai báo tạo lập bảng, các trường và kiểu dữ liệu</span>
+        <h3>Bảng nhacsi(idNhacsi, tenNhacsi)</h3>
+        <div class="mock-step" style="border:0;padding:0;">
+          <div>
+            <ol>
+              <li>Nháy nút phải chuột ở vùng danh sách các CSDL, chọn <span class="ui-word">Tạo mới</span> → <span class="ui-word">Bảng</span>.</li>
+              <li>Nhập <strong>Tên</strong>: <code class="inline">nhacsi</code>, chọn <span class="ui-word">Thêm mới</span> để thêm trường. Một trường với tên mặc định <code class="inline">Column1</code> xuất hiện phía dưới.</li>
+              <li>Nhập tên <code class="inline">idNhacsi</code>, chọn kiểu dữ liệu <strong>INT</strong>, <strong>bỏ đánh dấu ô Allow NULL</strong>.</li>
+              <li>Ở cột <span class="ui-word">Mặc định</span>, chọn <strong>AUTO_INCREMENT</strong> rồi chọn <span class="ui-word">OK</span>.</li>
+              <li>Thêm trường tiếp theo: nhấn <kbd>Ctrl</kbd>+<kbd>Insert</kbd> hoặc nháy nút phải chuột vào phần dưới dòng <code class="inline">idNhacsi</code> và chọn <span class="ui-word">Add column</span>.</li>
+              <li>Nhập <code class="inline">tenNhacsi</code>, chọn kiểu <strong>VARCHAR</strong>, độ dài <strong>255</strong>, giá trị mặc định là kí tự rỗng <code class="inline">''</code>.</li>
+            </ol>
+          </div>
+          <div>
+            <div class="ui-shot">
+              <div class="shot-title"><span>Table: [Untitled] · Basic</span><span>Tên: nhacsi</span></div>
+              <div class="shot-body">
+                <table>
+                  <thead><tr><th>#</th><th>Tên</th><th>Kiểu dữ liệu</th><th>Length/Set</th><th>Allow NULL</th><th>Mặc định</th></tr></thead>
+                  <tbody>
+                    <tr><td>1</td><td>idNhacsi</td><td>INT</td><td></td><td class="hl">☐</td><td style="color:#1f3fbf;font-weight:700;">AUTO_INCREMENT</td></tr>
+                    <tr><td>2</td><td>tenNhacsi</td><td>VARCHAR</td><td class="hl">255</td><td>☐</td><td>''</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p class="shot-cap">Hình 19.4 – 19.5. Khai báo trường INT AUTO_INCREMENT và trường VARCHAR (minh hoạ)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card data-story">
+        <span class="mini-label">b) Khai báo khoá chính</span>
+        <h3>Ấn định idNhacsi là khoá chính</h3>
+        <div class="mock-step" style="border:0;padding:0;">
+          <div>
+            <p>Nháy nút phải chuột vào dòng khai báo <code class="inline">idNhacsi</code> và chọn <span class="ui-word">Create new index</span> → <span class="ui-word">PRIMARY</span>. Biểu tượng chìa khoá vàng xuất hiện cạnh tên trường.</p>
+            <h4 style="margin-top:14px;">Chọn nhầm trường làm khoá chính thì sao?</h4>
+            <p>Giả sử chọn nhầm <code class="inline">tenNhacsi</code> (Hình 19.7). Để sửa, mở phần <strong>Indexes</strong> phía trên, <strong>nháy đúp chuột</strong> vào ô <code class="inline">tenNhacsi</code> ở dưới ô <strong>PRIMARY KEY</strong> và chọn lại <code class="inline">idNhacsi</code> (Hình 19.8), sau đó nháy chuột vào ô bên cạnh dưới ô PRIMARY (Hình 19.9).</p>
+          </div>
+          <div>
+            <div class="ui-shot">
+              <div class="shot-body">
+                <div class="shot-menu">
+                  <div>Sao chép <span style="float:right;color:#777;">Ctrl+C</span></div>
+                  <hr>
+                  <div><span style="color:#2e9d3a;font-weight:900;">＋</span> Add column <span style="float:right;color:#777;">Ctrl+Ins</span></div>
+                  <div><span style="color:#d23b3b;font-weight:900;">✕</span> Remove column <span style="float:right;color:#777;">Ctrl+Del</span></div>
+                  <hr>
+                  <div class="sel">⚡ Create new index ▸</div>
+                </div>
+                <div class="shot-menu" style="min-width:110px;vertical-align:bottom;">
+                  <div class="sel"><span class="key-gold">🔑</span> PRIMARY</div>
+                  <div><span class="key-green">🔑</span> KEY</div>
+                  <div><span class="key-red">🔑</span> UNIQUE</div>
+                </div>
+              </div>
+            </div>
+            <p class="shot-cap">Hình 19.6. Bảng chọn để khai báo khoá chính (minh hoạ)</p>
+          </div>
+        </div>
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>Khoá cấm trùng lặp.</strong> Làm tương tự khoá chính nhưng chọn <span class="ui-word">Create new index</span> → <span class="ui-word">UNIQUE</span>. Muốn cấm trùng lặp cho <em>một cặp</em> trường, hãy đánh dấu cả hai trường rồi mới chọn UNIQUE. Ví dụ: bảng <code class="inline">tinhthanh(idTinh, tenTinh)</code> nên đặt UNIQUE cho <code class="inline">tenTinh</code> vì không có hai tỉnh trùng tên.</p>
+        </div>
+      </div>
+
+      <div class="card data-story">
+        <span class="mini-label">c) Lưu kết quả</span>
+        <p>Cuối cùng chọn <span class="ui-word">Lưu</span> để lưu lại khai báo bảng <code class="inline">nhacsi</code>. Ở vùng hiển thị phía trái sẽ xuất hiện tên bảng <code class="inline">nhacsi</code> dưới dòng tên CSDL <code class="inline">mymusic</code> (Hình 19.10). HeidiSQL đã gửi đến máy chủ câu lệnh SQL:</p>
+        <pre class="sql-mini"><span class="kw">CREATE TABLE</span> `nhacsi` (
+	`idNhacsi` <span class="kw">INT NOT NULL AUTO_INCREMENT</span>,
+	`tenNhacsi` <span class="kw">VARCHAR</span>(255) <span class="kw">NOT NULL DEFAULT</span> '',
+	<span class="kw">PRIMARY KEY</span> (`idNhacsi`) USING BTREE
+)
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB;</pre>
+        <h3 style="margin-top:20px;">Lỗi thường gặp</h3>
+        <div class="pitfall-grid">
+          <div class="pitfall"><strong>Quên khai báo khoá chính</strong><p>Trường đặt AUTO_INCREMENT mà chưa là khoá → lỗi <code>SQL Error (1075): Incorrect table definition; there can be only one auto column and it must be defined as a key</code>.</p></div>
+          <div class="pitfall"><strong>VARCHAR thiếu độ dài</strong><p>Kiểu VARCHAR bắt buộc có Length/Set. HeidiSQL tự điền 50 – nhớ sửa thành 255 như thiết kế.</p></div>
+          <div class="pitfall"><strong>Chọn nhầm khoá chính</strong><p>Không cần xoá bảng: sửa lại trường trong mục Indexes (PRIMARY KEY) rồi Lưu.</p></div>
+          <div class="pitfall"><strong>Quên bấm Lưu</strong><p>Mọi khai báo chỉ được gửi đến máy chủ khi bấm Lưu; nếu chuyển sang bảng khác, thay đổi sẽ mất.</p></div>
+        </div>
+      </div>
+      <div class="button-row"><button class="btn btn-primary" type="button" data-panel="phong-may">Vào phòng máy HeidiSQL →</button></div>
+    </section>
+
+    <!-- PHÒNG MÁY -->
+    <section class="lesson-panel" id="phong-may">
+      <div class="section-heading">
+        <span class="section-no">5</span>
+        <div><h2>Phòng máy mô phỏng HeidiSQL</h2><p>Thao tác giống HeidiSQL thật: nháy nút phải chuột vào cây CSDL, Thêm mới trường, chọn Mặc định, Create new index, Lưu. Bảng nhiệm vụ bên cạnh tự chấm kết quả.</p></div>
+      </div>
+      <div class="heidi-layout">
+        <div class="heidi" id="heidi"></div>
+        <aside class="card task-panel" id="task-panel" aria-live="polite"></aside>
+      </div>
+      <p class="muted" style="font-size:.88rem;margin-top:12px;">Phòng máy chỉ mô phỏng phần khai báo cấu trúc; kết quả được lưu trên trình duyệt của em. Trên máy tính có MySQL/MariaDB và HeidiSQL, các thao tác hoàn toàn tương tự.</p>
+    </section>
+
+    <!-- LUYỆN TẬP -->
+    <section class="lesson-panel" id="luyen-tap">
+      <div class="section-heading">
+        <span class="section-no">6</span>
+        <div><h2>Luyện tập</h2><p>Trắc nghiệm nhanh và bài luyện tập SGK.</p></div>
+      </div>
+      <div class="quiz-shell">
+        <div class="quiz-top">
+          <span class="quiz-count" id="quiz-count">Câu 1/6</span>
+          <div class="quiz-progress" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" aria-label="Tiến độ luyện tập"><div class="quiz-progress-fill" id="quiz-progress-fill"></div></div>
+        </div>
+        <div class="card quiz-card" id="quiz-card">
+          <h3 id="quiz-question">Đang tải câu hỏi…</h3>
+          <div class="quiz-options" id="quiz-options"></div>
+          <p class="quiz-feedback" id="quiz-feedback" role="status"></p>
+          <div class="quiz-actions">
+            <button class="btn btn-secondary" type="button" id="quiz-retry">Làm lại</button>
+            <button class="btn btn-primary" type="button" id="quiz-next" disabled>Câu tiếp theo</button>
+          </div>
+        </div>
+        <div class="card quiz-result" id="quiz-result">
+          <div class="score-disc"><div><strong id="quiz-score">0/6</strong><span>điểm</span></div></div>
+          <h3 id="quiz-result-title">Hoàn thành!</h3>
+          <p id="quiz-result-text"></p>
+          <div class="quiz-actions" style="justify-content:center;">
+            <button class="btn btn-accent" type="button" id="quiz-retry-2">Làm lại từ đầu</button>
+            <button class="btn btn-secondary" type="button" data-panel="van-dung">Sang Vận dụng</button>
+          </div>
+        </div>
+      </div>
+      <div class="exercise" style="margin-top:24px;">
+        <h3>Luyện tập (SGK)</h3>
+        <p>Khai báo tạo lập bảng <code class="inline">casi</code> như thiết kế ở Bài 18: <code class="inline">casi(idCasi, tenCasi)</code>, <code class="inline">idCasi</code> INT AUTO_INCREMENT là khoá chính, <code class="inline">tenCasi</code> VARCHAR(255).</p>
+        <button class="btn btn-primary" type="button" data-goto-task="lt">Làm trong phòng máy</button>
+      </div>
+    </section>
+
+    <!-- VẬN DỤNG -->
+    <section class="lesson-panel" id="van-dung">
+      <div class="section-heading">
+        <span class="section-no">7</span>
+        <div><h2>Vận dụng</h2><p>Hãy lập CSDL quản lí tên các Quận/Huyện, Tỉnh/Thành phố của Việt Nam. Tạo bảng Tỉnh/Thành phố.</p></div>
+      </div>
+      <div class="card data-story">
+        <p>Dựa trên mô hình đã phân tích ở phần Vận dụng của Bài 18:</p>
+        <ol>
+          <li>Tạo CSDL mới tên <code class="inline">hanhchinh</code> (đối chiếu utf8mb4_general_ci).</li>
+          <li>Tạo bảng <code class="inline">tinhthanh(idTinh, tenTinh)</code>: <code class="inline">idTinh</code> INT, bỏ Allow NULL, AUTO_INCREMENT, là khoá chính; <code class="inline">tenTinh</code> VARCHAR(255), mặc định <code class="inline">''</code>.</li>
+          <li>Đặt <strong>khoá cấm trùng lặp</strong> (UNIQUE) cho <code class="inline">tenTinh</code> vì không có hai tỉnh/thành phố trùng tên.</li>
+        </ol>
+        <p class="muted">Bảng quận/huyện (hoặc xã/phường) có khoá ngoài tham chiếu đến <code class="inline">tinhthanh</code> nên sẽ được tạo ở Bài 20.</p>
+        <button class="btn btn-primary" type="button" data-goto-task="vd">Làm trong phòng máy</button>
+      </div>
+    </section>
+
+    <!-- BÀI TẬP SBT -->
+    <section class="lesson-panel" id="bai-tap-sbt">
+      <div class="section-heading">
+        <span class="section-no">8</span>
+        <div><h2>Bài tập Sách bài tập (SBT) – Bài 19</h2><p>Các câu 19.5 – 19.8 có sẵn nhiệm vụ tự chấm trong phòng máy.</p></div>
+      </div>
+      <div class="card data-story">
+        <span class="mini-label">Tóm tắt kiến thức (SBT)</span>
+        <ul style="margin:0;padding-left:20px;">
+          <li>Trong xây dựng CSDL, việc đầu tiên là tạo lập CSDL, sau đó là khai báo định nghĩa các bảng đơn giản (các bảng không có khoá ngoài).</li>
+          <li>Với HeidiSQL, người dùng có thể khởi tạo CSDL dễ dàng. Việc khai báo các bảng cũng dễ dàng: khai báo từng trường, chỉ định kiểu dữ liệu, cuối cùng khai báo khoá chính và lưu lại kết quả.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <div class="exercise">
+          <h3>19.1</h3><p>Có thể dùng tiếng Việt có dấu để khai báo tên của CSDL được không?</p>
+          <button class="btn btn-secondary" type="button" data-reveal="s191">Xem đáp án</button>
+          <div class="reveal-box" id="s191" hidden><p>Về kĩ thuật, MySQL/MariaDB <strong>có thể</strong> chấp nhận tên có dấu nếu đặt trong cặp dấu <code class="inline">`…`</code> (ví dụ <code class="inline">`quảnlíhọcsinh`</code>), vì tên CSDL được lưu bằng Unicode. Tuy nhiên <strong>không nên</strong> dùng: tên CSDL còn là tên thư mục trên ổ đĩa của máy chủ, dễ phát sinh lỗi bảng mã khi sao lưu, chuyển sang máy khác; khó gõ chính xác trong câu truy vấn. Quy ước chung: tên viết <strong>không dấu, không khoảng trắng</strong>, ví dụ <code class="inline">qlhs</code>, <code class="inline">mymusic</code>.</p></div>
+        </div>
+        <div class="exercise">
+          <h3>19.2</h3><p>Có thể dùng tiếng Việt có dấu để khai báo tên của bảng và tên của các trường dữ liệu được không?</p>
+          <button class="btn btn-secondary" type="button" data-reveal="s192">Xem đáp án</button>
+          <div class="reveal-box" id="s192" hidden><p>Tương tự câu 19.1: <strong>có thể</strong> nếu luôn đặt tên trong dấu <code class="inline">`…`</code>, nhưng <strong>không nên</strong>. Mỗi câu truy vấn đều phải gõ lại tên bảng, tên trường; tên có dấu, có khoảng trắng rất dễ gõ sai, dễ lỗi bảng mã và khó dùng với các ngôn ngữ lập trình. Nên đặt tên không dấu, ghép từ, ví dụ <code class="inline">tenNhacsi</code>, <code class="inline">ngaysinh</code>. Nội dung dữ liệu (tên nhạc sĩ, tên tỉnh…) thì vẫn lưu tiếng Việt có dấu bình thường nhờ bảng mã utf8mb4.</p></div>
+        </div>
+        <div class="exercise">
+          <h3>19.3</h3><p>Có thể tạo bảng bên ngoài mọi CSDL được không?</p>
+          <button class="btn btn-secondary" type="button" data-reveal="s193">Xem đáp án</button>
+          <div class="reveal-box" id="s193" hidden><p><strong>Không.</strong> Mỗi bảng phải thuộc về một CSDL. Vì vậy phải tạo (hoặc chọn) CSDL trước, rồi mới tạo bảng trong CSDL đó. Trong HeidiSQL (và phòng máy mô phỏng), mục <strong>Tạo mới → Bảng</strong> chỉ dùng được khi đã chọn một CSDL; trong câu lệnh SQL, nếu chưa <code class="inline">USE</code> CSDL nào sẽ gặp lỗi <code class="inline">No database selected</code>.</p></div>
+        </div>
+        <div class="exercise">
+          <h3>19.4</h3><p>Giả sử đã tạo bảng <em>dantoc</em> trong một CSDL (chẳng hạn CSDL <em>dancu</em>). Có thể tạo bảng <em>dantoc</em> trong một CSDL khác (chẳng hạn CSDL <em>hocsinh</em>) được không?</p>
+          <button class="btn btn-secondary" type="button" data-reveal="s194">Xem đáp án</button>
+          <div class="reveal-box" id="s194" hidden><p><strong>Được.</strong> Tên bảng chỉ cần duy nhất <strong>trong một CSDL</strong>. Hai bảng <code class="inline">dancu.dantoc</code> và <code class="inline">hocsinh.dantoc</code> là hai bảng khác nhau, độc lập với nhau. Chỉ khi tạo hai bảng cùng tên trong cùng một CSDL mới bị lỗi <code class="inline">Table 'dantoc' already exists</code>. Em có thể kiểm chứng trong phòng máy: bảng <code class="inline">tinhthanh</code> có thể có ở cả CSDL <code class="inline">hanhchinh</code> và <code class="inline">qlhs</code>.</p></div>
+        </div>
+        <div class="exercise apply">
+          <h3>19.5 – 19.6</h3><p>Hãy tạo lập CSDL <em>qlhs</em>. Trong CSDL <em>qlhs</em>, hãy tạo lập bảng <em>dantoc</em> quản lí danh sách các tên dân tộc ở Việt Nam.</p>
+          <p class="muted">Gợi ý thiết kế: <code class="inline">dantoc(idDantoc, tenDantoc)</code> – <code class="inline">idDantoc</code> INT AUTO_INCREMENT khoá chính; <code class="inline">tenDantoc</code> VARCHAR(255), mặc định <code class="inline">''</code>, đặt UNIQUE (Việt Nam có 54 dân tộc, không trùng tên).</p>
+          <button class="btn btn-primary" type="button" data-goto-task="s195">Làm trong phòng máy</button>
+        </div>
+        <div class="exercise apply">
+          <h3>19.7</h3><p>Trong CSDL <em>qlhs</em>, hãy tạo lập các bảng quản lí danh sách các tên xã/phường, tại huyện/quận, tỉnh/thành phố nơi em cư trú.</p>
+          <button class="btn btn-secondary" type="button" data-reveal="s197">Xem gợi ý</button>
+          <div class="reveal-box" id="s197" hidden>
+            <p>Từ 01/7/2025, nước ta tổ chức chính quyền địa phương hai cấp (tỉnh – xã/phường), không còn cấp huyện/quận. Vì vậy chỉ cần hai bảng:</p>
+            <code class="schema-line"><b>tinhthanh</b>(<span class="pk">idTinh</span>, <span class="uq">tenTinh</span>)</code>
+            <code class="schema-line"><b>xaphuong</b>(<span class="pk">idXaphuong</span>, tenXaphuong, <span class="fk">idTinh</span>)</code>
+            <p>Bảng <code class="inline">tinhthanh</code> không có khoá ngoài nên tạo ngay ở bài này. Bảng <code class="inline">xaphuong</code> có khoá ngoài <code class="inline">idTinh</code> nên sẽ hoàn thành ở Bài 20. (Nếu làm theo đúng ba cấp như SBT, thêm bảng <code class="inline">quanhuyen(idQuanhuyen, tenQuanhuyen, idTinh)</code> và thay <code class="inline">idTinh</code> trong <code class="inline">xaphuong</code> bằng <code class="inline">idQuanhuyen</code>.)</p>
+          </div>
+          <div class="button-row"><button class="btn btn-primary" type="button" data-goto-task="s197">Làm trong phòng máy</button></div>
+        </div>
+        <div class="exercise apply">
+          <h3>19.8</h3><p>Trong CSDL <em>qlhs</em>, hãy tạo lập bảng danh sách các lớp học gồm tên các lớp theo từng năm học và nhập dữ liệu các lớp học trong trường em.</p>
+          <p class="muted">Gợi ý thiết kế: <code class="inline">lop(idLop, tenLop, namHoc)</code> – <code class="inline">idLop</code> INT AUTO_INCREMENT khoá chính; <code class="inline">tenLop</code> VARCHAR (ví dụ “11A1”); <code class="inline">namHoc</code> VARCHAR (ví dụ “2026-2027”); UNIQUE cho cặp <code class="inline">(tenLop, namHoc)</code>. Phần nhập dữ liệu em thực hiện trên HeidiSQL thật ở thẻ <strong>Dữ liệu</strong> (sẽ học kĩ ở Bài 21).</p>
+          <button class="btn btn-primary" type="button" data-goto-task="s198">Làm trong phòng máy</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TỔNG KẾT -->
+    <section class="lesson-panel" id="tong-ket">
+      <div class="section-heading">
+        <span class="section-no">9</span>
+        <div><h2>Tổng kết</h2><p>Quy trình tạo lập CSDL và bảng với HeidiSQL.</p></div>
+      </div>
+      <div class="card">
+        <div class="summary-map">
+          <div class="summary-node"><strong>1. Tạo CSDL</strong><span>Chuột phải → Tạo mới → Cơ sở dữ liệu; utf8mb4_general_ci.</span></div>
+          <div class="summary-node"><strong>2. Tạo bảng</strong><span>Tạo mới → Bảng; nhập Tên; Thêm mới các trường.</span></div>
+          <div class="summary-node"><strong>3. Khai báo trường</strong><span>Kiểu dữ liệu, Length, Allow NULL, Mặc định / AUTO_INCREMENT.</span></div>
+          <div class="summary-node"><strong>4. Khai báo khoá</strong><span>Create new index → PRIMARY; UNIQUE cho trường cấm trùng.</span></div>
+          <div class="summary-node"><strong>5. Lưu</strong><span>Bảng xuất hiện dưới tên CSDL ở cây bên trái.</span></div>
+        </div>
+        <div class="final-score">
+          <h3>Kết quả luyện tập: <span id="summary-score">Chưa hoàn thành</span></h3>
+          <p id="summary-message">Hãy hoàn thành phần trắc nghiệm ở mục Luyện tập để cập nhật kết quả tại đây.</p>
+          <p id="summary-lab" style="margin-top:6px;">Phòng máy: chưa có nhiệm vụ nào hoàn thành.</p>
+        </div>
+        <div class="button-row">
+          <a class="btn btn-secondary" href="Bai18_K11.html">← Bài 18</a>
+          <button class="btn btn-accent" type="button" data-open-glossary>Bảng thuật ngữ</button>
+          <a class="btn btn-primary" href="Bai20_K11.html">Sang Bài 20 →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="glossary-dialog" aria-labelledby="glossary-title">
+    <div class="dialog-head"><h2 id="glossary-title">Bảng thuật ngữ</h2><button class="dialog-close" type="button" id="close-glossary" aria-label="Đóng bảng thuật ngữ">✕</button></div>
+    <div class="dialog-body">
+      <dl>
+        <dt>HeidiSQL</dt><dd>Phần mềm khách có giao diện đồ hoạ để quản trị CSDL MySQL/MariaDB.</dd>
+        <dt>utf8mb4</dt><dd>Bộ mã Unicode 4 byte, lưu được đầy đủ tiếng Việt và các kí tự đặc biệt.</dd>
+        <dt>Đối chiếu</dt><dd>(Collation) Quy tắc so sánh, sắp xếp xâu kí tự; utf8mb4_general_ci không phân biệt chữ hoa, chữ thường.</dd>
+        <dt>Allow NULL</dt><dd>Cho phép trường để trống (không có giá trị). Khoá chính phải bỏ dấu ô này.</dd>
+        <dt>AUTO_INCREMENT</dt><dd>Giá trị trường tự động tăng khi thêm bản ghi; trường phải là khoá.</dd>
+        <dt>PRIMARY</dt><dd>Chỉ mục khoá chính, khai báo qua Create new index → PRIMARY.</dd>
+        <dt>UNIQUE</dt><dd>Chỉ mục cấm trùng lặp giá trị, khai báo qua Create new index → UNIQUE.</dd>
+        <dt>Index</dt><dd>Chỉ mục – cấu trúc giúp tìm kiếm nhanh và cài đặt các loại khoá.</dd>
+      </dl>
+    </div>
+  </dialog>
+
+  <footer><p>Tin học 11 · Chủ đề F · Bài 19: Thực hành tạo lập cơ sở dữ liệu và các bảng · Bài học tương tác phục vụ dạy học.</p></footer>
+
+  <script>
+    window.WARMUP = {
+      answer: "b",
+      right: "Chính xác! Bảng nhacsi và casi không tham chiếu đến bảng nào nên tạo được ngay. Bảng bannhac cần bảng nhacsi đã có, bảng banthuam cần bannhac và casi đã có – các bảng có khoá ngoài sẽ tạo ở Bài 20.",
+      wrong: "Chưa đúng. Gợi ý: khoá ngoài phải tham chiếu đến khoá chính của một bảng đã tồn tại. Bảng nào không cần “dựa” vào bảng khác?"
+    };
+    window.QUIZ = [
+      { q: "Để tạo một CSDL mới trong HeidiSQL, em thực hiện thế nào?", options: ["Nháy nút phải chuột ở vùng danh sách CSDL, chọn Tạo mới → Bảng.", "Nháy nút phải chuột ở vùng danh sách CSDL, chọn Tạo mới → Cơ sở dữ liệu, nhập tên, chọn OK.", "Chọn Tập tin → Lưu.", "Mở thẻ Dữ liệu và nhấn phím Insert."], answer: 1, explain: "Tạo mới → Cơ sở dữ liệu mở hộp thoại để nhập tên CSDL và chọn đối chiếu." },
+      { q: "Khi khai báo trường idNhacsi, em cần làm gì với ô Allow NULL và cột Mặc định?", options: ["Đánh dấu Allow NULL; Mặc định là NULL.", "Bỏ đánh dấu Allow NULL; Mặc định là AUTO_INCREMENT.", "Đánh dấu Allow NULL; Mặc định là AUTO_INCREMENT.", "Bỏ đánh dấu Allow NULL; Mặc định là kí tự rỗng ''."], answer: 1, explain: "idNhacsi là khoá chính nên không được để trống; AUTO_INCREMENT giúp tự động đánh số." },
+      { q: "Phím tắt để thêm một trường mới trong HeidiSQL là:", options: ["Ctrl + N", "Ctrl + Delete", "Ctrl + Insert", "Ctrl + S"], answer: 2, explain: "Ctrl+Insert tương đương lệnh Add column trong bảng chọn chuột phải." },
+      { q: "Để ấn định idNhacsi là khoá chính, em nháy nút phải chuột vào dòng idNhacsi và chọn:", options: ["Create new index → PRIMARY", "Create new index → UNIQUE", "Add column", "Move up"], answer: 0, explain: "PRIMARY là chỉ mục khoá chính; UNIQUE dùng cho khoá cấm trùng lặp." },
+      { q: "Em lỡ chọn tenNhacsi làm khoá chính. Cách sửa đúng là:", options: ["Xoá CSDL mymusic và làm lại từ đầu.", "Không sửa được, phải tạo bảng mới tên khác.", "Trong mục Indexes, nháy đúp vào ô tenNhacsi dưới PRIMARY KEY, chọn lại idNhacsi rồi Lưu.", "Đổi tên trường tenNhacsi thành idNhacsi."], answer: 2, explain: "Có thể chọn lại trường của chỉ mục PRIMARY KEY ngay trong mục Indexes." },
+      { q: "Bảng tinhthanh(idTinh, tenTinh) không cho hai tỉnh trùng tên. Em khai báo thế nào cho tenTinh?", options: ["Create new index → PRIMARY", "Create new index → UNIQUE", "Đặt Mặc định là AUTO_INCREMENT", "Bỏ đánh dấu Allow NULL là đủ"], answer: 1, explain: "UNIQUE là khoá cấm trùng lặp: máy chủ sẽ từ chối bản ghi có tenTinh đã tồn tại." }
+    ];
+    window.HEIDI_CONFIG = {
+      storageKey: "k11-bai19-heidisql-v1",
+      initial: {},
+      tasks: [
+        { id: "nv", group: "SGK", label: "Nhiệm vụ: CSDL mymusic, bảng nhacsi", title: "Nhiệm vụ", desc: "Tạo CSDL mymusic, tạo bảng nhacsi(idNhacsi, tenNhacsi) và khai báo khoá chính.", db: "mymusic", collation: "utf8mb4_general_ci",
+          tables: [{ name: "nhacsi", columns: [{ name: "idNhacsi", type: "INT", notNull: true, def: "auto" }, { name: "tenNhacsi", type: "VARCHAR", length: "255", def: "empty" }], pk: ["idNhacsi"] }],
+          steps: ["Nháy nút phải chuột vào cây bên trái → <strong>Tạo mới → Cơ sở dữ liệu</strong>, nhập <code>mymusic</code>, OK.", "Nháy nút phải chuột vào <code>mymusic</code> → <strong>Tạo mới → Bảng</strong>, nhập Tên <code>nhacsi</code>.", "<strong>Thêm mới</strong> trường <code>idNhacsi</code>: INT, bỏ dấu Allow NULL, Mặc định AUTO_INCREMENT.", "<kbd>Ctrl</kbd>+<kbd>Insert</kbd> thêm <code>tenNhacsi</code>: VARCHAR, Length 255, Mặc định Custom text để trống ('').", "Tích chọn dòng <code>idNhacsi</code> → <strong>Create new index → PRIMARY</strong>.", "Bấm <strong>Lưu</strong>."],
+          doneText: "Tuyệt vời! Bảng nhacsi đã sẵn sàng. Tiếp tục với bài Luyện tập: bảng casi." },
+        { id: "lt", group: "SGK", label: "Luyện tập: bảng casi", title: "Luyện tập", desc: "Khai báo tạo lập bảng casi(idCasi, tenCasi) trong CSDL mymusic như thiết kế ở Bài 18.", db: "mymusic", dbGiven: true,
+          tables: [{ name: "casi", columns: [{ name: "idCasi", type: "INT", notNull: true, def: "auto" }, { name: "tenCasi", type: "VARCHAR", length: "255", def: "empty" }], pk: ["idCasi"] }],
+          steps: ["Nháy nút phải chuột vào <code>mymusic</code> → <strong>Tạo mới → Bảng</strong>, Tên <code>casi</code>.", "Thêm <code>idCasi</code> (INT, bỏ Allow NULL, AUTO_INCREMENT) và <code>tenCasi</code> (VARCHAR 255, mặc định '').", "Create new index → PRIMARY cho <code>idCasi</code>, rồi Lưu."] },
+        { id: "vd", group: "SGK", label: "Vận dụng: CSDL hanhchinh, bảng tinhthanh", title: "Vận dụng", desc: "Lập CSDL hanhchinh quản lí tên đơn vị hành chính; tạo bảng tinhthanh(idTinh, tenTinh) với tenTinh không được trùng.", db: "hanhchinh", collation: "utf8mb4_general_ci",
+          tables: [{ name: "tinhthanh", columns: [{ name: "idTinh", type: "INT", notNull: true, def: "auto" }, { name: "tenTinh", type: "VARCHAR", length: "255", def: "empty" }], pk: ["idTinh"], unique: [["tenTinh"]] }],
+          steps: ["Tạo CSDL <code>hanhchinh</code>.", "Tạo bảng <code>tinhthanh</code> với hai trường như hướng dẫn.", "PRIMARY cho <code>idTinh</code>; tích chọn <code>tenTinh</code> → <strong>Create new index → UNIQUE</strong>.", "Lưu."] },
+        { id: "s195", group: "Sách bài tập", label: "19.5 – 19.6: CSDL qlhs, bảng dantoc", title: "SBT 19.5 – 19.6", desc: "Tạo CSDL qlhs và bảng dantoc(idDantoc, tenDantoc) quản lí tên các dân tộc Việt Nam.", db: "qlhs", collation: "utf8mb4_general_ci",
+          tables: [{ name: "dantoc", columns: [{ name: "idDantoc", type: "INT", notNull: true, def: "auto" }, { name: "tenDantoc", type: "VARCHAR", length: "255", def: "empty" }], pk: ["idDantoc"], unique: [["tenDantoc"]] }],
+          steps: ["Tạo CSDL <code>qlhs</code>.", "Tạo bảng <code>dantoc</code>: <code>idDantoc</code> INT AUTO_INCREMENT, <code>tenDantoc</code> VARCHAR(255) mặc định ''.", "PRIMARY cho <code>idDantoc</code>, UNIQUE cho <code>tenDantoc</code>, Lưu."] },
+        { id: "s197", group: "Sách bài tập", label: "19.7: bảng tinhthanh trong qlhs", title: "SBT 19.7", desc: "Trong CSDL qlhs, tạo bảng tinhthanh(idTinh, tenTinh). Bảng xaphuong có khoá ngoài sẽ làm ở Bài 20.", db: "qlhs", dbGiven: true,
+          tables: [{ name: "tinhthanh", columns: [{ name: "idTinh", type: "INT", notNull: true, def: "auto" }, { name: "tenTinh", type: "VARCHAR", length: "255", def: "empty" }], pk: ["idTinh"], unique: [["tenTinh"]] }],
+          steps: ["Nháy nút phải chuột vào <code>qlhs</code> → Tạo mới → Bảng, Tên <code>tinhthanh</code>.", "Khai báo hai trường giống bảng tinhthanh của phần Vận dụng.", "PRIMARY cho <code>idTinh</code>, UNIQUE cho <code>tenTinh</code>, Lưu."] },
+        { id: "s198", group: "Sách bài tập", label: "19.8: bảng lop", title: "SBT 19.8", desc: "Trong CSDL qlhs, tạo bảng lop(idLop, tenLop, namHoc) quản lí tên các lớp theo từng năm học.", db: "qlhs", dbGiven: true,
+          tables: [{ name: "lop", columns: [{ name: "idLop", type: "INT", notNull: true, def: "auto" }, { name: "tenLop", type: "VARCHAR" }, { name: "namHoc", type: "VARCHAR" }], pk: ["idLop"], unique: [["tenLop", "namHoc"]] }],
+          steps: ["Tạo bảng <code>lop</code> trong <code>qlhs</code>.", "<code>idLop</code> INT AUTO_INCREMENT; <code>tenLop</code> VARCHAR (ví dụ 255); <code>namHoc</code> VARCHAR (ví dụ 9).", "PRIMARY cho <code>idLop</code>.", "Tích chọn <strong>cả hai</strong> dòng <code>tenLop</code> và <code>namHoc</code> → Create new index → UNIQUE.", "Lưu."] }
+      ]
+    };
+  </script>
+  <script>
+    /* ==== Điều hướng tab, bảng thuật ngữ, câu khởi động, gợi ý đáp án ==== */
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const root = document.documentElement;
+        const panels = Array.from(document.querySelectorAll(".lesson-panel"));
+        const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+        if (!panels.length || !navLinks.length) return;
+        root.classList.add("js-enabled");
+
+        function showPanel(panelId, updateHash) {
+          const target = document.getElementById(panelId);
+          if (!target || !target.classList.contains("lesson-panel")) return;
+          panels.forEach(function (panel) { panel.classList.toggle("active", panel.id === panelId); });
+          navLinks.forEach(function (link) {
+            if (link.dataset.panel === panelId) link.setAttribute("aria-current", "page");
+            else link.removeAttribute("aria-current");
+          });
+          if (updateHash && window.history && window.history.replaceState) window.history.replaceState(null, "", "#" + panelId);
+          const anchor = document.querySelector(".lesson-nav-wrap");
+          if (anchor && window.scrollY > anchor.offsetTop) window.scrollTo({ top: anchor.offsetTop, behavior: "smooth" });
+          document.dispatchEvent(new CustomEvent("panelchange", { detail: panelId }));
+        }
+        window.showLessonPanel = showPanel;
+
+        document.addEventListener("click", function (event) {
+          const link = event.target.closest("[data-panel]");
+          if (!link) return;
+          event.preventDefault();
+          showPanel(link.dataset.panel, true);
+        });
+
+        const initialId = window.location.hash.replace("#", "");
+        if (initialId && document.getElementById(initialId)) showPanel(initialId, false);
+
+        const warmupButton = document.getElementById("warmup-check");
+        const warmupFeedback = document.getElementById("warmup-feedback");
+        if (warmupButton && warmupFeedback && window.WARMUP) {
+          warmupButton.addEventListener("click", function () {
+            const selected = document.querySelector('input[name="warmup"]:checked');
+            if (!selected) {
+              warmupFeedback.className = "feedback show hint";
+              warmupFeedback.textContent = "Em hãy chọn một dự đoán trước khi kiểm tra.";
+              return;
+            }
+            const right = selected.value === window.WARMUP.answer;
+            warmupFeedback.className = "feedback show " + (right ? "success" : "hint");
+            warmupFeedback.textContent = right ? window.WARMUP.right : window.WARMUP.wrong;
+            if (typeof window.WARMUP.after === "function") window.WARMUP.after(right);
+          });
+        }
+
+        const dialog = document.getElementById("glossary-dialog");
+        const closeDialog = document.getElementById("close-glossary");
+        document.querySelectorAll("[data-open-glossary]").forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (dialog && typeof dialog.showModal === "function") dialog.showModal();
+            else window.alert("Trình duyệt chưa hỗ trợ hộp thoại. Các thuật ngữ đều đã được giải thích trong bài.");
+          });
+        });
+        if (dialog && closeDialog) {
+          closeDialog.addEventListener("click", function () { dialog.close(); });
+          dialog.addEventListener("click", function (event) { if (event.target === dialog) dialog.close(); });
+        }
+
+        document.querySelectorAll("[data-reveal]").forEach(function (button) {
+          const box = document.getElementById(button.dataset.reveal);
+          if (!box) return;
+          button.setAttribute("aria-expanded", "false");
+          button.addEventListener("click", function () {
+            const open = box.hasAttribute("hidden");
+            if (open) box.removeAttribute("hidden"); else box.setAttribute("hidden", "");
+            button.setAttribute("aria-expanded", String(open));
+            button.textContent = open ? (button.dataset.hideText || "Ẩn gợi ý") : (button.dataset.showText || button.textContent);
+          });
+          button.dataset.showText = button.textContent;
+        });
+      } catch (error) {
+        console.error("Không thể khởi tạo điều hướng:", error);
+      }
+    });
+
+    /* ==== Luyện tập trắc nghiệm: mỗi lần một câu ==== */
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const questions = window.QUIZ || [];
+        const card = document.getElementById("quiz-card");
+        const resultCard = document.getElementById("quiz-result");
+        const questionEl = document.getElementById("quiz-question");
+        const optionsEl = document.getElementById("quiz-options");
+        const feedbackEl = document.getElementById("quiz-feedback");
+        const nextBtn = document.getElementById("quiz-next");
+        const retryBtn = document.getElementById("quiz-retry");
+        const retry2Btn = document.getElementById("quiz-retry-2");
+        const countEl = document.getElementById("quiz-count");
+        const fillEl = document.getElementById("quiz-progress-fill");
+        const progressEl = document.querySelector(".quiz-progress");
+        const scoreEl = document.getElementById("quiz-score");
+        const resultTitle = document.getElementById("quiz-result-title");
+        const resultText = document.getElementById("quiz-result-text");
+        const summaryScore = document.getElementById("summary-score");
+        const summaryMessage = document.getElementById("summary-message");
+        if (!questions.length || !card || !questionEl || !optionsEl || !nextBtn) return;
+
+        const total = questions.length;
+        let index = 0;
+        let score = 0;
+        let answered = false;
+        const letters = ["A", "B", "C", "D"];
+
+        function render() {
+          const item = questions[index];
+          answered = false;
+          countEl.textContent = "Câu " + (index + 1) + "/" + total;
+          fillEl.style.width = ((index + 1) / total * 100) + "%";
+          if (progressEl) progressEl.setAttribute("aria-valuenow", String(index + 1));
+          questionEl.textContent = item.q;
+          optionsEl.replaceChildren();
+          item.options.forEach(function (text, i) {
+            const label = document.createElement("label");
+            label.className = "quiz-option";
+            const input = document.createElement("input");
+            input.type = "radio"; input.name = "quiz-option"; input.value = String(i);
+            const letter = document.createElement("span"); letter.className = "option-letter"; letter.textContent = letters[i];
+            const span = document.createElement("span"); span.innerHTML = text;
+            label.append(input, letter, span);
+            input.addEventListener("change", function () { check(i); });
+            optionsEl.append(label);
+          });
+          feedbackEl.className = "quiz-feedback";
+          feedbackEl.textContent = "";
+          nextBtn.disabled = true;
+          nextBtn.textContent = index === total - 1 ? "Xem kết quả" : "Câu tiếp theo";
+        }
+
+        function check(choice) {
+          if (answered) return;
+          answered = true;
+          const item = questions[index];
+          const labels = Array.from(optionsEl.querySelectorAll(".quiz-option"));
+          labels.forEach(function (label, i) {
+            const input = label.querySelector("input");
+            input.disabled = true;
+            if (i === item.answer) label.classList.add("correct");
+            else if (i === choice) label.classList.add("wrong");
+          });
+          const right = choice === item.answer;
+          if (right) score += 1;
+          feedbackEl.className = "quiz-feedback show " + (right ? "correct" : "wrong");
+          feedbackEl.innerHTML = (right ? "<strong>Chính xác!</strong> " : "<strong>Chưa đúng.</strong> Đáp án đúng là " + letters[item.answer] + ". ") + item.explain;
+          nextBtn.disabled = false;
+          nextBtn.focus();
+        }
+
+        function finish() {
+          card.style.display = "none";
+          resultCard.classList.add("show");
+          scoreEl.textContent = score + "/" + total;
+          const ratio = score / total;
+          resultTitle.textContent = ratio === 1 ? "Xuất sắc!" : ratio >= 0.6 ? "Khá tốt!" : "Cần ôn lại";
+          resultText.textContent = ratio === 1
+            ? "Em đã trả lời đúng tất cả các câu hỏi."
+            : ratio >= 0.6 ? "Em nắm được phần lớn nội dung. Hãy xem lại các câu sai ở phần hướng dẫn."
+            : "Em nên đọc lại phần hướng dẫn và thực hành thêm trên phòng máy mô phỏng rồi làm lại.";
+          if (summaryScore) summaryScore.textContent = score + "/" + total + " câu đúng";
+          if (summaryMessage) summaryMessage.textContent = resultText.textContent;
+        }
+
+        function restart() {
+          index = 0; score = 0;
+          card.style.display = "";
+          resultCard.classList.remove("show");
+          render();
+        }
+
+        nextBtn.addEventListener("click", function () {
+          if (!answered) return;
+          if (index < total - 1) { index += 1; render(); } else finish();
+        });
+        if (retryBtn) retryBtn.addEventListener("click", restart);
+        if (retry2Btn) retry2Btn.addEventListener("click", restart);
+        render();
+      } catch (error) {
+        console.error("Không thể khởi tạo phần luyện tập:", error);
+      }
+    });
+  </script>
+  <script>
+    /* ==== Phòng máy mô phỏng HeidiSQL (tạo CSDL, bảng, khoá chính, khoá cấm trùng lặp, khoá ngoài) ==== */
+    document.addEventListener("DOMContentLoaded", function () {
+      const cfg = window.HEIDI_CONFIG;
+      const host = document.getElementById("heidi");
+      const taskHost = document.getElementById("task-panel");
+      if (!cfg || !host) return;
+
+      const SYSTEM_DBS = ["information_schema", "mysql", "performance_schema", "sys"];
+      const TYPES = ["INT", "TINYINT", "BIGINT", "VARCHAR", "CHAR", "TEXT", "DATE", "DATETIME", "DOUBLE", "DECIMAL"];
+      const INT_TYPES = ["INT", "TINYINT", "BIGINT"];
+      const NUM_TYPES = INT_TYPES.concat(["DOUBLE", "DECIMAL"]);
+      const LEN_TYPES = ["VARCHAR", "CHAR"];
+      const COLLATIONS = ["utf8mb4_general_ci", "utf8mb4_unicode_ci", "utf8mb3_general_ci", "latin1_swedish_ci"];
+      const FK_RULES = ["NO ACTION", "RESTRICT", "CASCADE", "SET NULL"];
+      const KEY_SVG = '<svg class="hs-key KIND" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" stroke-width="3"/><path d="M11.5 11.5 21 21M17 17l3-3M14.5 14.5l2.5-2.5" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/></svg>';
+
+      let uidSeq = 1;
+      const uid = function () { uidSeq += 1; return "u" + uidSeq; };
+      const clone = function (value) { return JSON.parse(JSON.stringify(value)); };
+      const esc = function (text) { return String(text == null ? "" : text).replace(/[&<>"']/g, function (ch) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]; }); };
+      const lc = function (text) { return String(text || "").toLowerCase(); };
+      const sameName = function (a, b) { return lc(a) === lc(b); };
+      const NAME_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
+
+      let state = load() || freshState();
+      let editor = null;
+      let activeTask = state.activeTask || cfg.tasks[0].id;
+      let toastTimer = null;
+
+      function freshState() {
+        const s = { dbs: clone(cfg.initial || {}), selectedDb: null, log: [], activeTask: cfg.tasks[0].id };
+        s.log.push({ t: "cm", s: "/* Đã kết nối tới 127.0.0.1 qua MariaDB or MySQL (TCP/IP), cổng 3306 */" });
+        s.log.push({ t: "", s: "SHOW DATABASES;" });
+        return s;
+      }
+      function load() {
+        try {
+          const raw = window.localStorage.getItem(cfg.storageKey);
+          if (!raw) return null;
+          const data = JSON.parse(raw);
+          if (!data || typeof data.dbs !== "object") return null;
+          return data;
+        } catch (error) { return null; }
+      }
+      function persist() {
+        state.activeTask = activeTask;
+        try { window.localStorage.setItem(cfg.storageKey, JSON.stringify(state)); } catch (error) { /* bỏ qua khi trình duyệt chặn lưu trữ */ }
+      }
+      function addLog(text, type) {
+        state.log.push({ t: type || "", s: text });
+        if (state.log.length > 60) state.log = state.log.slice(-60);
+      }
+
+      function findDbName(name) { return Object.keys(state.dbs).find(function (key) { return sameName(key, name); }); }
+      function findTableName(db, name) { if (!db || !state.dbs[db]) return undefined; return Object.keys(state.dbs[db].tables).find(function (key) { return sameName(key, name); }); }
+      function getTable(db, name) { const key = findTableName(db, name); return key ? state.dbs[db].tables[key] : null; }
+
+      /* ---------- Khung cửa sổ ---------- */
+      host.innerHTML =
+        '<div class="hs-window" id="hs-window">' +
+          '<div class="hs-titlebar"><span class="hs-logo">H</span><span class="hs-title" id="hs-title"></span><span class="hs-winbtns" aria-hidden="true">–☐✕</span></div>' +
+          '<div class="hs-menubar" aria-hidden="true"><span>Tập tin</span><span>Chỉnh sửa</span><span>Tìm kiếm</span><span>Truy vấn</span><span>Các công cụ</span><span>Đến</span><span>Trợ giúp</span></div>' +
+          '<div class="hs-toolbar">' +
+            '<button type="button" class="hs-btn" data-act="new-menu" aria-haspopup="menu"><span class="ico-add">＋</span> Tạo mới ▾</button>' +
+            '<button type="button" class="hs-btn" data-act="refresh">⟳ Làm mới</button>' +
+            '<button type="button" class="hs-btn" data-act="reset" style="margin-left:auto;">Đặt lại phòng máy</button>' +
+          '</div>' +
+          '<div class="hs-body">' +
+            '<div class="hs-tree" id="hs-tree" tabindex="0" aria-label="Danh sách CSDL – nháy nút phải chuột để mở bảng chọn"></div>' +
+            '<div class="hs-main" id="hs-main"></div>' +
+          '</div>' +
+          '<div class="hs-log" id="hs-log" aria-label="Nhật kí câu lệnh SQL"></div>' +
+          '<div class="hs-status"><span><span class="dot"></span>Connected</span><span>MariaDB 10.6.4</span><span>Máy chủ: 127.0.0.1</span><span>Idle.</span></div>' +
+        '</div>';
+      const win = document.getElementById("hs-window");
+      const treeEl = document.getElementById("hs-tree");
+      const mainEl = document.getElementById("hs-main");
+      const logEl = document.getElementById("hs-log");
+      const titleEl = document.getElementById("hs-title");
+
+      /* ---------- Thông báo, hộp thoại, bảng chọn ---------- */
+      function toast(text, kind) {
+        const old = win.querySelector(".hs-toast");
+        if (old) old.remove();
+        const el = document.createElement("div");
+        el.className = "hs-toast " + (kind || "");
+        el.setAttribute("role", "status");
+        el.textContent = text;
+        win.append(el);
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { el.remove(); }, 3200);
+      }
+      function dialog(opts) {
+        closeMenus();
+        const overlay = document.createElement("div");
+        overlay.className = "hs-overlay";
+        const box = document.createElement("div");
+        box.className = "hs-dialog";
+        box.setAttribute("role", "dialog");
+        box.setAttribute("aria-modal", "true");
+        box.innerHTML = '<div class="hd"><span>' + esc(opts.title) + '</span></div><div class="bd">' + opts.html + '</div><div class="ft"></div>';
+        const ft = box.querySelector(".ft");
+        (opts.buttons || [{ label: "OK", primary: true }]).forEach(function (btn) {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "hs-btn" + (btn.primary ? " primary" : "");
+          b.textContent = btn.label;
+          b.addEventListener("click", function () {
+            if (btn.action && btn.action(box) === false) return;
+            overlay.remove();
+          });
+          ft.append(b);
+        });
+        overlay.append(box);
+        win.append(overlay);
+        overlay.addEventListener("keydown", function (event) { if (event.key === "Escape") overlay.remove(); });
+        const focusTarget = box.querySelector("input, select") || ft.querySelector(".primary") || ft.querySelector("button");
+        if (focusTarget) { focusTarget.focus(); if (focusTarget.select) focusTarget.select(); }
+        if (opts.onOpen) opts.onOpen(box);
+        return box;
+      }
+      function sqlError(code, message, explain) {
+        const isSql = code !== "—";
+        if (isSql) { addLog("/* SQL Error (" + code + "): " + message + " */", "err"); renderLog(); }
+        dialog({
+          title: isSql ? "Unnamed: Lỗi" : "Phòng máy: Nhắc nhở",
+          html: '<div class="err-head"><span class="err-ico' + (isSql ? "" : " q") + '">' + (isSql ? "✕" : "!") + '</span><div>' + (isSql ? '<strong>SQL Error (' + esc(code) + '):</strong> ' : "") + esc(message) + '</div></div>' +
+            (explain ? '<div class="explain"><strong>Giải thích:</strong> ' + explain + '</div>' : ""),
+          buttons: [{ label: "OK", primary: true }]
+        });
+      }
+      function confirmBox(title, html, onYes, yesLabel) {
+        dialog({
+          title: title,
+          html: '<div class="err-head"><span class="err-ico q">?</span><div>' + html + '</div></div>',
+          buttons: [{ label: yesLabel || "OK", primary: true, action: function () { onYes(); } }, { label: "Hủy" }]
+        });
+      }
+
+      let menuEl = null;
+      function closeMenus() {
+        if (menuEl) { menuEl.remove(); menuEl = null; }
+        const pop = win.querySelector(".hs-pop");
+        if (pop) pop.remove();
+      }
+      function openMenu(x, y, items) {
+        closeMenus();
+        menuEl = document.createElement("div");
+        menuEl.className = "hs-menu";
+        menuEl.setAttribute("role", "menu");
+        items.forEach(function (item) {
+          if (item === "sep") { menuEl.append(document.createElement("hr")); return; }
+          const b = document.createElement("button");
+          b.type = "button";
+          b.setAttribute("role", "menuitem");
+          b.innerHTML = "<span>" + item.label + "</span>" + (item.key ? "<small>" + esc(item.key) + "</small>" : "");
+          b.disabled = !!item.disabled;
+          b.addEventListener("click", function () { closeMenus(); item.run(); });
+          menuEl.append(b);
+        });
+        document.body.append(menuEl);
+        const rect = menuEl.getBoundingClientRect();
+        const left = Math.min(x, window.innerWidth - rect.width - 8);
+        const top = y + rect.height > window.innerHeight - 8 ? Math.max(8, y - rect.height) : y;
+        menuEl.style.left = Math.max(8, left) + "px";
+        menuEl.style.top = top + "px";
+        const first = menuEl.querySelector("button:not(:disabled)");
+        if (first) first.focus();
+      }
+      document.addEventListener("click", function (event) {
+        if (menuEl && !menuEl.contains(event.target) && !event.target.closest("[data-act='new-menu'],[data-act='index-menu']")) closeMenus();
+        const pop = win.querySelector(".hs-pop");
+        if (pop && !pop.contains(event.target) && !event.target.closest(".hs-defbtn")) pop.remove();
+      });
+      document.addEventListener("keydown", function (event) { if (event.key === "Escape") closeMenus(); });
+      window.addEventListener("scroll", function () { if (menuEl) closeMenus(); }, { passive: true });
+
+      /* ---------- Cây CSDL ---------- */
+      function tableSize(table) { return (16 + 16 * table.indexes.filter(function (ix) { return ix.type !== "PRIMARY"; }).length).toFixed(1).replace(".", ",") + " KiB"; }
+      function dbSize(db) { const tables = Object.values(state.dbs[db].tables); let total = 0; tables.forEach(function (t) { total += 16 + 16 * t.indexes.filter(function (ix) { return ix.type !== "PRIMARY"; }).length; }); return total ? total.toFixed(1).replace(".", ",") + " KiB" : "0 B"; }
+      function renderTree() {
+        let html = '<button type="button" class="hs-node" data-act="select-server"><span class="hs-ico server"></span>Unnamed</button>';
+        SYSTEM_DBS.forEach(function (name) {
+          html += '<button type="button" class="hs-node lvl1 sys" data-act="sysdb"><span class="hs-ico db sys"></span>' + name + '</button>';
+        });
+        Object.keys(state.dbs).sort().forEach(function (db) {
+          const selected = state.selectedDb === db && !editor;
+          html += '<button type="button" class="hs-node lvl1' + (selected ? " selected" : "") + '" data-act="select-db" data-db="' + esc(db) + '"><span class="hs-ico db"></span>' + esc(db) + '<span class="size">' + dbSize(db) + '</span></button>';
+          Object.keys(state.dbs[db].tables).sort().forEach(function (tn) {
+            const on = editor && editor.db === db && editor.orig && sameName(editor.orig, tn);
+            html += '<button type="button" class="hs-node lvl2' + (on ? " selected" : "") + '" data-act="open-table" data-db="' + esc(db) + '" data-table="' + esc(tn) + '"><span class="hs-ico table"></span>' + esc(tn) + '<span class="size">' + tableSize(state.dbs[db].tables[tn]) + '</span></button>';
+          });
+        });
+        treeEl.innerHTML = html;
+      }
+      function renderTitle() {
+        const db = editor ? editor.db : state.selectedDb;
+        const tbl = editor ? (editor.orig || "") : "";
+        titleEl.textContent = "Unnamed\\" + (db ? db + "\\" : "") + (tbl ? tbl + "\\" : "") + " - HeidiSQL Portable 12.0.0.6468";
+      }
+      function renderLog() {
+        const start = 170;
+        logEl.innerHTML = state.log.map(function (line, i) {
+          const cls = line.t === "cm" ? "c-cm" : line.t === "err" ? "c-err" : "";
+          let body = esc(line.s);
+          if (!cls) body = body.replace(/\b(CREATE|DATABASE|TABLE|USE|DROP|ALTER|SHOW|DATABASES|NOT NULL|NULL|DEFAULT|AUTO_INCREMENT|PRIMARY KEY|UNIQUE INDEX|INDEX|CONSTRAINT|FOREIGN KEY|REFERENCES|ON UPDATE|ON DELETE|NO ACTION|COLLATE|ENGINE)\b/g, '<span class="c-kw">$1</span>');
+          return '<div><span>' + (start + i) + '</span><span class="' + cls + '">' + body + '</span></div>';
+        }).join("");
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+
+      /* ---------- Vùng chính ---------- */
+      function renderMain() {
+        renderTitle();
+        if (editor) { renderEditor(); return; }
+        const db = state.selectedDb && state.dbs[state.selectedDb] ? state.selectedDb : null;
+        let html = '<div class="hs-toptabs"><span class="hs-toptab' + (db ? "" : " on") + '">Máy chủ: 127.0.0.1</span>' + (db ? '<span class="hs-toptab on">Cơ sở dữ liệu: ' + esc(db) + '</span>' : "") + '<span class="hs-toptab">▶ Truy vấn</span></div>';
+        if (!db) {
+          html += '<div class="hs-empty"><h4>Máy chủ 127.0.0.1 đã sẵn sàng</h4>' +
+            '<p>Để tạo CSDL mới: <strong>nháy nút phải chuột</strong> vào vùng danh sách CSDL bên trái (hoặc bấm nút <strong>Tạo mới ▾</strong> trên thanh công cụ), chọn <strong>Tạo mới → Cơ sở dữ liệu</strong>.</p>' +
+            (Object.keys(state.dbs).length ? '<p>Hoặc nháy chuột vào tên một CSDL ở cây bên trái để làm việc với CSDL đó.</p>' : "") + '</div>';
+        } else {
+          const tables = Object.keys(state.dbs[db].tables).sort();
+          html += '<div class="hs-empty"><h4>CSDL <code>' + esc(db) + '</code> · đối chiếu ' + esc(state.dbs[db].collation) + '</h4>';
+          if (!tables.length) {
+            html += '<p>CSDL chưa có bảng nào. Nháy nút phải chuột vào tên CSDL (hoặc bấm <strong>Tạo mới ▾</strong>), chọn <strong>Tạo mới → Bảng</strong>.</p>';
+          } else {
+            html += '<table class="hs-tablelist"><thead><tr><th>Bảng</th><th>Số trường</th><th>Khoá chính</th><th>Khoá ngoài</th></tr></thead><tbody>' +
+              tables.map(function (tn) {
+                const t = state.dbs[db].tables[tn];
+                const pk = t.indexes.find(function (ix) { return ix.type === "PRIMARY"; });
+                return '<tr><td><button type="button" class="hs-btn" data-act="open-table" data-db="' + esc(db) + '" data-table="' + esc(tn) + '">' + esc(tn) + '</button></td><td>' + t.columns.length + '</td><td>' + (pk ? esc(pk.cols.join(", ")) : "—") + '</td><td>' + (t.fks.length ? t.fks.map(function (fk) { return esc(fk.col + " → " + fk.refTable + "(" + fk.refCol + ")"); }).join("<br>") : "—") + '</td></tr>';
+              }).join("") + '</tbody></table>' +
+              '<p class="hs-note">Nháy vào tên bảng để xem/sửa cấu trúc. Nháy nút phải chuột vào tên CSDL để tạo bảng mới.</p>';
+          }
+          html += '</div>';
+        }
+        mainEl.innerHTML = html;
+      }
+
+      /* ---------- Trình soạn bảng ---------- */
+      function blankColumn(name) { return { uid: uid(), name: name, type: "INT", length: "", unsigned: false, allowNull: true, def: { kind: "none", text: "" } }; }
+      function newEditor(db) {
+        editor = { mode: "new", db: db, orig: null, name: "", comment: "", columns: [], indexes: [], fks: [], selected: [], tab: "basic", dirty: false };
+      }
+      function editorFromTable(db, tn) {
+        const t = state.dbs[db].tables[tn];
+        const cols = t.columns.map(function (c) { const copy = clone(c); copy.uid = uid(); return copy; });
+        const byName = function (name) { const c = cols.find(function (col) { return sameName(col.name, name); }); return c ? c.uid : null; };
+        editor = {
+          mode: "edit", db: db, orig: tn, name: tn, comment: t.comment || "",
+          columns: cols,
+          indexes: t.indexes.filter(function (ix) { return !ix.auto; }).map(function (ix) { return { uid: uid(), type: ix.type, name: ix.name, cols: ix.cols.map(byName).filter(Boolean) }; }),
+          fks: t.fks.map(function (fk) { return { uid: uid(), name: fk.name, col: byName(fk.col) || "", refTable: fk.refTable, refCol: fk.refCol, onUpdate: fk.onUpdate, onDelete: fk.onDelete }; }),
+          selected: [], tab: "basic", dirty: false
+        };
+      }
+      function colByUid(id) { return editor.columns.find(function (c) { return c.uid === id; }); }
+      function keyKinds(col) {
+        const kinds = [];
+        editor.indexes.forEach(function (ix) {
+          if (ix.cols.indexOf(col.uid) === -1) return;
+          kinds.push(ix.type === "PRIMARY" ? "pk" : ix.type === "UNIQUE" ? "uq" : "ix");
+        });
+        if (editor.fks.some(function (fk) { return fk.col === col.uid; })) kinds.push("fk");
+        return kinds;
+      }
+      function defLabel(col) {
+        if (col.def.kind === "auto") return "AUTO_INCREMENT";
+        if (col.def.kind === "null") return "NULL";
+        if (col.def.kind === "text") return NUM_TYPES.indexOf(col.type) !== -1 && col.def.text !== "" ? col.def.text : "'" + col.def.text + "'";
+        return "No default";
+      }
+      function markDirty() { editor.dirty = true; const flag = mainEl.querySelector(".hs-dirty"); if (flag) flag.textContent = "● Chưa lưu"; refreshCode(); }
+
+      function renderEditor() {
+        const ed = editor;
+        const countIx = ed.indexes.length;
+        const countFk = ed.fks.length;
+        let html = '<div class="hs-toptabs"><span class="hs-toptab">Máy chủ: 127.0.0.1</span><span class="hs-toptab">Cơ sở dữ liệu: ' + esc(ed.db) + '</span><span class="hs-toptab on">Table: ' + (ed.orig ? esc(ed.orig) : "[Untitled]") + '</span><span class="hs-toptab">▶ Truy vấn</span></div>';
+        html += '<div class="hs-subtabs" role="tablist">' +
+          subTab("basic", "Basic") + subTab("options", "Tùy chọn") + subTab("indexes", "Indexes (" + countIx + ")") + subTab("fks", "Foreign keys (" + countFk + ")") + subTab("checks", "Check constraints (0)") + subTab("code", "Mã CREATE") + '</div>';
+        html += '<div class="hs-pane" id="hs-pane">' + paneHtml() + '</div>';
+        html += '<div class="hs-colbar"><span class="lbl">Cột:</span>' +
+          '<button type="button" class="hs-btn" data-act="add-col" title="Ctrl+Insert"><span class="ico-add">＋</span> Thêm mới</button>' +
+          '<button type="button" class="hs-btn" data-act="del-col" title="Ctrl+Delete"' + (ed.selected.length ? "" : " disabled") + '><span class="ico-del">✕</span> Xóa</button>' +
+          '<button type="button" class="hs-btn" data-act="up-col"' + (ed.selected.length === 1 ? "" : " disabled") + '>▲ Up</button>' +
+          '<button type="button" class="hs-btn" data-act="down-col"' + (ed.selected.length === 1 ? "" : " disabled") + '>▼ Down</button>' +
+          '<button type="button" class="hs-btn" data-act="index-menu" aria-haspopup="menu"' + (ed.selected.length ? "" : " disabled") + '>⚡ Create new index ▾</button>' +
+          '</div>';
+        html += '<div class="hs-grid-wrap" id="hs-grid-wrap" tabindex="-1"><table class="hs-grid"><thead><tr><th>#</th><th></th><th>Tên</th><th>Kiểu dữ liệu</th><th>Length/Set</th><th>Unsigned</th><th>Allow NULL</th><th>Mặc định</th></tr></thead><tbody>';
+        if (!ed.columns.length) html += '<tr><td colspan="8" style="padding:14px;color:#777;white-space:normal;">Chưa có trường nào. Bấm <strong>Thêm mới</strong> (hoặc nhấn <kbd>Ctrl</kbd>+<kbd>Insert</kbd>) để thêm trường.</td></tr>';
+        ed.columns.forEach(function (col, i) {
+          const sel = ed.selected.indexOf(col.uid) !== -1;
+          const keys = keyKinds(col).map(function (k) { return KEY_SVG.replace("KIND", k); }).join("");
+          html += '<tr data-uid="' + col.uid + '"' + (sel ? ' class="sel"' : "") + '>' +
+            '<td class="rowno"><label><input type="checkbox" data-act="pick" aria-label="Chọn trường ' + esc(col.name) + '"' + (sel ? " checked" : "") + '>' + (i + 1) + '</label></td>' +
+            '<td><span class="hs-keys">' + keys + '</span></td>' +
+            '<td><input type="text" class="col-name" data-f="name" value="' + esc(col.name) + '" aria-label="Tên trường ' + (i + 1) + '" spellcheck="false" autocomplete="off"></td>' +
+            '<td><select data-f="type" aria-label="Kiểu dữ liệu trường ' + (i + 1) + '">' + TYPES.map(function (t) { return '<option' + (t === col.type ? " selected" : "") + '>' + t + '</option>'; }).join("") + '</select></td>' +
+            '<td><input type="text" class="len" data-f="length" value="' + esc(col.length) + '" aria-label="Độ dài trường ' + (i + 1) + '" inputmode="numeric" autocomplete="off"></td>' +
+            '<td class="center"><input type="checkbox" data-f="unsigned"' + (col.unsigned ? " checked" : "") + ' aria-label="Unsigned"></td>' +
+            '<td class="center"><input type="checkbox" data-f="allowNull"' + (col.allowNull ? " checked" : "") + ' aria-label="Allow NULL trường ' + (i + 1) + '"></td>' +
+            '<td><button type="button" class="hs-defbtn' + (col.def.kind === "auto" ? " auto" : "") + '" data-act="def" aria-label="Giá trị mặc định trường ' + (i + 1) + '">' + esc(defLabel(col)) + ' ▾</button></td>' +
+            '</tr>';
+        });
+        html += '</tbody></table></div>';
+        html += '<div class="hs-actions"><button type="button" class="hs-btn" data-act="help">Trợ giúp</button><button type="button" class="hs-btn" data-act="cancel">Hủy bỏ</button><button type="button" class="hs-btn primary" data-act="save">Lưu</button><span class="grow"></span><span class="hs-dirty">' + (ed.dirty ? "● Chưa lưu" : "") + '</span></div>';
+        mainEl.innerHTML = html;
+      }
+      function subTab(id, label) { return '<button type="button" role="tab" class="hs-subtab' + (editor.tab === id ? " on" : "") + '" data-act="tab" data-tab="' + id + '" aria-selected="' + (editor.tab === id) + '">' + label + '</button>'; }
+      function paneHtml() {
+        const ed = editor;
+        if (ed.tab === "basic") {
+          return '<div class="hs-field"><label for="hs-tname">Tên:</label><input id="hs-tname" data-f="tname" value="' + esc(ed.name) + '" spellcheck="false" autocomplete="off"' + (ed.name ? "" : ' class="hs-input-hl"') + '></div>' +
+            '<div class="hs-field"><label for="hs-tcomment">Bình luận:</label><input id="hs-tcomment" data-f="tcomment" value="' + esc(ed.comment) + '" autocomplete="off"></div>';
+        }
+        if (ed.tab === "options") return '<p class="hs-note">Đối chiếu mặc định: ' + esc(state.dbs[ed.db].collation) + ' · Engine: InnoDB. Bài thực hành không cần thay đổi thẻ này.</p>';
+        if (ed.tab === "checks") return '<p class="hs-note">Bài thực hành không dùng ràng buộc kiểm tra (Check constraints).</p>';
+        if (ed.tab === "code") return '<pre class="hs-code" id="hs-code">' + esc(buildCreate(ed)) + '</pre>';
+        if (ed.tab === "indexes") {
+          if (!ed.indexes.length) return '<p class="hs-note">Chưa có chỉ mục nào. Đánh dấu trường ở bảng Cột bên dưới, nháy nút phải chuột và chọn <strong>Create new index</strong> → <strong>PRIMARY</strong> / <strong>UNIQUE</strong>.</p>';
+          return ed.indexes.map(function (ix) {
+            const label = ix.type === "PRIMARY" ? "PRIMARY KEY" : ix.type === "UNIQUE" ? "UNIQUE" : "KEY";
+            const kind = ix.type === "PRIMARY" ? "pk" : ix.type === "UNIQUE" ? "uq" : "ix";
+            let row = '<div class="hs-ix-row" data-ix="' + ix.uid + '">' + KEY_SVG.replace("KIND", kind) + '<select class="hs-ix-type" data-f="ixtype" aria-label="Loại chỉ mục">' +
+              ["PRIMARY", "UNIQUE", "KEY"].map(function (t) { return '<option value="' + t + '"' + (t === ix.type ? " selected" : "") + '>' + (t === "PRIMARY" ? "PRIMARY KEY" : t) + '</option>'; }).join("") + '</select><span>trên trường:</span>';
+            ix.cols.forEach(function (cid, pos) {
+              row += '<select data-f="ixcol" data-pos="' + pos + '" aria-label="Trường thứ ' + (pos + 1) + ' của chỉ mục ' + label + '">' + ed.columns.map(function (c) { return '<option value="' + c.uid + '"' + (c.uid === cid ? " selected" : "") + '>' + esc(c.name) + '</option>'; }).join("") + '</select>' +
+                '<button type="button" class="hs-btn" data-act="ix-dropcol" data-pos="' + pos + '" aria-label="Bỏ trường khỏi chỉ mục">✕</button>';
+            });
+            const rest = ed.columns.filter(function (c) { return ix.cols.indexOf(c.uid) === -1; });
+            if (rest.length) row += '<select data-f="ixadd" aria-label="Thêm trường vào chỉ mục"><option value="">+ thêm trường…</option>' + rest.map(function (c) { return '<option value="' + c.uid + '">' + esc(c.name) + '</option>'; }).join("") + '</select>';
+            row += '<button type="button" class="hs-btn" data-act="ix-del" style="margin-left:auto;"><span class="ico-del">✕</span> Xóa chỉ mục</button></div>';
+            return row;
+          }).join("") + '<p class="hs-note">Mẹo: nếu chọn nhầm trường làm khoá chính, chỉ cần chọn lại đúng trường ở ô bên cạnh chữ PRIMARY KEY.</p>';
+        }
+        if (ed.tab === "fks") {
+          const tables = Object.keys(state.dbs[ed.db].tables).sort();
+          let html = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;"><button type="button" class="hs-btn" data-act="fk-add"><span class="ico-add">＋</span> Thêm mới</button><button type="button" class="hs-btn" data-act="fk-clear"' + (ed.fks.length ? "" : " disabled") + '><span class="ico-del">✕</span> Dọn dẹp</button></div>';
+          if (!ed.fks.length) return html + '<p class="hs-note">Chưa có khoá ngoài. Bấm <strong>Thêm mới</strong> để khai báo một khoá ngoài.</p>';
+          html += '<div class="hs-fk-wrap"><table class="hs-fk-table"><thead><tr><th>Key name</th><th>Columns</th><th>Reference table</th><th>Foreign columns</th><th>On UPDATE</th><th>On DELETE</th><th></th></tr></thead><tbody>';
+          ed.fks.forEach(function (fk) {
+            const ref = fk.refTable ? getTable(ed.db, fk.refTable) : null;
+            html += '<tr data-fk="' + fk.uid + '">' +
+              '<td><input data-f="fkname" value="' + esc(fk.name) + '" aria-label="Tên khoá ngoài" spellcheck="false"></td>' +
+              '<td><select data-f="fkcol" aria-label="Trường khoá ngoài"' + (fk.col ? "" : ' class="hs-input-hl"') + '><option value="">(chọn)</option>' + ed.columns.map(function (c) { return '<option value="' + c.uid + '"' + (c.uid === fk.col ? " selected" : "") + '>' + esc(c.name) + '</option>'; }).join("") + '</select></td>' +
+              '<td><select data-f="fkref" aria-label="Bảng tham chiếu"' + (fk.refTable ? "" : ' class="hs-input-hl"') + '><option value="">(chọn)</option>' + tables.map(function (tn) { return '<option' + (sameName(tn, fk.refTable) ? " selected" : "") + '>' + esc(tn) + '</option>'; }).join("") + '</select></td>' +
+              '<td><select data-f="fkrefcol" aria-label="Trường được tham chiếu"' + (fk.refCol ? "" : ' class="hs-input-hl"') + '><option value="">(chọn)</option>' + (ref ? ref.columns.map(function (c) { return '<option' + (sameName(c.name, fk.refCol) ? " selected" : "") + '>' + esc(c.name) + '</option>'; }).join("") : "") + '</select></td>' +
+              '<td><select data-f="fkupd" aria-label="On UPDATE">' + FK_RULES.map(function (r) { return '<option' + (r === fk.onUpdate ? " selected" : "") + '>' + r + '</option>'; }).join("") + '</select></td>' +
+              '<td><select data-f="fkdel" aria-label="On DELETE">' + FK_RULES.map(function (r) { return '<option' + (r === fk.onDelete ? " selected" : "") + '>' + r + '</option>'; }).join("") + '</select></td>' +
+              '<td><button type="button" class="hs-btn" data-act="fk-del" aria-label="Xóa khoá ngoài"><span class="ico-del">✕</span></button></td></tr>';
+          });
+          return html + '</tbody></table></div><p class="hs-note">Columns: trường khoá ngoài của bảng này · Reference table: bảng được tham chiếu · Foreign columns: trường khoá chính của bảng được tham chiếu.</p>';
+        }
+        return "";
+      }
+      function refreshCode() {
+        const code = document.getElementById("hs-code");
+        if (code && editor) code.textContent = buildCreate(editor);
+      }
+
+      /* ---------- Sinh câu lệnh CREATE ---------- */
+      function q(name) { return "`" + name + "`"; }
+      function colSql(c) {
+        let s = q(c.name || "?") + " " + c.type + (c.length !== "" ? "(" + c.length + ")" : "") + (c.unsigned ? " UNSIGNED" : "") + (c.allowNull ? " NULL" : " NOT NULL");
+        if (c.def.kind === "auto") s += " AUTO_INCREMENT";
+        else if (c.def.kind === "null") s += " DEFAULT NULL";
+        else if (c.def.kind === "text") s += " DEFAULT " + (NUM_TYPES.indexOf(c.type) !== -1 && c.def.text !== "" ? c.def.text : "'" + c.def.text.replace(/'/g, "''") + "'");
+        return s;
+      }
+      function indexName(ix, used) {
+        if (ix.type === "PRIMARY") return "PRIMARY";
+        let base = ix.name || (ix.cols[0] || "Index");
+        let name = base; let n = 2;
+        while (used.indexOf(lc(name)) !== -1) { name = base + "_" + n; n += 1; }
+        used.push(lc(name));
+        return name;
+      }
+      function draftToDef(ed) {
+        const name = function (id) { const c = colByUid(id); return c ? c.name : "?"; };
+        const used = [];
+        const indexes = ed.indexes.map(function (ix) { return { type: ix.type, cols: ix.cols.map(name) }; });
+        indexes.forEach(function (ix) { ix.name = indexName(ix, used); });
+        return {
+          name: ed.name.trim(), comment: ed.comment,
+          columns: ed.columns.map(function (c) { return { name: c.name.trim(), type: c.type, length: String(c.length).trim(), unsigned: c.unsigned, allowNull: c.allowNull, def: clone(c.def) }; }),
+          indexes: indexes,
+          fks: ed.fks.map(function (fk) { return { name: fk.name.trim(), col: fk.col ? name(fk.col) : "", refTable: fk.refTable, refCol: fk.refCol, onUpdate: fk.onUpdate, onDelete: fk.onDelete }; })
+        };
+      }
+      function createSql(def, collation) {
+        const lines = def.columns.map(function (c) { return "\t" + colSql(c); });
+        def.indexes.forEach(function (ix) {
+          const cols = "(" + ix.cols.map(q).join(", ") + ")";
+          if (ix.type === "PRIMARY") lines.push("\tPRIMARY KEY " + cols + " USING BTREE");
+          else if (ix.type === "UNIQUE") lines.push("\tUNIQUE INDEX " + q(ix.name) + " " + cols + " USING BTREE");
+          else lines.push("\tINDEX " + q(ix.name) + " " + cols + " USING BTREE");
+        });
+        def.fks.forEach(function (fk) {
+          lines.push("\tCONSTRAINT " + q(fk.name || "FK") + " FOREIGN KEY (" + q(fk.col || "?") + ") REFERENCES " + q(fk.refTable || "?") + " (" + q(fk.refCol || "?") + ") ON UPDATE " + fk.onUpdate + " ON DELETE " + fk.onDelete);
+        });
+        return "CREATE TABLE " + q(def.name || "Untitled") + " (\n" + lines.join(",\n") + "\n)\n" + (def.comment ? "COMMENT='" + def.comment.replace(/'/g, "''") + "'\n" : "") + "COLLATE='" + collation + "'\nENGINE=InnoDB\n;";
+      }
+      function buildCreate(ed) { return createSql(draftToDef(ed), state.dbs[ed.db].collation); }
+
+      /* ---------- Kiểm tra và lưu bảng ---------- */
+      function sameType(a, b) { return a.type === b.type && !!a.unsigned === !!b.unsigned; }
+      function leadingIndexed(table, colName) { return table.indexes.some(function (ix) { return ix.cols.length && sameName(ix.cols[0], colName); }); }
+      function validate(def) {
+        const ed = editor;
+        const db = state.dbs[ed.db];
+        if (!def.name) return ["—", "Chưa nhập tên bảng.", "Hãy nhập tên bảng vào ô <strong>Tên</strong> ở thẻ <strong>Basic</strong>, ví dụ <code>nhacsi</code>."];
+        if (!NAME_RE.test(def.name)) return ["—", "Tên bảng '" + def.name + "' chưa theo quy ước đặt tên.", "Tên bảng nên viết <strong>không dấu, không khoảng trắng</strong> và bắt đầu bằng chữ cái, ví dụ <code>nhacsi</code>, <code>bannhac</code>. (MySQL vẫn chấp nhận tên có dấu nếu đặt trong cặp dấu `, nhưng rất dễ gây lỗi khi viết truy vấn nên phòng máy yêu cầu theo quy ước.)"];
+        const clash = findTableName(ed.db, def.name);
+        if (clash && !(ed.mode === "edit" && sameName(clash, ed.orig))) return ["1050", "Table '" + def.name + "' already exists", "Trong CSDL <code>" + esc(ed.db) + "</code> đã có bảng tên này. Hãy đặt tên khác hoặc mở bảng đã có để sửa."];
+        if (!def.columns.length) return ["1113", "A table must have at least 1 column", "Bảng phải có ít nhất một trường. Bấm <strong>Thêm mới</strong> để thêm trường."];
+        const seen = [];
+        for (const c of def.columns) {
+          if (!c.name) return ["—", "Có trường chưa được đặt tên.", "Hãy nhập tên cho mọi trường ở cột <strong>Tên</strong>."];
+          if (!NAME_RE.test(c.name)) return ["—", "Tên trường '" + c.name + "' chưa theo quy ước đặt tên.", "Tên trường nên viết <strong>không dấu, không khoảng trắng</strong>, ví dụ <code>tenNhacsi</code>."];
+          if (seen.indexOf(lc(c.name)) !== -1) return ["1060", "Duplicate column name '" + c.name + "'", "Hai trường trong một bảng không được trùng tên."];
+          seen.push(lc(c.name));
+          if (LEN_TYPES.indexOf(c.type) !== -1 && c.length === "") return ["1064", "You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '" + (c.allowNull ? "NULL" : "NOT NULL") + "' at line 2", "Kiểu <strong>" + c.type + "</strong> bắt buộc khai báo độ dài ở cột <strong>Length/Set</strong> (ví dụ 255) cho trường <code>" + esc(c.name) + "</code>."];
+          if (c.length !== "" && !/^\d+$/.test(c.length)) return ["1064", "You have an error in your SQL syntax near '" + c.length + "'", "Độ dài (Length/Set) của trường <code>" + esc(c.name) + "</code> phải là một số nguyên dương."];
+          if (c.type === "VARCHAR" && Number(c.length) > 16383) return ["1074", "Column length too big for column '" + c.name + "' (max = 16383); use BLOB or TEXT instead", "Với bảng mã utf8mb4, VARCHAR dài tối đa 16383 kí tự. SGK dùng VARCHAR(255)."];
+          if (c.def.kind === "auto" && INT_TYPES.indexOf(c.type) === -1) return ["1063", "Incorrect column specifier for column '" + c.name + "'", "Chỉ trường kiểu số nguyên (INT…) mới được đặt <strong>AUTO_INCREMENT</strong>."];
+          if (c.def.kind === "null" && !c.allowNull) return ["1067", "Invalid default value for '" + c.name + "'", "Trường không cho phép NULL (đã bỏ dấu Allow NULL) thì không thể lấy giá trị mặc định là NULL."];
+          if (c.def.kind === "text" && NUM_TYPES.indexOf(c.type) !== -1 && !/^-?\d+(\.\d+)?$/.test(c.def.text)) return ["1067", "Invalid default value for '" + c.name + "'", "Trường kiểu số chỉ nhận giá trị mặc định là một số, ví dụ <code>0</code>."];
+        }
+        const autos = def.columns.filter(function (c) { return c.def.kind === "auto"; });
+        const tmp = { indexes: def.indexes };
+        if (autos.length > 1 || (autos.length === 1 && !leadingIndexed(tmp, autos[0].name))) return ["1075", "Incorrect table definition; there can be only one auto column and it must be defined as a key", "Trường <code>" + esc(autos[0].name) + "</code> đặt AUTO_INCREMENT nhưng <strong>chưa được khai báo là khoá</strong>. Hãy nháy nút phải chuột vào trường đó, chọn <strong>Create new index → PRIMARY</strong>." + (autos.length > 1 ? " Lưu ý: mỗi bảng chỉ có một trường AUTO_INCREMENT." : "")];
+        if (def.indexes.filter(function (ix) { return ix.type === "PRIMARY"; }).length > 1) return ["1068", "Multiple primary key defined", "Mỗi bảng chỉ có <strong>một</strong> khoá chính. Nếu khoá chính gồm nhiều trường, hãy thêm các trường vào cùng một chỉ mục PRIMARY ở thẻ Indexes."];
+        for (const ix of def.indexes) if (!ix.cols.length) return ["1064", "Index without columns", "Có chỉ mục chưa chứa trường nào. Hãy xoá chỉ mục đó ở thẻ <strong>Indexes</strong>."];
+        const fkNames = [];
+        Object.keys(db.tables).forEach(function (tn) { if (!(ed.mode === "edit" && sameName(tn, ed.orig))) db.tables[tn].fks.forEach(function (fk) { fkNames.push(lc(fk.name)); }); });
+        for (const fk of def.fks) {
+          if (!fk.col || !fk.refTable || !fk.refCol) return ["1005", "Can't create table `" + ed.db + "`.`" + def.name + "` (errno: 150 \"Foreign key constraint is incorrectly formed\")", "Khoá ngoài <code>" + esc(fk.name || "FK") + "</code> khai báo chưa đủ: cần chọn <strong>Columns</strong> (trường khoá ngoài), <strong>Reference table</strong> (bảng tham chiếu) và <strong>Foreign columns</strong> (trường được tham chiếu)."];
+          if (!fk.name || !NAME_RE.test(fk.name)) return ["—", "Tên khoá ngoài chưa theo quy ước đặt tên.", "Tên khoá ngoài (Key name) nên viết không dấu, không khoảng trắng, ví dụ <code>FK_bannhac_nhacsi</code>."];
+          if (fkNames.indexOf(lc(fk.name)) !== -1) return ["1005", "Can't create table `" + ed.db + "`.`" + def.name + "` (errno: 121 \"Duplicate key on write or update\")", "Tên khoá ngoài <code>" + esc(fk.name) + "</code> đã được dùng ở một bảng khác trong CSDL. Trong một CSDL, mỗi khoá ngoài cần một tên riêng — hãy đổi Key name, ví dụ <code>FK_" + esc(def.name) + "_" + esc(fk.refTable) + "</code>."];
+          fkNames.push(lc(fk.name));
+          const local = def.columns.find(function (c) { return sameName(c.name, fk.col); });
+          const self = sameName(fk.refTable, def.name);
+          const refTable = self ? def : getTable(ed.db, fk.refTable);
+          const refCol = refTable ? refTable.columns.find(function (c) { return sameName(c.name, fk.refCol); }) : null;
+          if (!refTable || !refCol) return ["1005", "Can't create table `" + ed.db + "`.`" + def.name + "` (errno: 150 \"Foreign key constraint is incorrectly formed\")", "Không tìm thấy trường <code>" + esc(fk.refCol) + "</code> trong bảng <code>" + esc(fk.refTable) + "</code>."];
+          if (!sameType(local, refCol)) return ["1005", "Can't create table `" + ed.db + "`.`" + def.name + "` (errno: 150 \"Foreign key constraint is incorrectly formed\")", "Trường khoá ngoài <code>" + esc(local.name) + "</code> (" + local.type + (local.unsigned ? " UNSIGNED" : "") + ") phải <strong>cùng kiểu dữ liệu</strong> với trường được tham chiếu <code>" + esc(refTable.name || fk.refTable) + "." + esc(refCol.name) + "</code> (" + refCol.type + (refCol.unsigned ? " UNSIGNED" : "") + ")."];
+          if (!leadingIndexed(refTable, refCol.name)) return ["1005", "Can't create table `" + ed.db + "`.`" + def.name + "` (errno: 150 \"Foreign key constraint is incorrectly formed\")", "Trường được tham chiếu <code>" + esc(refCol.name) + "</code> phải là <strong>khoá chính</strong> (hoặc có chỉ mục) của bảng <code>" + esc(fk.refTable) + "</code>."];
+          if (fk.onDelete === "SET NULL" || fk.onUpdate === "SET NULL") { if (!local.allowNull) return ["1005", "Can't create table `" + ed.db + "`.`" + def.name + "` (errno: 150 \"Foreign key constraint is incorrectly formed\")", "Quy tắc SET NULL chỉ dùng được khi trường khoá ngoài cho phép NULL. Bài thực hành giữ mặc định <strong>NO ACTION</strong>."]; }
+        }
+        if (ed.mode === "edit") {
+          for (const tn of Object.keys(db.tables)) {
+            if (sameName(tn, ed.orig)) continue;
+            for (const fk of db.tables[tn].fks) {
+              if (!sameName(fk.refTable, ed.orig)) continue;
+              const target = def.columns.find(function (c) { return sameName(c.name, fk.refCol); });
+              const local = db.tables[tn].columns.find(function (c) { return sameName(c.name, fk.col); });
+              if (!target || !sameType(target, local) || !leadingIndexed(def, target.name)) return ["1833", "Cannot change column '" + fk.refCol + "': used in a foreign key constraint '" + fk.name + "' of table '" + ed.db + "." + tn + "'", "Trường <code>" + esc(fk.refCol) + "</code> đang được bảng <code>" + esc(tn) + "</code> tham chiếu qua khoá ngoài nên không thể xoá, đổi kiểu hay bỏ khoá chính của nó."];
+            }
+          }
+        }
+        return null;
+      }
+      function saveTable() {
+        const ed = editor;
+        const def = draftToDef(ed);
+        const err = validate(def);
+        if (err) { sqlError(err[0], err[1], err[2]); return; }
+        let note = "";
+        def.indexes.forEach(function (ix) {
+          if (ix.type !== "PRIMARY") return;
+          def.columns.forEach(function (c) { if (ix.cols.some(function (n) { return sameName(n, c.name); }) && c.allowNull) { c.allowNull = false; note = " Trường khoá chính được tự động chuyển thành NOT NULL."; } });
+        });
+        const used = def.indexes.map(function (ix) { return lc(ix.name); });
+        def.fks.forEach(function (fk) {
+          if (!leadingIndexed(def, fk.col)) { def.indexes.push({ type: "KEY", name: fk.name, cols: [fk.col], auto: true }); used.push(lc(fk.name)); }
+        });
+        const dbObj = state.dbs[ed.db];
+        if (ed.mode === "new") {
+          addLog(createSql(def, dbObj.collation).replace(/\n\t?/g, " ").replace(/\s+;$/, ";"));
+        } else {
+          addLog("ALTER TABLE " + q(ed.orig) + " /* cập nhật cấu trúc bảng" + (sameName(ed.orig, def.name) ? "" : ", đổi tên thành " + def.name) + " */;");
+          delete dbObj.tables[findTableName(ed.db, ed.orig)];
+          if (!sameName(ed.orig, def.name)) {
+            Object.values(dbObj.tables).forEach(function (t) { t.fks.forEach(function (fk) { if (sameName(fk.refTable, ed.orig)) fk.refTable = def.name; }); });
+          }
+        }
+        dbObj.tables[def.name] = def;
+        persist();
+        editorFromTable(ed.db, def.name);
+        renderAll();
+        toast("Đã lưu bảng " + def.name + "." + note, "ok");
+      }
+
+      /* ---------- Tạo CSDL ---------- */
+      function newDatabaseDialog() {
+        const html = '<div class="hs-field"><label for="hs-dbname">Tên:</label><input id="hs-dbname" spellcheck="false" autocomplete="off"></div>' +
+          '<div class="hs-field"><label for="hs-dbcoll">Đối chiếu:</label><select id="hs-dbcoll">' + COLLATIONS.map(function (c) { return '<option' + (c === "utf8mb4_general_ci" ? " selected" : "") + '>' + c + '</option>'; }).join("") + '</select></div>' +
+          '<p class="hs-note" style="margin:0 0 8px 90px;">Máy chủ mặc định: utf8mb4_general_ci</p>' +
+          '<label for="hs-dbcode" style="font-size:12px;">mã CREATE:</label><textarea id="hs-dbcode" readonly></textarea>';
+        dialog({
+          title: "Tạo cơ sở dữ liệu…",
+          html: html,
+          onOpen: function (box) {
+            const nameIn = box.querySelector("#hs-dbname");
+            const coll = box.querySelector("#hs-dbcoll");
+            const code = box.querySelector("#hs-dbcode");
+            const update = function () { code.value = "CREATE DATABASE `" + nameIn.value.trim() + "` /*!40100 COLLATE '" + coll.value + "' */"; };
+            nameIn.addEventListener("input", update);
+            coll.addEventListener("change", update);
+            nameIn.addEventListener("keydown", function (event) { if (event.key === "Enter") box.querySelector(".ft .primary").click(); });
+            update();
+          },
+          buttons: [
+            { label: "OK", primary: true, action: function (box) {
+              const name = box.querySelector("#hs-dbname").value.trim();
+              const coll = box.querySelector("#hs-dbcoll").value;
+              if (!name) { box.querySelector("#hs-dbname").focus(); toast("Hãy nhập tên CSDL, ví dụ mymusic.", "warn"); return false; }
+              if (!NAME_RE.test(name)) { sqlError("—", "Tên CSDL '" + name + "' chưa theo quy ước đặt tên.", "Tên CSDL nên viết <strong>không dấu, không khoảng trắng</strong>, ví dụ <code>mymusic</code>."); return true; }
+              if (findDbName(name) || SYSTEM_DBS.indexOf(lc(name)) !== -1) { sqlError("1007", "Can't create database '" + name + "'; database exists", "Đã có CSDL tên <code>" + esc(name) + "</code> trên máy chủ."); return true; }
+              state.dbs[name] = { collation: coll, tables: {} };
+              state.selectedDb = name;
+              addLog("CREATE DATABASE `" + name + "` /*!40100 COLLATE '" + coll + "' */;");
+              addLog("USE `" + name + "`;");
+              persist();
+              renderAll();
+              toast("Đã tạo CSDL " + name + ".", "ok");
+              return true;
+            } },
+            { label: "Hủy" }
+          ]
+        });
+      }
+
+      /* ---------- Điều phối thao tác ---------- */
+      function guardDirty(next) {
+        if (editor && editor.dirty) confirmBox("Unnamed: Xác nhận", "Bảng <strong>" + esc(editor.name || "[Untitled]") + "</strong> có thay đổi chưa lưu. Bỏ các thay đổi này?", next, "Bỏ thay đổi");
+        else next();
+      }
+      function startNewTable(db) {
+        const target = db || state.selectedDb;
+        if (!target || !state.dbs[target]) { toast("Hãy chọn (nháy chuột vào) một CSDL ở cây bên trái trước khi tạo bảng.", "warn"); return; }
+        guardDirty(function () {
+          state.selectedDb = target;
+          newEditor(target);
+          renderAll();
+          const nameIn = document.getElementById("hs-tname");
+          if (nameIn) nameIn.focus();
+        });
+      }
+      function newMenuItems(db) {
+        const target = db || state.selectedDb;
+        return [
+          { label: "Tạo mới → Cơ sở dữ liệu", run: function () { guardDirty(function () { editor = null; renderAll(); newDatabaseDialog(); }); } },
+          { label: "Tạo mới → Bảng" + (target ? " (trong " + esc(target) + ")" : ""), disabled: !target, run: function () { startNewTable(target); } }
+        ];
+      }
+      function addColumn() {
+        let n = editor.columns.length + 1;
+        while (editor.columns.some(function (c) { return sameName(c.name, "Column" + n); })) n += 1;
+        const col = blankColumn("Column" + n);
+        const after = editor.selected.length ? Math.max.apply(null, editor.selected.map(function (id) { return editor.columns.findIndex(function (c) { return c.uid === id; }); })) : editor.columns.length - 1;
+        editor.columns.splice(after + 1, 0, col);
+        editor.selected = [];
+        editor.dirty = true;
+        renderEditor();
+        const input = mainEl.querySelector('tr[data-uid="' + col.uid + '"] input[data-f="name"]');
+        if (input) { input.focus(); input.select(); }
+      }
+      function removeColumns() {
+        if (!editor.selected.length) return;
+        editor.columns = editor.columns.filter(function (c) { return editor.selected.indexOf(c.uid) === -1; });
+        editor.indexes.forEach(function (ix) { ix.cols = ix.cols.filter(function (id) { return editor.selected.indexOf(id) === -1; }); });
+        editor.indexes = editor.indexes.filter(function (ix) { return ix.cols.length; });
+        editor.fks.forEach(function (fk) { if (editor.selected.indexOf(fk.col) !== -1) fk.col = ""; });
+        editor.selected = [];
+        editor.dirty = true;
+        renderEditor();
+      }
+      function moveColumn(step) {
+        if (editor.selected.length !== 1) return;
+        const i = editor.columns.findIndex(function (c) { return c.uid === editor.selected[0]; });
+        const j = i + step;
+        if (j < 0 || j >= editor.columns.length) return;
+        const tmp = editor.columns[i]; editor.columns[i] = editor.columns[j]; editor.columns[j] = tmp;
+        editor.dirty = true;
+        renderEditor();
+      }
+      function createIndex(type) {
+        if (!editor.selected.length) { toast("Hãy đánh dấu (tích chọn) trường cần tạo chỉ mục.", "warn"); return; }
+        const cols = editor.columns.filter(function (c) { return editor.selected.indexOf(c.uid) !== -1; }).map(function (c) { return c.uid; });
+        if (type === "PRIMARY") {
+          const existing = editor.indexes.find(function (ix) { return ix.type === "PRIMARY"; });
+          if (existing) { toast("Bảng đã có khoá chính. Hãy sửa khoá chính ở thẻ Indexes (chọn lại trường) hoặc xoá nó trước.", "warn"); editor.tab = "indexes"; renderEditor(); return; }
+        }
+        editor.indexes.push({ uid: uid(), type: type, cols: cols });
+        editor.dirty = true;
+        renderEditor();
+        const names = cols.map(function (id) { return colByUid(id).name; }).join(", ");
+        toast((type === "PRIMARY" ? "Đã khai báo khoá chính: " : type === "UNIQUE" ? "Đã khai báo khoá cấm trùng lặp (UNIQUE): " : "Đã tạo chỉ mục KEY: ") + names, "ok");
+      }
+      function indexMenuItems() {
+        return [
+          { label: "Create new index → PRIMARY", run: function () { createIndex("PRIMARY"); } },
+          { label: "Create new index → KEY", run: function () { createIndex("KEY"); } },
+          { label: "Create new index → UNIQUE", run: function () { createIndex("UNIQUE"); } }
+        ];
+      }
+      function rowMenuItems() {
+        return [
+          { label: "Add column", key: "Ctrl+Ins", run: addColumn },
+          { label: "Remove column", key: "Ctrl+Del", disabled: !editor.selected.length, run: removeColumns },
+          { label: "Move up", key: "Ctrl+U", disabled: editor.selected.length !== 1, run: function () { moveColumn(-1); } },
+          { label: "Move down", key: "Ctrl+D", disabled: editor.selected.length !== 1, run: function () { moveColumn(1); } },
+          "sep"
+        ].concat(indexMenuItems());
+      }
+      function openDefaultPop(button, col) {
+        closeMenus();
+        const pop = document.createElement("div");
+        pop.className = "hs-pop";
+        const name = "def-" + col.uid;
+        pop.innerHTML =
+          '<label><input type="radio" name="' + name + '" value="none"' + (col.def.kind === "none" ? " checked" : "") + '> No default value</label>' +
+          '<label><input type="radio" name="' + name + '" value="text"' + (col.def.kind === "text" ? " checked" : "") + '> Custom text:</label>' +
+          '<input type="text" class="def-text" value="' + esc(col.def.text) + '" aria-label="Giá trị mặc định tự nhập" autocomplete="off">' +
+          '<label><input type="radio" name="' + name + '" value="null"' + (col.def.kind === "null" ? " checked" : "") + '> NULL</label>' +
+          '<label class="auto-opt"><input type="radio" name="' + name + '" value="auto"' + (col.def.kind === "auto" ? " checked" : "") + '> AUTO_INCREMENT</label>' +
+          '<div class="row"><button type="button" class="hs-btn primary" data-pop="ok">OK</button><button type="button" class="hs-btn" data-pop="cancel">Hủy</button></div>';
+        win.append(pop);
+        const wr = win.getBoundingClientRect();
+        const br = button.getBoundingClientRect();
+        let left = br.left - wr.left;
+        if (left + 240 > wr.width) left = Math.max(4, wr.width - 240);
+        let top = br.bottom - wr.top + 2;
+        if (top + 230 > wr.height) top = Math.max(4, br.top - wr.top - 232);
+        pop.style.left = left + "px";
+        pop.style.top = top + "px";
+        const textIn = pop.querySelector(".def-text");
+        textIn.addEventListener("focus", function () { pop.querySelector('input[value="text"]').checked = true; });
+        const apply = function () {
+          const kind = pop.querySelector('input[type="radio"]:checked').value;
+          col.def = { kind: kind, text: kind === "text" ? textIn.value : "" };
+          pop.remove();
+          editor.dirty = true;
+          renderEditor();
+        };
+        textIn.addEventListener("keydown", function (event) { if (event.key === "Enter") apply(); });
+        pop.querySelector('[data-pop="ok"]').addEventListener("click", apply);
+        pop.querySelector('[data-pop="cancel"]').addEventListener("click", function () { pop.remove(); });
+        const checked = pop.querySelector('input[type="radio"]:checked');
+        if (checked) checked.focus();
+      }
+      function dropTable(db, tn) {
+        const refs = [];
+        Object.keys(state.dbs[db].tables).forEach(function (other) {
+          if (sameName(other, tn)) return;
+          state.dbs[db].tables[other].fks.forEach(function (fk) { if (sameName(fk.refTable, tn)) refs.push(other); });
+        });
+        if (refs.length) { sqlError("1451", "Cannot delete or update a parent row: a foreign key constraint fails", "Bảng <code>" + esc(tn) + "</code> đang được bảng <code>" + esc(refs.join(", ")) + "</code> tham chiếu qua khoá ngoài. Muốn xoá, phải xoá bảng tham chiếu (hoặc khoá ngoài) trước."); return; }
+        confirmBox("Unnamed: Xác nhận", "Xoá bảng <strong>" + esc(tn) + "</strong>? Toàn bộ cấu trúc và dữ liệu của bảng sẽ mất.", function () {
+          delete state.dbs[db].tables[tn];
+          if (editor && editor.db === db && sameName(editor.orig, tn)) editor = null;
+          addLog("DROP TABLE `" + tn + "`;");
+          persist(); renderAll(); toast("Đã xoá bảng " + tn + ".");
+        }, "Xoá");
+      }
+      function dropDb(db) {
+        confirmBox("Unnamed: Xác nhận", "Xoá CSDL <strong>" + esc(db) + "</strong> cùng tất cả các bảng của nó?", function () {
+          delete state.dbs[db];
+          if (state.selectedDb === db) state.selectedDb = null;
+          if (editor && editor.db === db) editor = null;
+          addLog("DROP DATABASE `" + db + "`;");
+          persist(); renderAll(); toast("Đã xoá CSDL " + db + ".");
+        }, "Xoá");
+      }
+
+      host.addEventListener("click", function (event) {
+        const el = event.target.closest("[data-act]");
+        if (!el || !host.contains(el)) return;
+        const act = el.dataset.act;
+        if (act === "new-menu") { const r = el.getBoundingClientRect(); openMenu(r.left, r.bottom + 2, newMenuItems()); return; }
+        if (act === "refresh") { addLog("SHOW DATABASES;"); renderLog(); toast("Đã làm mới danh sách."); return; }
+        if (act === "reset") { confirmBox("Đặt lại phòng máy", "Xoá mọi CSDL và bảng em đã tạo trong phòng máy mô phỏng để làm lại từ đầu?", function () { state = freshState(); editor = null; activeTask = cfg.tasks[0].id; persist(); renderAll(); toast("Đã đặt lại phòng máy."); }, "Đặt lại"); return; }
+        if (act === "select-server") { guardDirty(function () { editor = null; state.selectedDb = null; renderAll(); }); return; }
+        if (act === "sysdb") { toast("Đây là CSDL hệ thống của máy chủ. Hãy thực hành trên CSDL do em tạo.", "warn"); return; }
+        if (act === "select-db") { const db = el.dataset.db; guardDirty(function () { editor = null; state.selectedDb = db; addLog("USE `" + db + "`;"); persist(); renderAll(); }); return; }
+        if (act === "open-table") { const db = el.dataset.db; const tn = el.dataset.table; guardDirty(function () { state.selectedDb = db; editorFromTable(db, tn); addLog("SHOW CREATE TABLE `" + db + "`.`" + tn + "`;"); renderAll(); }); return; }
+        if (!editor) return;
+        if (act === "tab") { editor.tab = el.dataset.tab; renderEditor(); return; }
+        if (act === "add-col") { addColumn(); return; }
+        if (act === "del-col") { removeColumns(); return; }
+        if (act === "up-col") { moveColumn(-1); return; }
+        if (act === "down-col") { moveColumn(1); return; }
+        if (act === "index-menu") { const r = el.getBoundingClientRect(); openMenu(r.left, r.bottom + 2, indexMenuItems()); return; }
+        if (act === "def") { const row = el.closest("tr"); const col = colByUid(row.dataset.uid); if (col) openDefaultPop(el, col); return; }
+        if (act === "save") { saveTable(); return; }
+        if (act === "cancel") {
+          if (editor.mode === "edit") { editorFromTable(editor.db, findTableName(editor.db, editor.orig)); renderAll(); toast("Đã huỷ các thay đổi chưa lưu."); }
+          else { editor = null; renderAll(); toast("Đã huỷ khai báo bảng mới."); }
+          return;
+        }
+        if (act === "help") { dialog({ title: "Trợ giúp", html: "<p style='margin:0'>Các bước: đặt <strong>Tên</strong> bảng → <strong>Thêm mới</strong> các trường, chọn kiểu dữ liệu, bỏ dấu <strong>Allow NULL</strong> nếu cần, chọn <strong>Mặc định</strong> → đánh dấu trường, chọn <strong>Create new index</strong> → PRIMARY / UNIQUE → (nếu có) khai báo <strong>Foreign keys</strong> → bấm <strong>Lưu</strong>.</p>" }); return; }
+        if (act === "ix-del") { const row = el.closest("[data-ix]"); editor.indexes = editor.indexes.filter(function (ix) { return ix.uid !== row.dataset.ix; }); editor.dirty = true; renderEditor(); return; }
+        if (act === "ix-dropcol") { const row = el.closest("[data-ix]"); const ix = editor.indexes.find(function (x) { return x.uid === row.dataset.ix; }); ix.cols.splice(Number(el.dataset.pos), 1); if (!ix.cols.length) editor.indexes = editor.indexes.filter(function (x) { return x !== ix; }); editor.dirty = true; renderEditor(); return; }
+        if (act === "fk-add") { let n = editor.fks.length + 1; while (editor.fks.some(function (fk) { return sameName(fk.name, "FK" + n); })) n += 1; editor.fks.push({ uid: uid(), name: "FK" + n, col: "", refTable: "", refCol: "", onUpdate: "NO ACTION", onDelete: "NO ACTION" }); editor.dirty = true; renderEditor(); return; }
+        if (act === "fk-clear") { editor.fks = []; editor.dirty = true; renderEditor(); return; }
+        if (act === "fk-del") { const row = el.closest("[data-fk]"); editor.fks = editor.fks.filter(function (fk) { return fk.uid !== row.dataset.fk; }); editor.dirty = true; renderEditor(); return; }
+      });
+      host.addEventListener("change", function (event) {
+        if (!editor) return;
+        const el = event.target;
+        const f = el.dataset.f;
+        const act = el.dataset.act;
+        if (act === "pick") {
+          const id = el.closest("tr").dataset.uid;
+          editor.selected = el.checked ? editor.selected.concat([id]) : editor.selected.filter(function (x) { return x !== id; });
+          renderEditor();
+          return;
+        }
+        const row = el.closest("tr[data-uid]");
+        if (row) {
+          const col = colByUid(row.dataset.uid);
+          if (f === "type") {
+            col.type = el.value;
+            if (LEN_TYPES.indexOf(col.type) !== -1) { if (!col.length) col.length = "50"; }
+            else if (col.type !== "DECIMAL") col.length = "";
+            if (NUM_TYPES.indexOf(col.type) === -1) col.unsigned = false;
+          }
+          if (f === "unsigned") col.unsigned = el.checked;
+          if (f === "allowNull") col.allowNull = el.checked;
+          if (f === "type" || f === "unsigned" || f === "allowNull") { editor.dirty = true; renderEditor(); }
+          return;
+        }
+        const ixRow = el.closest("[data-ix]");
+        if (ixRow) {
+          const ix = editor.indexes.find(function (x) { return x.uid === ixRow.dataset.ix; });
+          if (f === "ixtype") {
+            if (el.value === "PRIMARY" && editor.indexes.some(function (x) { return x !== ix && x.type === "PRIMARY"; })) { toast("Bảng đã có khoá chính.", "warn"); renderEditor(); return; }
+            ix.type = el.value;
+          }
+          if (f === "ixcol") { ix.cols[Number(el.dataset.pos)] = el.value; ix.cols = ix.cols.filter(function (id, i, arr) { return arr.indexOf(id) === i; }); }
+          if (f === "ixadd" && el.value) ix.cols.push(el.value);
+          editor.dirty = true; renderEditor();
+          return;
+        }
+        const fkRow = el.closest("[data-fk]");
+        if (fkRow) {
+          const fk = editor.fks.find(function (x) { return x.uid === fkRow.dataset.fk; });
+          if (f === "fkcol") fk.col = el.value;
+          if (f === "fkref") {
+            fk.refTable = el.value; fk.refCol = "";
+            if (/^FK\d+$/i.test(fk.name) && fk.refTable && editor.name.trim()) fk.name = "FK_" + editor.name.trim() + "_" + fk.refTable;
+          }
+          if (f === "fkrefcol") fk.refCol = el.value;
+          if (f === "fkupd") fk.onUpdate = el.value;
+          if (f === "fkdel") fk.onDelete = el.value;
+          if (f === "fkname") { fk.name = el.value; editor.dirty = true; refreshCode(); return; }
+          editor.dirty = true; renderEditor();
+        }
+      });
+      host.addEventListener("input", function (event) {
+        if (!editor) return;
+        const el = event.target;
+        const f = el.dataset.f;
+        if (f === "tname") { editor.name = el.value; el.classList.toggle("hs-input-hl", !el.value); markDirty(); return; }
+        if (f === "tcomment") { editor.comment = el.value; markDirty(); return; }
+        if (f === "fkname") { const fk = editor.fks.find(function (x) { return x.uid === el.closest("[data-fk]").dataset.fk; }); fk.name = el.value; markDirty(); return; }
+        const row = el.closest("tr[data-uid]");
+        if (!row) return;
+        const col = colByUid(row.dataset.uid);
+        if (f === "name") { col.name = el.value; markDirty(); }
+        if (f === "length") { col.length = el.value.trim(); markDirty(); }
+      });
+      host.addEventListener("contextmenu", function (event) {
+        const inTree = event.target.closest("#hs-tree");
+        const row = event.target.closest(".hs-grid tr[data-uid]");
+        if (!inTree && !row) return;
+        event.preventDefault();
+        if (row && editor) {
+          const id = row.dataset.uid;
+          if (editor.selected.indexOf(id) === -1) { editor.selected = [id]; renderEditor(); }
+          openMenu(event.clientX, event.clientY, rowMenuItems());
+          return;
+        }
+        const node = event.target.closest(".hs-node");
+        if (node && node.dataset.act === "open-table") {
+          const db = node.dataset.db; const tn = node.dataset.table;
+          openMenu(event.clientX, event.clientY, [
+            { label: "Sửa cấu trúc bảng", run: function () { guardDirty(function () { state.selectedDb = db; editorFromTable(db, tn); renderAll(); }); } },
+            { label: "Xóa bảng…", run: function () { dropTable(db, tn); } },
+            "sep"
+          ].concat(newMenuItems(db)));
+          return;
+        }
+        if (node && node.dataset.act === "select-db") {
+          const db = node.dataset.db;
+          if (!editor) { state.selectedDb = db; renderAll(); }
+          openMenu(event.clientX, event.clientY, newMenuItems(db).concat(["sep", { label: "Xóa CSDL…", run: function () { dropDb(db); } }]));
+          return;
+        }
+        openMenu(event.clientX, event.clientY, newMenuItems().concat(["sep", { label: "Làm mới", key: "F5", run: function () { addLog("SHOW DATABASES;"); renderLog(); } }]));
+      });
+      host.addEventListener("keydown", function (event) {
+        if (!editor) return;
+        if (event.ctrlKey && event.key === "Insert") { event.preventDefault(); addColumn(); }
+        else if (event.ctrlKey && event.key === "Delete" && event.target.closest(".hs-grid")) { event.preventDefault(); removeColumns(); }
+        else if (event.ctrlKey && (event.key === "s" || event.key === "S")) { event.preventDefault(); saveTable(); }
+      });
+
+      /* ---------- Bảng nhiệm vụ ---------- */
+      function describeCol(c) {
+        let text = "<code>" + c.name + "</code>" + (c.alt ? " (hoặc <code>" + c.alt.join(", ") + "</code>)" : "") + ": " + c.type + (c.length ? "(" + c.length + ")" : "");
+        if (c.notNull) text += ", bỏ Allow NULL";
+        if (c.def === "auto") text += ", AUTO_INCREMENT";
+        else if (c.def === "empty") text += ", mặc định ''";
+        else if (c.def !== undefined) text += ", mặc định " + c.def;
+        return text;
+      }
+      function colOk(t, spec) {
+        const names = [spec.name].concat(spec.alt || []);
+        const c = t.columns.find(function (x) { return names.some(function (n) { return sameName(x.name, n); }); });
+        if (!c || c.type !== spec.type) return false;
+        if (spec.length && String(c.length) !== String(spec.length)) return false;
+        if (spec.notNull && c.allowNull) return false;
+        if (spec.def === "auto" && c.def.kind !== "auto") return false;
+        if (spec.def === "empty" && !(c.def.kind === "text" && c.def.text === "")) return false;
+        if (spec.def !== undefined && spec.def !== "auto" && spec.def !== "empty" && !(c.def.kind === "text" && c.def.text.trim() === String(spec.def))) return false;
+        return true;
+      }
+      function sameSet(a, b) { if (a.length !== b.length) return false; const la = a.map(lc).sort(); const lb = b.map(lc).sort(); return la.every(function (x, i) { return x === lb[i]; }); }
+      function evalTask(task) {
+        const items = [];
+        const dbName = findDbName(task.db);
+        const db = dbName ? state.dbs[dbName] : null;
+        if (!task.dbGiven) items.push({ text: "Đã tạo CSDL <code>" + task.db + "</code>" + (task.collation ? " (đối chiếu " + task.collation + ")" : ""), ok: !!db && (!task.collation || db.collation === task.collation) });
+        task.tables.forEach(function (spec) {
+          const t = db ? getTable(dbName, spec.name) : null;
+          items.push({ text: "Đã lưu bảng <code>" + spec.name + "</code>", ok: !!t });
+          spec.columns.forEach(function (c) { items.push({ text: describeCol(c), ok: !!t && colOk(t, c) }); });
+          if (spec.pk) items.push({ text: "Khoá chính: <code>" + spec.pk.join(", ") + "</code>", ok: !!t && t.indexes.some(function (ix) { return ix.type === "PRIMARY" && sameSet(ix.cols, spec.pk); }) });
+          (spec.unique || []).forEach(function (u) { items.push({ text: "Khoá cấm trùng lặp (UNIQUE): (<code>" + u.join(", ") + "</code>)", ok: !!t && t.indexes.some(function (ix) { return ix.type === "UNIQUE" && sameSet(ix.cols, u); }) }); });
+          (spec.fks || []).forEach(function (f) { items.push({ text: "Khoá ngoài: <code>" + f.col + "</code> → <code>" + f.refTable + "(" + f.refCol + ")</code>", ok: !!t && t.fks.some(function (fk) { return sameName(fk.col, f.col) && sameName(fk.refTable, f.refTable) && sameName(fk.refCol, f.refCol); }) }); });
+          (spec.absent || []).forEach(function (name) { items.push({ text: "Không còn trường <code>" + name + "</code>", ok: !!t && !t.columns.some(function (c) { return sameName(c.name, name); }) }); });
+          if (!spec.partial) items.push({ text: "Bảng có đúng " + spec.columns.length + " trường, không có trường thừa", ok: !!t && t.columns.length === spec.columns.length });
+        });
+        return items;
+      }
+      function renderTasks() {
+        if (!taskHost) return;
+        const results = cfg.tasks.map(function (task) { const items = evalTask(task); return { task: task, items: items, done: items.every(function (i) { return i.ok; }), count: items.filter(function (i) { return i.ok; }).length }; });
+        const current = results.find(function (r) { return r.task.id === activeTask; }) || results[0];
+        const doneCount = results.filter(function (r) { return r.done; }).length;
+        let html = '<span class="mini-label">Bảng nhiệm vụ</span><h3>Máy tự kiểm tra kết quả</h3><p class="muted" style="margin:0;font-size:.88rem;">Kết quả chỉ được tính sau khi em bấm <strong>Lưu</strong> trong HeidiSQL.</p><div class="task-tabs">';
+        results.forEach(function (r, i) {
+          if (r.task.group && (i === 0 || results[i - 1].task.group !== r.task.group)) html += '<span class="task-group">' + r.task.group + '</span>';
+          html += '<button type="button" class="task-tab" data-task="' + r.task.id + '" aria-pressed="' + (r === current) + '"><span>' + r.task.label + '</span><span class="badge' + (r.done ? " done" : "") + '">' + (r.done ? "Hoàn thành" : r.count + "/" + r.items.length) + '</span></button>';
+        });
+        html += '</div><p class="task-desc"><strong>' + current.task.title + '.</strong> ' + current.task.desc + '</p><ul class="check-list">' +
+          current.items.map(function (i) { return '<li class="' + (i.ok ? "ok" : "") + '"><span>' + i.text + '</span></li>'; }).join("") + '</ul>';
+        if (current.done) html += '<div class="task-done">🎉 ' + (current.task.doneText || "Em đã hoàn thành nhiệm vụ này!") + '</div>';
+        html += '<details><summary>Gợi ý các bước</summary><ol>' + current.task.steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") + '</ol></details>';
+        html += '<p class="task-progress">Đã hoàn thành ' + doneCount + '/' + results.length + ' nhiệm vụ.</p>';
+        taskHost.innerHTML = html;
+        document.dispatchEvent(new CustomEvent("heidiprogress", { detail: { done: doneCount, total: results.length, results: results.map(function (r) { return { id: r.task.id, done: r.done }; }) } }));
+      }
+      if (taskHost) {
+        taskHost.addEventListener("click", function (event) {
+          const btn = event.target.closest("[data-task]");
+          if (!btn) return;
+          activeTask = btn.dataset.task;
+          persist();
+          renderTasks();
+        });
+      }
+      window.heidiSelectTask = function (id) { activeTask = id; persist(); renderTasks(); };
+
+      function renderAll() { renderTree(); renderMain(); renderLog(); renderTasks(); }
+      renderAll();
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("[data-goto-task]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (window.heidiSelectTask) window.heidiSelectTask(btn.dataset.gotoTask);
+          if (window.showLessonPanel) window.showLessonPanel("phong-may", true);
+        });
+      });
+    });
+    document.addEventListener("heidiprogress", function (event) {
+      const el = document.getElementById("summary-lab");
+      if (el) el.textContent = "Phòng máy: đã hoàn thành " + event.detail.done + "/" + event.detail.total + " nhiệm vụ.";
+    });
+  </script>
+</body>
+</html>

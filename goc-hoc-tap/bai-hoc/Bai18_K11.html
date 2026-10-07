@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bài học tương tác Tin học 11 – Bài 18: Thực hành xác định cấu trúc bảng và các trường khoá, Chủ đề F.">
+  <meta name="theme-color" content="#173F5F">
+  <title>Bài 18: Thực hành xác định cấu trúc bảng và các trường khoá – Tin học 11</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173F5F'/%3E%3Cellipse cx='32' cy='17' rx='18' ry='8' fill='%2335C0CD'/%3E%3Cpath d='M14 17v15c0 4.4 8.1 8 18 8s18-3.6 18-8V17M14 32v15c0 4.4 8.1 8 18 8s18-3.6 18-8V32' fill='none' stroke='white' stroke-width='4'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --navy: #173F5F;
+      --navy-dark: #0e2b42;
+      --navy-soft: #eaf1f5;
+      --cyan: #35C0CD;
+      --cyan-dark: #158f9b;
+      --cyan-soft: #e7f9fb;
+      --ink: #182b3a;
+      --muted: #607485;
+      --paper: #ffffff;
+      --page: #f3f7f9;
+      --line: #d7e2e8;
+      --success: #16805d;
+      --success-soft: #e8f8f1;
+      --warning: #b66a00;
+      --warning-soft: #fff5df;
+      --danger: #b64040;
+      --danger-soft: #fff0f0;
+      --purple: #7458b3;
+      --shadow: 0 16px 42px rgba(23, 63, 95, .11);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 96% 2%, rgba(53, 192, 205, .14), transparent 18rem),
+        var(--page);
+      font-family: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+    button, input, textarea, select { font: inherit; }
+    button, [role="button"] { touch-action: manipulation; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 12px;
+      top: -80px;
+      padding: 10px 14px;
+      color: #fff;
+      background: var(--navy-dark);
+      border-radius: 9px;
+    }
+    .skip-link:focus { top: 12px; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background: linear-gradient(125deg, var(--navy-dark), var(--navy) 62%, #176f83);
+    }
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border: 2px solid rgba(255,255,255,.1);
+      border-radius: 50%;
+    }
+    .hero::before { width: 320px; height: 320px; right: -85px; top: -170px; }
+    .hero::after { width: 200px; height: 200px; right: 45px; top: -120px; }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1160px, calc(100% - 32px));
+      margin: auto;
+      padding: 38px 0 34px;
+    }
+    .breadcrumb { margin: 0 0 16px; color: #bfeff2; font-size: .88rem; font-weight: 600; }
+    .lesson-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      color: var(--navy-dark);
+      background: var(--cyan);
+      border-radius: 999px;
+      font-size: .84rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .lesson-mark svg { width: 19px; height: 19px; }
+    h1 {
+      max-width: 860px;
+      margin: 0;
+      font-size: clamp(2.15rem, 6vw, 4.6rem);
+      line-height: 1.08;
+      letter-spacing: -.045em;
+    }
+    .hero-subtitle { max-width: 760px; margin: 16px 0 0; color: #d8eef4; font-size: 1.03rem; }
+
+    .lesson-nav-wrap {
+      position: sticky;
+      z-index: 30;
+      top: 0;
+      background: rgba(255,255,255,.95);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 5px 18px rgba(23,63,95,.07);
+      backdrop-filter: blur(12px);
+    }
+    .lesson-nav {
+      display: flex;
+      gap: 7px;
+      width: min(1160px, calc(100% - 24px));
+      margin: auto;
+      padding: 10px 0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .nav-link {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--navy); background: var(--navy-soft); }
+    .nav-link[aria-current="page"] { color: #fff; background: var(--navy); }
+    .nav-link:focus-visible,
+    .btn:focus-visible,
+    .map-node:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible { outline: 3px solid rgba(53,192,205,.4); outline-offset: 2px; }
+
+    main { width: min(1160px, calc(100% - 28px)); margin: 28px auto 70px; }
+    .lesson-panel { margin-bottom: 28px; scroll-margin-top: 88px; }
+    .js-enabled .lesson-panel:not(.active) { display: none; }
+    .js-enabled .lesson-panel.active { display: block; animation: panelIn .24s ease both; }
+    @keyframes panelIn { from { opacity: .2; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    .section-heading { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+    .section-no {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 48px;
+      height: 48px;
+      color: #fff;
+      background: var(--navy);
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      box-shadow: 0 7px 16px rgba(23,63,95,.18);
+    }
+    .section-heading h2 { margin: 0; color: var(--navy); font-size: clamp(1.55rem, 4vw, 2.25rem); line-height: 1.2; }
+    .section-heading p { margin: 5px 0 0; color: var(--muted); }
+    h3 { color: var(--navy); line-height: 1.3; }
+    .card {
+      padding: clamp(20px, 4vw, 30px);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .callout {
+      padding: 17px 19px;
+      background: var(--cyan-soft);
+      border-left: 5px solid var(--cyan);
+      border-radius: 0 14px 14px 0;
+    }
+    .callout p { margin: 0; }
+    .callout strong { color: var(--navy); }
+    .mini-label { display: block; margin-bottom: 6px; color: var(--cyan-dark); font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 47px;
+      padding: 10px 17px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .15s, background .15s, border-color .15s, box-shadow .15s;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .btn:disabled { cursor: not-allowed; opacity: .52; }
+    .btn-primary { color: #fff; background: var(--navy); box-shadow: 0 8px 18px rgba(23,63,95,.18); }
+    .btn-primary:hover:not(:disabled) { background: #205477; }
+    .btn-accent { color: var(--navy-dark); background: var(--cyan); }
+    .btn-accent:hover:not(:disabled) { background: #5bd1da; }
+    .btn-secondary { color: var(--navy); background: #fff; border-color: #b9cbd5; }
+    .btn-secondary:hover:not(:disabled) { background: var(--navy-soft); }
+    .btn-danger { color: var(--danger); background: #fff; border-color: #e0aaaa; }
+    .button-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+
+    .scenario-card { display: grid; grid-template-columns: 1.2fr .8fr; gap: 26px; align-items: center; }
+    .scenario-card h2 { margin-top: 0; font-size: clamp(1.7rem,4vw,2.5rem); }
+    .scenario-visual {
+      position: relative;
+      min-height: 280px;
+      padding: 26px;
+      background: linear-gradient(145deg, var(--navy-dark), var(--navy));
+      border-radius: 18px;
+      color: #fff;
+      overflow: hidden;
+    }
+    .search-bar { display: flex; gap: 8px; padding: 10px; background: #fff; border-radius: 11px; color: var(--muted); }
+    .search-dot { width: 22px; height: 22px; border: 3px solid var(--cyan); border-radius: 50%; position: relative; }
+    .search-dot::after { content: ""; position: absolute; width: 8px; height: 3px; right: -7px; bottom: -3px; background: var(--cyan); transform: rotate(45deg); }
+    .music-result { margin-top: 15px; padding: 13px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16); border-radius: 11px; }
+    .music-result small { color: #bdeff1; }
+    .pulse-line { height: 7px; margin-top: 9px; background: linear-gradient(90deg,var(--cyan) 65%,rgba(255,255,255,.15) 65%); border-radius: 9px; }
+    .prediction-box { margin-top: 20px; padding: 17px; background: #f7fafc; border: 1px solid var(--line); border-radius: 14px; }
+    .prediction-box fieldset { margin: 0; padding: 0; border: 0; }
+    .prediction-box legend { margin-bottom: 10px; font-weight: 700; }
+    .choice-line { display: flex; gap: 9px; align-items: flex-start; margin: 8px 0; cursor: pointer; }
+    .choice-line input { width: 19px; height: 19px; margin-top: 3px; accent-color: var(--cyan-dark); }
+    .feedback { display: none; margin-top: 13px; padding: 12px 14px; border-radius: 10px; }
+    .feedback.show { display: block; }
+    .feedback.success { color: #0f6044; background: var(--success-soft); border: 1px solid #93d2b8; }
+    .feedback.hint { color: #7a4a00; background: var(--warning-soft); border: 1px solid #e7c482; }
+
+    .goal-card { min-height: 190px; }
+    .goal-icon { display: grid; place-items: center; width: 43px; height: 43px; margin-bottom: 13px; color: var(--navy); background: var(--cyan-soft); border-radius: 12px; font-weight: 800; }
+    .goal-card h3 { margin: 0 0 7px; font-size: 1.05rem; }
+    .goal-card p { margin: 0; color: var(--muted); font-size: .93rem; }
+
+    .data-story { margin-bottom: 22px; }
+    .data-tables { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 20px 0; overflow-x: auto; }
+    .table-card { min-width: 180px; overflow: hidden; border: 1px solid #bdd0d9; border-radius: 12px; }
+    .table-title { padding: 8px 10px; color: #fff; background: var(--navy); font-size: .9rem; font-weight: 800; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .data-table th, .data-table td { padding: 7px 8px; border-bottom: 1px solid #dce7eb; text-align: left; white-space: nowrap; }
+    .data-table th { color: var(--navy-dark); background: #dff6f7; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .key-tag { display: inline-block; margin-left: 4px; padding: 1px 5px; color: #5b3b00; background: #ffe39d; border-radius: 5px; font-size: .68rem; font-weight: 800; vertical-align: 1px; }
+    .foreign-tag { color: #4c337c; background: #ede7fb; }
+    .definition { margin: 20px 0; padding: 22px; color: #fff; background: linear-gradient(125deg,var(--navy),#205f7e); border-radius: 16px; }
+    .definition p { margin: 0; font-size: 1.07rem; }
+    .concept-card { padding: 18px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--cyan); border-radius: 14px; }
+    .concept-card h3 { margin: 0 0 6px; font-size: 1rem; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: .91rem; }
+    .schema-example { overflow-x: auto; margin: 20px 0; }
+    .schema-example table { width: 100%; min-width: 670px; border-collapse: collapse; }
+    .schema-example caption { margin-bottom: 9px; color: var(--navy); font-weight: 700; text-align: left; }
+    .schema-example th, .schema-example td { padding: 9px 11px; border: 1px solid var(--line); text-align: left; }
+    .schema-example th { background: var(--navy); color: #fff; }
+    .schema-example tbody tr:nth-child(even) { background: #f1f9fa; }
+    .quiz-shell { max-width: 820px; margin: auto; }
+    .quiz-top { display: flex; align-items: center; gap: 13px; margin-bottom: 18px; }
+    .quiz-count { color: var(--navy); font-weight: 800; white-space: nowrap; }
+    .quiz-progress { flex: 1; height: 11px; background: #e1eaee; border-radius: 999px; overflow: hidden; }
+    .quiz-progress-fill { width: 20%; height: 100%; background: linear-gradient(90deg,var(--cyan),var(--cyan-dark)); transition: width .25s; }
+    .quiz-card h3 { margin: 0 0 17px; font-size: 1.2rem; }
+    .quiz-options { display: grid; gap: 10px; }
+    .quiz-option { position: relative; display: grid; grid-template-columns: 34px 1fr; gap: 11px; padding: 13px 14px; background: #f7fafb; border: 1.5px solid #d3e0e5; border-radius: 12px; cursor: pointer; }
+    .quiz-option:hover { border-color: var(--cyan-dark); }
+    .quiz-option input { position: absolute; opacity: 0; }
+    .option-letter { display: grid; place-items: center; width: 30px; height: 30px; color: var(--navy); background: #fff; border: 1px solid #aebfc8; border-radius: 50%; font-weight: 800; }
+    .quiz-option:has(input:checked) { background: var(--cyan-soft); border-color: var(--cyan-dark); }
+    .quiz-option:has(input:checked) .option-letter { color: #fff; background: var(--cyan-dark); border-color: var(--cyan-dark); }
+    .quiz-option.correct { background: var(--success-soft); border-color: var(--success); }
+    .quiz-option.wrong { background: var(--danger-soft); border-color: var(--danger); }
+    .quiz-feedback { display: none; margin-top: 14px; padding: 13px 15px; border-radius: 11px; }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.correct { color: #0e6548; background: var(--success-soft); border-left: 4px solid var(--success); }
+    .quiz-feedback.wrong { color: #794000; background: var(--warning-soft); border-left: 4px solid var(--warning); }
+    .quiz-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 17px; }
+    .quiz-result { display: none; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-disc { display: grid; place-items: center; width: 150px; height: 150px; margin: 0 auto 18px; color: #fff; background: var(--navy); border: 12px solid var(--cyan); border-radius: 50%; }
+    .score-disc strong { font-size: 2.4rem; line-height: 1; }
+    .score-disc span { display: block; font-size: .8rem; }
+
+    .summary-map { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; align-items: stretch; }
+    .summary-node { position: relative; padding: 17px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--cyan); border-radius: 13px; }
+    .summary-node:not(:last-child)::after { content: "→"; position: absolute; right: -15px; top: 42%; z-index: 2; color: var(--cyan-dark); font-weight: 800; }
+    .summary-node strong { display: block; color: var(--navy); margin-bottom: 5px; }
+    .summary-node span { color: var(--muted); font-size: .87rem; }
+    .final-score { margin-top: 22px; padding: 20px; color: #fff; background: linear-gradient(120deg,var(--navy),#1b657a); border-radius: 15px; }
+    .final-score h3 { margin: 0 0 5px; color: #fff; }
+    .final-score p { margin: 0; color: #d8f4f5; }
+
+    dialog { width: min(680px, calc(100% - 28px)); padding: 0; border: 0; border-radius: 18px; box-shadow: 0 24px 70px rgba(0,0,0,.28); }
+    dialog::backdrop { background: rgba(8,28,42,.65); backdrop-filter: blur(3px); }
+    .dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; color: #fff; background: var(--navy); }
+    .dialog-head h2 { margin: 0; font-size: 1.2rem; }
+    .dialog-close { width: 42px; height: 42px; color: #fff; background: transparent; border: 1px solid rgba(255,255,255,.3); border-radius: 10px; cursor: pointer; }
+    .dialog-body { padding: 20px; }
+    .dialog-body dl { display: grid; grid-template-columns: 140px 1fr; gap: 10px 16px; margin: 0; }
+    .dialog-body dt { color: var(--navy); font-weight: 800; }
+    .dialog-body dd { margin: 0; color: var(--muted); }
+    .noscript-note { margin: 20px auto; padding: 14px; color: #704900; background: var(--warning-soft); border: 1px solid #e3c078; border-radius: 10px; }
+    footer { padding: 24px 16px; color: #bdd4df; background: var(--navy-dark); text-align: center; font-size: .86rem; }
+
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .data-tables { grid-template-columns: repeat(2,minmax(220px,1fr)); }
+      .map-layout, .three-layout, .code-layout { grid-template-columns: 1fr; }
+      .map-detail { min-height: auto; }
+      .three-controls { order: -1; }
+      .summary-map { grid-template-columns: 1fr 1fr; }
+      .summary-node::after { display: none; }
+    }
+    @media (max-width: 680px) {
+      body { font-size: 16px; }
+      .hero-inner { padding-top: 27px; }
+      .scenario-card, .grid-2, .grid-3, .simulation-grid { grid-template-columns: 1fr; }
+      .scenario-visual { min-height: 240px; }
+      .data-tables { grid-template-columns: repeat(4,210px); }
+      .map-board { min-height: 600px; padding: 14px; }
+      .map-grid { grid-template: repeat(4,1fr) / 1fr; min-height: 565px; }
+      #map-node-nhacsi { grid-area: 1 / 1; }
+      #map-node-bannhac { grid-area: 2 / 1; }
+      #map-node-casi { grid-area: 3 / 1; }
+      #map-node-banthuam { grid-area: 4 / 1; }
+      .map-lines { display: none; }
+      .three-stage { min-height: 390px; }
+      .schema-world { transform: translate(-50%,-50%) rotateX(-18deg) rotateY(28deg) scale(.72); }
+      .bar-row { grid-template-columns: 115px 1fr 28px; font-size: .82rem; }
+      .summary-map { grid-template-columns: 1fr; }
+      .quiz-actions .btn, .code-actions .btn { flex: 1 1 140px; }
+      .dialog-body dl { grid-template-columns: 1fr; gap: 3px; }
+      .dialog-body dd { margin-bottom: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+    @media print {
+      body { background: #fff; }
+      .hero { print-color-adjust: exact; }
+      .lesson-nav-wrap, .button-row, .code-actions, .quiz-actions { display: none !important; }
+      .lesson-panel { display: block !important; break-before: page; }
+      .lesson-panel:first-of-type { break-before: auto; }
+      .card { box-shadow: none; }
+      .three-stage { min-height: 330px; print-color-adjust: exact; }
+    }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+    .compare-card { padding: 18px; border: 1px solid var(--line); border-radius: 15px; background: #fff; }
+    .compare-card.manual { border-top: 4px solid #b66a00; }
+    .compare-card.computer { border-top: 4px solid var(--cyan); }
+    .compare-card h3 { margin: 0 0 8px; font-size: 1.02rem; }
+    .compare-card ul { margin: 0; padding-left: 19px; color: var(--muted); font-size: .93rem; }
+    .compare-card li { margin: 4px 0; }
+
+    .benefit-list { display: grid; gap: 12px; margin-top: 16px; }
+    .benefit-item { display: grid; grid-template-columns: 40px 1fr; gap: 13px; align-items: start; padding: 14px 16px; background: #f7fafb; border-radius: 13px; }
+    .benefit-item .benefit-icon { display: grid; place-items: center; width: 40px; height: 40px; color: var(--navy); background: var(--cyan-soft); border-radius: 11px; font-weight: 800; }
+    .benefit-item strong { color: var(--navy); }
+    .benefit-item p { margin: 3px 0 0; color: var(--muted); font-size: .93rem; }
+
+    .step-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; margin-top: 16px; }
+    .step-card { padding: 16px; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--cyan); border-radius: 13px; }
+    .step-card span.step-no { display: inline-block; margin-bottom: 7px; padding: 2px 9px; color: #fff; background: var(--navy); border-radius: 999px; font-size: .78rem; font-weight: 800; }
+    .step-card h3 { margin: 0 0 5px; font-size: .98rem; }
+    .step-card p { margin: 0; color: var(--muted); font-size: .9rem; }
+    code.inline { padding: 2px 6px; background: var(--navy-soft); border-radius: 6px; color: var(--navy); font-family: Consolas, "Courier New", monospace; font-size: .92em; }
+
+    .console-shot { margin-top: 16px; padding: 14px 16px; color: #dbf4f5; background: #08151f; border: 1px solid #2a4a5f; border-radius: 12px; font-family: Consolas, "Courier New", monospace; font-size: .88rem; white-space: pre-wrap; }
+    .console-shot .prompt-line { color: #8ce7ed; }
+    figure { margin: 20px 0 0; }
+    figcaption { margin-top: 9px; color: var(--muted); font-size: .87rem; text-align: center; }
+    .mindmap-wrap { margin-top: 18px; overflow-x: auto; }
+    .mindmap-wrap svg { min-width: 640px; }
+
+    /* ==== Bổ sung chung cho Bài 18 – 20 ==== */
+    [hidden] { display: none !important; }
+    .scenario-card > *, .mock-step > *, .lab-grid > *, .grid-2 > *, .grid-3 > *, .heidi-layout > * { min-width: 0; }
+    .ui-shot { overflow-x: auto; }
+    .stack > * + * { margin-top: 18px; }
+    .lead { font-size: 1.04rem; }
+    .muted { color: var(--muted); }
+    .task-banner { display: grid; grid-template-columns: 54px 1fr; gap: 14px; align-items: start; padding: 18px 20px; background: #f4effc; border: 1px solid #d9cdf2; border-left: 5px solid var(--purple); border-radius: 0 16px 16px 0; }
+    .task-banner .task-icon { display: grid; place-items: center; width: 54px; height: 54px; color: #fff; background: var(--purple); border-radius: 50%; font-weight: 800; font-size: 1.3rem; }
+    .task-banner strong { display: block; color: #4c337c; font-size: 1.05rem; }
+    .task-banner p { margin: 4px 0 0; }
+    .schema-line { display: block; margin: 8px 0; padding: 10px 14px; overflow-x: auto; color: var(--ink); background: #f7fafb; border: 1px solid var(--line); border-radius: 10px; font: 600 .98rem/1.6 Consolas, "Courier New", monospace; white-space: nowrap; }
+    .schema-line b { color: var(--navy); }
+    .pk { color: #b35a00; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
+    .fk { color: #6b3fb8; }
+    .fk2 { color: #158f9b; }
+    .uq { color: #b64040; }
+    .sgk-table-wrap { overflow-x: auto; margin: 16px 0; }
+    .sgk-table { width: 100%; min-width: 420px; border-collapse: collapse; font-size: .92rem; }
+    .sgk-table caption { margin-bottom: 8px; color: var(--navy); font-weight: 700; text-align: left; }
+    .sgk-table caption em { color: var(--muted); font-weight: 500; }
+    .sgk-table th, .sgk-table td { padding: 7px 10px; border: 1px solid #fff; text-align: left; }
+    .sgk-table th { color: var(--navy-dark); background: #ffe7c2; }
+    .sgk-table td { background: #e3f3fa; }
+    .sgk-table td.num, .sgk-table th.num { text-align: center; }
+    .sgk-table tr.hl td { background: #fff2c9; }
+    .sgk-table td.dup { background: #ffd9d4; color: #8a2121; font-weight: 700; }
+    .sgk-table td.link-id { color: #6b3fb8; font-weight: 700; }
+    .table-row-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; align-items: start; }
+    .mini-table-card { overflow: hidden; background: #fff; border: 1px solid #bdd0d9; border-radius: 12px; }
+    .mini-table-card .table-title { display: flex; justify-content: space-between; gap: 8px; }
+    .mini-table-card .table-title small { color: #bdeff1; font-weight: 600; }
+    .mini-table-card .data-table td.dup { background: #ffd9d4; color: #8a2121; font-weight: 700; }
+    .mini-table-card .data-table td.new-id { color: #6b3fb8; font-weight: 700; }
+    .mini-table-wrap { max-height: 340px; overflow: auto; }
+    .stepper { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+    .stepper button { min-height: 42px; padding: 8px 13px; color: var(--navy); background: #fff; border: 1.5px solid #b9cbd5; border-radius: 999px; font-weight: 700; cursor: pointer; }
+    .stepper button[aria-pressed="true"] { color: #fff; background: var(--navy); border-color: var(--navy); }
+    .stat-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 14px 0; }
+    .stat { padding: 14px; background: #f4f8fa; border: 1px solid var(--line); border-radius: 12px; }
+    .stat strong { display: block; color: var(--navy); font-size: 1.5rem; line-height: 1.1; }
+    .stat span { color: var(--muted); font-size: .86rem; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .field-toggle { min-height: 42px; padding: 8px 13px; color: var(--navy); background: #fff; border: 1.5px dashed #9fb6c2; border-radius: 10px; font: 600 .92rem Consolas, "Courier New", monospace; cursor: pointer; }
+    .field-toggle[aria-pressed="true"] { color: #fff; background: var(--cyan-dark); border-style: solid; border-color: var(--cyan-dark); }
+    .verdict { margin-top: 12px; padding: 12px 14px; border-radius: 10px; background: var(--navy-soft); }
+    .verdict.ok { color: #0f6044; background: var(--success-soft); border: 1px solid #93d2b8; }
+    .verdict.bad { color: #8a2121; background: var(--danger-soft); border: 1px solid #e7b1b1; }
+    .verdict.warn { color: #7a4a00; background: var(--warning-soft); border: 1px solid #e7c482; }
+    .key-legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 10px 0 0; color: var(--muted); font-size: .88rem; }
+    .key-legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 6px; border-radius: 3px; vertical-align: -1px; background: currentColor; }
+    .schema-svg-wrap { overflow-x: auto; padding: 8px 0; }
+    .schema-svg-wrap svg { min-width: 720px; width: 100%; height: auto; }
+    .schema-svg-wrap .fk-link { cursor: pointer; }
+    .schema-svg-wrap .fk-link path { transition: stroke-width .15s; }
+    .schema-svg-wrap .fk-link:hover path, .schema-svg-wrap .fk-link.on path { stroke-width: 5; }
+    .schema-svg-wrap .fk-link:focus { outline: none; }
+    .schema-svg-wrap .fk-link:focus-visible path { stroke-width: 5; }
+    .info-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    .info-table th, .info-table td { padding: 9px 11px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .info-table th { color: #fff; background: var(--navy); }
+    .info-table tbody tr:nth-child(even) { background: #f4f8fa; }
+    .info-table code { font-family: Consolas, "Courier New", monospace; color: var(--navy); font-weight: 700; }
+    .lab-grid { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 20px; }
+    .lab-form { display: grid; gap: 10px; }
+    .lab-form label { display: grid; gap: 4px; font-weight: 700; font-size: .9rem; }
+    .lab-form input, .lab-form select { min-height: 44px; padding: 8px 11px; border: 1px solid #b8cbd4; border-radius: 10px; background: #fff; font-weight: 500; }
+    .reveal-box { margin-top: 12px; padding: 14px 16px; background: #f7fafb; border: 1px dashed #b9cbd5; border-radius: 12px; }
+    .reveal-box p:first-child { margin-top: 0; }
+    .reveal-box p:last-child { margin-bottom: 0; }
+    .exercise { padding: 18px 20px; background: #fff; border: 1px solid var(--line); border-left: 5px solid #d9534f; border-radius: 0 14px 14px 0; }
+    .exercise.apply { border-left-color: #2a7fd4; }
+    .exercise h3 { margin: 0 0 6px; font-size: 1.02rem; }
+    .exercise p { margin: 0 0 6px; }
+    .mock-step { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; padding: 18px; background: #fff; border: 1px solid var(--line); border-radius: 15px; }
+    .mock-step + .mock-step { margin-top: 14px; }
+    .mock-step h4 { margin: 0 0 6px; color: var(--navy); font-size: 1.02rem; }
+    .mock-step ol, .mock-step ul { margin: 6px 0 0; padding-left: 20px; }
+    .mock-step li { margin: 4px 0; }
+    .kbd, kbd { display: inline-block; padding: 1px 7px; color: var(--navy-dark); background: #fff; border: 1px solid #b9cbd5; border-bottom-width: 3px; border-radius: 6px; font: 700 .82rem Consolas, monospace; }
+    .ui-word { color: var(--navy-dark); font-weight: 800; }
+    .sql-mini { margin: 10px 0 0; padding: 11px 13px; overflow-x: auto; color: #dbf4f5; background: #0b1b28; border-radius: 10px; font: 500 .84rem/1.55 Consolas, "Courier New", monospace; white-space: pre; }
+    .sql-mini .kw { color: #8ce7ed; font-weight: 700; }
+    .sql-mini .cm { color: #8eabbc; }
+    .pitfall-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+    .pitfall { padding: 14px 16px; background: var(--danger-soft); border: 1px solid #efc7c7; border-radius: 12px; }
+    .pitfall strong { display: block; color: var(--danger); margin-bottom: 3px; }
+    .pitfall p { margin: 0; font-size: .92rem; }
+    .pitfall code { font-family: Consolas, monospace; font-size: .86rem; }
+
+    /* Ảnh minh hoạ giao diện HeidiSQL dựng bằng HTML */
+    .ui-shot { overflow: hidden; background: #f0f0f0; border: 1px solid #a9b4bb; border-radius: 8px; font: 12px/1.4 "Segoe UI", Tahoma, Arial, sans-serif; color: #1b1b1b; box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+    .ui-shot .shot-title { display: flex; justify-content: space-between; padding: 5px 10px; background: #fff; border-bottom: 1px solid #d6d6d6; }
+    .ui-shot .shot-body { padding: 10px; }
+    .ui-shot .shot-row { display: grid; grid-template-columns: 80px 1fr; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .ui-shot .shot-input { padding: 3px 6px; background: #fff; border: 1px solid #7a9cc6; border-radius: 2px; min-height: 22px; }
+    .ui-shot .shot-btns { display: flex; gap: 6px; justify-content: flex-end; margin-top: 8px; }
+    .ui-shot .shot-btn { padding: 3px 14px; background: #e1e1e1; border: 1px solid #adadad; border-radius: 2px; }
+    .ui-shot .shot-btn.hl, .ui-shot .hl { background: #fff36b; }
+    .ui-shot table { width: 100%; border-collapse: collapse; background: #fff; }
+    .ui-shot th, .ui-shot td { padding: 3px 6px; border: 1px solid #e3e3e3; text-align: left; white-space: nowrap; }
+    .ui-shot th { background: #f7f7f7; font-weight: 600; }
+    .ui-shot .shot-code { padding: 6px; background: #fff; border: 1px solid #c8c8c8; color: #1f3fbf; font-family: Consolas, monospace; font-size: 11px; white-space: pre-wrap; }
+    .ui-shot .shot-menu { display: inline-block; min-width: 190px; background: #f2f2f2; border: 1px solid #a0a0a0; box-shadow: 2px 3px 8px rgba(0,0,0,.18); }
+    .ui-shot .shot-menu div { padding: 3px 12px; }
+    .ui-shot .shot-menu .sel { background: #cce4f7; }
+    .ui-shot .shot-menu hr { margin: 3px 0; border: 0; border-top: 1px solid #d0d0d0; }
+    .ui-shot .key-gold { color: #d79b00; }
+    .ui-shot .key-red { color: #c62828; }
+    .ui-shot .key-green { color: #2e7d32; }
+    .shot-cap { margin: 6px 0 0; color: var(--muted); font-size: .84rem; font-style: italic; text-align: center; }
+
+    @media (max-width: 900px) {
+      .lab-grid, .mock-step, .pitfall-grid { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 680px) {
+      .stat-row { grid-template-columns: 1fr; }
+      .task-banner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Bỏ qua điều hướng</a>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="breadcrumb">Chủ đề F · Giải quyết vấn đề với sự trợ giúp của máy tính · Tin học 11</p>
+      <span class="lesson-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="7" height="7" rx="1"></rect><rect x="14" y="4" width="7" height="7" rx="1"></rect><rect x="8.5" y="14" width="7" height="7" rx="1"></rect><path d="M10 7.5h4M12 11v3"></path></svg>
+        Bài 18 · Thực hành
+      </span>
+      <h1>Xác định cấu trúc bảng và các trường khoá</h1>
+      <p class="hero-subtitle">Từ một cuốn sổ ghi chép các bản thu âm, em sẽ từng bước tách thành các bảng gọn gàng, chọn khoá chính, khoá ngoài, khoá cấm trùng lặp và kiểu dữ liệu – trước khi bắt tay vào tạo CSDL trên máy.</p>
+    </div>
+  </header>
+
+  <div class="lesson-nav-wrap">
+    <nav class="lesson-nav" aria-label="Các phần của bài học">
+      <a class="nav-link" href="#khoi-dong" data-panel="khoi-dong" aria-current="page">Khởi động</a>
+      <a class="nav-link" href="#muc-tieu" data-panel="muc-tieu">Mục tiêu</a>
+      <a class="nav-link" href="#phan-tich" data-panel="phan-tich">1–2. Bài toán &amp; bảng</a>
+      <a class="nav-link" href="#to-chuc" data-panel="to-chuc">3. Tổ chức lại bảng</a>
+      <a class="nav-link" href="#cac-khoa" data-panel="cac-khoa">4–5. Khoá &amp; kiểu dữ liệu</a>
+      <a class="nav-link" href="#thu-rang-buoc" data-panel="thu-rang-buoc">Phòng thử khoá</a>
+      <a class="nav-link" href="#luyen-tap" data-panel="luyen-tap">Luyện tập</a>
+      <a class="nav-link" href="#van-dung" data-panel="van-dung">Vận dụng</a>
+      <a class="nav-link" href="#bai-tap-sbt" data-panel="bai-tap-sbt">Bài tập SBT</a>
+      <a class="nav-link" href="#tong-ket" data-panel="tong-ket">Tổng kết</a>
+    </nav>
+  </div>
+
+  <noscript>
+    <p class="noscript-note">Trình duyệt đang tắt JavaScript. Nội dung kiến thức vẫn hiển thị nối tiếp nhau; riêng các hoạt động tương tác sẽ không hoạt động.</p>
+  </noscript>
+
+  <main id="main-content">
+    <!-- KHỞI ĐỘNG -->
+    <section class="lesson-panel active" id="khoi-dong">
+      <div class="card scenario-card">
+        <div>
+          <span class="mini-label">Khởi động</span>
+          <h2>Cuốn sổ ghi chép của website âm nhạc</h2>
+          <p>Ở Bài 13, em đã thấy lợi ích khi tổ chức CSDL của website âm nhạc thành <strong>nhiều bảng</strong> thay vì một bảng chứa đầy đủ mọi thông tin về mỗi bản thu âm (tên bản nhạc, tên nhạc sĩ, tên ca sĩ).</p>
+          <p>Nhưng làm thế nào để từ yêu cầu ban đầu – <em>quản lí danh sách các bản thu âm</em> – người ta đi đến được các bảng như ở Bài 13? Hãy bắt đầu từ cuốn sổ ghi chép dưới đây.</p>
+          <div class="prediction-box">
+            <fieldset>
+              <legend>Dự đoán trước khi học</legend>
+              <p style="margin:0 0 10px;color:#607485;font-size:.93rem;">Ca sĩ <strong>Trần Khánh</strong> cần sửa lại tên trong sổ ghi chép (Bảng 18.1 bên dưới). Em sẽ phải sửa ở bao nhiêu dòng?</p>
+              <label class="choice-line"><input type="radio" name="warmup" value="1"><span>Chỉ 1 dòng.</span></label>
+              <label class="choice-line"><input type="radio" name="warmup" value="2"><span>2 dòng – ở mọi dòng có tên ca sĩ này.</span></label>
+              <label class="choice-line"><input type="radio" name="warmup" value="10"><span>Cả 10 dòng của bảng.</span></label>
+            </fieldset>
+            <div class="button-row">
+              <button class="btn btn-primary" type="button" id="warmup-check">Kiểm tra dự đoán</button>
+              <button class="btn btn-secondary" type="button" data-panel="phan-tich">Vào bài học</button>
+            </div>
+            <p class="feedback" id="warmup-feedback" role="status"></p>
+          </div>
+        </div>
+        <div class="scenario-visual" aria-hidden="true">
+          <div class="search-bar"><span class="search-dot"></span><span>Sửa tên ca sĩ: Trần Khánh…</span></div>
+          <div class="music-result"><strong>Một bảng duy nhất</strong><small>Tên ca sĩ lặp lại ở nhiều dòng → sửa nhiều nơi, dễ sót</small><div class="pulse-line" style="background:linear-gradient(90deg,#e9a23b 30%,rgba(255,255,255,.15) 30%)"></div></div>
+          <div class="music-result"><strong>Nhiều bảng có khoá</strong><small>Mỗi tên chỉ lưu một lần → sửa một nơi, mọi nơi đều đúng</small><div class="pulse-line"></div></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:20px;">
+        <div class="sgk-table-wrap">
+          <table class="sgk-table" id="t181">
+            <caption>Bảng 18.1. <em>Ví dụ về một bản ghi chép các bản thu âm nhạc</em></caption>
+            <thead><tr><th class="num">STT</th><th>Tên bản nhạc</th><th>Tên nhạc sĩ</th><th>Tên ca sĩ</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="muted" style="margin:0;font-size:.9rem;">Quy ước: nói đến <strong>nhạc sĩ</strong> sáng tác bản nhạc là nói đến tên một nhạc sĩ hay một nhóm nhạc sĩ; nói đến <strong>ca sĩ</strong> là nói đến một ca sĩ hay một nhóm ca sĩ biểu diễn tác phẩm.</p>
+      </div>
+    </section>
+
+    <!-- MỤC TIÊU -->
+    <section class="lesson-panel" id="muc-tieu">
+      <div class="section-heading">
+        <span class="section-no">2</span>
+        <div><h2>Mục tiêu bài học</h2><p>Sau bài học này em sẽ:</p></div>
+      </div>
+      <div class="task-banner" style="margin-bottom:20px;">
+        <span class="task-icon">!</span>
+        <div><strong>Nhiệm vụ. Xác định các bảng dữ liệu, cấu trúc của chúng và các trường khoá cho CSDL của một website âm nhạc.</strong><p>Có được hình dung về công việc xác định các bảng dữ liệu, cấu trúc của chúng và các trường khoá trước khi bước vào tạo lập CSDL.</p></div>
+      </div>
+      <div class="grid-3">
+        <div class="card goal-card"><div class="goal-icon">01</div><h3>Phân tích bài toán</h3><p>Tổng kết các thông tin cần quản lí, mô tả bảng ban đầu dưới dạng <code class="inline">tênbảng(trường1, trường2, …)</code> và chọn khoá chính.</p></div>
+        <div class="card goal-card"><div class="goal-icon">02</div><h3>Tổ chức lại bảng</h3><p>Phát hiện dữ liệu lặp lại, tách thành các bảng <code class="inline">casi</code>, <code class="inline">nhacsi</code>, <code class="inline">bannhac</code>, <code class="inline">banthuam</code> liên kết với nhau qua khoá ngoài.</p></div>
+        <div class="card goal-card"><div class="goal-icon">03</div><h3>Xác định khoá và kiểu dữ liệu</h3><p>Chỉ ra khoá chính, khoá ngoài, khoá cấm trùng lặp (UNIQUE) và chọn kiểu INT · AUTO_INCREMENT, VARCHAR(255) cho các trường.</p></div>
+      </div>
+      <div class="button-row">
+        <button class="btn btn-accent" type="button" data-open-glossary>Mở bảng thuật ngữ</button>
+        <button class="btn btn-secondary" type="button" data-panel="phan-tich">Bắt đầu học</button>
+      </div>
+    </section>
+
+    <!-- 1-2. XEM XÉT BÀI TOÁN & TẠO LẬP BẢNG -->
+    <section class="lesson-panel" id="phan-tich">
+      <div class="section-heading">
+        <span class="section-no">3</span>
+        <div><h2>Xem xét bài toán và tạo lập bảng</h2><p>Mục 1 và 2 trong SGK: từ bản ghi chép đến mô tả một bảng dữ liệu.</p></div>
+      </div>
+      <div class="card data-story">
+        <span class="mini-label">Mục 1 · Xem xét bài toán</span>
+        <h3>Cần quản lí những thông tin gì?</h3>
+        <p>Cùng xem xét lại bài toán quản lí các bản thu âm nhạc (Bảng 18.1 ở phần Khởi động). Mỗi dòng là một <strong>bản thu âm</strong>: một bản nhạc của một nhạc sĩ, do một ca sĩ thể hiện. Cùng một bản nhạc có thể có nhiều bản thu âm do các ca sĩ khác nhau thể hiện.</p>
+        <span class="mini-label" style="margin-top:18px;">Mục 2 · Tạo lập bảng</span>
+        <h3>Viết mô tả ngắn gọn cho bảng</h3>
+        <p>Tổng kết tất cả thông tin cần quản lí thành dãy: số hiệu bản thu âm (STT), tên bản nhạc, tên nhạc sĩ sáng tác, tên ca sĩ thể hiện. Từ đó ta hình dung một bảng tên <strong>banthuam</strong> với các trường <code class="inline">idBanthuam</code> (số hiệu bản thu âm), <code class="inline">tenBannhac</code>, <code class="inline">tenNhacsi</code>, <code class="inline">tenCasi</code>:</p>
+        <code class="schema-line"><b>banthuam</b>(idBanthuam, tenBannhac, tenNhacsi, tenCasi)</code>
+        <p>Trường <code class="inline">idBanthuam</code> xác định duy nhất một bản thu âm nên được lấy làm <strong>khoá chính</strong>. Nhóm cả ba trường <code class="inline">tenBannhac, tenNhacsi, tenCasi</code> cũng xác định duy nhất một bản thu âm nên cũng có thể làm khoá chính, nhưng rõ ràng dùng <code class="inline">idBanthuam</code> là <strong>ngắn gọn và thuận lợi hơn</strong>. Tên trường khoá chính được viết <span class="pk">gạch chân</span>:</p>
+        <code class="schema-line"><b>banthuam</b>(<span class="pk">idBanthuam</span>, tenBannhac, tenNhacsi, tenCasi)</code>
+      </div>
+
+      <div class="card data-story">
+        <span class="mini-label">Hoạt động · Máy kiểm tra giúp em</span>
+        <h3>Trường (nhóm trường) nào có thể làm khoá chính?</h3>
+        <p>Chọn một hoặc nhiều trường rồi bấm <strong>Kiểm tra</strong>. Máy sẽ dò cả 10 dòng của Bảng 18.1 xem tổ hợp em chọn có <strong>xác định duy nhất</strong> mỗi dòng hay không.</p>
+        <div class="chip-row" id="pk-fields" role="group" aria-label="Chọn trường làm khoá chính"></div>
+        <div class="button-row" style="margin-top:6px;">
+          <button class="btn btn-primary" type="button" id="pk-check">Kiểm tra</button>
+          <button class="btn btn-secondary" type="button" id="pk-clear">Bỏ chọn</button>
+        </div>
+        <div class="verdict" id="pk-verdict" role="status">Chưa chọn trường nào.</div>
+        <div class="sgk-table-wrap"><table class="sgk-table" id="pk-table"><thead></thead><tbody></tbody></table></div>
+      </div>
+      <div class="button-row"><button class="btn btn-primary" type="button" data-panel="to-chuc">Tiếp: Tổ chức lại bảng dữ liệu →</button></div>
+    </section>
+
+    <!-- 3. TỔ CHỨC LẠI BẢNG -->
+    <section class="lesson-panel" id="to-chuc">
+      <div class="section-heading">
+        <span class="section-no">4</span>
+        <div><h2>Tổ chức lại bảng dữ liệu</h2><p>Mục 3 trong SGK: phân tích và sắp xếp lại để hạn chế lượng dữ liệu lặp lại.</p></div>
+      </div>
+      <div class="card data-story">
+        <p class="lead">Bấm lần lượt từng bước. Ô <span style="background:#ffd9d4;color:#8a2121;font-weight:700;padding:0 5px;border-radius:4px;">tô đỏ</span> là giá trị bị lặp lại trong cột; số <span style="color:#6b3fb8;font-weight:700;">màu tím</span> là mã (id) dùng thay cho tên.</p>
+        <div class="stepper" id="split-steps" role="group" aria-label="Các bước tổ chức lại bảng">
+          <button type="button" data-step="0" aria-pressed="true">Bước 0 · Bảng ban đầu</button>
+          <button type="button" data-step="1" aria-pressed="false">Bước 1 · Tách bảng casi</button>
+          <button type="button" data-step="2" aria-pressed="false">Bước 2 · Tách bảng bannhac</button>
+          <button type="button" data-step="3" aria-pressed="false">Bước 3 · Tách bảng nhacsi</button>
+        </div>
+        <div class="callout" id="split-explain" aria-live="polite"></div>
+        <div id="split-schema" style="margin-top:12px;"></div>
+        <div class="stat-row" id="split-stats"></div>
+        <div class="table-row-cards" id="split-tables"></div>
+        <div class="button-row">
+          <button class="btn btn-secondary" type="button" id="split-prev">← Bước trước</button>
+          <button class="btn btn-primary" type="button" id="split-next">Bước tiếp →</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="mini-label">Kết quả · Hình 18.1</span>
+        <h3>Các bảng dữ liệu thu được</h3>
+        <code class="schema-line"><b>casi</b>(<span class="pk">idCasi</span>, tenCasi)</code>
+        <code class="schema-line"><b>nhacsi</b>(<span class="pk">idNhacsi</span>, tenNhacsi)</code>
+        <code class="schema-line"><b>bannhac</b>(<span class="pk">idBannhac</span>, tenBannhac, <span class="fk">idNhacsi</span>)</code>
+        <code class="schema-line"><b>banthuam</b>(<span class="pk">idBanthuam</span>, <span class="fk2">idBannhac</span>, <span class="fk">idCasi</span>)</code>
+        <div class="definition"><p><strong>Ghi nhớ.</strong> Khi một thông tin (tên ca sĩ, tên bản nhạc, tên nhạc sĩ) bị lặp lại nhiều lần, ta tách nó ra một bảng riêng có khoá chính là một mã số ngắn gọn, rồi dùng mã số đó (khoá ngoài) ở bảng cũ thay cho thông tin bị lặp.</p></div>
+      </div>
+      <div class="button-row"><button class="btn btn-primary" type="button" data-panel="cac-khoa">Tiếp: Các loại khoá →</button></div>
+    </section>
+
+    <!-- 4-5. CÁC LOẠI KHOÁ & KIỂU DỮ LIỆU -->
+    <section class="lesson-panel" id="cac-khoa">
+      <div class="section-heading">
+        <span class="section-no">5</span>
+        <div><h2>Các loại khoá và kiểu dữ liệu của các trường</h2><p>Mục 4 và 5 trong SGK.</p></div>
+      </div>
+      <div class="card data-story">
+        <span class="mini-label">Mục 4 · Các loại khoá</span>
+        <h3>Khoá chính và khoá ngoài</h3>
+        <ul>
+          <li>Mỗi bảng đã có <strong>một khoá chính</strong> (tên trường được gạch chân).</li>
+          <li>Khoá ngoài của các bảng:
+            <ul>
+              <li><code class="inline">bannhac</code>: <code class="inline">idNhacsi</code> tham chiếu đến <code class="inline">idNhacsi</code> trong bảng <code class="inline">nhacsi</code>;</li>
+              <li><code class="inline">banthuam</code>: <code class="inline">idBannhac</code> tham chiếu đến <code class="inline">idBannhac</code> trong bảng <code class="inline">bannhac</code>; <code class="inline">idCasi</code> tham chiếu đến <code class="inline">idCasi</code> trong bảng <code class="inline">casi</code>.</li>
+            </ul>
+          </li>
+        </ul>
+        <p>Sơ đồ dưới đây tóm tắt cấu trúc các bảng và quan hệ tham chiếu từ <strong>khoá ngoài</strong> đến <strong>khoá chính</strong> (Hình 18.2). <strong>Nháy chuột vào một đường nối</strong> để xem giải thích.</p>
+        <div class="schema-svg-wrap">
+          <svg viewBox="0 0 760 210" role="img" aria-labelledby="h182-title" id="h182">
+            <title id="h182-title">Hình 18.2: cấu trúc các bảng casi, banthuam, bannhac, nhacsi và quan hệ tham chiếu khoá ngoài – khoá chính</title>
+            <g font-family="Consolas, 'Courier New', monospace" font-size="14" text-anchor="middle">
+              <g>
+                <rect x="10" y="20" width="140" height="32" fill="#ffe7c2" stroke="#173F5F"/><text x="80" y="41" font-weight="700" fill="#173F5F">casi</text>
+                <rect x="10" y="52" width="140" height="30" fill="#fff" stroke="#173F5F"/><text x="80" y="72" fill="#b35a00" text-decoration="underline">idCasi</text>
+                <rect x="10" y="82" width="140" height="30" fill="#fff" stroke="#173F5F"/><text x="80" y="102" fill="#173F5F">tenCasi</text>
+              </g>
+              <g>
+                <rect x="210" y="20" width="150" height="32" fill="#ffe7c2" stroke="#173F5F"/><text x="285" y="41" font-weight="700" fill="#173F5F">banthuam</text>
+                <rect x="210" y="52" width="150" height="30" fill="#fff" stroke="#173F5F"/><text x="285" y="72" fill="#b35a00" text-decoration="underline">idBanthuam</text>
+                <rect x="210" y="82" width="150" height="30" fill="#fff" stroke="#173F5F"/><text x="285" y="102" fill="#158f9b">idBannhac</text>
+                <rect x="210" y="112" width="150" height="30" fill="#fff" stroke="#173F5F"/><text x="285" y="132" fill="#6b3fb8">idCasi</text>
+              </g>
+              <g>
+                <rect x="420" y="20" width="150" height="32" fill="#ffe7c2" stroke="#173F5F"/><text x="495" y="41" font-weight="700" fill="#173F5F">bannhac</text>
+                <rect x="420" y="52" width="150" height="30" fill="#fff" stroke="#173F5F"/><text x="495" y="72" fill="#b35a00" text-decoration="underline">idBannhac</text>
+                <rect x="420" y="82" width="150" height="30" fill="#fff" stroke="#173F5F"/><text x="495" y="102" fill="#173F5F">tenBannhac</text>
+                <rect x="420" y="112" width="150" height="30" fill="#fff" stroke="#173F5F"/><text x="495" y="132" fill="#16805d">idNhacsi</text>
+              </g>
+              <g>
+                <rect x="620" y="20" width="130" height="32" fill="#ffe7c2" stroke="#173F5F"/><text x="685" y="41" font-weight="700" fill="#173F5F">nhacsi</text>
+                <rect x="620" y="52" width="130" height="30" fill="#fff" stroke="#173F5F"/><text x="685" y="72" fill="#b35a00" text-decoration="underline">idNhacsi</text>
+                <rect x="620" y="82" width="130" height="30" fill="#fff" stroke="#173F5F"/><text x="685" y="102" fill="#173F5F">tenNhacsi</text>
+              </g>
+            </g>
+            <g class="fk-link" data-link="casi" tabindex="0" role="button" aria-label="Khoá ngoài banthuam.idCasi tham chiếu casi.idCasi">
+              <path d="M210 127 H180 V67 H150" fill="none" stroke="#6b3fb8" stroke-width="3"/>
+              <path d="M210 127 l-12 -7 M210 127 l-12 7" stroke="#6b3fb8" stroke-width="3"/>
+              <path d="M210 127 H150 V67" fill="none" stroke="transparent" stroke-width="18"/>
+            </g>
+            <g class="fk-link" data-link="bannhac" tabindex="0" role="button" aria-label="Khoá ngoài banthuam.idBannhac tham chiếu bannhac.idBannhac">
+              <path d="M360 97 H390 V67 H420" fill="none" stroke="#158f9b" stroke-width="3"/>
+              <path d="M360 97 l12 -7 M360 97 l12 7" stroke="#158f9b" stroke-width="3"/>
+              <path d="M360 97 H420 V67" fill="none" stroke="transparent" stroke-width="18"/>
+            </g>
+            <g class="fk-link" data-link="nhacsi" tabindex="0" role="button" aria-label="Khoá ngoài bannhac.idNhacsi tham chiếu nhacsi.idNhacsi">
+              <path d="M570 127 H595 V67 H620" fill="none" stroke="#16805d" stroke-width="3"/>
+              <path d="M570 127 l12 -7 M570 127 l12 7" stroke="#16805d" stroke-width="3"/>
+              <path d="M570 127 H620 V67" fill="none" stroke="transparent" stroke-width="18"/>
+            </g>
+            <g font-family="Be Vietnam Pro, Arial, sans-serif" font-size="13" fill="#607485">
+              <text x="380" y="185" text-anchor="middle">Đầu “chân chim” ở phía khoá ngoài (nhiều) · đầu thẳng ở phía khoá chính (một)</text>
+            </g>
+          </svg>
+        </div>
+        <div class="verdict" id="link-explain" role="status">Nháy chuột vào một đường nối trên sơ đồ.</div>
+        <h3 style="margin-top:22px;">Khoá cấm trùng lặp giá trị (UNIQUE)</h3>
+        <p>Cặp <code class="inline">(tenBannhac, idNhacsi)</code> trong bảng <code class="inline">bannhac</code> không được trùng lặp giá trị: một nhạc sĩ không có hai bản nhạc cùng tên. Cặp <code class="inline">(idBannhac, idCasi)</code> trong bảng <code class="inline">banthuam</code> cũng không được trùng lặp: một ca sĩ không thu âm hai lần cùng một bản nhạc. Để ghi nhớ điều này, người ta nói các trường này phải đặt <strong>khoá cấm trùng lặp</strong>.</p>
+      </div>
+
+      <div class="card data-story">
+        <span class="mini-label">Mục 5 · Về các kiểu dữ liệu của các trường</span>
+        <h3>Chọn kiểu dữ liệu</h3>
+        <ul>
+          <li>Để đơn giản, các trường khoá chính thường có kiểu <strong>INT</strong> và <strong>tự động tăng giá trị (AUTO_INCREMENT)</strong>.</li>
+          <li>Các trường <code class="inline">tenNhacsi</code>, <code class="inline">tenCasi</code>, <code class="inline">tenBannhac</code> có thể chọn là xâu kí tự có độ dài tối đa 255 kí tự <strong>(VARCHAR(255))</strong>.</li>
+          <li>Trường khoá ngoài phải có <strong>cùng kiểu</strong> với khoá chính mà nó tham chiếu đến (ở đây là INT).</li>
+        </ul>
+        <div style="overflow-x:auto;">
+          <table class="info-table">
+            <thead><tr><th>Bảng</th><th>Khoá chính</th><th>Khoá ngoài</th><th>Khoá cấm trùng lặp</th><th>Kiểu dữ liệu</th></tr></thead>
+            <tbody>
+              <tr><td><code>casi</code></td><td><code>idCasi</code></td><td>—</td><td>—</td><td>idCasi INT AUTO_INCREMENT; tenCasi VARCHAR(255)</td></tr>
+              <tr><td><code>nhacsi</code></td><td><code>idNhacsi</code></td><td>—</td><td>—</td><td>idNhacsi INT AUTO_INCREMENT; tenNhacsi VARCHAR(255)</td></tr>
+              <tr><td><code>bannhac</code></td><td><code>idBannhac</code></td><td><code>idNhacsi</code> → nhacsi</td><td>(tenBannhac, idNhacsi)</td><td>idBannhac INT AUTO_INCREMENT; tenBannhac VARCHAR(255); idNhacsi INT</td></tr>
+              <tr><td><code>banthuam</code></td><td><code>idBanthuam</code></td><td><code>idBannhac</code> → bannhac<br><code>idCasi</code> → casi</td><td>(idBannhac, idCasi)</td><td>idBanthuam INT AUTO_INCREMENT; idBannhac INT; idCasi INT</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="mini-label">Câu hỏi SGK</span>
+        <h3>Em hãy chỉ ra những lợi ích có được khi tổ chức CSDL âm nhạc với các bảng như đã trình bày trong bài học.</h3>
+        <button class="btn btn-secondary" type="button" data-reveal="ans-loiich">Xem gợi ý trả lời</button>
+        <div class="reveal-box" id="ans-loiich" hidden>
+          <ul style="margin:0;padding-left:20px;">
+            <li><strong>Hạn chế dữ liệu lặp lại</strong>, tiết kiệm dung lượng lưu trữ: mỗi tên ca sĩ, nhạc sĩ, bản nhạc chỉ lưu một lần; các bảng khác chỉ lưu mã số ngắn gọn.</li>
+            <li><strong>Cập nhật dễ dàng và nhất quán</strong>: sửa tên ca sĩ Trần Khánh chỉ cần sửa một dòng trong bảng <code class="inline">casi</code>, không sợ sửa sót.</li>
+            <li><strong>Kiểm soát dữ liệu</strong>: khoá chính, khoá ngoài, khoá cấm trùng lặp giúp hệ QTCSDL ngăn bản ghi trùng hoặc bản thu âm trỏ đến bản nhạc không tồn tại.</li>
+            <li><strong>Khai thác linh hoạt</strong>: dễ dàng liệt kê các bản nhạc của một nhạc sĩ, các bản thu âm của một ca sĩ… bằng cách liên kết các bảng.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="button-row"><button class="btn btn-primary" type="button" data-panel="thu-rang-buoc">Tiếp: Thử các khoá trong thực tế →</button></div>
+    </section>
+
+    <!-- PHÒNG THỬ KHOÁ -->
+    <section class="lesson-panel" id="thu-rang-buoc">
+      <div class="section-heading">
+        <span class="section-no">6</span>
+        <div><h2>Phòng thử khoá: khi nào hệ QTCSDL từ chối dữ liệu?</h2><p>Thêm bản ghi vào CSDL âm nhạc đã thiết kế và quan sát các khoá “làm việc”.</p></div>
+      </div>
+      <div class="card lab-grid">
+        <div>
+          <span class="mini-label">Thêm một bản ghi</span>
+          <div class="lab-form" id="lab-form">
+            <label>Bảng<select id="lab-table"><option value="banthuam">banthuam</option><option value="bannhac">bannhac</option><option value="casi">casi</option><option value="nhacsi">nhacsi</option></select></label>
+            <div id="lab-fields" class="lab-form"></div>
+          </div>
+          <div class="button-row">
+            <button class="btn btn-primary" type="button" id="lab-insert">Thêm bản ghi</button>
+            <button class="btn btn-secondary" type="button" id="lab-reset">Khôi phục dữ liệu</button>
+          </div>
+          <p class="muted" style="font-size:.88rem;">Để trống ô khoá chính để hệ QTCSDL tự điền (AUTO_INCREMENT).</p>
+          <span class="mini-label" style="margin-top:14px;">Thử nhanh các tình huống</span>
+          <div class="chip-row" id="lab-presets">
+            <button class="btn btn-secondary" type="button" data-preset="0">Trùng khoá chính</button>
+            <button class="btn btn-secondary" type="button" data-preset="1">Trùng khoá cấm trùng lặp</button>
+            <button class="btn btn-secondary" type="button" data-preset="2">Khoá ngoài “mồ côi”</button>
+            <button class="btn btn-secondary" type="button" data-preset="3">Bản ghi hợp lệ</button>
+          </div>
+          <div class="verdict" id="lab-verdict" role="status">Chọn bảng, nhập giá trị rồi bấm “Thêm bản ghi”.</div>
+        </div>
+        <div>
+          <span class="mini-label">Dữ liệu hiện có</span>
+          <div class="table-row-cards" id="lab-data"></div>
+        </div>
+      </div>
+      <div class="button-row"><button class="btn btn-primary" type="button" data-panel="luyen-tap">Tiếp: Luyện tập →</button></div>
+    </section>
+
+    <!-- LUYỆN TẬP -->
+    <section class="lesson-panel" id="luyen-tap">
+      <div class="section-heading">
+        <span class="section-no">7</span>
+        <div><h2>Luyện tập</h2><p>Trắc nghiệm nhanh, sau đó làm hai bài luyện tập trong SGK.</p></div>
+      </div>
+      <div class="quiz-shell">
+        <div class="quiz-top">
+          <span class="quiz-count" id="quiz-count">Câu 1/5</span>
+          <div class="quiz-progress" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1" aria-label="Tiến độ luyện tập"><div class="quiz-progress-fill" id="quiz-progress-fill"></div></div>
+        </div>
+        <div class="card quiz-card" id="quiz-card">
+          <h3 id="quiz-question">Đang tải câu hỏi…</h3>
+          <div class="quiz-options" id="quiz-options"></div>
+          <p class="quiz-feedback" id="quiz-feedback" role="status"></p>
+          <div class="quiz-actions">
+            <button class="btn btn-secondary" type="button" id="quiz-retry">Làm lại</button>
+            <button class="btn btn-primary" type="button" id="quiz-next" disabled>Câu tiếp theo</button>
+          </div>
+        </div>
+        <div class="card quiz-result" id="quiz-result">
+          <div class="score-disc"><div><strong id="quiz-score">0/5</strong><span>điểm</span></div></div>
+          <h3 id="quiz-result-title">Hoàn thành!</h3>
+          <p id="quiz-result-text"></p>
+          <div class="quiz-actions" style="justify-content:center;">
+            <button class="btn btn-accent" type="button" id="quiz-retry-2">Làm lại từ đầu</button>
+            <button class="btn btn-secondary" type="button" data-panel="van-dung">Sang Vận dụng</button>
+          </div>
+        </div>
+      </div>
+      <div class="stack" style="margin-top:24px;">
+        <div class="exercise">
+          <h3>Luyện tập 1 (SGK)</h3>
+          <p>Có thể có những nhạc sĩ, ca sĩ trùng tên nên người ta muốn quản lí thêm thông tin <strong>ngày sinh</strong> của các nhạc sĩ, ca sĩ. Để làm được việc đó, CSDL cần thay đổi như thế nào?</p>
+          <button class="btn btn-secondary" type="button" data-reveal="ans-lt1">Xem gợi ý</button>
+          <div class="reveal-box" id="ans-lt1" hidden>
+            <p>Ngày sinh là thông tin <strong>riêng của mỗi người</strong>, không lặp lại theo kiểu tên ca sĩ trong bảng bản thu âm, nên chỉ cần thêm một trường vào hai bảng <code class="inline">nhacsi</code> và <code class="inline">casi</code>, kiểu <strong>DATE</strong>:</p>
+            <code class="schema-line"><b>nhacsi</b>(<span class="pk">idNhacsi</span>, tenNhacsi, ngaysinh)</code>
+            <code class="schema-line"><b>casi</b>(<span class="pk">idCasi</span>, tenCasi, ngaysinh)</code>
+            <p>Khi đó có thể đặt khoá cấm trùng lặp cho cặp <code class="inline">(tenNhacsi, ngaysinh)</code> và <code class="inline">(tenCasi, ngaysinh)</code> để phân biệt những người trùng tên. Các bảng <code class="inline">bannhac</code>, <code class="inline">banthuam</code> không cần thay đổi vì chúng chỉ lưu mã số <code class="inline">idNhacsi</code>, <code class="inline">idCasi</code>.</p>
+          </div>
+        </div>
+        <div class="exercise">
+          <h3>Luyện tập 2 (SGK)</h3>
+          <p>Nếu muốn quản lí thêm thông tin <strong>nơi sinh</strong> của nhạc sĩ, ca sĩ (tên tỉnh/thành phố), CSDL cần thay đổi như thế nào?</p>
+          <button class="btn btn-secondary" type="button" data-reveal="ans-lt2">Xem gợi ý</button>
+          <div class="reveal-box" id="ans-lt2" hidden>
+            <p>Tên tỉnh/thành phố sẽ <strong>lặp lại</strong> ở nhiều nhạc sĩ, ca sĩ (nhiều người cùng sinh ở Hà Nội…). Áp dụng đúng cách làm ở Mục 3: tách thành bảng riêng rồi dùng khoá ngoài.</p>
+            <code class="schema-line"><b>tinhthanh</b>(<span class="pk">idTinh</span>, tenTinh)</code>
+            <code class="schema-line"><b>nhacsi</b>(<span class="pk">idNhacsi</span>, tenNhacsi, <span class="fk">idTinh</span>)</code>
+            <code class="schema-line"><b>casi</b>(<span class="pk">idCasi</span>, tenCasi, <span class="fk">idTinh</span>)</code>
+            <p>Trường <code class="inline">idTinh</code> (INT) trong <code class="inline">nhacsi</code> và <code class="inline">casi</code> là khoá ngoài tham chiếu đến <code class="inline">idTinh</code> của bảng <code class="inline">tinhthanh</code>; <code class="inline">tenTinh</code> VARCHAR(255) nên đặt khoá cấm trùng lặp.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VẬN DỤNG -->
+    <section class="lesson-panel" id="van-dung">
+      <div class="section-heading">
+        <span class="section-no">8</span>
+        <div><h2>Vận dụng</h2><p>Thực hiện các bước phân tích để thiết lập mô hình dữ liệu cho một bài toán quản lí thực tế: quản lí <strong>danh sách tên</strong> quận/huyện của các tỉnh/thành phố.</p></div>
+      </div>
+      <div class="card data-story">
+        <span class="mini-label">Bước 1 · Xem xét bài toán</span>
+        <p>Bản ghi chép ban đầu có dạng (ví dụ một số đơn vị hành chính trước khi sắp xếp năm 2025):</p>
+        <div class="sgk-table-wrap">
+          <table class="sgk-table" style="max-width:620px;">
+            <thead><tr><th class="num">STT</th><th>Tên quận/huyện</th><th>Tên tỉnh/thành phố</th></tr></thead>
+            <tbody>
+              <tr><td class="num">1</td><td>Ba Đình</td><td class="dup">Hà Nội</td></tr>
+              <tr><td class="num">2</td><td>Hoàn Kiếm</td><td class="dup">Hà Nội</td></tr>
+              <tr><td class="num">3</td><td>Quận 1</td><td class="dup">TP Hồ Chí Minh</td></tr>
+              <tr><td class="num">4</td><td>Củ Chi</td><td class="dup">TP Hồ Chí Minh</td></tr>
+              <tr><td class="num">5</td><td class="dup">Châu Thành</td><td>Tiền Giang</td></tr>
+              <tr><td class="num">6</td><td class="dup">Châu Thành</td><td>Bến Tre</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted" style="font-size:.9rem;">Để ý: tên tỉnh lặp lại rất nhiều lần; và có những huyện ở hai tỉnh khác nhau <strong>trùng tên</strong> (Châu Thành).</p>
+        <span class="mini-label" style="margin-top:16px;">Bước 2 – 3 · Chọn mô hình dữ liệu tốt nhất</span>
+        <fieldset class="prediction-box" style="margin-top:8px;">
+          <legend>Mô hình nào hợp lí nhất?</legend>
+          <label class="choice-line"><input type="radio" name="vd18" value="a"><span><code class="inline">quanhuyen(idQuanhuyen, tenQuanhuyen, tenTinh)</code></span></label>
+          <label class="choice-line"><input type="radio" name="vd18" value="b"><span><code class="inline">tinhthanh(idTinh, tenTinh)</code> và <code class="inline">quanhuyen(idQuanhuyen, tenQuanhuyen, idTinh)</code></span></label>
+          <label class="choice-line"><input type="radio" name="vd18" value="c"><span><code class="inline">tinhthanh(idTinh, tenTinh, tenQuanhuyen)</code></span></label>
+          <label class="choice-line"><input type="radio" name="vd18" value="d"><span><code class="inline">quanhuyen(tenQuanhuyen, tenTinh)</code> với khoá chính là <code class="inline">tenQuanhuyen</code></span></label>
+          <div class="button-row"><button class="btn btn-primary" type="button" id="vd18-check">Kiểm tra</button></div>
+          <p class="feedback" id="vd18-feedback" role="status"></p>
+        </fieldset>
+        <div id="vd18-answer" hidden>
+          <span class="mini-label" style="margin-top:16px;">Bước 4 – 5 · Khoá và kiểu dữ liệu</span>
+          <code class="schema-line"><b>tinhthanh</b>(<span class="pk">idTinh</span>, <span class="uq">tenTinh</span>)</code>
+          <code class="schema-line"><b>quanhuyen</b>(<span class="pk">idQuanhuyen</span>, tenQuanhuyen, <span class="fk">idTinh</span>)</code>
+          <ul>
+            <li>Khoá chính: <code class="inline">idTinh</code>, <code class="inline">idQuanhuyen</code> – kiểu INT, AUTO_INCREMENT.</li>
+            <li>Khoá ngoài: <code class="inline">quanhuyen.idTinh</code> tham chiếu đến <code class="inline">tinhthanh.idTinh</code> (kiểu INT).</li>
+            <li>Khoá cấm trùng lặp: <code class="inline">tenTinh</code> trong bảng <code class="inline">tinhthanh</code>; cặp <code class="inline">(tenQuanhuyen, idTinh)</code> trong bảng <code class="inline">quanhuyen</code> – không đặt riêng <code class="inline">tenQuanhuyen</code> vì hai tỉnh khác nhau có thể có huyện trùng tên.</li>
+            <li><code class="inline">tenTinh</code>, <code class="inline">tenQuanhuyen</code>: VARCHAR(255).</li>
+          </ul>
+          <div class="callout"><p><strong>Liên hệ thực tế.</strong> Từ ngày 01/7/2025, nước ta tổ chức chính quyền địa phương hai cấp (tỉnh – xã/phường), không còn cấp huyện. Cách phân tích hoàn toàn tương tự: chỉ cần thay bảng <code class="inline">quanhuyen</code> bằng bảng <code class="inline">xaphuong(idXaphuong, tenXaphuong, idTinh)</code>. Ở Bài 19 và 20 em sẽ tạo các bảng này trên máy.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BÀI TẬP SBT -->
+    <section class="lesson-panel" id="bai-tap-sbt">
+      <div class="section-heading">
+        <span class="section-no">9</span>
+        <div><h2>Bài tập Sách bài tập (SBT) – Bài 18</h2><p>Làm bài trước, sau đó bấm “Xem đáp án” để tự đối chiếu.</p></div>
+      </div>
+      <div class="card data-story">
+        <span class="mini-label">Tóm tắt kiến thức (SBT)</span>
+        <ul style="margin:0;padding-left:20px;">
+          <li>Xây dựng kiến trúc CSDL (xác định các bảng, trường khoá, quan hệ, kiểu dữ liệu) là việc đầu tiên phải làm: bắt đầu bằng việc thống kê tất cả các dữ liệu cần thu thập, đưa vào một hay một số ít bảng, xác định khoá và khoá chính.</li>
+          <li>Tiếp theo: phân tích, phát hiện sự dư thừa, lặp lại lượng lớn dữ liệu hay sự phụ thuộc giữa các trường; đưa ra giải pháp tách bảng, đồng thời xác định khoá chính, khoá ngoài, khoá cấm trùng lặp.</li>
+          <li>Cuối cùng là chỉ định kiểu dữ liệu cho từng trường.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <div class="exercise">
+          <h3>18.1</h3>
+          <p>Ở bảng <em>nhacsi</em> có thể chọn trường <em>tenNhacsi</em> là khoá chính được không? Tại sao?</p>
+          <button class="btn btn-secondary" type="button" data-reveal="sbt181">Xem đáp án</button>
+          <div class="reveal-box" id="sbt181" hidden>
+            <p><strong>Không nên.</strong> Khoá chính phải xác định <strong>duy nhất</strong> mỗi bản ghi, nhưng có thể có những nhạc sĩ <strong>trùng tên</strong> (như SGK đã lưu ý ở phần Luyện tập). Ngoài ra, tên là xâu kí tự dài, có thể phải sửa (sai chính tả, nghệ danh…), trong khi khoá chính được các bảng khác tham chiếu đến nên cần <strong>ngắn gọn và ổn định</strong>. Vì vậy dùng trường mã số <code class="inline">idNhacsi</code> (INT, AUTO_INCREMENT) làm khoá chính là hợp lí.</p>
+          </div>
+        </div>
+        <div class="exercise">
+          <h3>18.2 <span class="muted" style="font-weight:500;font-size:.9rem;">(chọn những phương án đúng)</span></h3>
+          <p>Việc tổ chức lại các bảng dữ liệu từ một bảng duy nhất ban đầu nhằm mục đích gì?</p>
+          <div class="multi-q" data-answer="A,B,C" id="mq182">
+            <label class="choice-line"><input type="checkbox" value="A"><span>A. Chống lặp lại dữ liệu và đảm bảo tính nhất quán dữ liệu.</span></label>
+            <label class="choice-line"><input type="checkbox" value="B"><span>B. Hạn chế lặp lại lượng lớn dữ liệu, tiết kiệm không gian lưu trữ dữ liệu.</span></label>
+            <label class="choice-line"><input type="checkbox" value="C"><span>C. Tạo thuận lợi cho việc cập nhật dữ liệu và đảm bảo tính nhất quán dữ liệu.</span></label>
+            <label class="choice-line"><input type="checkbox" value="D"><span>D. Tạo thuận lợi cho việc bảo mật và an toàn dữ liệu.</span></label>
+            <div class="button-row"><button class="btn btn-primary" type="button" data-check-multi>Kiểm tra</button></div>
+            <p class="feedback" role="status" data-explain="Đáp án: A, B, C. Tách bảng giúp mỗi thông tin chỉ lưu một lần (chống lặp, tiết kiệm bộ nhớ), sửa một nơi là đúng ở mọi nơi (nhất quán, dễ cập nhật). Bảo mật, an toàn dữ liệu (D) là mục tiêu của các biện pháp khác như phân quyền, sao lưu – không phải mục đích của việc tách bảng."></p>
+          </div>
+        </div>
+        <div class="exercise">
+          <h3>18.3 <span class="muted" style="font-weight:500;font-size:.9rem;">(chọn những phương án đúng)</span></h3>
+          <p>Khoá ngoài của bảng có vai trò gì?</p>
+          <div class="multi-q" data-answer="C,D" id="mq183">
+            <label class="choice-line"><input type="checkbox" value="A"><span>A. Hạn chế việc lặp lại lượng lớn dữ liệu.</span></label>
+            <label class="choice-line"><input type="checkbox" value="B"><span>B. Hỗ trợ cho khoá chính.</span></label>
+            <label class="choice-line"><input type="checkbox" value="C"><span>C. Chỉ ra tham chiếu đến khoá chính của bảng khác, nhờ đó có thể liên kết hai bảng lại với nhau.</span></label>
+            <label class="choice-line"><input type="checkbox" value="D"><span>D. Thể hiện mối liên hệ giữa hai bảng.</span></label>
+            <div class="button-row"><button class="btn btn-primary" type="button" data-check-multi>Kiểm tra</button></div>
+            <p class="feedback" role="status" data-explain="Đáp án: C, D. Khoá ngoài tham chiếu đến khoá chính của bảng khác, thể hiện mối liên hệ và cho phép liên kết dữ liệu giữa hai bảng. Việc hạn chế lặp lại dữ liệu (A) là kết quả của việc tách bảng; khoá ngoài không có vai trò “hỗ trợ khoá chính” (B)."></p>
+          </div>
+        </div>
+        <div class="exercise">
+          <h3>18.4</h3>
+          <p>Khoá cấm trùng lặp có vai trò gì?</p>
+          <div class="multi-q" data-answer="C" data-single id="mq184">
+            <label class="choice-line"><input type="radio" name="mq184" value="A"><span>A. Hạn chế trùng lặp lượng lớn dữ liệu.</span></label>
+            <label class="choice-line"><input type="radio" name="mq184" value="B"><span>B. Hỗ trợ khoá ngoài.</span></label>
+            <label class="choice-line"><input type="radio" name="mq184" value="C"><span>C. Ngăn cản giá trị trùng lặp trong các trường chỉ định, hỗ trợ đảm bảo tính chính xác của dữ liệu nhập vào.</span></label>
+            <label class="choice-line"><input type="radio" name="mq184" value="D"><span>D. Có vai trò tương tự khoá ngoài.</span></label>
+            <div class="button-row"><button class="btn btn-primary" type="button" data-check-multi>Kiểm tra</button></div>
+            <p class="feedback" role="status" data-explain="Đáp án: C. Khoá cấm trùng lặp (UNIQUE) khiến hệ QTCSDL từ chối mọi bản ghi làm trùng giá trị ở các trường được chỉ định, ví dụ không cho nhập hai lần cùng một cặp (tenBannhac, idNhacsi). Em có thể thử ở mục “Phòng thử khoá”."></p>
+          </div>
+        </div>
+        <div class="exercise apply">
+          <h3>18.5</h3>
+          <p>Công việc quản lí danh sách tất cả học sinh và những thông tin cá nhân cơ bản của học sinh trong một trường THPT là quản lí những thông tin: mã học sinh, số CCCD, họ và tên, giới tính, ngày sinh, dân tộc, địa chỉ, năm vào trường, năm ra trường. Trong đó địa chỉ là thông tin về xã/phường nơi học sinh cư trú. Hãy phân tích bài toán và xây dựng mô hình CSDL với các bảng cần thiết, các khoá, các kiểu dữ liệu cho từng trường.</p>
+          <button class="btn btn-secondary" type="button" data-reveal="sbt185">Xem gợi ý đáp án</button>
+          <div class="reveal-box" id="sbt185" hidden>
+            <p><strong>Bước 1 – bảng ban đầu:</strong> <code class="inline">hocsinh(idHocsinh, maHocsinh, soCCCD, hovaten, gioitinh, ngaysinh, tenDantoc, tenXaphuong, namVaotruong, namRatruong)</code>.</p>
+            <p><strong>Bước 2 – phát hiện lặp lại:</strong> tên dân tộc (Kinh, Hoa, Khmer…) và tên xã/phường lặp lại ở rất nhiều học sinh → tách thành bảng riêng.</p>
+            <code class="schema-line"><b>dantoc</b>(<span class="pk">idDantoc</span>, <span class="uq">tenDantoc</span>)</code>
+            <code class="schema-line"><b>tinhthanh</b>(<span class="pk">idTinh</span>, <span class="uq">tenTinh</span>)</code>
+            <code class="schema-line"><b>xaphuong</b>(<span class="pk">idXaphuong</span>, tenXaphuong, <span class="fk">idTinh</span>)</code>
+            <code class="schema-line"><b>hocsinh</b>(<span class="pk">idHocsinh</span>, <span class="uq">maHocsinh</span>, <span class="uq">soCCCD</span>, hovaten, gioitinh, ngaysinh, <span class="fk">idDantoc</span>, <span class="fk">idXaphuong</span>, namVaotruong, namRatruong)</code>
+            <p><strong>Bước 3 – các khoá:</strong></p>
+            <ul>
+              <li>Khoá chính: <code class="inline">idDantoc</code>, <code class="inline">idTinh</code>, <code class="inline">idXaphuong</code>, <code class="inline">idHocsinh</code> (INT, AUTO_INCREMENT).</li>
+              <li>Khoá ngoài: <code class="inline">hocsinh.idDantoc → dantoc</code>, <code class="inline">hocsinh.idXaphuong → xaphuong</code>, <code class="inline">xaphuong.idTinh → tinhthanh</code>.</li>
+              <li>Khoá cấm trùng lặp: <code class="inline">maHocsinh</code>, <code class="inline">soCCCD</code> (mỗi học sinh một mã, một số CCCD); <code class="inline">tenDantoc</code>; <code class="inline">tenTinh</code>; cặp <code class="inline">(tenXaphuong, idTinh)</code>.</li>
+            </ul>
+            <p><strong>Bước 4 – kiểu dữ liệu:</strong></p>
+            <div style="overflow-x:auto;">
+              <table class="info-table">
+                <thead><tr><th>Trường</th><th>Kiểu</th><th>Lí do</th></tr></thead>
+                <tbody>
+                  <tr><td><code>maHocsinh</code></td><td>VARCHAR(20)</td><td>Mã có thể chứa chữ và số.</td></tr>
+                  <tr><td><code>soCCCD</code></td><td>VARCHAR(12)</td><td>Số CCCD có 12 chữ số, có thể bắt đầu bằng chữ số 0 – lưu dạng xâu để không mất số 0 đầu.</td></tr>
+                  <tr><td><code>hovaten</code>, <code>tenDantoc</code>, <code>tenXaphuong</code>, <code>tenTinh</code></td><td>VARCHAR(255)</td><td>Xâu kí tự.</td></tr>
+                  <tr><td><code>gioitinh</code></td><td>TINYINT</td><td>Quy ước bằng số, ví dụ 1 – nam, 0 – nữ.</td></tr>
+                  <tr><td><code>ngaysinh</code></td><td>DATE</td><td>Ngày tháng năm.</td></tr>
+                  <tr><td><code>namVaotruong</code>, <code>namRatruong</code></td><td>INT</td><td><code>namRatruong</code> cho phép NULL vì học sinh đang học chưa có năm ra trường.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="muted" style="font-size:.9rem;">Ghi chú: nếu mọi học sinh đều ở các xã/phường quanh trường, có thể chỉ cần bảng <code class="inline">xaphuong(idXaphuong, tenXaphuong)</code>. Thêm bảng <code class="inline">tinhthanh</code> giúp CSDL mở rộng được cho học sinh ở nơi khác. Từ 01/7/2025 không còn cấp huyện nên không cần bảng quận/huyện.</p>
+          </div>
+        </div>
+        <div class="exercise apply">
+          <h3>18.6</h3>
+          <p>Để quản lí danh sách học sinh và lớp học, cần quản lí thêm thông tin về lớp học của học sinh trong từng năm học. Hãy phân tích bài toán và xây dựng mô hình CSDL với các bảng cần thiết, các khoá, các kiểu dữ liệu cho từng trường.</p>
+          <button class="btn btn-secondary" type="button" data-reveal="sbt186">Xem gợi ý đáp án</button>
+          <div class="reveal-box" id="sbt186" hidden>
+            <p>Mỗi năm học, một học sinh học ở một lớp; qua các năm học sinh chuyển lên lớp khác. Nếu thêm trường <code class="inline">idLop</code> vào bảng <code class="inline">hocsinh</code> thì chỉ lưu được lớp của <strong>một</strong> năm học. Vì vậy cần hai bảng mới:</p>
+            <code class="schema-line"><b>lop</b>(<span class="pk">idLop</span>, tenLop, namHoc)</code>
+            <code class="schema-line"><b>lophs</b>(<span class="pk">idLophs</span>, <span class="fk">idHocsinh</span>, <span class="fk2">idLop</span>)</code>
+            <ul>
+              <li><code class="inline">lop</code>: <code class="inline">idLop</code> INT AUTO_INCREMENT; <code class="inline">tenLop</code> VARCHAR(255) (ví dụ “11A1”); <code class="inline">namHoc</code> VARCHAR(9) (ví dụ “2026-2027”). Khoá cấm trùng lặp: <code class="inline">(tenLop, namHoc)</code> – mỗi năm học chỉ có một lớp 11A1.</li>
+              <li><code class="inline">lophs</code> (học sinh – lớp): <code class="inline">idLophs</code> INT AUTO_INCREMENT; <code class="inline">idHocsinh</code> INT là khoá ngoài → <code class="inline">hocsinh</code>; <code class="inline">idLop</code> INT là khoá ngoài → <code class="inline">lop</code>. Khoá cấm trùng lặp: <code class="inline">(idHocsinh, idLop)</code>.</li>
+            </ul>
+            <p>Bảng <code class="inline">lophs</code> đóng vai trò giống bảng <code class="inline">banthuam</code> trong CSDL âm nhạc: nối hai bảng với nhau.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TỔNG KẾT -->
+    <section class="lesson-panel" id="tong-ket">
+      <div class="section-heading">
+        <span class="section-no">10</span>
+        <div><h2>Tổng kết</h2><p>Quy trình xác định cấu trúc bảng và các trường khoá.</p></div>
+      </div>
+      <div class="card">
+        <div class="summary-map">
+          <div class="summary-node"><strong>1. Xem xét bài toán</strong><span>Thống kê mọi thông tin cần quản lí.</span></div>
+          <div class="summary-node"><strong>2. Tạo lập bảng</strong><span>Mô tả bảng ban đầu, chọn khoá chính ngắn gọn.</span></div>
+          <div class="summary-node"><strong>3. Tổ chức lại</strong><span>Tách thông tin lặp lại thành bảng riêng, nối bằng khoá ngoài.</span></div>
+          <div class="summary-node"><strong>4. Các loại khoá</strong><span>Khoá chính · khoá ngoài · khoá cấm trùng lặp.</span></div>
+          <div class="summary-node"><strong>5. Kiểu dữ liệu</strong><span>INT AUTO_INCREMENT cho khoá; VARCHAR(255) cho tên.</span></div>
+        </div>
+        <div class="final-score">
+          <h3>Kết quả luyện tập: <span id="summary-score">Chưa hoàn thành</span></h3>
+          <p id="summary-message">Hãy hoàn thành phần trắc nghiệm ở mục Luyện tập để cập nhật kết quả tại đây.</p>
+        </div>
+        <div class="callout" style="margin-top:20px;"><p><strong>Chuẩn bị cho Bài 19.</strong> Các bảng <code class="inline">nhacsi</code> và <code class="inline">casi</code> không có khoá ngoài nên sẽ được tạo trước trên HeidiSQL; các bảng <code class="inline">bannhac</code>, <code class="inline">banthuam</code> có khoá ngoài sẽ được tạo ở Bài 20.</p></div>
+        <div class="button-row">
+          <button class="btn btn-secondary" type="button" data-panel="khoi-dong">Quay lại đầu bài</button>
+          <button class="btn btn-accent" type="button" data-open-glossary>Bảng thuật ngữ</button>
+          <a class="btn btn-primary" href="Bai19_K11.html">Sang Bài 19 →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="glossary-dialog" aria-labelledby="glossary-title">
+    <div class="dialog-head"><h2 id="glossary-title">Bảng thuật ngữ</h2><button class="dialog-close" type="button" id="close-glossary" aria-label="Đóng bảng thuật ngữ">✕</button></div>
+    <div class="dialog-body">
+      <dl>
+        <dt>Khoá chính</dt><dd>Trường (hoặc nhóm trường) xác định duy nhất mỗi bản ghi của bảng; tên trường được gạch chân khi mô tả bảng.</dd>
+        <dt>Khoá ngoài</dt><dd>Trường của một bảng tham chiếu đến khoá chính của bảng khác, dùng để liên kết dữ liệu giữa hai bảng.</dd>
+        <dt>Khoá cấm trùng lặp</dt><dd>(UNIQUE) Ràng buộc không cho phép hai bản ghi có cùng giá trị ở trường/nhóm trường chỉ định.</dd>
+        <dt>Dư thừa dữ liệu</dt><dd>Cùng một thông tin được lưu lặp lại ở nhiều nơi, gây tốn bộ nhớ và dễ sai lệch khi cập nhật.</dd>
+        <dt>INT</dt><dd>Kiểu số nguyên, thường dùng cho các trường mã số (id).</dd>
+        <dt>AUTO_INCREMENT</dt><dd>Hệ QTCSDL tự động tăng giá trị khi thêm bản ghi mới, thường dùng cho khoá chính kiểu INT.</dd>
+        <dt>VARCHAR(255)</dt><dd>Xâu kí tự có độ dài thay đổi, tối đa 255 kí tự.</dd>
+      </dl>
+    </div>
+  </dialog>
+
+  <footer><p>Tin học 11 · Chủ đề F · Bài 18: Thực hành xác định cấu trúc bảng và các trường khoá · Bài học tương tác phục vụ dạy học.</p></footer>
+
+  <script>
+    window.WARMUP = {
+      answer: "2",
+      right: "Chính xác! Trần Khánh xuất hiện ở dòng 3 và dòng 9 nên phải sửa ở cả hai dòng – nếu sửa sót một dòng, dữ liệu sẽ không nhất quán. Hai dòng đó đã được tô vàng trong Bảng 18.1.",
+      wrong: "Chưa đúng. Hãy dò cột “Tên ca sĩ” trong Bảng 18.1: tên Trần Khánh xuất hiện ở những dòng nào? (Các dòng đó đã được tô vàng.)",
+      after: function () { document.querySelectorAll("#t181 tbody tr").forEach(function (tr) { tr.classList.toggle("hl", tr.dataset.casi === "Trần Khánh"); }); }
+    };
+    window.QUIZ = [
+      { q: "Trong bảng banthuam(idBanthuam, tenBannhac, tenNhacsi, tenCasi), vì sao chọn idBanthuam làm khoá chính thay vì nhóm ba trường (tenBannhac, tenNhacsi, tenCasi)?", options: ["Vì nhóm ba trường không xác định duy nhất một bản thu âm.", "Vì idBanthuam cũng xác định duy nhất một bản thu âm mà ngắn gọn, thuận lợi hơn.", "Vì khoá chính bắt buộc phải là kiểu số.", "Vì khoá chính chỉ được có đúng một trường."], answer: 1, explain: "Cả hai lựa chọn đều xác định duy nhất bản thu âm, nhưng một trường mã số ngắn gọn thì thuận lợi hơn khi lưu trữ và tham chiếu." },
+      { q: "Vì sao cần tách bảng casi(idCasi, tenCasi) ra khỏi bảng banthuam?", options: ["Vì một ca sĩ có thể thể hiện nhiều bản nhạc nên tên ca sĩ bị lặp lại, tốn bộ nhớ và khó sửa chữa.", "Vì bảng banthuam có quá nhiều trường.", "Vì tên ca sĩ là dữ liệu bí mật cần lưu riêng.", "Vì HeidiSQL không cho lưu tên ca sĩ trong bảng banthuam."], answer: 0, explain: "Tên ca sĩ lặp lại ở nhiều dòng; tách bảng giúp mỗi tên chỉ lưu một lần, sửa một nơi là đúng ở mọi nơi." },
+      { q: "Trong bảng bannhac(idBannhac, tenBannhac, idNhacsi), trường idNhacsi là gì?", options: ["Khoá chính của bảng bannhac.", "Khoá cấm trùng lặp của bảng bannhac.", "Khoá ngoài tham chiếu đến khoá chính idNhacsi của bảng nhacsi.", "Một trường bình thường, không liên quan đến bảng khác."], answer: 2, explain: "idNhacsi trong bannhac tham chiếu đến idNhacsi (khoá chính) của bảng nhacsi." },
+      { q: "Cặp trường nào trong bảng banthuam(idBanthuam, idBannhac, idCasi) cần đặt khoá cấm trùng lặp?", options: ["(idBanthuam, idBannhac)", "(idBannhac, idCasi)", "(idBanthuam, idCasi)", "Không cần khoá cấm trùng lặp."], answer: 1, explain: "Một ca sĩ không thu âm hai lần cùng một bản nhạc, nên cặp (idBannhac, idCasi) không được trùng." },
+      { q: "Theo SGK, kiểu dữ liệu phù hợp cho các trường khoá chính và trường tenCasi lần lượt là:", options: ["VARCHAR(255) và INT", "INT AUTO_INCREMENT và VARCHAR(255)", "INT và DATE", "TEXT và INT AUTO_INCREMENT"], answer: 1, explain: "Khoá chính thường là INT tự động tăng; tên là xâu kí tự tối đa 255 kí tự." }
+    ];
+  </script>
+  <script>
+    /* ==== Điều hướng tab, bảng thuật ngữ, câu khởi động, gợi ý đáp án ==== */
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const root = document.documentElement;
+        const panels = Array.from(document.querySelectorAll(".lesson-panel"));
+        const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+        if (!panels.length || !navLinks.length) return;
+        root.classList.add("js-enabled");
+
+        function showPanel(panelId, updateHash) {
+          const target = document.getElementById(panelId);
+          if (!target || !target.classList.contains("lesson-panel")) return;
+          panels.forEach(function (panel) { panel.classList.toggle("active", panel.id === panelId); });
+          navLinks.forEach(function (link) {
+            if (link.dataset.panel === panelId) link.setAttribute("aria-current", "page");
+            else link.removeAttribute("aria-current");
+          });
+          if (updateHash && window.history && window.history.replaceState) window.history.replaceState(null, "", "#" + panelId);
+          const anchor = document.querySelector(".lesson-nav-wrap");
+          if (anchor && window.scrollY > anchor.offsetTop) window.scrollTo({ top: anchor.offsetTop, behavior: "smooth" });
+          document.dispatchEvent(new CustomEvent("panelchange", { detail: panelId }));
+        }
+        window.showLessonPanel = showPanel;
+
+        document.addEventListener("click", function (event) {
+          const link = event.target.closest("[data-panel]");
+          if (!link) return;
+          event.preventDefault();
+          showPanel(link.dataset.panel, true);
+        });
+
+        const initialId = window.location.hash.replace("#", "");
+        if (initialId && document.getElementById(initialId)) showPanel(initialId, false);
+
+        const warmupButton = document.getElementById("warmup-check");
+        const warmupFeedback = document.getElementById("warmup-feedback");
+        if (warmupButton && warmupFeedback && window.WARMUP) {
+          warmupButton.addEventListener("click", function () {
+            const selected = document.querySelector('input[name="warmup"]:checked');
+            if (!selected) {
+              warmupFeedback.className = "feedback show hint";
+              warmupFeedback.textContent = "Em hãy chọn một dự đoán trước khi kiểm tra.";
+              return;
+            }
+            const right = selected.value === window.WARMUP.answer;
+            warmupFeedback.className = "feedback show " + (right ? "success" : "hint");
+            warmupFeedback.textContent = right ? window.WARMUP.right : window.WARMUP.wrong;
+            if (typeof window.WARMUP.after === "function") window.WARMUP.after(right);
+          });
+        }
+
+        const dialog = document.getElementById("glossary-dialog");
+        const closeDialog = document.getElementById("close-glossary");
+        document.querySelectorAll("[data-open-glossary]").forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (dialog && typeof dialog.showModal === "function") dialog.showModal();
+            else window.alert("Trình duyệt chưa hỗ trợ hộp thoại. Các thuật ngữ đều đã được giải thích trong bài.");
+          });
+        });
+        if (dialog && closeDialog) {
+          closeDialog.addEventListener("click", function () { dialog.close(); });
+          dialog.addEventListener("click", function (event) { if (event.target === dialog) dialog.close(); });
+        }
+
+        document.querySelectorAll("[data-reveal]").forEach(function (button) {
+          const box = document.getElementById(button.dataset.reveal);
+          if (!box) return;
+          button.setAttribute("aria-expanded", "false");
+          button.addEventListener("click", function () {
+            const open = box.hasAttribute("hidden");
+            if (open) box.removeAttribute("hidden"); else box.setAttribute("hidden", "");
+            button.setAttribute("aria-expanded", String(open));
+            button.textContent = open ? (button.dataset.hideText || "Ẩn gợi ý") : (button.dataset.showText || button.textContent);
+          });
+          button.dataset.showText = button.textContent;
+        });
+      } catch (error) {
+        console.error("Không thể khởi tạo điều hướng:", error);
+      }
+    });
+
+    /* ==== Luyện tập trắc nghiệm: mỗi lần một câu ==== */
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const questions = window.QUIZ || [];
+        const card = document.getElementById("quiz-card");
+        const resultCard = document.getElementById("quiz-result");
+        const questionEl = document.getElementById("quiz-question");
+        const optionsEl = document.getElementById("quiz-options");
+        const feedbackEl = document.getElementById("quiz-feedback");
+        const nextBtn = document.getElementById("quiz-next");
+        const retryBtn = document.getElementById("quiz-retry");
+        const retry2Btn = document.getElementById("quiz-retry-2");
+        const countEl = document.getElementById("quiz-count");
+        const fillEl = document.getElementById("quiz-progress-fill");
+        const progressEl = document.querySelector(".quiz-progress");
+        const scoreEl = document.getElementById("quiz-score");
+        const resultTitle = document.getElementById("quiz-result-title");
+        const resultText = document.getElementById("quiz-result-text");
+        const summaryScore = document.getElementById("summary-score");
+        const summaryMessage = document.getElementById("summary-message");
+        if (!questions.length || !card || !questionEl || !optionsEl || !nextBtn) return;
+
+        const total = questions.length;
+        let index = 0;
+        let score = 0;
+        let answered = false;
+        const letters = ["A", "B", "C", "D"];
+
+        function render() {
+          const item = questions[index];
+          answered = false;
+          countEl.textContent = "Câu " + (index + 1) + "/" + total;
+          fillEl.style.width = ((index + 1) / total * 100) + "%";
+          if (progressEl) progressEl.setAttribute("aria-valuenow", String(index + 1));
+          questionEl.textContent = item.q;
+          optionsEl.replaceChildren();
+          item.options.forEach(function (text, i) {
+            const label = document.createElement("label");
+            label.className = "quiz-option";
+            const input = document.createElement("input");
+            input.type = "radio"; input.name = "quiz-option"; input.value = String(i);
+            const letter = document.createElement("span"); letter.className = "option-letter"; letter.textContent = letters[i];
+            const span = document.createElement("span"); span.innerHTML = text;
+            label.append(input, letter, span);
+            input.addEventListener("change", function () { check(i); });
+            optionsEl.append(label);
+          });
+          feedbackEl.className = "quiz-feedback";
+          feedbackEl.textContent = "";
+          nextBtn.disabled = true;
+          nextBtn.textContent = index === total - 1 ? "Xem kết quả" : "Câu tiếp theo";
+        }
+
+        function check(choice) {
+          if (answered) return;
+          answered = true;
+          const item = questions[index];
+          const labels = Array.from(optionsEl.querySelectorAll(".quiz-option"));
+          labels.forEach(function (label, i) {
+            const input = label.querySelector("input");
+            input.disabled = true;
+            if (i === item.answer) label.classList.add("correct");
+            else if (i === choice) label.classList.add("wrong");
+          });
+          const right = choice === item.answer;
+          if (right) score += 1;
+          feedbackEl.className = "quiz-feedback show " + (right ? "correct" : "wrong");
+          feedbackEl.innerHTML = (right ? "<strong>Chính xác!</strong> " : "<strong>Chưa đúng.</strong> Đáp án đúng là " + letters[item.answer] + ". ") + item.explain;
+          nextBtn.disabled = false;
+          nextBtn.focus();
+        }
+
+        function finish() {
+          card.style.display = "none";
+          resultCard.classList.add("show");
+          scoreEl.textContent = score + "/" + total;
+          const ratio = score / total;
+          resultTitle.textContent = ratio === 1 ? "Xuất sắc!" : ratio >= 0.6 ? "Khá tốt!" : "Cần ôn lại";
+          resultText.textContent = ratio === 1
+            ? "Em đã trả lời đúng tất cả các câu hỏi."
+            : ratio >= 0.6 ? "Em nắm được phần lớn nội dung. Hãy xem lại các câu sai ở phần hướng dẫn."
+            : "Em nên đọc lại phần hướng dẫn và thực hành thêm trên phòng máy mô phỏng rồi làm lại.";
+          if (summaryScore) summaryScore.textContent = score + "/" + total + " câu đúng";
+          if (summaryMessage) summaryMessage.textContent = resultText.textContent;
+        }
+
+        function restart() {
+          index = 0; score = 0;
+          card.style.display = "";
+          resultCard.classList.remove("show");
+          render();
+        }
+
+        nextBtn.addEventListener("click", function () {
+          if (!answered) return;
+          if (index < total - 1) { index += 1; render(); } else finish();
+        });
+        if (retryBtn) retryBtn.addEventListener("click", restart);
+        if (retry2Btn) retry2Btn.addEventListener("click", restart);
+        render();
+      } catch (error) {
+        console.error("Không thể khởi tạo phần luyện tập:", error);
+      }
+    });
+  </script>
+  <script>
+    /* ==== Hoạt động riêng của Bài 18 ==== */
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const RAW = [
+          [1, "Du kích sông Thao", "Đỗ Nhuận", "Doãn Tần"],
+          [2, "Trường ca Sông Lô", "Văn Cao", "Lê Dung"],
+          [3, "Tình ca", "Hoàng Việt", "Trần Khánh"],
+          [4, "Xa khơi", "Nguyễn Tài Tuệ", "Tân Nhân"],
+          [5, "Việt Nam quê hương tôi", "Đỗ Nhuận", "Quốc Hương"],
+          [6, "Tiến về Hà Nội", "Văn Cao", "Doãn Tần"],
+          [7, "Nhạc rừng", "Hoàng Việt", "Quốc Hương"],
+          [8, "Tiếng hát giữa rừng Pắc Bó", "Nguyễn Tài Tuệ", "Lê Dung"],
+          [9, "Trường ca Sông Lô", "Văn Cao", "Trần Khánh"],
+          [10, "Tiến về Hà Nội", "Văn Cao", "Quốc Hương"]
+        ];
+        const esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+
+        /* Bảng 18.1 */
+        const t181 = document.querySelector("#t181 tbody");
+        if (t181) t181.innerHTML = RAW.map(function (r) { return '<tr data-casi="' + esc(r[3]) + '"><td class="num">' + r[0] + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td><td>' + esc(r[3]) + '</td></tr>'; }).join("");
+
+        /* Chọn khoá chính */
+        const FIELDS = ["idBanthuam", "tenBannhac", "tenNhacsi", "tenCasi"];
+        const chosen = [];
+        const fieldBox = document.getElementById("pk-fields");
+        const verdict = document.getElementById("pk-verdict");
+        const pkTable = document.getElementById("pk-table");
+        function drawPkTable(dupRows, cols) {
+          pkTable.querySelector("thead").innerHTML = "<tr>" + FIELDS.map(function (f) { return "<th>" + f + "</th>"; }).join("") + "</tr>";
+          pkTable.querySelector("tbody").innerHTML = RAW.map(function (r, i) {
+            return "<tr>" + r.map(function (v, j) { const dup = dupRows.indexOf(i) !== -1 && cols.indexOf(j) !== -1; return '<td class="' + (j === 0 ? "num" : "") + (dup ? " dup" : "") + '">' + esc(v) + "</td>"; }).join("") + "</tr>";
+          }).join("");
+        }
+        if (fieldBox && verdict && pkTable) {
+          FIELDS.forEach(function (f) {
+            const b = document.createElement("button");
+            b.type = "button"; b.className = "field-toggle"; b.textContent = f; b.setAttribute("aria-pressed", "false");
+            b.addEventListener("click", function () {
+              const i = chosen.indexOf(f);
+              if (i === -1) chosen.push(f); else chosen.splice(i, 1);
+              b.setAttribute("aria-pressed", String(i === -1));
+            });
+            fieldBox.append(b);
+          });
+          drawPkTable([], []);
+          document.getElementById("pk-clear").addEventListener("click", function () {
+            chosen.length = 0;
+            fieldBox.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+            verdict.className = "verdict"; verdict.textContent = "Chưa chọn trường nào."; drawPkTable([], []);
+          });
+          document.getElementById("pk-check").addEventListener("click", function () {
+            if (!chosen.length) { verdict.className = "verdict warn"; verdict.textContent = "Hãy chọn ít nhất một trường."; return; }
+            const cols = FIELDS.map(function (f, i) { return chosen.indexOf(f) !== -1 ? i : -1; }).filter(function (i) { return i !== -1; });
+            const seen = {}; const dupRows = [];
+            RAW.forEach(function (r, i) {
+              const key = cols.map(function (c) { return r[c]; }).join("¦");
+              if (seen[key] !== undefined) { dupRows.push(i); if (dupRows.indexOf(seen[key]) === -1) dupRows.push(seen[key]); } else seen[key] = i;
+            });
+            drawPkTable(dupRows, cols);
+            const label = "(" + cols.map(function (c) { return FIELDS[c]; }).join(", ") + ")";
+            if (dupRows.length) {
+              verdict.className = "verdict bad";
+              verdict.textContent = "Không được: tổ hợp " + label + " bị trùng giá trị ở các dòng " + dupRows.map(function (i) { return i + 1; }).sort(function (a, b) { return a - b; }).join(", ") + " (ô tô đỏ). Khoá chính phải xác định duy nhất mỗi dòng.";
+            } else if (cols.length === 1 && cols[0] === 0) {
+              verdict.className = "verdict ok";
+              verdict.textContent = "Tốt nhất! idBanthuam xác định duy nhất mỗi bản thu âm và chỉ là một số ngắn gọn – đây là khoá chính SGK chọn.";
+            } else if (cols.indexOf(0) !== -1) {
+              verdict.className = "verdict warn";
+              verdict.textContent = "Tổ hợp " + label + " không trùng, nhưng thừa: chỉ riêng idBanthuam đã đủ xác định duy nhất mỗi dòng. Khoá chính nên tối giản.";
+            } else {
+              verdict.className = "verdict warn";
+              verdict.textContent = "Tổ hợp " + label + " không bị trùng trong 10 dòng này nên có thể làm khoá chính, nhưng gồm nhiều trường xâu kí tự dài – kém thuận lợi hơn idBanthuam.";
+            }
+          });
+        }
+
+        /* Tổ chức lại bảng theo từng bước */
+        const CASI = ["Trần Khánh", "Lê Dung", "Tân Nhân", "Quốc Hương", "Doãn Tần"];
+        const BANNHAC = []; const NHACSI = [];
+        RAW.forEach(function (r) {
+          if (!BANNHAC.some(function (b) { return b[0] === r[1] && b[1] === r[2]; })) BANNHAC.push([r[1], r[2]]);
+          if (NHACSI.indexOf(r[2]) === -1) NHACSI.push(r[2]);
+        });
+        const idCasi = function (n) { return CASI.indexOf(n) + 1; };
+        const idBannhac = function (t, ns) { return BANNHAC.findIndex(function (b) { return b[0] === t && b[1] === ns; }) + 1; };
+        const idNhacsi = function (n) { return NHACSI.indexOf(n) + 1; };
+        function card(name, cols, rows, opts) {
+          opts = opts || {};
+          const counts = cols.map(function (c, j) { const m = {}; rows.forEach(function (r) { m[r[j]] = (m[r[j]] || 0) + 1; }); return m; });
+          return '<div class="mini-table-card"><div class="table-title"><span>' + name + '</span><small>' + rows.length + ' dòng</small></div><div class="mini-table-wrap"><table class="data-table"><thead><tr>' +
+            cols.map(function (c, j) { return "<th>" + (j === 0 ? '<span class="pk">' + c + "</span>" : c) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+            rows.map(function (r) { return "<tr>" + r.map(function (v, j) { const isText = typeof v === "string"; const dup = j > 0 && counts[j][v] > 1 && isText && (opts.dupCols || []).indexOf(j) !== -1; const idc = j > 0 && !isText; return '<td class="' + (dup ? "dup" : idc ? "new-id" : "") + '">' + esc(v) + "</td>"; }).join("") + "</tr>"; }).join("") +
+            "</tbody></table></div></div>";
+        }
+        const STEPS = [
+          { explain: "<strong>Bảng ban đầu.</strong> Tên ca sĩ, tên bản nhạc, tên nhạc sĩ đều bị lặp lại. Ví dụ ca sĩ Trần Khánh thể hiện hai bản nhạc (dòng 3 và 9): khi cần sửa tên ca sĩ này phải tìm sửa ở tất cả những dòng có tên đó.",
+            schema: '<code class="schema-line"><b>banthuam</b>(<span class="pk">idBanthuam</span>, tenBannhac, tenNhacsi, tenCasi)</code>',
+            tables: function () { return card("banthuam", ["idBanthuam", "tenBannhac", "tenNhacsi", "tenCasi"], RAW, { dupCols: [1, 2, 3] }); } },
+          { explain: "<strong>Tách bảng casi.</strong> Lập bảng <code class=\"inline\">casi(idCasi, tenCasi)</code> với khoá chính <code class=\"inline\">idCasi</code> và thay <code class=\"inline\">tenCasi</code> trong bảng banthuam bởi <code class=\"inline\">idCasi</code>. Như vậy <code class=\"inline\">idCasi</code> trong bảng banthuam là <strong>khoá ngoài</strong> tham chiếu đến khoá chính <code class=\"inline\">idCasi</code> của bảng casi (Bảng 18.2, 18.3).",
+            schema: '<code class="schema-line"><b>banthuam</b>(<span class="pk">idBanthuam</span>, tenBannhac, tenNhacsi, <span class="fk">idCasi</span>)</code><code class="schema-line"><b>casi</b>(<span class="pk">idCasi</span>, tenCasi)</code>',
+            tables: function () { return card("casi", ["idCasi", "tenCasi"], CASI.map(function (n, i) { return [i + 1, n]; })) + card("banthuam", ["idBanthuam", "tenBannhac", "tenNhacsi", "idCasi"], RAW.map(function (r) { return [r[0], r[1], r[2], idCasi(r[3])]; }), { dupCols: [1, 2] }); } },
+          { explain: "<strong>Tách bảng bannhac.</strong> Một bản nhạc có thể có nhiều bản thu âm (Trường ca Sông Lô ở dòng 2 và 9). Lập bảng <code class=\"inline\">bannhac(idBannhac, tenBannhac, tenNhacsi)</code> và thay cặp <code class=\"inline\">(tenBannhac, tenNhacsi)</code> trong banthuam bởi <code class=\"inline\">idBannhac</code> (Bảng 18.4, 18.5).",
+            schema: '<code class="schema-line"><b>banthuam</b>(<span class="pk">idBanthuam</span>, <span class="fk2">idBannhac</span>, <span class="fk">idCasi</span>)</code><code class="schema-line"><b>casi</b>(<span class="pk">idCasi</span>, tenCasi)</code><code class="schema-line"><b>bannhac</b>(<span class="pk">idBannhac</span>, tenBannhac, tenNhacsi)</code>',
+            tables: function () { return card("casi", ["idCasi", "tenCasi"], CASI.map(function (n, i) { return [i + 1, n]; })) + card("bannhac", ["idBannhac", "tenBannhac", "tenNhacsi"], BANNHAC.map(function (b, i) { return [i + 1, b[0], b[1]]; }), { dupCols: [2] }) + card("banthuam", ["idBanthuam", "idBannhac", "idCasi"], RAW.map(function (r) { return [r[0], idBannhac(r[1], r[2]), idCasi(r[3])]; })); } },
+          { explain: "<strong>Tách bảng nhacsi.</strong> Tên nhạc sĩ trong bảng bannhac vẫn lặp lại (Văn Cao ở dòng 2 và 6) vì một nhạc sĩ sáng tác nhiều bản nhạc. Lập bảng <code class=\"inline\">nhacsi(idNhacsi, tenNhacsi)</code> và thay <code class=\"inline\">tenNhacsi</code> trong bannhac bởi <code class=\"inline\">idNhacsi</code> (Bảng 18.6, 18.7). Không còn tên nào bị lặp!",
+            schema: '<code class="schema-line"><b>casi</b>(<span class="pk">idCasi</span>, tenCasi)</code><code class="schema-line"><b>nhacsi</b>(<span class="pk">idNhacsi</span>, tenNhacsi)</code><code class="schema-line"><b>bannhac</b>(<span class="pk">idBannhac</span>, tenBannhac, <span class="fk">idNhacsi</span>)</code><code class="schema-line"><b>banthuam</b>(<span class="pk">idBanthuam</span>, <span class="fk2">idBannhac</span>, <span class="fk">idCasi</span>)</code>',
+            tables: function () { return card("casi", ["idCasi", "tenCasi"], CASI.map(function (n, i) { return [i + 1, n]; })) + card("nhacsi", ["idNhacsi", "tenNhacsi"], NHACSI.map(function (n, i) { return [i + 1, n]; })) + card("bannhac", ["idBannhac", "tenBannhac", "idNhacsi"], BANNHAC.map(function (b, i) { return [i + 1, b[0], idNhacsi(b[1])]; })) + card("banthuam", ["idBanthuam", "idBannhac", "idCasi"], RAW.map(function (r) { return [r[0], idBannhac(r[1], r[2]), idCasi(r[3])]; })); } }
+        ];
+        const STATS = [[30, 2, 4], [25, 1, 4], [21, 1, 2], [17, 1, 1]];
+        let step = 0;
+        const stepBtns = Array.from(document.querySelectorAll("#split-steps button"));
+        function drawStep() {
+          const s = STEPS[step];
+          stepBtns.forEach(function (b) { b.setAttribute("aria-pressed", String(Number(b.dataset.step) === step)); });
+          document.getElementById("split-explain").innerHTML = "<p>" + s.explain + "</p>";
+          document.getElementById("split-schema").innerHTML = s.schema;
+          const st = STATS[step];
+          document.getElementById("split-stats").innerHTML =
+            '<div class="stat"><strong>' + st[0] + '</strong><span>ô phải lưu tên (xâu kí tự dài)</span></div>' +
+            '<div class="stat"><strong>' + st[1] + '</strong><span>chỗ phải sửa khi đổi tên ca sĩ Trần Khánh</span></div>' +
+            '<div class="stat"><strong>' + st[2] + '</strong><span>chỗ phải sửa khi đổi tên nhạc sĩ Văn Cao</span></div>';
+          document.getElementById("split-tables").innerHTML = s.tables();
+          document.getElementById("split-prev").disabled = step === 0;
+          document.getElementById("split-next").disabled = step === STEPS.length - 1;
+        }
+        if (stepBtns.length) {
+          stepBtns.forEach(function (b) { b.addEventListener("click", function () { step = Number(b.dataset.step); drawStep(); }); });
+          document.getElementById("split-prev").addEventListener("click", function () { if (step > 0) { step -= 1; drawStep(); } });
+          document.getElementById("split-next").addEventListener("click", function () { if (step < STEPS.length - 1) { step += 1; drawStep(); } });
+          drawStep();
+        }
+
+        /* Sơ đồ Hình 18.2 */
+        const LINKS = {
+          casi: "<strong>banthuam.idCasi → casi.idCasi.</strong> Mỗi bản thu âm do một ca sĩ thể hiện; một ca sĩ có thể có nhiều bản thu âm. Giá trị idCasi nhập vào bảng banthuam phải có sẵn trong bảng casi.",
+          bannhac: "<strong>banthuam.idBannhac → bannhac.idBannhac.</strong> Mỗi bản thu âm là của một bản nhạc; một bản nhạc có thể có nhiều bản thu âm (ví dụ Trường ca Sông Lô).",
+          nhacsi: "<strong>bannhac.idNhacsi → nhacsi.idNhacsi.</strong> Mỗi bản nhạc do một nhạc sĩ (nhóm nhạc sĩ) sáng tác; một nhạc sĩ có thể sáng tác nhiều bản nhạc (ví dụ Văn Cao)."
+        };
+        const linkBox = document.getElementById("link-explain");
+        document.querySelectorAll("#h182 .fk-link").forEach(function (g) {
+          const act = function () {
+            document.querySelectorAll("#h182 .fk-link").forEach(function (x) { x.classList.toggle("on", x === g); });
+            linkBox.className = "verdict ok"; linkBox.innerHTML = LINKS[g.dataset.link];
+          };
+          g.addEventListener("click", act);
+          g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); act(); } });
+        });
+
+        /* Phòng thử khoá */
+        const SCHEMA = {
+          casi: { cols: ["idCasi", "tenCasi"], pk: "idCasi", unique: [], fks: [] },
+          nhacsi: { cols: ["idNhacsi", "tenNhacsi"], pk: "idNhacsi", unique: [], fks: [] },
+          bannhac: { cols: ["idBannhac", "tenBannhac", "idNhacsi"], pk: "idBannhac", unique: [["tenBannhac", "idNhacsi"]], fks: [["idNhacsi", "nhacsi", "idNhacsi"]] },
+          banthuam: { cols: ["idBanthuam", "idBannhac", "idCasi"], pk: "idBanthuam", unique: [["idBannhac", "idCasi"]], fks: [["idBannhac", "bannhac", "idBannhac"], ["idCasi", "casi", "idCasi"]] }
+        };
+        function seedData() {
+          return {
+            casi: CASI.map(function (n, i) { return { idCasi: i + 1, tenCasi: n }; }),
+            nhacsi: NHACSI.map(function (n, i) { return { idNhacsi: i + 1, tenNhacsi: n }; }),
+            bannhac: BANNHAC.map(function (b, i) { return { idBannhac: i + 1, tenBannhac: b[0], idNhacsi: idNhacsi(b[1]) }; }),
+            banthuam: RAW.map(function (r) { return { idBanthuam: r[0], idBannhac: idBannhac(r[1], r[2]), idCasi: idCasi(r[3]) }; })
+          };
+        }
+        let DATA = seedData();
+        let lastAdded = null;
+        const labTable = document.getElementById("lab-table");
+        const labFields = document.getElementById("lab-fields");
+        const labVerdict = document.getElementById("lab-verdict");
+        const labData = document.getElementById("lab-data");
+        function drawFields(values) {
+          const s = SCHEMA[labTable.value];
+          labFields.innerHTML = s.cols.map(function (c) {
+            const isText = c.indexOf("ten") === 0;
+            const note = c === s.pk ? " (khoá chính)" : s.fks.some(function (f) { return f[0] === c; }) ? " (khoá ngoài)" : "";
+            return '<label>' + c + note + '<input data-col="' + c + '" ' + (isText ? "" : 'inputmode="numeric"') + ' value="' + esc(values && values[c] !== undefined ? values[c] : "") + '" placeholder="' + (c === s.pk ? "để trống = tự tăng" : isText ? "nhập tên" : "nhập số") + '" autocomplete="off"></label>';
+          }).join("");
+        }
+        function drawData() {
+          const name = labTable.value;
+          const s = SCHEMA[name];
+          const related = [name].concat(s.fks.map(function (f) { return f[1]; }));
+          labData.innerHTML = related.map(function (tn) {
+            const cols = SCHEMA[tn].cols;
+            return '<div class="mini-table-card"><div class="table-title"><span>' + tn + '</span><small>' + DATA[tn].length + ' dòng</small></div><div class="mini-table-wrap"><table class="data-table"><thead><tr>' + cols.map(function (c, j) { return "<th>" + (j === 0 ? '<span class="pk">' + c + "</span>" : c) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+              DATA[tn].map(function (r) { const isNew = lastAdded && lastAdded.t === tn && lastAdded.row === r; return '<tr' + (isNew ? ' style="background:#e8f8f1;font-weight:700;"' : "") + ">" + cols.map(function (c) { return "<td>" + esc(r[c]) + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div></div>";
+          }).join("");
+        }
+        function insert() {
+          const name = labTable.value;
+          const s = SCHEMA[name];
+          const row = {};
+          for (const c of s.cols) {
+            const raw = labFields.querySelector('[data-col="' + c + '"]').value.trim();
+            const isText = c.indexOf("ten") === 0;
+            if (c === s.pk && raw === "") { row[c] = DATA[name].reduce(function (m, r) { return Math.max(m, r[c]); }, 0) + 1; continue; }
+            if (raw === "") { labVerdict.className = "verdict bad"; labVerdict.textContent = "Trường " + c + " chưa có giá trị."; return; }
+            if (!isText && !/^\d+$/.test(raw)) { labVerdict.className = "verdict bad"; labVerdict.textContent = "Trường " + c + " có kiểu INT nên chỉ nhận số nguyên."; return; }
+            row[c] = isText ? raw : Number(raw);
+          }
+          if (DATA[name].some(function (r) { return r[s.pk] === row[s.pk]; })) {
+            labVerdict.className = "verdict bad";
+            labVerdict.innerHTML = "<strong>Bị từ chối – vi phạm khoá chính.</strong> Đã có bản ghi " + s.pk + " = " + row[s.pk] + ". Khoá chính không được trùng (Duplicate entry '" + row[s.pk] + "' for key 'PRIMARY').";
+            return;
+          }
+          for (const u of s.unique) {
+            const clash = DATA[name].find(function (r) { return u.every(function (c) { return String(r[c]).toLowerCase() === String(row[c]).toLowerCase(); }); });
+            if (clash) { labVerdict.className = "verdict bad"; labVerdict.innerHTML = "<strong>Bị từ chối – vi phạm khoá cấm trùng lặp (" + u.join(", ") + ").</strong> Bản ghi " + s.pk + " = " + clash[s.pk] + " đã có cùng giá trị (" + u.map(function (c) { return row[c]; }).join(", ") + ")."; return; }
+          }
+          for (const f of s.fks) {
+            if (!DATA[f[1]].some(function (r) { return r[f[2]] === row[f[0]]; })) { labVerdict.className = "verdict bad"; labVerdict.innerHTML = "<strong>Bị từ chối – vi phạm khoá ngoài.</strong> " + f[0] + " = " + row[f[0]] + " không có trong khoá chính " + f[2] + " của bảng " + f[1] + ". Nếu chấp nhận, bản ghi sẽ trỏ đến một " + (f[1] === "casi" ? "ca sĩ" : f[1] === "nhacsi" ? "nhạc sĩ" : "bản nhạc") + " không tồn tại."; return; }
+          }
+          DATA[name].push(row);
+          lastAdded = { t: name, row: row };
+          labVerdict.className = "verdict ok";
+          labVerdict.innerHTML = "<strong>Đã thêm.</strong> Bản ghi thoả mãn khoá chính, khoá cấm trùng lặp và khoá ngoài (" + s.cols.map(function (c) { return c + " = " + row[c]; }).join(", ") + ").";
+          drawFields(); drawData();
+        }
+        const PRESETS = [
+          { t: "casi", v: { idCasi: 3, tenCasi: "Thu Phương" } },
+          { t: "banthuam", v: { idBanthuam: "", idBannhac: 2, idCasi: 1 } },
+          { t: "banthuam", v: { idBanthuam: "", idBannhac: 9, idCasi: 2 } },
+          { t: "banthuam", v: { idBanthuam: "", idBannhac: 4, idCasi: 4 } }
+        ];
+        if (labTable && labFields) {
+          labTable.addEventListener("change", function () { lastAdded = null; drawFields(); drawData(); labVerdict.className = "verdict"; labVerdict.textContent = "Nhập giá trị rồi bấm “Thêm bản ghi”."; });
+          document.getElementById("lab-insert").addEventListener("click", insert);
+          document.getElementById("lab-reset").addEventListener("click", function () { DATA = seedData(); lastAdded = null; drawFields(); drawData(); labVerdict.className = "verdict"; labVerdict.textContent = "Đã khôi phục dữ liệu ban đầu."; });
+          document.querySelectorAll("#lab-presets [data-preset]").forEach(function (b) {
+            b.addEventListener("click", function () { const p = PRESETS[Number(b.dataset.preset)]; labTable.value = p.t; lastAdded = null; drawFields(p.v); drawData(); insert(); });
+          });
+          drawFields(); drawData();
+        }
+
+        /* Vận dụng */
+        const vdBtn = document.getElementById("vd18-check");
+        if (vdBtn) vdBtn.addEventListener("click", function () {
+          const sel = document.querySelector('input[name="vd18"]:checked');
+          const fb = document.getElementById("vd18-feedback");
+          if (!sel) { fb.className = "feedback show hint"; fb.textContent = "Hãy chọn một mô hình."; return; }
+          const msg = {
+            a: "Chưa tốt: tên tỉnh vẫn lặp lại ở mọi quận/huyện của tỉnh đó – đúng tình trạng của tenCasi trong Bảng 18.1.",
+            b: "Chính xác! Tên tỉnh được tách thành bảng tinhthanh, bảng quanhuyen chỉ lưu mã idTinh (khoá ngoài).",
+            c: "Chưa đúng: một tỉnh có nhiều quận/huyện nên mỗi tỉnh sẽ phải lặp lại ở nhiều dòng; idTinh khi đó cũng không còn xác định duy nhất một dòng.",
+            d: "Chưa đúng: tenQuanhuyen không thể làm khoá chính vì có các huyện trùng tên ở các tỉnh khác nhau (Châu Thành), và tên tỉnh vẫn bị lặp."
+          }[sel.value];
+          fb.className = "feedback show " + (sel.value === "b" ? "success" : "hint");
+          fb.textContent = msg;
+          if (sel.value === "b") document.getElementById("vd18-answer").removeAttribute("hidden");
+        });
+
+        /* Câu hỏi nhiều lựa chọn SBT */
+        document.querySelectorAll(".multi-q").forEach(function (box) {
+          const btn = box.querySelector("[data-check-multi]");
+          const fb = box.querySelector(".feedback");
+          btn.addEventListener("click", function () {
+            const picked = Array.from(box.querySelectorAll("input:checked")).map(function (i) { return i.value; }).sort().join(",");
+            if (!picked) { fb.className = "feedback show hint"; fb.textContent = "Hãy chọn phương án trước khi kiểm tra."; return; }
+            const ok = picked === box.dataset.answer;
+            fb.className = "feedback show " + (ok ? "success" : "hint");
+            fb.textContent = (ok ? "Chính xác! " : "Chưa đúng. ") + fb.dataset.explain;
+          });
+        });
+      } catch (error) {
+        console.error("Không thể khởi tạo hoạt động Bài 18:", error);
+      }
+    });
+  </script>
+</body>
+</html>
