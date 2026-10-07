@@ -143,6 +143,26 @@
   .assessment-notice dt { font-weight: 700; color: var(--ink); }
   .assessment-notice dd { margin: 0; color: var(--ink-muted); }
 
+  .tool-link-card {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    margin: 1.75rem 0 0; padding: 1rem 1.25rem;
+    border: 1px solid var(--border); border-radius: 14px;
+    background: var(--surface); box-shadow: var(--shadow);
+  }
+  .tool-link-label {
+    display: block; font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.1em; color: var(--accent-1); margin-bottom: 0.3rem;
+  }
+  .tool-link-card h2 { margin: 0 0 0.2rem; font-family: var(--font-display); font-size: 1.2rem; line-height: 1.2; }
+  .tool-link-card p { margin: 0; font-size: 0.9rem; color: var(--ink-muted); max-width: 56ch; }
+  .tool-link-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none;
+    font-weight: 700; font-size: 0.9rem; color: var(--accent-1);
+    border: 1px solid var(--accent-1); border-radius: 999px; padding: 0.5rem 1rem;
+  }
+  .tool-link-btn:hover, .tool-link-btn:focus-visible { background: var(--accent-1); color: var(--surface); }
+  .tool-link-btn svg { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
   .semester-block { margin-top: 2.25rem; }
   .semester-head {
     display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 1rem;
@@ -244,6 +264,15 @@
       <span class="summary-pill">Đã có bài giảng · <strong id="lesson-progress">4 / 29</strong></span>
     </div>
   </header>
+
+  <section class="tool-link-card" aria-labelledby="tool-link-title">
+    <div>
+      <span class="tool-link-label">CÔNG CỤ THỰC HÀNH · CHỦ ĐỀ F</span>
+      <h2 id="tool-link-title">Chạy MySQL trực tuyến</h2>
+      <p>Không cần cài phần mềm: mở OneCompiler, gõ và chạy câu lệnh SQL ngay trên trình duyệt để luyện tập các bài về cơ sở dữ liệu.</p>
+    </div>
+    <a class="tool-link-btn" href="https://onecompiler.com/mysql" target="_blank" rel="noopener">Mở OneCompiler MySQL<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+  </section>
 
   <section class="assessment-notice" aria-labelledby="assessment-notice-title">
     <div class="assessment-notice-head">
