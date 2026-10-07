@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bài học tương tác Tin học 11 – Bài 14: SQL – Ngôn ngữ truy vấn có cấu trúc, Chủ đề F.">
+  <meta name="theme-color" content="#173F5F">
+  <title>Bài 14: SQL – Ngôn ngữ truy vấn có cấu trúc – Tin học 11</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173F5F'/%3E%3Cellipse cx='32' cy='17' rx='18' ry='8' fill='%2335C0CD'/%3E%3Cpath d='M14 17v15c0 4.4 8.1 8 18 8s18-3.6 18-8V17M14 32v15c0 4.4 8.1 8 18 8s18-3.6 18-8V32' fill='none' stroke='white' stroke-width='4'/%3E%3C/svg%3E">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js" defer></script>
+  <style>
+    :root {
+      --navy: #173F5F;
+      --navy-dark: #0e2b42;
+      --navy-soft: #eaf1f5;
+      --cyan: #35C0CD;
+      --cyan-dark: #158f9b;
+      --cyan-soft: #e7f9fb;
+      --ink: #182b3a;
+      --muted: #607485;
+      --paper: #ffffff;
+      --page: #f3f7f9;
+      --line: #d7e2e8;
+      --success: #16805d;
+      --success-soft: #e8f8f1;
+      --warning: #b66a00;
+      --warning-soft: #fff5df;
+      --danger: #b64040;
+      --danger-soft: #fff0f0;
+      --purple: #7458b3;
+      --shadow: 0 16px 42px rgba(23, 63, 95, .11);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 96% 2%, rgba(53, 192, 205, .14), transparent 18rem),
+        var(--page);
+      font-family: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+    button, input, textarea, select { font: inherit; }
+    button, [role="button"] { touch-action: manipulation; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      left: 12px;
+      top: -80px;
+      padding: 10px 14px;
+      color: #fff;
+      background: var(--navy-dark);
+      border-radius: 9px;
+    }
+    .skip-link:focus { top: 12px; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background: linear-gradient(125deg, var(--navy-dark), var(--navy) 62%, #176f83);
+    }
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border: 2px solid rgba(255,255,255,.1);
+      border-radius: 50%;
+    }
+    .hero::before { width: 320px; height: 320px; right: -85px; top: -170px; }
+    .hero::after { width: 200px; height: 200px; right: 45px; top: -120px; }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1160px, calc(100% - 32px));
+      margin: auto;
+      padding: 38px 0 34px;
+    }
+    .breadcrumb { margin: 0 0 16px; color: #bfeff2; font-size: .88rem; font-weight: 600; }
+    .lesson-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      color: var(--navy-dark);
+      background: var(--cyan);
+      border-radius: 999px;
+      font-size: .84rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .lesson-mark svg { width: 19px; height: 19px; }
+    h1 {
+      max-width: 860px;
+      margin: 0;
+      font-size: clamp(2.15rem, 6vw, 4.6rem);
+      line-height: 1.08;
+      letter-spacing: -.045em;
+    }
+    .hero-subtitle { max-width: 760px; margin: 16px 0 0; color: #d8eef4; font-size: 1.03rem; }
+
+    .lesson-nav-wrap {
+      position: sticky;
+      z-index: 30;
+      top: 0;
+      background: rgba(255,255,255,.95);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 5px 18px rgba(23,63,95,.07);
+      backdrop-filter: blur(12px);
+    }
+    .lesson-nav {
+      display: flex;
+      gap: 7px;
+      width: min(1160px, calc(100% - 24px));
+      margin: auto;
+      padding: 10px 0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .nav-link {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--navy); background: var(--navy-soft); }
+    .nav-link[aria-current="page"] { color: #fff; background: var(--navy); }
+    .nav-link:focus-visible,
+    .btn:focus-visible,
+    .map-node:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible { outline: 3px solid rgba(53,192,205,.4); outline-offset: 2px; }
+
+    main { width: min(1160px, calc(100% - 28px)); margin: 28px auto 70px; }
+    .lesson-panel { margin-bottom: 28px; scroll-margin-top: 88px; }
+    .js-enabled .lesson-panel:not(.active) { display: none; }
+    .js-enabled .lesson-panel.active { display: block; animation: panelIn .24s ease both; }
+    @keyframes panelIn { from { opacity: .2; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    .section-heading { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+    .section-no {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 48px;
+      height: 48px;
+      color: #fff;
+      background: var(--navy);
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      box-shadow: 0 7px 16px rgba(23,63,95,.18);
+    }
+    .section-heading h2 { margin: 0; color: var(--navy); font-size: clamp(1.55rem, 4vw, 2.25rem); line-height: 1.2; }
+    .section-heading p { margin: 5px 0 0; color: var(--muted); }
+    h3 { color: var(--navy); line-height: 1.3; }
+    .card {
+      padding: clamp(20px, 4vw, 30px);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .callout {
+      padding: 17px 19px;
+      background: var(--cyan-soft);
+      border-left: 5px solid var(--cyan);
+      border-radius: 0 14px 14px 0;
+    }
+    .callout p { margin: 0; }
+    .callout strong { color: var(--navy); }
+    .mini-label { display: block; margin-bottom: 6px; color: var(--cyan-dark); font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 47px;
+      padding: 10px 17px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .15s, background .15s, border-color .15s, box-shadow .15s;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .btn:disabled { cursor: not-allowed; opacity: .52; }
+    .btn-primary { color: #fff; background: var(--navy); box-shadow: 0 8px 18px rgba(23,63,95,.18); }
+    .btn-primary:hover:not(:disabled) { background: #205477; }
+    .btn-accent { color: var(--navy-dark); background: var(--cyan); }
+    .btn-accent:hover:not(:disabled) { background: #5bd1da; }
+    .btn-secondary { color: var(--navy); background: #fff; border-color: #b9cbd5; }
+    .btn-secondary:hover:not(:disabled) { background: var(--navy-soft); }
+    .btn-danger { color: var(--danger); background: #fff; border-color: #e0aaaa; }
+    .button-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+
+    .scenario-card { display: grid; grid-template-columns: 1.2fr .8fr; gap: 26px; align-items: center; }
+    .scenario-card h2 { margin-top: 0; font-size: clamp(1.7rem,4vw,2.5rem); }
+    .scenario-visual {
+      position: relative;
+      min-height: 280px;
+      padding: 26px;
+      background: linear-gradient(145deg, var(--navy-dark), var(--navy));
+      border-radius: 18px;
+      color: #fff;
+      overflow: hidden;
+    }
+    .search-bar { display: flex; gap: 8px; padding: 10px; background: #fff; border-radius: 11px; color: var(--muted); }
+    .search-dot { width: 22px; height: 22px; border: 3px solid var(--cyan); border-radius: 50%; position: relative; }
+    .search-dot::after { content: ""; position: absolute; width: 8px; height: 3px; right: -7px; bottom: -3px; background: var(--cyan); transform: rotate(45deg); }
+    .music-result { margin-top: 15px; padding: 13px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16); border-radius: 11px; }
+    .music-result small { color: #bdeff1; }
+    .pulse-line { height: 7px; margin-top: 9px; background: linear-gradient(90deg,var(--cyan) 65%,rgba(255,255,255,.15) 65%); border-radius: 9px; }
+    .prediction-box { margin-top: 20px; padding: 17px; background: #f7fafc; border: 1px solid var(--line); border-radius: 14px; }
+    .prediction-box fieldset { margin: 0; padding: 0; border: 0; }
+    .prediction-box legend { margin-bottom: 10px; font-weight: 700; }
+    .choice-line { display: flex; gap: 9px; align-items: flex-start; margin: 8px 0; cursor: pointer; }
+    .choice-line input { width: 19px; height: 19px; margin-top: 3px; accent-color: var(--cyan-dark); }
+    .feedback { display: none; margin-top: 13px; padding: 12px 14px; border-radius: 10px; }
+    .feedback.show { display: block; }
+    .feedback.success { color: #0f6044; background: var(--success-soft); border: 1px solid #93d2b8; }
+    .feedback.hint { color: #7a4a00; background: var(--warning-soft); border: 1px solid #e7c482; }
+
+    .goal-card { min-height: 190px; }
+    .goal-icon { display: grid; place-items: center; width: 43px; height: 43px; margin-bottom: 13px; color: var(--navy); background: var(--cyan-soft); border-radius: 12px; font-weight: 800; }
+    .goal-card h3 { margin: 0 0 7px; font-size: 1.05rem; }
+    .goal-card p { margin: 0; color: var(--muted); font-size: .93rem; }
+
+    .data-story { margin-bottom: 22px; }
+    .data-tables { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 20px 0; overflow-x: auto; }
+    .table-card { min-width: 180px; overflow: hidden; border: 1px solid #bdd0d9; border-radius: 12px; }
+    .table-title { padding: 8px 10px; color: #fff; background: var(--navy); font-size: .9rem; font-weight: 800; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .data-table th, .data-table td { padding: 7px 8px; border-bottom: 1px solid #dce7eb; text-align: left; white-space: nowrap; }
+    .data-table th { color: var(--navy-dark); background: #dff6f7; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .key-tag { display: inline-block; margin-left: 4px; padding: 1px 5px; color: #5b3b00; background: #ffe39d; border-radius: 5px; font-size: .68rem; font-weight: 800; vertical-align: 1px; }
+    .foreign-tag { color: #4c337c; background: #ede7fb; }
+    .definition { margin: 20px 0; padding: 22px; color: #fff; background: linear-gradient(125deg,var(--navy),#205f7e); border-radius: 16px; }
+    .definition p { margin: 0; font-size: 1.07rem; }
+    .definition .definition-source { display: block; margin-top: 12px; color: #bdeff1; font-size: .86rem; font-style: normal; }
+    .definition .acid-gloss { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px 18px; margin-top: 14px; padding-top: 13px; border-top: 1px solid rgba(255,255,255,.2); }
+    .definition .acid-gloss span { color: #d8f4f5; font-size: .88rem; }
+    .definition .acid-gloss b { color: #8ce7ed; }
+    @media (max-width: 680px) { .definition .acid-gloss { grid-template-columns: 1fr; } }
+    .concept-card { padding: 18px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--cyan); border-radius: 14px; }
+    .concept-card h3 { margin: 0 0 6px; font-size: 1rem; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: .91rem; }
+    .schema-example { overflow-x: auto; margin: 20px 0; }
+    .schema-example table { width: 100%; min-width: 670px; border-collapse: collapse; }
+    .schema-example caption { margin-bottom: 9px; color: var(--navy); font-weight: 700; text-align: left; }
+    .schema-example th, .schema-example td { padding: 9px 11px; border: 1px solid var(--line); text-align: left; }
+    .schema-example th { background: var(--navy); color: #fff; }
+    .schema-example tbody tr:nth-child(even) { background: #f1f9fa; }
+
+    .map-layout { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(260px,.65fr); gap: 20px; }
+    .map-board {
+      position: relative;
+      min-height: 520px;
+      padding: 24px;
+      background: linear-gradient(160deg,#f7fcfd,#edf6f8);
+      border: 1px solid #cce1e7;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .map-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .map-lines path { fill: none; stroke: #35aebb; stroke-width: 3; stroke-dasharray: 7 5; }
+    .map-grid { position: relative; z-index: 2; display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); min-height: 470px; gap: 18px; align-items: center; }
+    .map-node {
+      min-height: 104px;
+      padding: 14px;
+      color: var(--ink);
+      background: #fff;
+      border: 2px solid #afcbd4;
+      border-radius: 15px;
+      box-shadow: 0 10px 22px rgba(23,63,95,.09);
+      cursor: pointer;
+      text-align: left;
+    }
+    .map-node:hover, .map-node.selected { border-color: var(--cyan-dark); transform: translateY(-2px); }
+    .map-node strong { display: block; color: var(--navy); }
+    .map-node small { display: block; margin-top: 5px; color: var(--muted); }
+    #map-node-nhacsi { grid-area: 1 / 1; }
+    #map-node-bannhac { grid-area: 2 / 2; }
+    #map-node-casi { grid-area: 3 / 1; }
+    #map-node-banthuam { grid-area: 3 / 3; }
+    .map-detail { min-height: 520px; }
+    .map-detail h3 { margin-top: 0; }
+    .field-list { display: grid; gap: 8px; margin: 14px 0; }
+    .field-chip { display: flex; justify-content: space-between; gap: 10px; padding: 9px 11px; background: #f4f8fa; border-radius: 9px; }
+    .field-chip code { color: var(--navy); font-weight: 700; }
+    .relation-note { margin-top: 15px; padding: 12px; color: #12616a; background: var(--cyan-soft); border-radius: 10px; }
+
+    .three-wrap { margin-top: 22px; }
+    .three-layout { display: grid; grid-template-columns: 1fr 280px; gap: 20px; }
+    .three-stage {
+      position: relative;
+      min-height: 430px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(53,192,205,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(53,192,205,.08) 1px, transparent 1px),
+        radial-gradient(circle at center,#244f68,#0d2639 75%);
+      background-size: 32px 32px,32px 32px,auto;
+      border-radius: 18px;
+      cursor: grab;
+      touch-action: none;
+      perspective: 900px;
+    }
+    .three-stage:active { cursor: grabbing; }
+    .schema-world {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 270px;
+      height: 200px;
+      transform-style: preserve-3d;
+      transform: translate(-50%,-50%) rotateX(-18deg) rotateY(28deg) scale(.9);
+      transition: transform .08s linear;
+    }
+    .db-plane {
+      position: absolute;
+      width: 230px;
+      min-height: 140px;
+      padding: 13px;
+      color: #fff;
+      background: rgba(23,63,95,.9);
+      border: 2px solid var(--cyan);
+      border-radius: 12px;
+      box-shadow: 0 0 28px rgba(53,192,205,.22);
+      backface-visibility: visible;
+    }
+    .db-plane strong { display: block; color: #8ce7ed; margin-bottom: 7px; }
+    .db-plane span { display: block; padding: 3px 0; font-size: .78rem; border-top: 1px solid rgba(255,255,255,.13); }
+    .plane-front { transform: translateZ(110px); }
+    .plane-right { transform: rotateY(90deg) translateZ(110px); }
+    .plane-top { transform: rotateX(90deg) translateZ(70px); }
+    .three-controls { padding: 18px; background: #f7fafb; border: 1px solid var(--line); border-radius: 15px; }
+    .three-controls h3 { margin-top: 0; }
+    .three-controls label { display: block; margin: 14px 0 6px; font-weight: 700; }
+    .three-controls input[type="range"] { width: 100%; accent-color: var(--cyan-dark); }
+    .three-readout { color: var(--muted); font-size: .88rem; }
+    .fallback-description { margin-top: 12px; color: var(--muted); font-size: .9rem; }
+
+    .lab-task { margin-bottom: 18px; }
+    .task-list { margin: 8px 0 0; padding-left: 20px; }
+    .task-list li { margin: 5px 0; }
+    .simulation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .sim-source, .sim-output { min-width: 0; }
+    .sim-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+    .sim-table { width: 100%; border-collapse: collapse; font-size: .83rem; }
+    .sim-table th, .sim-table td { padding: 8px 9px; border-bottom: 1px solid #e1e9ed; text-align: left; white-space: nowrap; }
+    .sim-table th { color: var(--navy); background: var(--cyan-soft); }
+    .sim-table tr.active-row { background: #fff2c9; outline: 2px solid #e0a72e; outline-offset: -2px; }
+    .sim-table tr.matched-row { background: var(--success-soft); }
+    .output-empty { display: grid; place-items: center; min-height: 190px; padding: 18px; color: var(--muted); background: #f7fafb; border: 1px dashed #b9cbd5; border-radius: 12px; text-align: center; }
+    .sim-status { margin: 15px 0 0; padding: 12px 14px; background: var(--navy-soft); border-radius: 10px; }
+    .step-meter { display: flex; align-items: center; gap: 10px; margin: 15px 0; }
+    .meter-track { flex: 1; height: 10px; background: #e0e9ee; border-radius: 999px; overflow: hidden; }
+    .meter-fill { width: 0; height: 100%; background: linear-gradient(90deg,var(--cyan),var(--cyan-dark)); transition: width .25s; }
+    .chart-card { margin-top: 20px; }
+    .bar-chart { display: grid; gap: 12px; margin-top: 15px; }
+    .bar-row { display: grid; grid-template-columns: minmax(145px,1fr) 2fr 35px; gap: 10px; align-items: center; }
+    .bar-track { height: 18px; background: #e8eff2; border-radius: 999px; overflow: hidden; }
+    .bar-fill { height: 100%; width: 0; background: linear-gradient(90deg,var(--cyan),#167d99); border-radius: inherit; transition: width .35s; }
+    .conclusion-box { margin-top: 20px; padding: 18px; background: #f7fafb; border-radius: 14px; }
+    .conclusion-box label { display: block; margin-bottom: 7px; font-weight: 700; }
+    .conclusion-box textarea { width: 100%; min-height: 90px; padding: 12px; border: 1px solid #b8cbd4; border-radius: 10px; resize: vertical; }
+
+    .code-layout { display: grid; grid-template-columns: minmax(0,1.5fr) minmax(280px,.5fr); gap: 20px; }
+    .code-panel { overflow: hidden; padding: 0; }
+    .code-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 15px 18px; color: #fff; background: var(--navy-dark); }
+    .code-head strong { color: #fff; }
+    .status-stack { display: flex; flex-wrap: wrap; gap: 8px; }
+    .status-pill { padding: 4px 9px; background: rgba(255,255,255,.11); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; font-size: .78rem; }
+    .status-pill.ready { color: #bff6db; }
+    .status-pill.running { color: #ffdfa1; }
+    .status-pill.error { color: #ffc4c4; }
+    .code-body { padding: 18px; background: #112433; }
+    .sample-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .sample-btn { min-height: 38px; padding: 7px 11px; color: #c8f5f7; background: #1d3b4e; border: 1px solid #38627a; border-radius: 8px; cursor: pointer; }
+    .sample-btn:hover { background: #285169; }
+    #sql-editor {
+      width: 100%;
+      min-height: 190px;
+      padding: 16px;
+      color: #eaf8fa;
+      background: #0b1b28;
+      border: 1px solid #31556c;
+      border-radius: 10px;
+      font: 500 15px/1.65 Consolas, "Courier New", monospace;
+      resize: vertical;
+      tab-size: 2;
+    }
+    .code-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
+    .code-output { min-height: 180px; max-height: 420px; margin-top: 14px; overflow: auto; color: #dbf4f5; background: #08151f; border: 1px solid #2a4a5f; border-radius: 10px; }
+    .code-placeholder { margin: 0; padding: 16px; color: #8eabbc; font-family: Consolas, monospace; white-space: pre-wrap; }
+    .result-table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+    .result-table th, .result-table td { padding: 9px 10px; border-bottom: 1px solid #254152; text-align: left; white-space: nowrap; }
+    .result-table th { position: sticky; top: 0; color: #9ce7eb; background: #132d3d; }
+    .result-table td { color: #e8f3f5; }
+    .error-output { margin: 0; padding: 16px; color: #ffc2c2; white-space: pre-wrap; }
+    .dataset-card h3 { margin-top: 0; }
+    .dataset-card details { margin: 10px 0; border: 1px solid var(--line); border-radius: 10px; }
+    .dataset-card summary { padding: 10px 12px; color: var(--navy); font-weight: 700; cursor: pointer; }
+    .dataset-card .mini-data { padding: 0 12px 12px; overflow-x: auto; }
+    .dataset-card table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+    .dataset-card th, .dataset-card td { padding: 5px 7px; border: 1px solid var(--line); text-align: left; }
+    .dataset-card th { background: var(--cyan-soft); }
+
+    .quiz-shell { max-width: 820px; margin: auto; }
+    .quiz-top { display: flex; align-items: center; gap: 13px; margin-bottom: 18px; }
+    .quiz-count { color: var(--navy); font-weight: 800; white-space: nowrap; }
+    .quiz-progress { flex: 1; height: 11px; background: #e1eaee; border-radius: 999px; overflow: hidden; }
+    .quiz-progress-fill { width: 20%; height: 100%; background: linear-gradient(90deg,var(--cyan),var(--cyan-dark)); transition: width .25s; }
+    .quiz-card h3 { margin: 0 0 17px; font-size: 1.2rem; }
+    .quiz-options { display: grid; gap: 10px; }
+    .quiz-option { position: relative; display: grid; grid-template-columns: 34px 1fr; gap: 11px; padding: 13px 14px; background: #f7fafb; border: 1.5px solid #d3e0e5; border-radius: 12px; cursor: pointer; }
+    .quiz-option:hover { border-color: var(--cyan-dark); }
+    .quiz-option input { position: absolute; opacity: 0; }
+    .option-letter { display: grid; place-items: center; width: 30px; height: 30px; color: var(--navy); background: #fff; border: 1px solid #aebfc8; border-radius: 50%; font-weight: 800; }
+    .quiz-option:has(input:checked) { background: var(--cyan-soft); border-color: var(--cyan-dark); }
+    .quiz-option:has(input:checked) .option-letter { color: #fff; background: var(--cyan-dark); border-color: var(--cyan-dark); }
+    .quiz-option.correct { background: var(--success-soft); border-color: var(--success); }
+    .quiz-option.wrong { background: var(--danger-soft); border-color: var(--danger); }
+    .quiz-feedback { display: none; margin-top: 14px; padding: 13px 15px; border-radius: 11px; }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.correct { color: #0e6548; background: var(--success-soft); border-left: 4px solid var(--success); }
+    .quiz-feedback.wrong { color: #794000; background: var(--warning-soft); border-left: 4px solid var(--warning); }
+    .quiz-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 17px; }
+    .quiz-result { display: none; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-disc { display: grid; place-items: center; width: 150px; height: 150px; margin: 0 auto 18px; color: #fff; background: var(--navy); border: 12px solid var(--cyan); border-radius: 50%; }
+    .score-disc strong { font-size: 2.4rem; line-height: 1; }
+    .score-disc span { display: block; font-size: .8rem; }
+
+    .summary-map { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; align-items: stretch; }
+    .summary-node { position: relative; padding: 17px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--cyan); border-radius: 13px; }
+    .summary-node:not(:last-child)::after { content: "→"; position: absolute; right: -15px; top: 42%; z-index: 2; color: var(--cyan-dark); font-weight: 800; }
+    .summary-node strong { display: block; color: var(--navy); margin-bottom: 5px; }
+    .summary-node span { color: var(--muted); font-size: .87rem; }
+    .final-score { margin-top: 22px; padding: 20px; color: #fff; background: linear-gradient(120deg,var(--navy),#1b657a); border-radius: 15px; }
+    .final-score h3 { margin: 0 0 5px; color: #fff; }
+    .final-score p { margin: 0; color: #d8f4f5; }
+
+    dialog { width: min(680px, calc(100% - 28px)); padding: 0; border: 0; border-radius: 18px; box-shadow: 0 24px 70px rgba(0,0,0,.28); }
+    dialog::backdrop { background: rgba(8,28,42,.65); backdrop-filter: blur(3px); }
+    .dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; color: #fff; background: var(--navy); }
+    .dialog-head h2 { margin: 0; font-size: 1.2rem; }
+    .dialog-close { width: 42px; height: 42px; color: #fff; background: transparent; border: 1px solid rgba(255,255,255,.3); border-radius: 10px; cursor: pointer; }
+    .dialog-body { padding: 20px; }
+    .dialog-body dl { display: grid; grid-template-columns: 140px 1fr; gap: 10px 16px; margin: 0; }
+    .dialog-body dt { color: var(--navy); font-weight: 800; }
+    .dialog-body dd { margin: 0; color: var(--muted); }
+    .noscript-note { margin: 20px auto; padding: 14px; color: #704900; background: var(--warning-soft); border: 1px solid #e3c078; border-radius: 10px; }
+    footer { padding: 24px 16px; color: #bdd4df; background: var(--navy-dark); text-align: center; font-size: .86rem; }
+
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .data-tables { grid-template-columns: repeat(2,minmax(220px,1fr)); }
+      .map-layout, .three-layout, .code-layout { grid-template-columns: 1fr; }
+      .map-detail { min-height: auto; }
+      .three-controls { order: -1; }
+      .summary-map { grid-template-columns: 1fr 1fr; }
+      .summary-node::after { display: none; }
+    }
+    @media (max-width: 680px) {
+      body { font-size: 16px; }
+      .hero-inner { padding-top: 27px; }
+      .scenario-card, .grid-2, .grid-3, .simulation-grid { grid-template-columns: 1fr; }
+      .scenario-visual { min-height: 240px; }
+      .data-tables { grid-template-columns: repeat(4,210px); }
+      .map-board { min-height: 600px; padding: 14px; }
+      .map-grid { grid-template: repeat(4,1fr) / 1fr; min-height: 565px; }
+      #map-node-nhacsi { grid-area: 1 / 1; }
+      #map-node-bannhac { grid-area: 2 / 1; }
+      #map-node-casi { grid-area: 3 / 1; }
+      #map-node-banthuam { grid-area: 4 / 1; }
+      .map-lines { display: none; }
+      .three-stage { min-height: 390px; }
+      .schema-world { transform: translate(-50%,-50%) rotateX(-18deg) rotateY(28deg) scale(.72); }
+      .bar-row { grid-template-columns: 115px 1fr 28px; font-size: .82rem; }
+      .summary-map { grid-template-columns: 1fr; }
+      .quiz-actions .btn, .code-actions .btn { flex: 1 1 140px; }
+      .dialog-body dl { grid-template-columns: 1fr; gap: 3px; }
+      .dialog-body dd { margin-bottom: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+    @media print {
+      body { background: #fff; }
+      .hero { print-color-adjust: exact; }
+      .lesson-nav-wrap, .button-row, .code-actions, .quiz-actions { display: none !important; }
+      .lesson-panel { display: block !important; break-before: page; }
+      .lesson-panel:first-of-type { break-before: auto; }
+      .card { box-shadow: none; }
+      .three-stage { min-height: 330px; print-color-adjust: exact; }
+    }
+
+    /* ===== Bài 14: phần bổ sung ===== */
+    pre.sql {
+      margin: 0;
+      padding: 14px 16px;
+      overflow-x: auto;
+      color: #eaf8fa;
+      background: #0b1b28;
+      border: 1px solid #31556c;
+      border-radius: 10px;
+      font: 500 14.5px/1.7 Consolas, "Courier New", monospace;
+      white-space: pre;
+      tab-size: 2;
+    }
+    .tk-k { color: #7fe0ea; font-weight: 700; }
+    .tk-f { color: #ffb86b; font-weight: 700; }
+    .tk-t { color: #c9a8ff; }
+    .tk-s { color: #ffd88a; }
+    .tk-n { color: #b8e994; }
+    .tk-c { color: #7e9bad; font-style: italic; }
+    code.inline { padding: 1px 6px; color: var(--navy); background: var(--cyan-soft); border-radius: 6px; font-family: Consolas, "Courier New", monospace; font-size: .92em; }
+    .chip-btn { min-height: 40px; padding: 7px 14px; color: var(--navy); background: #fff; border: 1.5px solid #b9cbd5; border-radius: 999px; font-weight: 700; cursor: pointer; }
+    .chip-btn:hover { background: var(--navy-soft); }
+    .chip-btn[aria-pressed="true"] { color: #fff; background: var(--navy); border-color: var(--navy); }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .sample-btn[aria-pressed="true"] { color: var(--navy-dark); background: var(--cyan); border-color: var(--cyan); font-weight: 700; }
+
+    .way-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; margin-top: 18px; }
+    .way-card { padding: 18px; background: #fff; border: 1px solid var(--line); border-top: 5px solid var(--purple); border-radius: 14px; min-width: 0; }
+    .way-card.sql-way { border-top-color: var(--cyan-dark); }
+    .way-card h3 { margin: 0 0 4px; font-size: 1.05rem; }
+    .way-card .way-sub { margin: 0 0 12px; color: var(--muted); font-size: .9rem; }
+    .way-meter { display: flex; align-items: baseline; gap: 8px; margin: 12px 0 0; padding: 10px 12px; background: var(--navy-soft); border-radius: 10px; }
+    .way-meter strong { color: var(--navy); font-size: 1.5rem; line-height: 1; }
+    .log-box { max-height: 170px; margin-top: 12px; padding: 10px 12px; overflow: auto; color: #dbf4f5; background: #0b1b28; border-radius: 10px; font: 500 13px/1.6 Consolas, monospace; }
+    .log-box p { margin: 0; }
+    .log-box .hit { color: #9bf0b9; }
+    .log-box .skip { color: #8eabbc; }
+    .sim-table tr.skip-row { color: #8a9ba6; background: #f1f4f6; }
+    .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .toolbar label { font-weight: 700; color: var(--navy); }
+    .toolbar select { min-height: 40px; max-width: 100%; padding: 6px 10px; border: 1px solid #b8cbd4; border-radius: 9px; background: #fff; }
+
+    .sql-parts { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; margin-top: 18px; }
+    .part-card { padding: 18px; background: #fff; border: 1px solid var(--line); border-radius: 14px; border-top: 5px solid var(--cyan); }
+    .part-card.dml { border-top-color: var(--success); }
+    .part-card.dcl { border-top-color: var(--warning); }
+    .part-card .tag { display: inline-block; padding: 2px 9px; color: #fff; background: var(--navy); border-radius: 999px; font: 800 .8rem Consolas, monospace; }
+    .part-card.dml .tag { background: var(--success); }
+    .part-card.dcl .tag { background: var(--warning); }
+    .part-card h3 { margin: 8px 0 4px; font-size: 1.02rem; }
+    .part-card p { margin: 0 0 8px; color: var(--muted); font-size: .9rem; }
+    .part-card ul { margin: 0; padding-left: 18px; font-family: Consolas, monospace; font-size: .86rem; color: var(--navy); }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .93rem; }
+    .std-table caption { margin-bottom: 8px; color: var(--navy); font-weight: 700; text-align: left; }
+    .std-table th, .std-table td { padding: 9px 12px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .std-table th { color: #fff; background: var(--navy); }
+    .std-table tbody tr:nth-child(even) { background: #f1f9fa; }
+    .std-table td:first-child { font-family: Consolas, monospace; color: var(--navy); font-weight: 700; white-space: nowrap; }
+    .table-scroll { overflow-x: auto; margin: 14px 0; }
+
+    .stmt-grid { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,.9fr); gap: 14px; align-items: center; margin: 12px 0; }
+    .stmt-note { padding: 12px 14px; color: #12616a; background: var(--cyan-soft); border-left: 4px solid var(--cyan); border-radius: 0 10px 10px 0; font-size: .92rem; }
+    .stmt-note b { color: var(--navy); }
+    .try-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 10px; }
+
+    .type-table td, .type-table th { padding: 8px 10px; }
+    .type-table select { width: 100%; min-height: 38px; border: 1px solid #b8cbd4; border-radius: 8px; background: #fff; }
+    .type-table select.ok { border-color: var(--success); background: var(--success-soft); }
+    .type-table select.bad { border-color: var(--danger); background: var(--danger-soft); }
+
+    .pipe-wrap { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr); gap: 18px; }
+    .pipe-sql .clause { display: block; padding: 0 6px; border-radius: 6px; }
+    .pipe-sql .clause.on { background: rgba(53,192,205,.28); outline: 1px solid var(--cyan); }
+    .pipe-desc { margin: 12px 0 0; padding: 12px 14px; background: var(--navy-soft); border-radius: 10px; font-size: .93rem; }
+    .sim-table td.dim, .sim-table th.dim { display: none; }
+    .sim-table tr.sorted-row { background: #fff2c9; }
+
+    .dml-panels { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; margin-top: 14px; }
+    .dml-panels h4 { margin: 0 0 6px; color: var(--navy); font-size: .95rem; }
+    .dml-panels .sim-table tr.diff-add { background: #d9f6e6; }
+    .dml-panels .sim-table tr.diff-del { background: #ffe0e0; text-decoration: line-through; color: #8b3a3a; }
+    .dml-panels .sim-table tr.diff-chg { background: #fff2c9; }
+    .dml-after.pending .sim-table { opacity: .35; }
+    .check-line { display: flex; gap: 9px; align-items: center; margin: 8px 0; font-weight: 600; }
+    .check-line input { width: 19px; height: 19px; accent-color: var(--warning); }
+
+    .priv-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; }
+    .priv-field { margin-bottom: 12px; }
+    .priv-field > label, .priv-field > .field-label { display: block; margin-bottom: 5px; color: var(--navy); font-weight: 700; }
+    .priv-field select { width: 100%; min-height: 42px; padding: 6px 10px; border: 1px solid #b8cbd4; border-radius: 9px; background: #fff; }
+    .priv-checks { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+    .priv-checks label { display: inline-flex; align-items: center; gap: 6px; font-family: Consolas, monospace; font-weight: 700; color: var(--navy); }
+    .priv-checks input, .priv-field input[type="radio"] { width: 18px; height: 18px; accent-color: var(--cyan-dark); }
+    .radio-row { display: flex; gap: 18px; }
+    .radio-row label { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
+    .priv-out .stmt-note { margin-top: 12px; }
+
+    .reveal-btn { margin-top: 8px; }
+    .reveal-box { margin-top: 10px; padding: 12px 14px; background: #f7fafb; border: 1px dashed #9db5c2; border-radius: 10px; }
+    .reveal-box[hidden] { display: none; }
+
+    .stmt-echo { padding: 10px 14px 4px; color: #8ce7ed; font: 600 13.5px/1.6 Consolas, monospace; white-space: pre-wrap; border-top: 1px solid #1d3b4e; }
+    .stmt-echo:first-child { border-top: 0; }
+    .ok-msg { margin: 0; padding: 4px 14px 12px; color: #9bf0b9; font: 600 13.5px Consolas, monospace; }
+    .stmt-skip { margin: 0; padding: 0 14px 12px; color: #8eabbc; font-size: .85rem; }
+    .row-count { margin: 0; padding: 6px 14px 12px; color: #8eabbc; font: 500 12.5px Consolas, monospace; }
+    .err-detail { display: block; margin-top: 6px; color: #b88; font-size: .8rem; }
+    #task-list { display: grid; gap: 4px; }
+    .task-item { display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 12px 14px; background: #f7fafb; border: 1px solid var(--line); border-radius: 12px; }
+    .task-item.done { background: var(--success-soft); border-color: #93d2b8; }
+    .task-mark { display: grid; place-items: center; width: 28px; height: 28px; color: var(--muted); background: #fff; border: 2px solid #b9cbd5; border-radius: 50%; font-weight: 800; font-size: .85rem; }
+    .task-item.done .task-mark { color: #fff; background: var(--success); border-color: var(--success); }
+    .task-item p { margin: 0; }
+    .task-item .src { color: var(--muted); font-size: .82rem; }
+    .task-item details { margin-top: 6px; }
+    .task-item summary { cursor: pointer; color: var(--cyan-dark); font-weight: 700; font-size: .88rem; }
+    .task-item details pre.sql { margin-top: 8px; }
+    .task-progress { margin: 0 0 12px; color: var(--navy); font-weight: 800; }
+    .db-table-title { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; }
+    .db-fk { margin: 6px 12px 0; color: #4c337c; font-size: .78rem; }
+    .db-more { margin: 6px 0 0; color: var(--muted); font-size: .78rem; }
+
+    .cls-list { display: grid; gap: 10px; margin-top: 12px; }
+    .cls-item { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; background: #f7fafb; border: 1px solid var(--line); border-radius: 12px; }
+    .cls-item pre.sql { padding: 8px 12px; font-size: 13px; line-height: 1.5; }
+    .cls-item.right { background: var(--success-soft); border-color: #93d2b8; }
+    .cls-item.wrong { background: var(--danger-soft); border-color: #e0aaaa; }
+    .cls-buttons { display: flex; gap: 6px; }
+    .cls-buttons .chip-btn { min-height: 36px; padding: 5px 11px; font-family: Consolas, monospace; }
+    .quiz-block { margin-bottom: 26px; }
+
+    @media (max-width: 900px) {
+      .sql-parts, .pipe-wrap, .priv-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .way-grid, .stmt-grid, .dml-panels { grid-template-columns: 1fr; }
+      .cls-item { grid-template-columns: 1fr; }
+      .std-table { min-width: 520px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Bỏ qua điều hướng</a>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="breadcrumb">Chủ đề F · Giải quyết vấn đề với sự trợ giúp của máy tính · Tin học 11</p>
+      <span class="lesson-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"></path></svg>
+        Bài 14
+      </span>
+      <h1>SQL – Ngôn ngữ truy vấn có cấu trúc</h1>
+      <p class="hero-subtitle">Thay vì tự viết chương trình duyệt từng bản ghi, em chỉ cần nói rõ muốn lấy gì – hệ quản trị cơ sở dữ liệu sẽ lo phần còn lại. Cùng làm quen với SQL qua cơ sở dữ liệu âm nhạc.</p>
+    </div>
+  </header>
+
+  <div class="lesson-nav-wrap">
+    <nav class="lesson-nav" aria-label="Các phần của bài học">
+      <a class="nav-link" href="#khoi-dong" data-panel="khoi-dong" aria-current="page">Khởi động</a>
+      <a class="nav-link" href="#muc-tieu" data-panel="muc-tieu">Mục tiêu</a>
+      <a class="nav-link" href="#loi-ich" data-panel="loi-ich">1. Lợi ích của SQL</a>
+      <a class="nav-link" href="#khoi-tao" data-panel="khoi-tao">2. Khởi tạo CSDL</a>
+      <a class="nav-link" href="#cap-nhat" data-panel="cap-nhat">3. Cập nhật &amp; truy xuất</a>
+      <a class="nav-link" href="#quyen" data-panel="quyen">4. Quyền truy cập</a>
+      <a class="nav-link" href="#phong-ma" data-panel="phong-ma">Phòng SQL</a>
+      <a class="nav-link" href="#luyen-tap" data-panel="luyen-tap">Luyện tập</a>
+      <a class="nav-link" href="#tong-ket" data-panel="tong-ket">Tổng kết</a>
+    </nav>
+  </div>
+
+  <main id="main-content">
+    <noscript><p class="noscript-note">JavaScript đang tắt. Em vẫn đọc được nội dung bài học; hãy bật JavaScript để dùng mô phỏng, phòng SQL và chấm điểm luyện tập.</p></noscript>
+
+    <!-- ===== Khởi động ===== -->
+    <section class="lesson-panel active" id="khoi-dong" aria-labelledby="heading-khoi-dong">
+      <div class="scenario-card card">
+        <div>
+          <span class="mini-label">Tình huống mở đầu</span>
+          <h2 id="heading-khoi-dong">Muốn gì, nói nấy</h2>
+          <p>Ở bài trước, em biết hệ quản trị CSDL là phần mềm giúp khởi tạo, cập nhật và truy xuất CSDL. Ngày nay, người ta làm những việc đó chủ yếu bằng một <strong>ngôn ngữ truy vấn</strong>. Em hãy hình dung cần lấy tên các bản nhạc của một nhạc sĩ: thay vì viết cả chương trình, ta chỉ gửi đi một yêu cầu như <code class="inline">CHỌN TenBN TỪ Bản nhạc VỚI Aid = 1</code>.</p>
+          <div class="prediction-box">
+            <fieldset>
+              <legend>Dự đoán: Việc dùng ngôn ngữ truy vấn khác gì so với lập trình trực tiếp để lấy dữ liệu?</legend>
+              <label class="choice-line"><input type="radio" name="warmup" value="fast"> SQL luôn chạy nhanh hơn mọi ngôn ngữ lập trình.</label>
+              <label class="choice-line"><input type="radio" name="warmup" value="what"> Em chỉ mô tả cần lấy dữ liệu gì; hệ QTCSDL tự lo cách thực hiện.</label>
+              <label class="choice-line"><input type="radio" name="warmup" value="loop"> Em vẫn phải tự viết vòng lặp để duyệt từng bản ghi.</label>
+            </fieldset>
+            <button class="btn btn-primary" id="warmup-check" type="button">Kiểm tra dự đoán</button>
+            <div class="feedback" id="warmup-feedback" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+        <div class="scenario-visual" aria-label="Minh hoạ một yêu cầu truy vấn gửi cho hệ quản trị cơ sở dữ liệu">
+          <div class="search-bar"><span class="search-dot" aria-hidden="true"></span><span>Yêu cầu của người dùng</span></div>
+          <div class="music-result"><small>Câu truy vấn</small><br><strong>SELECT TenBN FROM bannhac WHERE Aid = 1;</strong><div class="pulse-line"></div></div>
+          <div class="music-result"><small>Hệ QTCSDL thực hiện</small><br><strong>Tìm bảng · lọc dòng · lấy cột</strong><div class="pulse-line" style="background:linear-gradient(90deg,#35C0CD 46%,rgba(255,255,255,.15) 46%)"></div></div>
+          <div class="music-result"><small>Kết quả trả về</small><br><strong>Du kích sông Thao · Việt Nam quê hương tôi</strong></div>
+        </div>
+      </div>
+      <div class="button-row"><a class="btn btn-accent next-section" href="#muc-tieu" data-panel="muc-tieu">Bắt đầu bài học →</a></div>
+    </section>
+
+    <!-- ===== Mục tiêu ===== -->
+    <section class="lesson-panel" id="muc-tieu" aria-labelledby="heading-muc-tieu">
+      <div class="section-heading"><span class="section-no">0</span><div><h2 id="heading-muc-tieu">Mục tiêu bài học</h2><p>Sau bài học này, em hiểu được ở mức nguyên lí: CSDL và các bảng được tạo lập, được thêm mới, cập nhật và truy xuất dữ liệu qua SQL. Cụ thể, em có thể:</p></div></div>
+      <div class="grid-3">
+        <article class="goal-card card"><span class="goal-icon">01</span><h3>Nêu lợi ích của ngôn ngữ truy vấn</h3><p>So sánh truy xuất dữ liệu bằng lập trình “theo thủ tục” với việc gửi một câu truy vấn SQL.</p></article>
+        <article class="goal-card card"><span class="goal-icon">02</span><h3>Phân biệt DDL, DML, DCL</h3><p>Nhận ra ba thành phần của SQL và nhiệm vụ của từng thành phần.</p></article>
+        <article class="goal-card card"><span class="goal-icon">03</span><h3>Khởi tạo CSDL và bảng</h3><p>Dùng CREATE DATABASE, CREATE TABLE, ALTER TABLE cùng các kiểu dữ liệu để tạo bảng và khai báo khoá.</p></article>
+        <article class="goal-card card"><span class="goal-icon">04</span><h3>Truy xuất dữ liệu bằng SELECT</h3><p>Viết truy vấn có WHERE, ORDER BY và INNER JOIN để lấy dữ liệu từ một hay nhiều bảng.</p></article>
+        <article class="goal-card card"><span class="goal-icon">05</span><h3>Cập nhật dữ liệu</h3><p>Thêm, xoá, sửa dòng dữ liệu bằng INSERT, DELETE, UPDATE và hiểu vì sao không được quên WHERE.</p></article>
+        <article class="goal-card card"><span class="goal-icon">06</span><h3>Kiểm soát quyền truy cập</h3><p>Dùng GRANT và REVOKE để cấp hoặc thu hồi quyền của người dùng.</p></article>
+      </div>
+      <div class="button-row"><a class="btn btn-primary next-section" href="#loi-ich" data-panel="loi-ich">Khám phá kiến thức →</a></div>
+    </section>
+
+    <!-- ===== 1. Lợi ích ===== -->
+    <section class="lesson-panel" id="loi-ich" aria-labelledby="heading-loi-ich">
+      <div class="section-heading"><span class="section-no">1</span><div><h2 id="heading-loi-ich">Lợi ích của ngôn ngữ truy vấn</h2><p>Hoạt động 1: so sánh hai cách lấy danh sách các bản nhạc của cùng một nhạc sĩ.</p></div></div>
+
+      <article class="card">
+        <span class="mini-label">Hoạt động 1 · Thảo luận về hai cách truy xuất dữ liệu</span>
+        <p>Để lấy danh sách các bản nhạc do nhạc sĩ có mã định danh <code class="inline">Aid</code> sáng tác trong bảng <strong>Bản nhạc</strong>, ta có thể làm theo một trong hai cách. Hãy chọn nhạc sĩ rồi quan sát từng cách.</p>
+        <div class="toolbar">
+          <label for="ha-aid">Mã nhạc sĩ cần tìm:</label>
+          <select id="ha-aid">
+            <option value="1" selected>Aid = 1 (Đỗ Nhuận)</option>
+            <option value="2">Aid = 2 (Văn Cao)</option>
+            <option value="3">Aid = 3 (Hoàng Việt)</option>
+            <option value="4">Aid = 4 (Nguyễn Tài Tuệ)</option>
+          </select>
+        </div>
+        <div class="way-grid">
+          <div class="way-card">
+            <h3>Cách 1 · Dùng ngôn ngữ lập trình</h3>
+            <p class="way-sub">Mở tệp, duyệt từng bản ghi, tách Aid ra rồi so sánh.</p>
+            <div class="sim-table-wrap"><table class="sim-table"><thead><tr><th>#</th><th>Mid</th><th>Aid</th><th>TenBN</th></tr></thead><tbody id="ha-body"></tbody></table></div>
+            <div class="button-row">
+              <button class="btn btn-accent" id="ha-step" type="button">Đọc bản ghi tiếp theo</button>
+              <button class="btn btn-secondary" id="ha-auto" type="button">Tự động chạy</button>
+              <button class="btn btn-danger" id="ha-reset" type="button">Làm lại</button>
+            </div>
+            <div class="log-box" id="ha-log" aria-live="polite"><p class="skip">Bấm “Đọc bản ghi tiếp theo” để theo dõi chương trình.</p></div>
+            <div class="way-meter"><strong id="ha-ops">0</strong><span>thao tác do người lập trình phải tự viết</span></div>
+          </div>
+          <div class="way-card sql-way">
+            <h3>Cách 2 · Dùng ngôn ngữ truy vấn</h3>
+            <p class="way-sub">Chỉ cần viết yêu cầu, rồi gửi cho hệ QTCSDL thực hiện.</p>
+            <pre class="sql" id="ha-sql"></pre>
+            <div class="button-row"><button class="btn btn-primary" id="ha-send" type="button">Gửi cho hệ QTCSDL</button></div>
+            <div id="ha-sql-out" style="margin-top:12px"><div class="output-empty" style="min-height:120px">Kết quả sẽ hiện ở đây.</div></div>
+            <div class="way-meter"><strong id="ha-sql-ops">0</strong><span>câu truy vấn do người dùng viết</span></div>
+          </div>
+        </div>
+        <div class="conclusion-box">
+          <label for="ha-note">Câu hỏi thảo luận: Sự khác biệt cơ bản trong cách truy vấn nhờ ngôn ngữ truy vấn so với lập trình trực tiếp là gì?</label>
+          <textarea id="ha-note" placeholder="Viết nhận xét của em..."></textarea>
+          <button class="btn btn-secondary" id="ha-hint" type="button">Xem gợi ý</button>
+          <div class="feedback" id="ha-hint-box" role="status" aria-live="polite"></div>
+        </div>
+      </article>
+
+      <article class="card" style="margin-top:22px">
+        <span class="mini-label">Kiến thức chính</span>
+        <h3 style="margin-top:0">Lập trình “theo thủ tục” và truy vấn “khai báo”</h3>
+        <div class="grid-2">
+          <div class="concept-card"><h3>Cách 1: người dùng phải biết rõ thủ tục</h3><p>Phải biết cấu trúc tệp dữ liệu để lập trình lấy ra từng đoạn dữ liệu liên quan tới mỗi bản nhạc. Việc này mất công, dễ nhầm lẫn; bài toán khác (ví dụ lập danh sách học sinh có điểm trung bình môn Toán trên 8) lại phải viết lại chương trình với thủ tục tương tự.</p></div>
+          <div class="concept-card"><h3>Cách 2: người dùng chỉ nêu yêu cầu</h3><p>Chỉ cần viết ra yêu cầu dưới dạng một câu truy vấn – <strong>muốn làm gì</strong>, không phải nghĩ <strong>cách thực hiện</strong>. Hệ QTCSDL tiếp nhận yêu cầu ở dạng xâu truy vấn rồi lấy ra kết quả đúng như yêu cầu.</p></div>
+        </div>
+        <div class="definition">
+          <p><strong>SQL (Structured Query Language)</strong> là ngôn ngữ truy vấn định chuẩn cho việc định nghĩa, cập nhật, truy xuất và điều khiển dữ liệu từ các CSDL quan hệ. SQL được xây dựng từ những năm 1970 và đã trở thành ngôn ngữ truy vấn tiêu chuẩn mà hầu hết các hệ QTCSDL đều sử dụng: Oracle, SQL Server, MySQL, PostgreSQL,…</p>
+          <cite class="definition-source">Nguồn: SGK Tin học 11, Bài 14, mục 1.</cite>
+        </div>
+        <p>Điều đó có nghĩa là một câu lệnh SQL viết đúng chuẩn có thể dùng để thao tác trên hầu hết các hệ QTCSDL phổ biến. SQL có <strong>ba thành phần</strong>:</p>
+        <div class="sql-parts">
+          <div class="part-card"><span class="tag">DDL</span><h3>Data Definition Language</h3><p>Ngôn ngữ định nghĩa dữ liệu: tạo CSDL, bảng, khoá.</p><ul><li>CREATE DATABASE</li><li>CREATE TABLE</li><li>ALTER TABLE</li></ul></div>
+          <div class="part-card dml"><span class="tag">DML</span><h3>Data Manipulation Language</h3><p>Ngôn ngữ thao tác dữ liệu: truy xuất và cập nhật dữ liệu.</p><ul><li>SELECT</li><li>INSERT INTO</li><li>UPDATE · DELETE FROM</li></ul></div>
+          <div class="part-card dcl"><span class="tag">DCL</span><h3>Data Control Language</h3><p>Ngôn ngữ kiểm soát dữ liệu: quyền của người dùng.</p><ul><li>GRANT</li><li>REVOKE</li></ul></div>
+        </div>
+        <div class="callout" style="margin-top:18px"><p><strong>Trong bài này,</strong> em sẽ dùng SQL để minh hoạ cách thức quản trị CSDL âm nhạc gồm bốn bảng: <code class="inline">nhacsi</code>, <code class="inline">bannhac</code>, <code class="inline">casi</code>, <code class="inline">banthuam</code> (dữ liệu mẫu giống Bài 13). Lưu ý: SGK ghi nhạc sĩ có Aid = 1 là Văn Cao, còn trong dữ liệu mẫu của bài này Aid = 1 là Đỗ Nhuận; cách làm không thay đổi.</p></div>
+        <div class="button-row"><a class="btn btn-primary next-section" href="#khoi-tao" data-panel="khoi-tao">Khởi tạo CSDL →</a></div>
+      </article>
+    </section>
+
+    <!-- ===== 2. Khởi tạo CSDL ===== -->
+    <section class="lesson-panel" id="khoi-tao" aria-labelledby="heading-khoi-tao">
+      <div class="section-heading"><span class="section-no">2</span><div><h2 id="heading-khoi-tao">Khởi tạo CSDL</h2><p>Thành phần DDL của SQL cung cấp các câu truy vấn khởi tạo CSDL, khởi tạo bảng và thiết lập các khoá.</p></div></div>
+
+      <article class="card">
+        <span class="mini-label">Các câu truy vấn DDL</span>
+        <div class="table-scroll">
+          <table class="std-table">
+            <caption>Bảng 14.1. Các câu truy vấn CSDL</caption>
+            <thead><tr><th>Câu truy vấn DDL</th><th>Ý nghĩa</th></tr></thead>
+            <tbody>
+              <tr><td>CREATE DATABASE</td><td>Khởi tạo CSDL</td></tr>
+              <tr><td>CREATE TABLE</td><td>Khởi tạo bảng</td></tr>
+              <tr><td>ALTER TABLE</td><td>Thay đổi định nghĩa bảng</td></tr>
+              <tr><td>PRIMARY KEY</td><td>Khai báo khoá chính</td></tr>
+              <tr><td>FOREIGN KEY… REFERENCES…</td><td>Khai báo khoá ngoài</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Các thuộc tính của bảng trong SQL cần được gán một kiểu dữ liệu:</p>
+        <div class="table-scroll">
+          <table class="std-table">
+            <caption>Bảng 14.2. Kiểu dữ liệu</caption>
+            <thead><tr><th>Kiểu dữ liệu</th><th>Ý nghĩa</th></tr></thead>
+            <tbody>
+              <tr><td>CHAR (n)</td><td>Xâu kí tự có độ dài cố định n kí tự; nếu xâu có ít hơn n kí tự, các kí tự trống được thêm vào phía bên phải</td></tr>
+              <tr><td>VARCHAR (n)</td><td>Xâu kí tự có độ dài thay đổi, không vượt quá n kí tự</td></tr>
+              <tr><td>BOOLEAN</td><td>Kiểu lôgic có giá trị Đúng (1) hoặc Sai (0)</td></tr>
+              <tr><td>INT hay INTEGER</td><td>Số nguyên</td></tr>
+              <tr><td>REAL</td><td>Số thực dấu phẩy động</td></tr>
+              <tr><td>DATE</td><td>Ngày tháng, dạng ‘YYYY-MM-DD’</td></tr>
+              <tr><td>TIME</td><td>Thời gian, dạng ‘HH:MM:SS’</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="card" style="margin-top:22px">
+        <span class="mini-label">Thử thách nhỏ · Chọn kiểu dữ liệu</span>
+        <p>Chọn kiểu dữ liệu phù hợp nhất cho từng trường dưới đây rồi bấm kiểm tra.</p>
+        <div class="table-scroll">
+          <table class="std-table type-table" id="type-table">
+            <thead><tr><th>Trường</th><th>Mô tả</th><th style="width:190px">Kiểu dữ liệu</th></tr></thead>
+            <tbody>
+              <tr data-answer="CHAR"><td>Mid</td><td>Mã bản nhạc, luôn gồm đúng 4 kí tự (0001, 0002,…)</td><td></td></tr>
+              <tr data-answer="VARCHAR"><td>TenBN</td><td>Tên bản nhạc, dài ngắn khác nhau, tối đa 128 kí tự</td><td></td></tr>
+              <tr data-answer="INT"><td>Aid</td><td>Mã nhạc sĩ, là số nguyên</td><td></td></tr>
+              <tr data-answer="DATE"><td>NgaySinh</td><td>Ngày sinh của nhạc sĩ, dạng ‘1923-11-15’</td><td></td></tr>
+              <tr data-answer="REAL"><td>DiemTB</td><td>Điểm trung bình môn Toán, có phần thập phân</td><td></td></tr>
+              <tr data-answer="BOOLEAN"><td>DaThuAm</td><td>Bài hát đã được thu âm hay chưa (chỉ Đúng hoặc Sai)</td><td></td></tr>
+              <tr data-answer="TIME"><td>ThoiLuong</td><td>Thời lượng bài hát, dạng ‘00:03:45’</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="button-row"><button class="btn btn-primary" id="type-check" type="button">Kiểm tra</button><button class="btn btn-secondary" id="type-reset" type="button">Làm lại</button></div>
+        <div class="feedback" id="type-feedback" role="status" aria-live="polite"></div>
+      </article>
+
+      <article class="card" style="margin-top:22px">
+        <span class="mini-label">Ví dụ · Khởi tạo CSDL âm nhạc</span>
+        <p>Khởi tạo CSDL âm nhạc đặt tên là <code class="inline">music</code> và khởi tạo các bảng Nhạc sĩ, Bản nhạc có tên tương ứng là <code class="inline">nhacsi</code> và <code class="inline">bannhac</code>.</p>
+        <div class="stmt-grid"><pre class="sql">CREATE DATABASE music;</pre><div class="stmt-note"><b>Khởi tạo CSDL</b> music.</div></div>
+        <div class="stmt-grid"><pre class="sql">CREATE TABLE bannhac (
+  Mid CHAR(4),
+  Aid INT,
+  TenBN VARCHAR(128)
+);</pre><div class="stmt-note"><b>Khởi tạo bảng</b> bannhac với ba trường; mỗi trường gồm <b>tên + kiểu dữ liệu</b>, ngăn cách nhau bằng dấu phẩy (trường cuối không có dấu phẩy).</div></div>
+        <div class="stmt-grid"><pre class="sql">ALTER TABLE bannhac ADD PRIMARY KEY (Mid);</pre><div class="stmt-note"><b>Thêm khoá chính</b> Mid cho bảng bannhac bằng câu lệnh thay đổi định nghĩa bảng.</div></div>
+        <div class="stmt-grid"><pre class="sql">CREATE TABLE nhacsi (
+  Aid INT,
+  TenNS VARCHAR(64)
+);</pre><div class="stmt-note"><b>Khởi tạo bảng</b> nhacsi. Dấu chấm phẩy <b>“;”</b> được dùng để <b>kết thúc</b> câu truy vấn.</div></div>
+        <div class="try-row"><button class="btn btn-accent" type="button" data-panel="phong-ma" data-example="ddl">Chạy thử ví dụ này trong phòng SQL →</button><span class="fallback-description" style="margin:0">Phòng SQL sẽ tự nạp sẵn CSDL trống.</span></div>
+        <div class="callout" style="margin-top:18px"><p><strong>Ghi nhớ:</strong> từ khoá SQL (CREATE, TABLE, ALTER,…) không phân biệt chữ hoa, chữ thường, nhưng nên viết hoa để dễ đọc. Mỗi câu truy vấn kết thúc bằng dấu chấm phẩy.</p></div>
+      </article>
+
+      <article class="card" style="margin-top:22px">
+        <span class="mini-label">Câu hỏi (SGK)</span>
+        <ol class="task-list">
+          <li>Hãy viết câu truy vấn tạo bảng Ca sĩ như đã mô tả trong Bài 11 với tên bảng là <code class="inline">casi</code>.</li>
+          <li>Hãy viết câu truy vấn thêm khoá chính <code class="inline">Sid</code> cho bảng <code class="inline">casi</code>.</li>
+        </ol>
+        <button class="btn btn-secondary reveal-btn" type="button" data-reveal="rv-casi">Xem đáp án gợi ý</button>
+        <div class="reveal-box" id="rv-casi" hidden>
+          <pre class="sql">CREATE TABLE casi (
+  Sid CHAR(2),
+  TenCS VARCHAR(64)
+);
+ALTER TABLE casi ADD PRIMARY KEY (Sid);</pre>
+          <p class="fallback-description">Bảng Ca sĩ gồm mã ca sĩ Sid (ví dụ TK, LD) và tên ca sĩ TenCS. Em có thể tự chạy và được máy chấm ở nhiệm vụ trong phòng SQL.</p>
+        </div>
+        <div class="try-row"><button class="btn btn-accent" type="button" data-panel="phong-ma" data-example="casi-ddl">Làm trong phòng SQL →</button></div>
+      </article>
+      <div class="button-row"><a class="btn btn-primary next-section" href="#cap-nhat" data-panel="cap-nhat">Cập nhật và truy xuất dữ liệu →</a></div>
+    </section>
+
+    <!-- ===== 3. Cập nhật và truy xuất ===== -->
+    <section class="lesson-panel" id="cap-nhat" aria-labelledby="heading-cap-nhat">
+      <div class="section-heading"><span class="section-no">3</span><div><h2 id="heading-cap-nhat">Cập nhật và truy xuất dữ liệu</h2><p>Thành phần DML của SQL cung cấp các câu truy vấn cập nhật và truy xuất dữ liệu.</p></div></div>
+
+      <article class="card">
+        <span class="mini-label">Các câu truy vấn DML</span>
+        <div class="table-scroll">
+          <table class="std-table">
+            <caption>Bảng 14.3. Câu truy xuất dữ liệu</caption>
+            <thead><tr><th>Câu truy xuất dữ liệu</th><th>Ý nghĩa</th></tr></thead>
+            <tbody>
+              <tr><td>SELECT &lt;dữ liệu cần lấy&gt;</td><td>&lt;dữ liệu cần lấy&gt; có thể là danh sách các trường hay hàm nào đó với các biến là trường trong bảng</td></tr>
+              <tr><td>FROM &lt;tên bảng&gt;</td><td>Chỉ định bảng lấy dữ liệu</td></tr>
+              <tr><td>WHERE &lt;điều kiện chọn&gt;</td><td>Chỉ định chọn chỉ các dòng thoả mãn điều kiện xác định</td></tr>
+              <tr><td>ORDER BY &lt;tên trường&gt;</td><td>Sắp xếp các dòng kết quả theo thứ tự chỉ định</td></tr>
+              <tr><td>INNER JOIN</td><td>Liên kết các bảng theo điều kiện</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Truy vấn SELECT chạy qua từng bước</h3>
+        <p>Hãy theo dõi cách hệ QTCSDL xử lí câu truy vấn sau trên bảng <strong>bannhac</strong>. Bấm lần lượt từng bước để thấy dữ liệu thay đổi.</p>
+        <div class="toolbar">
+          <label for="pipe-aid">Nhạc sĩ:</label>
+          <select id="pipe-aid"><option value="1">Aid = 1 (Đỗ Nhuận)</option><option value="2">Aid = 2 (Văn Cao) – thấy rõ tác dụng của ORDER BY</option></select>
+        </div>
+        <div class="pipe-wrap">
+          <div>
+            <pre class="sql pipe-sql" id="pipe-sql"></pre>
+            <div class="chip-row" id="pipe-steps" role="group" aria-label="Các bước xử lí truy vấn">
+              <button class="chip-btn" type="button" data-stage="1" aria-pressed="true">① FROM</button>
+              <button class="chip-btn" type="button" data-stage="2" aria-pressed="false">② WHERE</button>
+              <button class="chip-btn" type="button" data-stage="3" aria-pressed="false">③ SELECT</button>
+              <button class="chip-btn" type="button" data-stage="4" aria-pressed="false">④ ORDER BY</button>
+            </div>
+            <div class="pipe-desc" id="pipe-desc" role="status" aria-live="polite"></div>
+          </div>
+          <div><div class="sim-table-wrap"><table class="sim-table" id="pipe-table"></table></div><p class="fallback-description" id="pipe-count"></p></div>
+        </div>
+        <div class="callout" style="margin-top:14px"><p><strong>Chú ý:</strong> thứ tự em viết (SELECT đứng đầu) khác với thứ tự hệ QTCSDL xử lí (FROM → WHERE → SELECT → ORDER BY).</p></div>
+      </article>
+
+      <article class="card" style="margin-top:22px">
+        <span class="mini-label">Liên kết bảng với INNER JOIN</span>
+        <div class="stmt-grid"><pre class="sql">SELECT bannhac.TenBN, nhacsi.TenNS
+FROM bannhac INNER JOIN nhacsi
+ON bannhac.Aid = nhacsi.Aid;</pre><div class="stmt-note">Chọn tất cả các dòng từ bảng <b>bannhac</b>, liên kết với bảng <b>nhacsi</b> theo khoá <b>Aid</b>; ở mỗi dòng lấy cột <b>TenBN</b> của bảng bannhac và cột <b>TenNS</b> của bảng nhacsi.</div></div>
+        <div class="grid-2" style="margin-top:12px">
+          <div><h4 style="margin:0 0 6px;color:var(--navy)">Kết quả của câu truy vấn</h4><div class="sim-table-wrap"><table class="sim-table"><thead><tr><th>TenBN</th><th>TenNS</th></tr></thead><tbody><tr><td>Du kích sông Thao</td><td>Đỗ Nhuận</td></tr><tr><td>Trường ca sông Lô</td><td>Văn Cao</td></tr><tr><td>Tình ca</td><td>Hoàng Việt</td></tr><tr><td>Xa khơi</td><td>Nguyễn Tài Tuệ</td></tr><tr><td>Việt Nam quê hương tôi</td><td>Đỗ Nhuận</td></tr><tr><td>Tiến về Hà Nội</td><td>Văn Cao</td></tr></tbody></table></div></div>
+          <div class="callout"><p><strong>Vì sao ghép được?</strong> Mỗi dòng của bannhac có Aid là khoá ngoài, trỏ tới khoá chính Aid của nhacsi. Điều kiện <code class="inline">ON bannhac.Aid = nhacsi.Aid</code> cho biết hai dòng nào thuộc về nhau. Ghi <code class="inline">tên_bảng.tên_trường</code> để tránh nhầm khi hai bảng có trường trùng tên.</p></div>
+        </div>
+        <div class="try-row"><button class="btn btn-accent" type="button" data-panel="phong-ma" data-example="join">Chạy thử truy vấn nối bảng →</button><button class="btn btn-secondary" type="button" data-panel="phong-ma" data-example="select1">Chạy thử SELECT … WHERE … ORDER BY →</button></div>
+      </article>
+
+      <article class="card" style="margin-top:22px">
+        <span class="mini-label">Các câu truy vấn cập nhật dữ liệu</span>
+        <div class="table-scroll">
+          <table class="std-table">
+            <caption>Bảng 14.4. Các câu truy vấn cập nhật dữ liệu</caption>
+            <thead><tr><th>Câu truy vấn cập nhật dữ liệu</th><th>Ý nghĩa</th></tr></thead>
+            <tbody>
+              <tr><td>INSERT INTO &lt;tên bảng&gt;<br>VALUES &lt;danh sách giá trị&gt;</td><td>Thêm dữ liệu vào bảng &lt;tên bảng&gt; với giá trị lấy từ &lt;danh sách giá trị&gt;</td></tr>
+              <tr><td>DELETE FROM &lt;tên bảng&gt;<br>WHERE &lt;điều kiện&gt;</td><td>Xoá các dòng trong bảng &lt;tên bảng&gt; thoả mãn &lt;điều kiện&gt;</td></tr>
+              <tr><td>UPDATE &lt;tên bảng&gt;<br>SET &lt;tên trường&gt; = &lt;giá trị&gt;</td><td>Cập nhật &lt;giá trị&gt; cho trường có tên là &lt;tên trường&gt; trong bảng &lt;tên bảng&gt;</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Xem dữ liệu thay đổi trước và sau khi chạy lệnh</h3>
+        <div class="chip-row" id="dml-tabs" role="group" aria-label="Chọn câu lệnh cập nhật">
+          <button class="chip-btn" type="button" data-dml="insert" aria-pressed="true">INSERT INTO</button>
+          <button class="chip-btn" type="button" data-dml="delete" aria-pressed="false">DELETE FROM</button>
+          <button class="chip-btn" type="button" data-dml="update" aria-pressed="false">UPDATE</button>
+        </div>
+        <pre class="sql" id="dml-sql"></pre>
+        <label class="check-line" id="dml-nowhere-row" hidden><input type="checkbox" id="dml-nowhere"> Thử bỏ mệnh đề WHERE (nguy hiểm!)</label>
+        <div class="button-row"><button class="btn btn-accent" id="dml-run" type="button">Thực hiện câu lệnh</button><button class="btn btn-secondary" id="dml-reset" type="button">Đặt lại</button></div>
+        <p class="sim-status" id="dml-status" role="status" aria-live="polite"></p>
+        <div class="dml-panels">
+          <div><h4>Trước khi chạy · <span id="dml-table-name"></span></h4><div class="sim-table-wrap"><table class="sim-table" id="dml-before"></table></div></div>
+          <div class="dml-after pending" id="dml-after-wrap"><h4>Sau khi chạy</h4><div class="sim-table-wrap"><table class="sim-table" id="dml-after"></table></div></div>
+        </div>
+        <div class="callout" style="margin-top:16px"><p><strong>Cẩn thận!</strong> <code class="inline">DELETE</code> và <code class="inline">UPDATE</code> không có <code class="inline">WHERE</code> sẽ tác động lên <strong>mọi dòng</strong> của bảng. Hãy kiểm tra điều kiện trước khi chạy.</p></div>
+        <div class="try-row"><button class="btn btn-accent" type="button" data-panel="phong-ma" data-example="dml">Chạy thử ba câu lệnh này trong phòng SQL →</button></div>
+      </article>
+
+      <article class="card" style="margin-top:22px">
+        <span class="mini-label">Hàm trong câu truy vấn</span>
+        <p>Giả sử đã có bảng <code class="inline">diemtoan_11A</code>, trong đó có cột <code class="inline">tb</code> ghi điểm trung bình môn Toán của tất cả học sinh lớp 11A. Khi đó câu truy vấn sau lấy ra điểm trung bình cộng môn Toán của tất cả các học sinh lớp 11A:</p>
+        <pre class="sql">SELECT AVG(tb) FROM diemtoan_11A;</pre>
+        <div class="try-row"><button class="btn btn-accent" type="button" data-panel="phong-ma" data-example="avg">Chạy thử với dữ liệu mẫu →</button></div>
+      </article>
+
+      <article class="card" style="margin-top:22px">
+        <span class="mini-label">Câu hỏi (SGK)</span>
+        <ol class="task-list">
+          <li>Hãy viết câu truy vấn lấy tất cả các dòng của bảng <code class="inline">nhacsi</code>.</li>
+          <li>Hãy viết câu truy vấn thêm các dòng cho bảng <code class="inline">casi</code> với các giá trị là (‘TK’, ‘Nguyễn Trung Kiên’), (‘QD’, ‘Quý Dương’), (‘YM’, ‘Y Moan’).</li>
+        </ol>
+        <button class="btn btn-secondary reveal-btn" type="button" data-reveal="rv-dml">Xem đáp án gợi ý</button>
+        <div class="reveal-box" id="rv-dml" hidden>
+          <pre class="sql">SELECT * FROM nhacsi;
+
+INSERT INTO casi VALUES
+  ('TK', 'Nguyễn Trung Kiên'),
+  ('QD', 'Quý Dương'),
+  ('YM', 'Y Moan');</pre>
+        </div>
+      </article>
+      <div class="button-row"><a class="btn btn-primary next-section" href="#quyen" data-panel="quyen">Kiểm soát quyền truy cập →</a></div>
+    </section>
+
+    <!-- ===== 4. Kiểm soát quyền truy cập ===== -->
+    <section class="lesson-panel" id="quyen" aria-labelledby="heading-quyen">
+      <div class="section-heading"><span class="section-no">4</span><div><h2 id="heading-quyen">Kiểm soát quyền truy cập</h2><p>Thành phần DCL của SQL cung cấp các câu truy vấn kiểm soát quyền của người dùng đối với CSDL.</p></div></div>
+      <article class="card">
+        <div class="table-scroll" style="max-width:640px">
+          <table class="std-table">
+            <caption>Bảng 14.5. Câu truy vấn kiểm soát quyền người dùng</caption>
+            <thead><tr><th>Mẫu câu truy vấn</th><th>Ý nghĩa</th></tr></thead>
+            <tbody><tr><td>GRANT</td><td>Cấp quyền cho người dùng</td></tr><tr><td>REVOKE</td><td>Thu hồi quyền đối với người dùng</td></tr></tbody>
+          </table>
+        </div>
+        <div class="stmt-grid"><pre class="sql">GRANT select
+ON music.*
+TO guest;</pre><div class="stmt-note">Cấp quyền dùng truy vấn <b>SELECT</b> đối với <b>tất cả các bảng</b> trong CSDL music cho người dùng <b>guest</b>.</div></div>
+        <div class="stmt-grid"><pre class="sql">REVOKE create, alter
+ON music.bannhac
+FROM mod;</pre><div class="stmt-note">Thu hồi quyền <b>CREATE</b> và <b>ALTER</b> cho bảng <b>bannhac</b> trong CSDL music đối với người dùng <b>mod</b>.</div></div>
+        <div class="callout"><p><strong>Cách đọc:</strong> <code class="inline">GRANT quyền ON đối_tượng TO người_dùng</code> và <code class="inline">REVOKE quyền ON đối_tượng FROM người_dùng</code>. Đối tượng <code class="inline">music.*</code> là mọi bảng của CSDL music; <code class="inline">music.bannhac</code> chỉ là bảng bannhac.</p></div>
+      </article>
+
+      <article class="card" style="margin-top:22px">
+        <span class="mini-label">Công cụ · Soạn câu lệnh cấp và thu hồi quyền</span>
+        <div class="priv-grid">
+          <div>
+            <div class="priv-field"><span class="field-label">Thao tác</span><div class="radio-row"><label><input type="radio" name="priv-action" value="GRANT" checked> GRANT (cấp)</label><label><input type="radio" name="priv-action" value="REVOKE"> REVOKE (thu hồi)</label></div></div>
+            <div class="priv-field"><span class="field-label" id="priv-label">Các quyền</span><div class="priv-checks" role="group" aria-labelledby="priv-label" id="priv-checks">
+              <label><input type="checkbox" value="select" checked> select</label><label><input type="checkbox" value="insert"> insert</label><label><input type="checkbox" value="update"> update</label><label><input type="checkbox" value="delete"> delete</label><label><input type="checkbox" value="create"> create</label><label><input type="checkbox" value="alter"> alter</label>
+            </div></div>
+            <div class="priv-field"><label for="priv-obj">Đối tượng</label><select id="priv-obj"><option value="music.*">music.* (mọi bảng trong CSDL music)</option><option value="music.bannhac">music.bannhac</option><option value="music.nhacsi">music.nhacsi</option></select></div>
+            <div class="priv-field"><label for="priv-user">Người dùng</label><select id="priv-user"><option value="guest">guest</option><option value="mod">mod</option></select></div>
+          </div>
+          <div class="priv-out">
+            <span class="mini-label">Câu lệnh được tạo</span>
+            <pre class="sql" id="priv-sql"></pre>
+            <div class="stmt-note" id="priv-explain" role="status" aria-live="polite"></div>
+            <div class="try-row"><button class="btn btn-accent" id="priv-try" type="button" data-panel="phong-ma">Chạy thử trong phòng SQL →</button></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" style="margin-top:22px">
+        <span class="mini-label">Câu hỏi (SGK)</span>
+        <ol class="task-list">
+          <li>Hãy viết câu truy vấn cấp quyền <strong>UPDATE</strong> đối với tất cả các bảng trong CSDL music cho người dùng mod.</li>
+          <li>Hãy viết câu truy vấn thu hồi quyền <strong>DELETE</strong> đối với bảng nhacsi trong CSDL music cho người dùng mod.</li>
+        </ol>
+        <button class="btn btn-secondary reveal-btn" type="button" data-reveal="rv-dcl">Xem đáp án gợi ý</button>
+        <div class="reveal-box" id="rv-dcl" hidden><pre class="sql">GRANT update
+ON music.*
+TO mod;
+
+REVOKE delete
+ON music.nhacsi
+FROM mod;</pre></div>
+      </article>
+      <div class="button-row"><a class="btn btn-primary next-section" href="#phong-ma" data-panel="phong-ma">Vào phòng thực hành SQL →</a></div>
+    </section>
+
+    <!-- ===== Phòng SQL ===== -->
+    <section class="lesson-panel" id="phong-ma" aria-labelledby="heading-phong-ma">
+      <div class="section-heading"><span class="section-no">5</span><div><h2 id="heading-phong-ma">Phòng thực hành SQL</h2><p>Gõ câu lệnh SQL, chạy ngay trên trình duyệt và xem dữ liệu thay đổi. Máy tự chấm các nhiệm vụ lấy từ SGK.</p></div></div>
+      <div class="callout lab-task"><p><strong>Cách dùng:</strong> chọn bộ dữ liệu, gõ một hoặc nhiều câu lệnh (mỗi câu kết thúc bằng dấu “;”) rồi bấm <strong>Chạy</strong> (hoặc Ctrl + Enter). Dữ liệu chỉ nằm trong trình duyệt của em và được tải lại khi bấm “Đặt lại dữ liệu”.</p></div>
+      <div class="code-layout">
+        <div class="code-panel card">
+          <div class="code-head"><strong>SQL Lab · CSDL music</strong><div class="status-stack"><span class="status-pill" id="engine-status">Bộ máy: Đang tải</span><span class="status-pill" id="db-status">CSDL: —</span><span class="status-pill" id="run-status">Lượt chạy: Chưa chạy</span></div></div>
+          <div class="code-body">
+            <span class="mini-label" style="color:#8ce7ed">Bộ dữ liệu</span>
+            <div class="sample-row" role="group" aria-label="Chọn bộ dữ liệu">
+              <button class="sample-btn preset-btn" type="button" data-preset="trong" aria-pressed="false">CSDL trống (mục 2)</button>
+              <button class="sample-btn preset-btn" type="button" data-preset="nhac" aria-pressed="true">Âm nhạc (mục 3, 4)</button>
+              <button class="sample-btn preset-btn" type="button" data-preset="daydu" aria-pressed="false">Đầy đủ 4 bảng</button>
+            </div>
+            <p class="fallback-description" id="preset-note" style="color:#9fc0cf;margin:0 0 12px"></p>
+            <span class="mini-label" style="color:#8ce7ed">Câu lệnh mẫu</span>
+            <div class="sample-row" aria-label="Các câu lệnh mẫu">
+              <button class="sample-btn" type="button" data-example="select1">SELECT</button>
+              <button class="sample-btn" type="button" data-example="join">INNER JOIN</button>
+              <button class="sample-btn" type="button" data-example="dml">INSERT · DELETE · UPDATE</button>
+              <button class="sample-btn" type="button" data-example="grant">GRANT · REVOKE</button>
+              <button class="sample-btn" type="button" data-example="show">SHOW · DESCRIBE</button>
+            </div>
+            <label class="mini-label" for="sql-editor" style="color:#8ce7ed">Vùng nhập câu lệnh</label>
+            <textarea id="sql-editor" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+            <div class="code-actions">
+              <button class="btn btn-accent" id="sql-run" type="button" disabled>▶ Chạy</button>
+              <button class="btn btn-secondary" id="sql-clear" type="button">Xoá kết quả</button>
+              <button class="btn btn-secondary" id="sql-reset-data" type="button">Đặt lại dữ liệu</button>
+            </div>
+            <div class="code-output" id="sql-output" aria-live="polite"><pre class="code-placeholder">Kết quả sẽ hiển thị tại đây.</pre></div>
+          </div>
+        </div>
+        <aside class="dataset-card card">
+          <h3>Dữ liệu hiện có</h3>
+          <p class="fallback-description">Bảng cập nhật ngay sau mỗi lần chạy. Nhãn <span class="key-tag">PK</span> là khoá chính, <span class="key-tag foreign-tag">FK</span> là khoá ngoài.</p>
+          <div id="db-view"></div>
+          <div class="callout"><p><strong>Lưu ý:</strong> phòng SQL mô phỏng MySQL bằng SQLite. Khoá chính được kiểm tra trùng lặp; khoá ngoài chỉ được ghi nhận, chưa kiểm tra khi nhập dữ liệu; GRANT/REVOKE chỉ lưu danh sách quyền (dùng <code class="inline">SHOW GRANTS FOR mod;</code> để xem).</p></div>
+        </aside>
+      </div>
+      <article class="card" style="margin-top:20px">
+        <span class="mini-label">Bảng nhiệm vụ</span>
+        <h3 style="margin-top:0">Máy tự kiểm tra kết quả</h3>
+        <p class="task-progress" id="task-progress"></p>
+        <div id="task-list"></div>
+      </article>
+      <div class="button-row"><a class="btn btn-primary next-section" href="#luyen-tap" data-panel="luyen-tap">Làm bài luyện tập →</a></div>
+    </section>
+
+    <!-- ===== Luyện tập ===== -->
+    <section class="lesson-panel" id="luyen-tap" aria-labelledby="heading-luyen-tap">
+      <div class="section-heading"><span class="section-no">6</span><div><h2 id="heading-luyen-tap">Luyện tập</h2><p>Phân loại câu lệnh, rồi trả lời 8 câu hỏi trắc nghiệm, mỗi lần một câu.</p></div></div>
+      <article class="card quiz-block">
+        <span class="mini-label">Phân loại nhanh</span>
+        <h3 style="margin-top:0">Câu lệnh nào thuộc DDL, DML hay DCL?</h3>
+        <div class="cls-list" id="cls-list"></div>
+        <p class="sim-status" id="cls-status" role="status" aria-live="polite">Chọn thành phần phù hợp cho từng câu lệnh.</p>
+      </article>
+      <article class="card quiz-block">
+        <span class="mini-label">Luyện tập (SGK) · Làm trong phòng SQL</span>
+        <ol class="task-list">
+          <li>Hãy viết câu truy vấn tạo bảng Bản thu âm (<code class="inline">banthuam</code>) như đã mô tả trong Bài 13.</li>
+          <li>Viết câu truy vấn tạo khoá ngoài <code class="inline">Mid</code> và <code class="inline">Sid</code> cho bảng <code class="inline">banthuam</code>.</li>
+          <li>Viết câu truy vấn lấy ra tất cả các dòng trong liên kết bảng <code class="inline">banthuam</code> với bảng <code class="inline">bannhac</code>, mỗi dòng lấy các cột: Mid, Sid của bảng banthuam và cột TenBN của bảng bannhac.</li>
+        </ol>
+        <button class="btn btn-secondary reveal-btn" type="button" data-reveal="rv-lt">Xem đáp án gợi ý</button>
+        <div class="reveal-box" id="rv-lt" hidden><pre class="sql">CREATE TABLE banthuam (
+  Mid CHAR(4),
+  Sid CHAR(2)
+);
+ALTER TABLE banthuam ADD FOREIGN KEY (Mid) REFERENCES bannhac(Mid);
+ALTER TABLE banthuam ADD FOREIGN KEY (Sid) REFERENCES casi(Sid);
+
+SELECT banthuam.Mid, banthuam.Sid, bannhac.TenBN
+FROM banthuam INNER JOIN bannhac
+ON banthuam.Mid = bannhac.Mid;</pre></div>
+        <h3>Vận dụng</h3>
+        <p>Viết câu truy vấn lấy ra tất cả các dòng trong liên kết bảng <code class="inline">banthuam</code> với bảng <code class="inline">bannhac</code> và bảng <code class="inline">casi</code>, mỗi dòng lấy các cột: Mid, Sid của bảng banthuam, cột TenBN của bảng bannhac và cột TenCS của bảng casi.</p>
+        <div class="try-row"><button class="btn btn-accent" type="button" data-panel="phong-ma" data-example="join3">Làm trong phòng SQL với 4 bảng đầy đủ →</button></div>
+      </article>
+
+      <div class="quiz-shell">
+        <div class="quiz-top"><span class="quiz-count" id="quiz-count">Câu 1/8</span><div class="quiz-progress" role="progressbar" aria-label="Tiến độ luyện tập" aria-valuemin="1" aria-valuemax="8" aria-valuenow="1"><div class="quiz-progress-fill" id="quiz-progress-fill"></div></div></div>
+        <div class="quiz-card card" id="quiz-card">
+          <h3 id="quiz-question"></h3>
+          <div class="quiz-options" id="quiz-options"></div>
+          <div class="quiz-feedback" id="quiz-feedback" role="status" aria-live="polite">Chọn một phương án để nhận phản hồi.</div>
+          <div class="quiz-actions"><button class="btn btn-primary" id="quiz-next" type="button" disabled>Câu tiếp theo</button></div>
+        </div>
+        <div class="quiz-result card" id="quiz-result" aria-live="polite">
+          <div class="score-disc"><div><strong id="quiz-score">0/8</strong><span>điểm luyện tập</span></div></div>
+          <h3 id="quiz-result-title">Hoàn thành!</h3><p id="quiz-result-text"></p>
+          <button class="btn btn-primary" id="quiz-retry" type="button">Làm lại</button>
+        </div>
+      </div>
+      <div class="button-row"><a class="btn btn-primary next-section" href="#tong-ket" data-panel="tong-ket">Tổng kết bài học →</a></div>
+    </section>
+
+    <!-- ===== Tổng kết ===== -->
+    <section class="lesson-panel" id="tong-ket" aria-labelledby="heading-tong-ket">
+      <div class="section-heading"><span class="section-no">7</span><div><h2 id="heading-tong-ket">Tổng kết kiến thức</h2><p>SQL cho phép “nói điều mình muốn” với CSDL quan hệ.</p></div></div>
+      <div class="summary-map">
+        <div class="summary-node"><strong>Truy vấn khai báo</strong><span>Chỉ nêu muốn làm gì; hệ QTCSDL lo cách làm.</span></div>
+        <div class="summary-node"><strong>DDL</strong><span>CREATE DATABASE, CREATE TABLE, ALTER TABLE, khoá chính, khoá ngoài.</span></div>
+        <div class="summary-node"><strong>DML</strong><span>SELECT (FROM, WHERE, ORDER BY, INNER JOIN), INSERT, DELETE, UPDATE.</span></div>
+        <div class="summary-node"><strong>DCL</strong><span>GRANT cấp quyền, REVOKE thu hồi quyền.</span></div>
+        <div class="summary-node"><strong>Khi viết lệnh</strong><span>Kết thúc bằng “;”, nhớ WHERE khi xoá hoặc sửa.</span></div>
+      </div>
+      <div class="final-score">
+        <h3>Điểm luyện tập: <span id="summary-score">Chưa hoàn thành</span></h3>
+        <p id="summary-message">Hãy hoàn thành 8 câu luyện tập để cập nhật kết quả tại đây.</p>
+      </div>
+      <div class="grid-2" style="margin-top:20px">
+        <div class="card"><span class="mini-label">Tự đánh giá</span><h3>Em đã làm được gì?</h3><ul><li>Giải thích lợi ích của ngôn ngữ truy vấn so với lập trình theo thủ tục.</li><li>Phân biệt DDL, DML, DCL.</li><li>Tạo CSDL, bảng, khoá chính và khoá ngoài bằng SQL.</li><li>Truy xuất dữ liệu bằng SELECT, WHERE, ORDER BY, INNER JOIN.</li><li>Thêm, xoá, sửa dữ liệu; cấp và thu hồi quyền.</li></ul></div>
+        <div class="card"><span class="mini-label">Vận dụng</span><h3>CSDL điểm của lớp em</h3><p>Hãy nghĩ một câu truy vấn để lập danh sách các học sinh có điểm trung bình môn Toán trên 8 từ bảng <code class="inline">diemtoan_11A</code>. So với việc viết chương trình duyệt từng dòng, em thấy SQL thuận tiện hơn ở điểm nào?</p><div class="callout"><p><strong>Gợi ý:</strong> dùng SELECT … FROM diemtoan_11A WHERE tb &gt; 8; – thử trong phòng SQL với bộ dữ liệu “Đầy đủ 4 bảng”.</p></div><div class="try-row"><button class="btn btn-accent" type="button" data-panel="phong-ma" data-example="avg">Mở phòng SQL →</button><a class="btn btn-secondary" href="../bai-tap/bai-tap-bai-14-tin-hoc-11.html" target="_blank" rel="noopener">Làm phiếu bài tập 14.1 – 14.10</a></div></div>
+      </div>
+      <div class="button-row"><a class="btn btn-secondary next-section" href="#khoi-dong" data-panel="khoi-dong">↟ Về đầu bài</a></div>
+    </section>
+  </main>
+
+  <footer>Nguồn nội dung: SGK Tin học 11 (Kết nối tri thức với cuộc sống), Bài 14 – SQL – Ngôn ngữ truy vấn có cấu trúc, trang 69–72 · Thiết kế phục vụ dạy và học.</footer>
+
+  <!-- Điều hướng, khởi động, tô màu cú pháp, hiển thị đáp án gợi ý -->
+  <script>
+    function esc(value) {
+      return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+    function highlightSql(code) {
+      const pattern = /('(?:[^']|'')*')|(--[^\n]*)|\b(AVG|COUNT|SUM|MIN|MAX)(?=\s*\()|\b(CHAR|VARCHAR|INTEGER|INT|REAL|BOOLEAN|DATE|TIME)\b|\b(SELECT|FROM|WHERE|ORDER|BY|INNER|JOIN|ON|INSERT|INTO|VALUES|DELETE|UPDATE|SET|CREATE|DATABASE|TABLE|ALTER|ADD|PRIMARY|KEY|FOREIGN|REFERENCES|GRANT|REVOKE|TO|FROM|AND|OR|NOT|NULL|USE|SHOW|TABLES|DATABASES|DESCRIBE|DESC|ASC|DROP|IF|EXISTS|GRANTS|FOR)\b|\b(\d+(?:\.\d+)?)\b/gi;
+      return esc(code).replace(pattern, function (m, s, c, f, t, k, n) {
+        if (s) return '<span class="tk-s">' + m + "</span>";
+        if (c) return '<span class="tk-c">' + m + "</span>";
+        if (f) return '<span class="tk-f">' + m + "</span>";
+        if (t) return '<span class="tk-t">' + m + "</span>";
+        if (k) return '<span class="tk-k">' + m + "</span>";
+        return '<span class="tk-n">' + m + "</span>";
+      });
+    }
+    function setSql(pre, code) { pre.dataset.raw = code; pre.innerHTML = highlightSql(code); }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const root = document.documentElement;
+        const panels = Array.from(document.querySelectorAll(".lesson-panel"));
+        const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+        const panelLinks = Array.from(document.querySelectorAll("[data-panel]"));
+        if (!root || panels.length === 0 || navLinks.length === 0) return;
+        root.classList.add("js-enabled");
+        Array.from(document.querySelectorAll("pre.sql")).forEach(function (pre) { if (!pre.dataset.raw && pre.textContent) setSql(pre, pre.textContent); });
+
+        function showPanel(panelId, updateHash) {
+          const target = document.getElementById(panelId);
+          if (!target || !target.classList.contains("lesson-panel")) return;
+          panels.forEach(function (panel) { panel.classList.toggle("active", panel.id === panelId); });
+          navLinks.forEach(function (link) {
+            if (link.dataset.panel === panelId) link.setAttribute("aria-current", "page");
+            else link.removeAttribute("aria-current");
+          });
+          if (updateHash && window.history && window.history.replaceState) window.history.replaceState(null, "", "#" + panelId);
+          window.scrollTo({ top: document.querySelector(".lesson-nav-wrap").offsetTop, behavior: "smooth" });
+        }
+        panelLinks.forEach(function (link) {
+          link.addEventListener("click", function (event) {
+            const panelId = link.dataset.panel;
+            if (!panelId) return;
+            event.preventDefault();
+            showPanel(panelId, true);
+          });
+        });
+        const initialId = window.location.hash.replace("#", "");
+        if (initialId && document.getElementById(initialId)) showPanel(initialId, false);
+
+        const warmupButton = document.getElementById("warmup-check");
+        const warmupFeedback = document.getElementById("warmup-feedback");
+        if (warmupButton && warmupFeedback) {
+          warmupButton.addEventListener("click", function () {
+            const selected = document.querySelector('input[name="warmup"]:checked');
+            warmupFeedback.className = "feedback show " + (selected && selected.value === "what" ? "success" : "hint");
+            warmupFeedback.textContent = selected && selected.value === "what"
+              ? "Chính xác! Với ngôn ngữ truy vấn, em mô tả điều cần lấy; hệ QTCSDL quyết định cách thực hiện."
+              : selected ? "Chưa đúng. Hãy nhớ: SQL cho phép nêu yêu cầu (muốn gì) mà không cần viết thủ tục duyệt dữ liệu. Em sẽ kiểm chứng ở Hoạt động 1." : "Em hãy chọn một dự đoán trước khi kiểm tra.";
+          });
+        }
+
+        Array.from(document.querySelectorAll("[data-reveal]")).forEach(function (button) {
+          button.addEventListener("click", function () {
+            const box = document.getElementById(button.dataset.reveal);
+            if (!box) return;
+            box.hidden = !box.hidden;
+            button.textContent = box.hidden ? "Xem đáp án gợi ý" : "Ẩn đáp án";
+          });
+        });
+      } catch (error) {
+        console.error("Không thể khởi tạo điều hướng:", error);
+      }
+    });
+  </script>
+
+  <!-- Hoạt động 1: hai cách truy xuất dữ liệu -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const SONGS = [["0001", 1, "Du kích sông Thao"], ["0002", 2, "Trường ca sông Lô"], ["0003", 3, "Tình ca"], ["0004", 4, "Xa khơi"], ["0005", 1, "Việt Nam quê hương tôi"], ["0006", 2, "Tiến về Hà Nội"]];
+        const aidSelect = document.getElementById("ha-aid");
+        const body = document.getElementById("ha-body");
+        const logBox = document.getElementById("ha-log");
+        const opsEl = document.getElementById("ha-ops");
+        const stepBtn = document.getElementById("ha-step");
+        const autoBtn = document.getElementById("ha-auto");
+        const resetBtn = document.getElementById("ha-reset");
+        const sqlPre = document.getElementById("ha-sql");
+        const sendBtn = document.getElementById("ha-send");
+        const sqlOut = document.getElementById("ha-sql-out");
+        const sqlOps = document.getElementById("ha-sql-ops");
+        const hintBtn = document.getElementById("ha-hint");
+        const hintBox = document.getElementById("ha-hint-box");
+        const note = document.getElementById("ha-note");
+        if (!aidSelect || !body || !logBox || !stepBtn || !autoBtn || !resetBtn || !sqlPre || !sendBtn || !sqlOut) return;
+        let index = 0, ops = 0, timer = null;
+
+        function aid() { return Number(aidSelect.value); }
+        function stopAuto() { if (timer) { window.clearInterval(timer); timer = null; } autoBtn.textContent = "Tự động chạy"; }
+        function renderRows() {
+          body.replaceChildren();
+          SONGS.forEach(function (song, i) {
+            const tr = document.createElement("tr");
+            [i + 1, song[0], song[1], song[2]].forEach(function (value) { const td = document.createElement("td"); td.textContent = String(value); tr.append(td); });
+            if (i < index) tr.className = song[1] === aid() ? "matched-row" : "skip-row";
+            else if (i === index) tr.className = "active-row";
+            body.append(tr);
+          });
+        }
+        function addLog(text, cls) { const p = document.createElement("p"); if (cls) p.className = cls; p.textContent = text; logBox.append(p); logBox.scrollTop = logBox.scrollHeight; }
+        function resetWayOne() {
+          stopAuto(); index = 0; ops = 0; opsEl.textContent = "0";
+          logBox.replaceChildren(); addLog("Bấm “Đọc bản ghi tiếp theo” để theo dõi chương trình.", "skip");
+          stepBtn.disabled = false; autoBtn.disabled = false; renderRows();
+        }
+        function step() {
+          if (index >= SONGS.length) return;
+          const song = SONGS[index]; const hit = song[1] === aid();
+          ops += 3; addLog("Dòng " + (index + 1) + ": đọc bản ghi → tách Aid = " + song[1] + " → so sánh Aid == " + aid() + "?");
+          if (hit) { ops += 1; addLog("   ✓ Khớp → đưa ra tên bản nhạc: " + song[2], "hit"); } else addLog("   ✗ Không khớp → bỏ qua", "skip");
+          index += 1; opsEl.textContent = String(ops); renderRows();
+          if (index >= SONGS.length) { stopAuto(); stepBtn.disabled = true; autoBtn.disabled = true; addLog("Xong! Người lập trình phải tự viết " + ops + " thao tác (đọc, tách, so sánh, đưa ra) và biết rõ cấu trúc tệp.", "hit"); }
+        }
+        function setSqlText() { setSql(sqlPre, "SELECT TenBN\nFROM bannhac\nWHERE Aid = " + aid() + ";"); }
+        function sendQuery() {
+          const rows = SONGS.filter(function (s) { return s[1] === aid(); });
+          const table = document.createElement("table"); table.className = "sim-table";
+          const head = document.createElement("thead"); const hr = document.createElement("tr"); const th = document.createElement("th"); th.textContent = "TenBN"; hr.append(th); head.append(hr); table.append(head);
+          const tbody = document.createElement("tbody");
+          rows.forEach(function (s) { const tr = document.createElement("tr"); tr.className = "matched-row"; const td = document.createElement("td"); td.textContent = s[2]; tr.append(td); tbody.append(tr); });
+          table.append(tbody); const wrap = document.createElement("div"); wrap.className = "sim-table-wrap"; wrap.append(table);
+          const p = document.createElement("p"); p.className = "fallback-description"; p.textContent = "Hệ QTCSDL trả về " + rows.length + " dòng. Muốn tìm nhạc sĩ khác, chỉ cần đổi số trong WHERE.";
+          sqlOut.replaceChildren(wrap, p); sqlOps.textContent = "1";
+        }
+        function resetWayTwo() { sqlOut.replaceChildren(); const d = document.createElement("div"); d.className = "output-empty"; d.style.minHeight = "120px"; d.textContent = "Kết quả sẽ hiện ở đây."; sqlOut.append(d); sqlOps.textContent = "0"; setSqlText(); }
+
+        stepBtn.addEventListener("click", step);
+        autoBtn.addEventListener("click", function () {
+          if (timer) { stopAuto(); return; }
+          autoBtn.textContent = "Tạm dừng";
+          timer = window.setInterval(function () { if (index >= SONGS.length) stopAuto(); else step(); }, 650);
+        });
+        resetBtn.addEventListener("click", resetWayOne);
+        sendBtn.addEventListener("click", sendQuery);
+        aidSelect.addEventListener("change", function () { resetWayOne(); resetWayTwo(); });
+        if (hintBtn && hintBox && note) {
+          hintBtn.addEventListener("click", function () {
+            const text = note.value.trim().toLowerCase();
+            const good = /(muốn|yêu cầu|cách thực hiện|thủ tục|không cần|chỉ cần|khai báo)/.test(text);
+            hintBox.className = "feedback show " + (good ? "success" : "hint");
+            hintBox.textContent = good
+              ? "Ý của em hợp lí: với SQL chỉ cần nêu yêu cầu (muốn lấy gì), còn cách thực hiện do hệ QTCSDL đảm nhiệm; lập trình trực tiếp phải biết cấu trúc tệp và tự viết thủ tục."
+              : "Gợi ý: so sánh số thao tác người dùng phải tự viết ở hai cách, và ai là người quyết định “cách làm” – người lập trình hay hệ QTCSDL?";
+          });
+        }
+        resetWayOne(); resetWayTwo();
+      } catch (error) {
+        console.error("Không thể khởi tạo Hoạt động 1:", error);
+      }
+    });
+  </script>
+
+  <!-- Mục 2: chọn kiểu dữ liệu -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const rows = Array.from(document.querySelectorAll("#type-table tbody tr"));
+        const checkBtn = document.getElementById("type-check");
+        const resetBtn = document.getElementById("type-reset");
+        const feedback = document.getElementById("type-feedback");
+        if (!rows.length || !checkBtn || !resetBtn || !feedback) return;
+        const TYPES = ["CHAR", "VARCHAR", "BOOLEAN", "INT", "REAL", "DATE", "TIME"];
+        rows.forEach(function (row) {
+          const select = document.createElement("select");
+          select.setAttribute("aria-label", "Kiểu dữ liệu của trường " + row.cells[0].textContent);
+          const blank = document.createElement("option"); blank.value = ""; blank.textContent = "— Chọn —"; select.append(blank);
+          TYPES.forEach(function (type) { const option = document.createElement("option"); option.value = type; option.textContent = type; select.append(option); });
+          row.cells[2].append(select);
+        });
+        checkBtn.addEventListener("click", function () {
+          let right = 0, empty = 0;
+          rows.forEach(function (row) {
+            const select = row.querySelector("select");
+            select.className = "";
+            if (!select.value) { empty += 1; return; }
+            if (select.value === row.dataset.answer) { right += 1; select.className = "ok"; } else select.className = "bad";
+          });
+          feedback.className = "feedback show " + (right === rows.length ? "success" : "hint");
+          feedback.textContent = empty ? "Em hãy chọn kiểu dữ liệu cho tất cả " + rows.length + " trường (còn " + empty + " trường chưa chọn)."
+            : right === rows.length ? "Tuyệt vời! Cả " + rows.length + " trường đều đúng. Nhớ: CHAR dùng cho xâu có độ dài cố định, VARCHAR cho xâu có độ dài thay đổi."
+            : "Đúng " + right + "/" + rows.length + ". Các ô màu đỏ cần xem lại: hãy đối chiếu với Bảng 14.2.";
+        });
+        resetBtn.addEventListener("click", function () {
+          rows.forEach(function (row) { const select = row.querySelector("select"); select.value = ""; select.className = ""; });
+          feedback.className = "feedback";
+        });
+      } catch (error) {
+        console.error("Không thể khởi tạo phần chọn kiểu dữ liệu:", error);
+      }
+    });
+  </script>
+
+  <!-- Mục 3: SELECT từng bước, INSERT/DELETE/UPDATE trước và sau -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const SONGS = [["0001", 1, "Du kích sông Thao"], ["0002", 2, "Trường ca sông Lô"], ["0003", 3, "Tình ca"], ["0004", 4, "Xa khơi"], ["0005", 1, "Việt Nam quê hương tôi"], ["0006", 2, "Tiến về Hà Nội"]];
+        function buildTable(table, cols, rows, classes) {
+          table.replaceChildren();
+          const thead = document.createElement("thead"); const hr = document.createElement("tr");
+          cols.forEach(function (c) { const th = document.createElement("th"); th.textContent = c; hr.append(th); });
+          thead.append(hr); table.append(thead);
+          const tbody = document.createElement("tbody");
+          rows.forEach(function (row, i) {
+            const tr = document.createElement("tr"); if (classes && classes[i]) tr.className = classes[i];
+            row.forEach(function (v) { const td = document.createElement("td"); td.textContent = String(v); tr.append(td); });
+            tbody.append(tr);
+          });
+          table.append(tbody);
+        }
+
+        /* --- SELECT từng bước --- */
+        const pipeSql = document.getElementById("pipe-sql");
+        const pipeTable = document.getElementById("pipe-table");
+        const pipeDesc = document.getElementById("pipe-desc");
+        const pipeCount = document.getElementById("pipe-count");
+        const pipeAid = document.getElementById("pipe-aid");
+        const pipeButtons = Array.from(document.querySelectorAll("#pipe-steps [data-stage]"));
+        if (pipeSql && pipeTable && pipeDesc && pipeAid && pipeButtons.length) {
+          let stage = 1;
+          const descriptions = {
+            1: "① FROM bannhac: lấy toàn bộ bảng bannhac làm dữ liệu đầu vào (6 dòng, 3 cột).",
+            2: "② WHERE Aid = …: giữ lại chỉ những dòng thoả mãn điều kiện, các dòng còn lại bị loại.",
+            3: "③ SELECT Mid, TenBN: chỉ giữ hai cột được yêu cầu, bỏ cột Aid.",
+            4: "④ ORDER BY TenBN: sắp xếp các dòng kết quả theo tên bản nhạc (A → Z)."
+          };
+          function drawPipe() {
+            const a = Number(pipeAid.value);
+            const lines = ["SELECT Mid, TenBN", "FROM bannhac", "WHERE Aid = " + a, "ORDER BY TenBN;"];
+            const clauseStage = [3, 1, 2, 4];
+            pipeSql.dataset.raw = lines.join("\n");
+            pipeSql.innerHTML = lines.map(function (line, i) { return '<span class="clause' + (clauseStage[i] === stage ? " on" : "") + '">' + highlightSql(line) + "</span>"; }).join("");
+            let rows = SONGS.map(function (s) { return s.slice(); });
+            let cols = ["Mid", "Aid", "TenBN"];
+            if (stage >= 2) rows = rows.filter(function (r) { return r[1] === a; });
+            if (stage >= 3) { rows = rows.map(function (r) { return [r[0], r[2]]; }); cols = ["Mid", "TenBN"]; }
+            if (stage >= 4) rows.sort(function (x, y) { return String(x[x.length - 1]).localeCompare(String(y[y.length - 1]), "vi"); });
+            buildTable(pipeTable, cols, rows, stage === 4 ? rows.map(function () { return "sorted-row"; }) : null);
+            pipeDesc.textContent = descriptions[stage];
+            pipeCount.textContent = "Kết quả ở bước này: " + rows.length + " dòng, " + cols.length + " cột.";
+            pipeButtons.forEach(function (b) { b.setAttribute("aria-pressed", String(Number(b.dataset.stage) === stage)); });
+          }
+          pipeButtons.forEach(function (b) { b.addEventListener("click", function () { stage = Number(b.dataset.stage); drawPipe(); }); });
+          pipeAid.addEventListener("change", drawPipe);
+          drawPipe();
+        }
+
+        /* --- INSERT / DELETE / UPDATE --- */
+        const dmlTabs = Array.from(document.querySelectorAll("#dml-tabs [data-dml]"));
+        const dmlSql = document.getElementById("dml-sql");
+        const dmlBefore = document.getElementById("dml-before");
+        const dmlAfter = document.getElementById("dml-after");
+        const dmlWrap = document.getElementById("dml-after-wrap");
+        const dmlStatus = document.getElementById("dml-status");
+        const dmlName = document.getElementById("dml-table-name");
+        const dmlRun = document.getElementById("dml-run");
+        const dmlReset = document.getElementById("dml-reset");
+        const noWhereRow = document.getElementById("dml-nowhere-row");
+        const noWhere = document.getElementById("dml-nowhere");
+        if (dmlTabs.length && dmlSql && dmlBefore && dmlAfter && dmlRun && dmlReset) {
+          const NHACSI = [[1, "Đỗ Nhuận"], [2, "Văn Cao"], [3, "Hoàng Việt"], [4, "Nguyễn Tài Tuệ"]];
+          const NHACSI6 = NHACSI.concat([[5, "Phú Quang"], [6, "Phan Huỳnh Điểu"]]);
+          const DEMOS = {
+            insert: { name: "nhacsi", cols: ["Aid", "TenNS"], before: NHACSI, sql: function () { return "INSERT INTO nhacsi VALUES\n  (5, 'Phú Quang'),\n  (6, 'Phan Huỳnh Điểu');"; }, apply: function () { return { rows: NHACSI6, cls: ["", "", "", "", "diff-add", "diff-add"] }; }, msg: "Đã thêm 2 dòng mới vào cuối bảng nhacsi." },
+            delete: { name: "bannhac", cols: ["Mid", "Aid", "TenBN"], before: SONGS, sql: function (nw) { return nw ? "DELETE FROM bannhac;" : "DELETE FROM bannhac\nWHERE Mid = '0005';"; }, apply: function (nw) { return nw ? { rows: SONGS, cls: SONGS.map(function () { return "diff-del"; }), after: [] } : { rows: SONGS, cls: SONGS.map(function (s) { return s[0] === "0005" ? "diff-del" : ""; }), after: SONGS.filter(function (s) { return s[0] !== "0005"; }) }; }, msg: function (nw) { return nw ? "Không có WHERE nên TOÀN BỘ 6 dòng bị xoá – bảng còn nguyên cấu trúc nhưng không còn dữ liệu!" : "Đã xoá 1 dòng có Mid = '0005' (Việt Nam quê hương tôi)."; } },
+            update: { name: "nhacsi", cols: ["Aid", "TenNS"], before: NHACSI6, sql: function (nw) { return nw ? "UPDATE nhacsi\nSET TenNS = 'Hoàng Hiệp';" : "UPDATE nhacsi\nSET TenNS = 'Hoàng Hiệp'\nWHERE Aid = 6;"; }, apply: function (nw) { const rows = NHACSI6.map(function (r) { return nw || r[0] === 6 ? [r[0], "Hoàng Hiệp"] : r; }); return { rows: rows, cls: NHACSI6.map(function (r) { return nw || r[0] === 6 ? "diff-chg" : ""; }) }; }, msg: function (nw) { return nw ? "Không có WHERE nên TẤT CẢ 6 nhạc sĩ đều bị đổi tên thành Hoàng Hiệp!" : "Đã đổi tên ở 1 dòng có Aid = 6 thành Hoàng Hiệp."; } }
+          };
+          let current = "insert";
+          function drawBefore() {
+            const d = DEMOS[current]; const nw = noWhere && noWhere.checked;
+            setSql(dmlSql, d.sql(nw));
+            dmlName.textContent = d.name;
+            buildTable(dmlBefore, d.cols, d.before);
+            buildTable(dmlAfter, d.cols, d.before);
+            dmlWrap.classList.add("pending");
+            dmlStatus.textContent = "Bấm “Thực hiện câu lệnh” để xem bảng thay đổi thế nào.";
+            dmlStatus.style.background = "";
+          }
+          function runDml() {
+            const d = DEMOS[current]; const nw = noWhere && noWhere.checked && current !== "insert";
+            const result = d.apply(nw);
+            if (current === "delete") {
+              const shown = result.after;
+              buildTable(dmlAfter, d.cols, shown.length ? shown : [], null);
+              if (!shown.length) { const tb = dmlAfter.querySelector("tbody"); const tr = document.createElement("tr"); const td = document.createElement("td"); td.colSpan = d.cols.length; td.textContent = "(bảng rỗng – 0 dòng)"; tr.append(td); tb.append(tr); }
+              buildTable(dmlBefore, d.cols, d.before, result.cls);
+            } else buildTable(dmlAfter, d.cols, result.rows, result.cls);
+            dmlWrap.classList.remove("pending");
+            dmlStatus.textContent = typeof d.msg === "function" ? d.msg(nw) : d.msg;
+            dmlStatus.style.background = nw ? "var(--danger-soft)" : "";
+          }
+          dmlTabs.forEach(function (b) {
+            b.addEventListener("click", function () {
+              current = b.dataset.dml;
+              dmlTabs.forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+              noWhereRow.hidden = current === "insert"; if (noWhere) noWhere.checked = false;
+              drawBefore();
+            });
+          });
+          if (noWhere) noWhere.addEventListener("change", drawBefore);
+          dmlRun.addEventListener("click", runDml);
+          dmlReset.addEventListener("click", function () { if (noWhere) noWhere.checked = false; drawBefore(); });
+          drawBefore();
+        }
+      } catch (error) {
+        console.error("Không thể khởi tạo phần mô phỏng mục 3:", error);
+      }
+    });
+  </script>
+
+  <!-- Mục 4: công cụ soạn GRANT / REVOKE -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const pre = document.getElementById("priv-sql");
+        const explain = document.getElementById("priv-explain");
+        const objSel = document.getElementById("priv-obj");
+        const userSel = document.getElementById("priv-user");
+        const checks = Array.from(document.querySelectorAll("#priv-checks input"));
+        const actions = Array.from(document.querySelectorAll('input[name="priv-action"]'));
+        if (!pre || !explain || !objSel || !userSel || !checks.length || !actions.length) return;
+        const VI = { select: "SELECT (xem dữ liệu)", insert: "INSERT (thêm dòng)", update: "UPDATE (sửa dòng)", delete: "DELETE (xoá dòng)", create: "CREATE (tạo bảng)", alter: "ALTER (đổi định nghĩa bảng)" };
+        function draw() {
+          const action = actions.find(function (a) { return a.checked; }).value;
+          const privs = checks.filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
+          if (!privs.length) { setSql(pre, "-- Hãy chọn ít nhất một quyền"); explain.textContent = "Chọn ít nhất một quyền để tạo câu lệnh."; window.__privSql = ""; return; }
+          const code = action + " " + privs.join(", ") + "\nON " + objSel.value + "\n" + (action === "GRANT" ? "TO " : "FROM ") + userSel.value + ";";
+          setSql(pre, code); window.__privSql = code;
+          const target = objSel.value === "music.*" ? "tất cả các bảng trong CSDL music" : "bảng " + objSel.value.split(".")[1] + " trong CSDL music";
+          explain.textContent = (action === "GRANT" ? "Cấp" : "Thu hồi") + " quyền " + privs.map(function (p) { return VI[p]; }).join(", ") + " đối với " + target + (action === "GRANT" ? " cho" : " của") + " người dùng " + userSel.value + ".";
+        }
+        checks.concat(actions).forEach(function (c) { c.addEventListener("change", draw); });
+        objSel.addEventListener("change", draw); userSel.addEventListener("change", draw);
+        draw();
+      } catch (error) {
+        console.error("Không thể khởi tạo công cụ cấp quyền:", error);
+      }
+    });
+  </script>
+
+  <!-- Phòng SQL (sql.js) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const el = function (id) { return document.getElementById(id); };
+      const editor = el("sql-editor"), output = el("sql-output"), runBtn = el("sql-run"), clearBtn = el("sql-clear"), resetBtn = el("sql-reset-data");
+      const engineStatus = el("engine-status"), runStatus = el("run-status"), dbStatus = el("db-status"), dbView = el("db-view"), taskList = el("task-list"), taskProgress = el("task-progress"), presetNote = el("preset-note");
+      const presetButtons = Array.from(document.querySelectorAll(".preset-btn"));
+      if (!editor || !output || !runBtn || !dbView || !taskList) return;
+
+      let SQL = null, session = null, presetKey = "nhac";
+      const done = new Set();
+      const VALID_PRIVS = ["SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "ALTER", "DROP"];
+
+      const NHAC_SQL =
+        "CREATE TABLE nhacsi (Aid INT, TenNS VARCHAR(64)); CREATE UNIQUE INDEX pk_nhacsi ON nhacsi(Aid);" +
+        "INSERT INTO nhacsi VALUES (1,'Đỗ Nhuận'),(2,'Văn Cao'),(3,'Hoàng Việt'),(4,'Nguyễn Tài Tuệ');" +
+        "CREATE TABLE bannhac (Mid CHAR(4), Aid INT, TenBN VARCHAR(128)); CREATE UNIQUE INDEX pk_bannhac ON bannhac(Mid);" +
+        "INSERT INTO bannhac VALUES ('0001',1,'Du kích sông Thao'),('0002',2,'Trường ca sông Lô'),('0003',3,'Tình ca'),('0004',4,'Xa khơi'),('0005',1,'Việt Nam quê hương tôi'),('0006',2,'Tiến về Hà Nội');" +
+        "CREATE TABLE casi (Sid CHAR(2), TenCS VARCHAR(64)); CREATE UNIQUE INDEX pk_casi ON casi(Sid);";
+      const FULL_SQL = NHAC_SQL +
+        "INSERT INTO casi VALUES ('TK','Trần Khánh'),('LD','Lê Dung'),('TN','Tấn Nhân'),('QH','Quốc Hương');" +
+        "CREATE TABLE banthuam (Mid CHAR(4), Sid CHAR(2));" +
+        "INSERT INTO banthuam VALUES ('0001','TK'),('0001','LD'),('0005','TK'),('0005','TN'),('0002','QH'),('0002','QH');" +
+        "CREATE TABLE diemtoan_11A (hoten VARCHAR(64), tb REAL);" +
+        "INSERT INTO diemtoan_11A VALUES ('Nguyễn Văn An',8.5),('Trần Thị Bình',7),('Lê Minh Chi',9),('Phạm Quốc Dũng',6.5),('Hoàng Thu Em',8),('Vũ Hải Phúc',9.5);";
+      const FK_NHAC = [{ table: "bannhac", cols: ["aid"], rt: "nhacsi", rcols: ["aid"] }];
+      const PRESETS = {
+        trong: { note: "Chưa có CSDL nào. Em tự khởi tạo CSDL music và các bảng như ở mục 2.", sql: "", current: null, pk: {}, fk: [], starter: "-- Khởi tạo CSDL và các bảng theo mục 2\nCREATE DATABASE music;\n" },
+        nhac: { note: "CSDL music đã có nhacsi (4 dòng), bannhac (6 dòng) và casi (chưa có dữ liệu). Phù hợp với mục 3 và 4.", sql: NHAC_SQL, current: "music", pk: { nhacsi: ["aid"], bannhac: ["mid"], casi: ["sid"] }, fk: FK_NHAC, starter: "SELECT Mid, TenBN\nFROM bannhac\nWHERE Aid = 1\nORDER BY TenBN;" },
+        daydu: { note: "Đủ bốn bảng nhacsi, bannhac, casi, banthuam (dữ liệu Bài 13) và bảng diemtoan_11A để thực hành truy vấn.", sql: FULL_SQL, current: "music", pk: { nhacsi: ["aid"], bannhac: ["mid"], casi: ["sid"] }, fk: FK_NHAC.concat([{ table: "banthuam", cols: ["mid"], rt: "bannhac", rcols: ["mid"] }, { table: "banthuam", cols: ["sid"], rt: "casi", rcols: ["sid"] }]), starter: "SELECT bannhac.TenBN, nhacsi.TenNS\nFROM bannhac INNER JOIN nhacsi\nON bannhac.Aid = nhacsi.Aid;" }
+      };
+      const EXAMPLES = {
+        ddl: { preset: "trong", sql: "CREATE DATABASE music;\n\nCREATE TABLE bannhac (\n  Mid CHAR(4),\n  Aid INT,\n  TenBN VARCHAR(128)\n);\nALTER TABLE bannhac ADD PRIMARY KEY (Mid);\n\nCREATE TABLE nhacsi (\n  Aid INT,\n  TenNS VARCHAR(64)\n);" },
+        "casi-ddl": { preset: "trong", sql: "-- Khởi tạo CSDL và bảng bannhac, nhacsi trước (xem nhiệm vụ 1–3), rồi viết lệnh tạo bảng casi:\nCREATE DATABASE music;\n\n" },
+        select1: { preset: "nhac", sql: "SELECT Mid, TenBN\nFROM bannhac\nWHERE Aid = 1\nORDER BY TenBN;" },
+        join: { preset: "nhac", sql: "SELECT bannhac.TenBN, nhacsi.TenNS\nFROM bannhac INNER JOIN nhacsi\nON bannhac.Aid = nhacsi.Aid;" },
+        dml: { preset: "nhac", sql: "INSERT INTO nhacsi VALUES\n  (5, 'Phú Quang'),\n  (6, 'Phan Huỳnh Điểu');\n\nDELETE FROM bannhac\nWHERE Mid = '0005';\n\nUPDATE nhacsi\nSET TenNS = 'Hoàng Hiệp'\nWHERE Aid = 6;\n\nSELECT * FROM nhacsi;" },
+        avg: { preset: "daydu", sql: "SELECT AVG(tb) FROM diemtoan_11A;\n\nSELECT hoten, tb\nFROM diemtoan_11A\nWHERE tb > 8;" },
+        join3: { preset: "daydu", sql: "-- Vận dụng: nối banthuam, bannhac và casi\nSELECT banthuam.Mid, banthuam.Sid, bannhac.TenBN, casi.TenCS\nFROM banthuam\nINNER JOIN bannhac ON banthuam.Mid = bannhac.Mid\nINNER JOIN casi ON banthuam.Sid = casi.Sid;" },
+        grant: { preset: null, sql: "SHOW GRANTS FOR mod;\n\nGRANT select\nON music.*\nTO guest;\n\nREVOKE create, alter\nON music.bannhac\nFROM mod;\n\nSHOW GRANTS FOR mod;" },
+        show: { preset: null, sql: "SHOW TABLES;\n\nDESCRIBE bannhac;" },
+        "casi-dml": { preset: "nhac", sql: "INSERT INTO casi VALUES\n  ('TK', 'Nguyễn Trung Kiên'),\n  ('QD', 'Quý Dương'),\n  ('YM', 'Y Moan');" }
+      };
+
+      function setBadge(node, text, state) { node.textContent = text; node.className = "status-pill" + (state ? " " + state : ""); }
+      function lower(s) { return String(s).toLowerCase(); }
+      function q(name) { return '"' + String(name).replace(/"/g, '""') + '"'; }
+
+      /* ----- tách câu lệnh ----- */
+      function splitStatements(text) {
+        const out = []; let cur = ""; let quote = null;
+        for (let i = 0; i < text.length; i++) {
+          const c = text[i], n = text[i + 1];
+          if (quote) { cur += c; if (c === quote) { if (n === quote) { cur += n; i++; } else quote = null; } continue; }
+          if (c === "'" || c === '"' || c === "`") { quote = c; cur += c; continue; }
+          if (c === "-" && n === "-") { while (i < text.length && text[i] !== "\n") i++; cur += "\n"; continue; }
+          if (c === "/" && n === "*") { const end = text.indexOf("*/", i + 2); i = end < 0 ? text.length : end + 1; cur += " "; continue; }
+          if (c === ";") { if (cur.trim()) out.push(cur.trim()); cur = ""; continue; }
+          cur += c;
+        }
+        if (cur.trim()) out.push(cur.trim());
+        return out;
+      }
+
+      /* ----- phiên làm việc ----- */
+      function createSession(key) {
+        const p = PRESETS[key];
+        const db = new SQL.Database();
+        if (p.sql) db.run(p.sql);
+        const reg = {
+          dbs: new Set(p.current ? ["music"] : []), current: p.current,
+          pk: JSON.parse(JSON.stringify(p.pk)), fk: p.fk.map(function (f) { return Object.assign({}, f); }),
+          grants: { mod: [{ priv: "CREATE", obj: "music.bannhac" }, { priv: "ALTER", obj: "music.bannhac" }, { priv: "DELETE", obj: "music.nhacsi" }], guest: [] }
+        };
+        return { db: db, reg: reg, last: null };
+      }
+      function tableList(db) { const r = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY rowid"); return r.length ? r[0].values.map(function (v) { return v[0]; }) : []; }
+      function tableInfo(db, t) { try { const r = db.exec("PRAGMA table_info(" + q(t) + ")"); return r.length ? r[0].values.map(function (v) { return { name: v[1], type: String(v[2] || ""), pk: v[5] }; }) : []; } catch (e) { return []; } }
+      function hasTable(db, t) { return tableList(db).some(function (n) { return lower(n) === lower(t); }); }
+      function getPk(t) {
+        const key = lower(t);
+        if (session.reg.pk[key]) return session.reg.pk[key];
+        return tableInfo(session.db, t).filter(function (c) { return c.pk > 0; }).sort(function (a, b) { return a.pk - b.pk; }).map(function (c) { return lower(c.name); });
+      }
+      function getFks(t) {
+        const key = lower(t);
+        const list = session.reg.fk.filter(function (f) { return f.table === key; });
+        try {
+          const r = session.db.exec("PRAGMA foreign_key_list(" + q(t) + ")");
+          if (r.length) {
+            const groups = {};
+            r[0].values.forEach(function (v) { (groups[v[0]] = groups[v[0]] || { table: key, cols: [], rt: lower(v[2]), rcols: [] }); groups[v[0]].cols.push(lower(v[3])); groups[v[0]].rcols.push(lower(v[4] || "")); });
+            Object.keys(groups).forEach(function (k) { list.push(groups[k]); });
+          }
+        } catch (e) { /* bảng không có khoá ngoài */ }
+        return list;
+      }
+      function selectRows(sql) { try { const r = session.db.exec(sql); return r.length ? r[0].values : []; } catch (e) { return null; } }
+
+      /* ----- thực thi ----- */
+      function viMsg(err) {
+        const m = err && err.message ? err.message : String(err);
+        let hint = null;
+        if (/no such table: (.+)/i.test(m)) hint = "Bảng '" + RegExp.$1 + "' chưa tồn tại. Hãy kiểm tra lại tên bảng hoặc tạo bảng trước.";
+        else if (/no such column: (.+)/i.test(m)) hint = "Không có trường '" + RegExp.$1 + "'. Hãy kiểm tra lại tên trường (xem bảng “Dữ liệu hiện có”).";
+        else if (/table (.+) already exists/i.test(m)) hint = "Bảng " + RegExp.$1 + " đã tồn tại.";
+        else if (/UNIQUE constraint failed: (.+)/i.test(m)) hint = "Giá trị của khoá chính bị trùng (" + RegExp.$1 + "). Mỗi bản ghi phải có khoá chính khác nhau.";
+        else if (/values for (\d+) columns|has (\d+) columns but (\d+) values|(\d+) values for (\d+) columns/i.test(m)) hint = "Số giá trị trong VALUES không khớp với số trường của bảng.";
+        else if (/syntax error|incomplete input|unrecognized token/i.test(m)) hint = "Sai cú pháp. Kiểm tra dấu phẩy giữa các trường, dấu ngoặc, dấu nháy đơn quanh xâu kí tự và từ khoá.";
+        return { text: hint || m, raw: hint ? m : "" };
+      }
+      function fail(text) { const e = new Error(text); e.plain = true; throw e; }
+      function parseCols(listText, tableName) {
+        const names = listText.split(",").map(function (s) { return s.trim().replace(/^[`"']|[`"']$/g, ""); }).filter(Boolean);
+        const info = tableInfo(session.db, tableName).map(function (c) { return lower(c.name); });
+        names.forEach(function (n) { if (info.indexOf(lower(n)) < 0) fail("Bảng " + tableName + " không có trường '" + n + "'."); });
+        return names.map(lower);
+      }
+      function needDb() { if (!session.reg.current) fail("Chưa chọn CSDL nào (No database selected). Hãy chạy CREATE DATABASE music; trước."); }
+      function afterDdl() { tableList(session.db).forEach(function (t) { const pk = tableInfo(session.db, t).filter(function (c) { return c.pk > 0; }); if (pk.length && !session.reg.pk[lower(t)]) session.reg.pk[lower(t)] = pk.map(function (c) { return lower(c.name); }); }); }
+
+      function execOne(raw) {
+        const sql = raw.replace(/\bmusic\.(?=[A-Za-z_])/gi, "");
+        const flat = raw.replace(/\s+/g, " ").trim();
+        const reg = session.reg, db = session.db;
+        let m;
+        if ((m = /^USE\s+`?(\w+)`?$/i.exec(flat))) { if (!reg.dbs.has(lower(m[1]))) fail("Unknown database '" + m[1] + "'."); reg.current = lower(m[1]); return { kind: "ok", msg: "Database changed" }; }
+        if ((m = /^CREATE\s+DATABASE\s+(IF\s+NOT\s+EXISTS\s+)?`?(\w+)`?$/i.exec(flat))) {
+          const name = lower(m[2]);
+          if (reg.dbs.has(name)) { if (m[1]) return { kind: "ok", msg: "Query OK, 0 dòng bị ảnh hưởng (CSDL đã tồn tại)" }; fail("Không tạo được CSDL '" + name + "': CSDL đã tồn tại."); }
+          if (name !== "music") fail("Phòng thực hành chỉ làm việc với CSDL tên music. Hãy dùng CREATE DATABASE music;");
+          reg.dbs.add(name); reg.current = name; return { kind: "ok", msg: "Query OK, 1 dòng bị ảnh hưởng (CSDL music đã được tạo và chọn làm CSDL hiện hành)" };
+        }
+        if (/^SHOW\s+DATABASES$/i.test(flat)) return { kind: "rows", columns: ["Database"], rows: Array.from(reg.dbs).sort().map(function (d) { return [d]; }) };
+        if (/^SHOW\s+TABLES$/i.test(flat)) { needDb(); return { kind: "rows", columns: ["Tables_in_music"], rows: tableList(db).map(function (t) { return [t]; }) }; }
+        if ((m = /^(?:DESCRIBE|DESC)\s+`?(\w+)`?$/i.exec(flat))) {
+          needDb(); if (!hasTable(db, m[1])) fail("Bảng '" + m[1] + "' chưa tồn tại.");
+          const pk = getPk(m[1]);
+          return { kind: "rows", columns: ["Field", "Type", "Key"], rows: tableInfo(db, m[1]).map(function (c) { return [c.name, c.type || "—", pk.indexOf(lower(c.name)) >= 0 ? "PRI" : ""]; }) };
+        }
+        if ((m = /^SHOW\s+GRANTS\s+FOR\s+'?(\w+)'?(?:@'?[\w%.]+'?)?$/i.exec(flat))) {
+          const u = lower(m[1]); if (!reg.grants[u]) fail("Không có người dùng '" + m[1] + "'. Người dùng có sẵn: mod, guest.");
+          return { kind: "rows", columns: ["Quyền", "Đối tượng"], rows: reg.grants[u].map(function (g) { return [g.priv, g.obj]; }) };
+        }
+        if ((m = /^(GRANT|REVOKE)\s+(.+?)\s+ON\s+`?(\w+)`?\.(\*|`?\w+`?)\s+(?:TO|FROM)\s+'?(\w+)'?(?:@'?[\w%.]+'?)?$/i.exec(flat))) {
+          const isGrant = lower(m[1]) === "grant"; const word = isGrant ? "TO" : "FROM";
+          if (!new RegExp("\\s" + word + "\\s", "i").test(flat)) fail("Sai cú pháp: " + m[1].toUpperCase() + " dùng với " + word + ".");
+          const user = lower(m[5]); if (!reg.grants[user]) fail("Không có người dùng '" + m[5] + "'. Người dùng có sẵn: mod, guest.");
+          if (lower(m[3]) !== "music") fail("Phòng thực hành chỉ có CSDL music.");
+          const obj = "music." + lower(m[4].replace(/`/g, ""));
+          let privs = m[2].split(",").map(function (p) { return p.trim().toUpperCase().replace(/\s+PRIVILEGES$/, ""); });
+          if (privs.indexOf("ALL") >= 0) privs = VALID_PRIVS.slice();
+          privs.forEach(function (p) { if (VALID_PRIVS.indexOf(p) < 0) fail("Quyền '" + p + "' không hợp lệ. Dùng một trong: " + VALID_PRIVS.join(", ") + "."); });
+          const list = reg.grants[user];
+          privs.forEach(function (p) {
+            const at = list.findIndex(function (g) { return g.priv === p && g.obj === obj; });
+            if (isGrant) { if (at < 0) list.push({ priv: p, obj: obj }); }
+            else { if (at < 0 && m[2].toUpperCase().indexOf("ALL") < 0) fail("Người dùng '" + user + "' chưa được cấp quyền " + p + " trên " + obj + " nên không thể thu hồi (There is no such grant defined)."); if (at >= 0) list.splice(at, 1); }
+          });
+          return { kind: "ok", msg: "Query OK, 0 dòng bị ảnh hưởng (" + (isGrant ? "đã cấp " : "đã thu hồi ") + privs.join(", ") + " trên " + obj + " " + (isGrant ? "cho " : "của ") + user + ")" };
+        }
+        if ((m = /^ALTER\s+TABLE\s+`?(\w+)`?\s+ADD\s+PRIMARY\s+KEY\s*\(([^)]+)\)$/i.exec(flat))) {
+          needDb(); if (!hasTable(db, m[1])) fail("Bảng '" + m[1] + "' chưa tồn tại.");
+          const t = lower(m[1]); if (getPk(t).length) fail("Bảng " + m[1] + " đã có khoá chính (Multiple primary key defined).");
+          const cols = parseCols(m[2], m[1]);
+          try { db.run("CREATE UNIQUE INDEX " + q("pk_" + t) + " ON " + q(t) + " (" + cols.map(q).join(", ") + ")"); } catch (e) { fail("Không thể đặt khoá chính vì dữ liệu hiện có đã bị trùng giá trị ở " + cols.join(", ") + "."); }
+          reg.pk[t] = cols; return { kind: "ok", msg: "Query OK, 0 dòng bị ảnh hưởng (khoá chính " + cols.join(", ") + " của bảng " + t + ")" };
+        }
+        if ((m = /^ALTER\s+TABLE\s+`?(\w+)`?\s+ADD\s+(?:CONSTRAINT\s+`?\w+`?\s+)?FOREIGN\s+KEY\s*\(([^)]+)\)\s*REFERENCES\s+`?(\w+)`?\s*\(([^)]+)\)$/i.exec(flat))) {
+          needDb(); if (!hasTable(db, m[1])) fail("Bảng '" + m[1] + "' chưa tồn tại."); if (!hasTable(db, m[3])) fail("Bảng tham chiếu '" + m[3] + "' chưa tồn tại.");
+          const cols = parseCols(m[2], m[1]), rcols = parseCols(m[4], m[3]);
+          if (cols.length !== rcols.length) fail("Số trường của khoá ngoài và số trường được tham chiếu phải bằng nhau.");
+          reg.fk.push({ table: lower(m[1]), cols: cols, rt: lower(m[3]), rcols: rcols });
+          return { kind: "ok", msg: "Query OK, 0 dòng bị ảnh hưởng (khoá ngoài " + cols.join(", ") + " → " + lower(m[3]) + "(" + rcols.join(", ") + "))" };
+        }
+        if (/^ALTER\b/i.test(flat)) fail("Phòng thực hành hỗ trợ ALTER TABLE … ADD PRIMARY KEY (…) và ALTER TABLE … ADD FOREIGN KEY (…) REFERENCES …(…).");
+        if (/^SELECT\b/i.test(flat)) {
+          needDb();
+          const stmt = db.prepare(sql); const columns = stmt.getColumnNames(); const rows = [];
+          try { while (stmt.step()) rows.push(stmt.get()); } finally { stmt.free(); }
+          session.last = { columns: columns, rows: rows, sql: flat };
+          return { kind: "rows", columns: columns, rows: rows };
+        }
+        if (/^(INSERT|UPDATE|DELETE)\b/i.test(flat)) { needDb(); db.run(sql); const n = db.getRowsModified(); return { kind: "ok", msg: "Query OK, " + n + " dòng bị ảnh hưởng" }; }
+        if (/^CREATE\s+TABLE\b/i.test(flat)) { needDb(); db.run(sql); afterDdl(); return { kind: "ok", msg: "Query OK, 0 dòng bị ảnh hưởng (đã tạo bảng)" }; }
+        if (/^DROP\s+TABLE\b/i.test(flat)) {
+          needDb(); db.run(sql); const names = tableList(db).map(lower);
+          Object.keys(reg.pk).forEach(function (k) { if (names.indexOf(k) < 0) delete reg.pk[k]; });
+          reg.fk = reg.fk.filter(function (f) { return names.indexOf(f.table) >= 0 && names.indexOf(f.rt) >= 0; });
+          return { kind: "ok", msg: "Query OK, 0 dòng bị ảnh hưởng (đã xoá bảng)" };
+        }
+        fail("Phòng thực hành hỗ trợ: CREATE DATABASE, USE, CREATE TABLE, ALTER TABLE (PRIMARY/FOREIGN KEY), DROP TABLE, SELECT, INSERT, UPDATE, DELETE, GRANT, REVOKE, SHOW và DESCRIBE.");
+      }
+
+      /* ----- hiển thị ----- */
+      function resultHtml(r) {
+        if (r.kind === "ok") return '<p class="ok-msg">' + esc(r.msg) + "</p>";
+        if (!r.rows.length) return '<p class="ok-msg">Empty set — không có dòng nào phù hợp (các cột: ' + esc(r.columns.join(", ") || "—") + ").</p>";
+        let html = '<table class="result-table"><thead><tr>' + r.columns.map(function (c) { return "<th>" + esc(c) + "</th>"; }).join("") + "</tr></thead><tbody>";
+        r.rows.forEach(function (row) { html += "<tr>" + row.map(function (v) { return "<td>" + esc(v === null ? "NULL" : v) + "</td>"; }).join("") + "</tr>"; });
+        return html + '</tbody></table><p class="row-count">' + r.rows.length + " dòng</p>";
+      }
+      function renderDbView() {
+        const open = {}; Array.from(dbView.querySelectorAll("details")).forEach(function (d) { open[d.dataset.table] = d.open; });
+        const names = tableList(session.db);
+        if (!names.length) { dbView.innerHTML = '<p class="fallback-description">Chưa có bảng nào. Hãy tạo bảng bằng CREATE TABLE.</p>'; return; }
+        dbView.innerHTML = names.map(function (t, i) {
+          const info = tableInfo(session.db, t); const pk = getPk(t); const fks = getFks(t);
+          const fkCols = {}; fks.forEach(function (f) { f.cols.forEach(function (c) { fkCols[c] = true; }); });
+          const data = session.db.exec("SELECT * FROM " + q(t) + " LIMIT 12");
+          const total = session.db.exec("SELECT COUNT(*) FROM " + q(t))[0].values[0][0];
+          const isOpen = Object.prototype.hasOwnProperty.call(open, t) ? open[t] : i < 3;
+          let h = '<details data-table="' + esc(t) + '"' + (isOpen ? " open" : "") + "><summary>" + esc(t) + " · " + total + " dòng</summary><div class=\"mini-data\"><table><tr>";
+          info.forEach(function (c) { h += "<th>" + esc(c.name) + (pk.indexOf(lower(c.name)) >= 0 ? ' <span class="key-tag">PK</span>' : "") + (fkCols[lower(c.name)] ? ' <span class="key-tag foreign-tag">FK</span>' : "") + "</th>"; });
+          h += "</tr>";
+          if (data.length) data[0].values.forEach(function (row) { h += "<tr>" + row.map(function (v) { return "<td>" + esc(v === null ? "NULL" : v) + "</td>"; }).join("") + "</tr>"; });
+          else h += '<tr><td colspan="' + info.length + '"><em>(chưa có dòng nào)</em></td></tr>';
+          h += "</table>";
+          if (total > 12) h += '<p class="db-more">Chỉ hiển thị 12 dòng đầu.</p>';
+          fks.forEach(function (f) { h += '<p class="db-fk">FK: ' + esc(f.cols.join(", ")) + " → " + esc(f.rt) + "(" + esc(f.rcols.join(", ")) + ")</p>"; });
+          return h + "</div></details>";
+        }).join("");
+      }
+      function updateDbStatus() { setBadge(dbStatus, "CSDL: " + (session.reg.current || "chưa chọn"), session.reg.current ? "ready" : ""); }
+
+      /* ----- nhiệm vụ ----- */
+      const same = function (a, b) { return a.length === b.length && a.every(function (v, i) { return lower(v) === lower(b[i]); }); };
+      function colNames(t) { return tableInfo(session.db, t).map(function (c) { return lower(c.name); }); }
+      function colTypes(t) { return tableInfo(session.db, t).map(function (c) { return c.type.toUpperCase(); }); }
+      function count(t, where) { const r = selectRows("SELECT COUNT(*) FROM " + q(t) + (where ? " WHERE " + where : "")); return r ? r[0][0] : null; }
+      const TASKS = [
+        { id: "a1", scope: "trong", text: "Khởi tạo CSDL music.", src: "Ví dụ mục 2", sol: "CREATE DATABASE music;", check: function () { return session.reg.dbs.has("music"); } },
+        { id: "a2", scope: "trong", text: "Tạo bảng bannhac gồm Mid CHAR(4), Aid INT, TenBN VARCHAR(128) rồi thêm khoá chính Mid.", src: "Ví dụ mục 2", sol: "CREATE TABLE bannhac (\n  Mid CHAR(4),\n  Aid INT,\n  TenBN VARCHAR(128)\n);\nALTER TABLE bannhac ADD PRIMARY KEY (Mid);", check: function () { if (!hasTable(session.db, "bannhac")) return false; const t = colTypes("bannhac"); return same(colNames("bannhac"), ["mid", "aid", "tenbn"]) && /^CHAR/.test(t[0]) && /^INT/.test(t[1]) && /^VARCHAR/.test(t[2]) && same(getPk("bannhac"), ["mid"]); } },
+        { id: "a3", scope: "trong", text: "Tạo bảng nhacsi gồm Aid INT, TenNS VARCHAR(64).", src: "Ví dụ mục 2", sol: "CREATE TABLE nhacsi (\n  Aid INT,\n  TenNS VARCHAR(64)\n);", check: function () { if (!hasTable(session.db, "nhacsi")) return false; const t = colTypes("nhacsi"); return same(colNames("nhacsi"), ["aid", "tenns"]) && /^INT/.test(t[0]) && /^VARCHAR/.test(t[1]); } },
+        { id: "a4", scope: "trong", text: "Tạo bảng casi gồm Sid và TenCS, sau đó thêm khoá chính Sid cho bảng casi.", src: "Câu hỏi 1–2, mục 2", sol: "CREATE TABLE casi (\n  Sid CHAR(2),\n  TenCS VARCHAR(64)\n);\nALTER TABLE casi ADD PRIMARY KEY (Sid);", check: function () { return hasTable(session.db, "casi") && same(colNames("casi"), ["sid", "tencs"]) && same(getPk("casi"), ["sid"]); } },
+        { id: "b1", scope: "nhac", text: "Lấy tất cả các dòng của bảng nhacsi.", src: "Câu hỏi 1, mục 3", sol: "SELECT * FROM nhacsi;", check: function () { const l = session.last; return !!l && same(l.columns, ["aid", "tenns"]) && l.rows.length === count("nhacsi") && l.rows.length > 0; } },
+        { id: "b2", scope: "nhac", text: "Thêm vào bảng casi ba dòng: ('TK', 'Nguyễn Trung Kiên'), ('QD', 'Quý Dương'), ('YM', 'Y Moan').", src: "Câu hỏi 2, mục 3", sol: "INSERT INTO casi VALUES\n  ('TK', 'Nguyễn Trung Kiên'),\n  ('QD', 'Quý Dương'),\n  ('YM', 'Y Moan');", check: function () { const r = selectRows("SELECT Sid, TenCS FROM casi ORDER BY Sid"); return !!r && r.length === 3 && r[0][0] === "QD" && r[0][1] === "Quý Dương" && r[1][0] === "TK" && r[1][1] === "Nguyễn Trung Kiên" && r[2][0] === "YM" && r[2][1] === "Y Moan"; } },
+        { id: "b3", scope: "nhac", text: "Thêm nhạc sĩ (5, 'Phú Quang') và (6, 'Phan Huỳnh Điểu'), rồi đổi tên nhạc sĩ có Aid = 6 thành 'Hoàng Hiệp'.", src: "Ví dụ INSERT và UPDATE, mục 3", sol: "INSERT INTO nhacsi VALUES\n  (5, 'Phú Quang'),\n  (6, 'Phan Huỳnh Điểu');\nUPDATE nhacsi\nSET TenNS = 'Hoàng Hiệp'\nWHERE Aid = 6;", check: function () { const r = selectRows("SELECT Aid, TenNS FROM nhacsi WHERE Aid IN (5,6) ORDER BY Aid"); return !!r && r.length === 2 && r[0][1] === "Phú Quang" && r[1][1] === "Hoàng Hiệp"; } },
+        { id: "b4", scope: "nhac", text: "Xoá dòng có Mid = '0005' trong bảng bannhac (không được xoá dòng khác).", src: "Ví dụ DELETE, mục 3", sol: "DELETE FROM bannhac\nWHERE Mid = '0005';", check: function () { return count("bannhac", "Mid = '0005'") === 0 && count("bannhac") === 5; } },
+        { id: "b5", scope: "nhac", text: "Tạo bảng banthuam gồm hai trường Mid CHAR(4) và Sid CHAR(2).", src: "Luyện tập 1", sol: "CREATE TABLE banthuam (\n  Mid CHAR(4),\n  Sid CHAR(2)\n);", check: function () { return hasTable(session.db, "banthuam") && same(colNames("banthuam"), ["mid", "sid"]); } },
+        { id: "b6", scope: "nhac", text: "Tạo hai khoá ngoài Mid (tham chiếu bannhac) và Sid (tham chiếu casi) cho bảng banthuam.", src: "Luyện tập 2", sol: "ALTER TABLE banthuam ADD FOREIGN KEY (Mid) REFERENCES bannhac(Mid);\nALTER TABLE banthuam ADD FOREIGN KEY (Sid) REFERENCES casi(Sid);", check: function () { if (!hasTable(session.db, "banthuam")) return false; const f = getFks("banthuam"); const has = function (c, t) { return f.some(function (x) { return same(x.cols, [c]) && x.rt === t && same(x.rcols, [c]); }); }; return has("mid", "bannhac") && has("sid", "casi"); } },
+        { id: "c1", scope: "daydu", text: "Lấy các cột Mid, Sid của bảng banthuam và cột TenBN của bảng bannhac, nối hai bảng bằng INNER JOIN.", src: "Luyện tập 3", sol: "SELECT banthuam.Mid, banthuam.Sid, bannhac.TenBN\nFROM banthuam INNER JOIN bannhac\nON banthuam.Mid = bannhac.Mid;", check: function () { const l = session.last; return !!l && same(l.columns, ["mid", "sid", "tenbn"]) && l.rows.length === 6; } },
+        { id: "c2", scope: "daydu", text: "Vận dụng: nối ba bảng banthuam, bannhac, casi; lấy các cột Mid, Sid, TenBN, TenCS.", src: "Vận dụng", sol: "SELECT banthuam.Mid, banthuam.Sid, bannhac.TenBN, casi.TenCS\nFROM banthuam\nINNER JOIN bannhac ON banthuam.Mid = bannhac.Mid\nINNER JOIN casi ON banthuam.Sid = casi.Sid;", check: function () { const l = session.last; return !!l && same(l.columns, ["mid", "sid", "tenbn", "tencs"]) && l.rows.length === 6; } },
+        { id: "c3", scope: "daydu", text: "Tính điểm trung bình cộng môn Toán của lớp 11A bằng hàm AVG.", src: "Ví dụ mục 3", sol: "SELECT AVG(tb) FROM diemtoan_11A;", check: function () { const l = session.last; return !!l && l.rows.length === 1 && l.columns.length === 1 && /avg/i.test(l.columns[0]); } },
+        { id: "c4", scope: "daydu", text: "Lập danh sách các học sinh có điểm trung bình môn Toán trên 8 (lấy hoten, tb).", src: "Hoạt động 1, mục 1", sol: "SELECT hoten, tb\nFROM diemtoan_11A\nWHERE tb > 8;", check: function () { const l = session.last; return !!l && same(l.columns, ["hoten", "tb"]) && l.rows.length === 3 && l.rows.every(function (r) { return r[1] > 8; }); } },
+        { id: "c5", scope: ["nhac", "daydu"], text: "Lấy Mid, TenBN của các bản nhạc có Aid = 1, sắp xếp theo TenBN.", src: "Ví dụ SELECT, mục 3", sol: "SELECT Mid, TenBN\nFROM bannhac\nWHERE Aid = 1\nORDER BY TenBN;", check: function () { const l = session.last; const expected = selectRows("SELECT Mid, TenBN FROM bannhac WHERE Aid = 1 ORDER BY TenBN"); return !!l && !!expected && same(l.columns, ["mid", "tenbn"]) && expected.length > 0 && JSON.stringify(l.rows) === JSON.stringify(expected) && /order\s+by/i.test(l.sql) && /where/i.test(l.sql); } },
+        { id: "d1", scope: "all", text: "Cấp quyền SELECT trên tất cả các bảng của CSDL music cho người dùng guest.", src: "Ví dụ mục 4", sol: "GRANT select\nON music.*\nTO guest;", check: function () { return session.reg.grants.guest.some(function (g) { return g.priv === "SELECT" && g.obj === "music.*"; }); } },
+        { id: "d2", scope: "all", text: "Thu hồi quyền CREATE và ALTER của người dùng mod đối với bảng bannhac.", src: "Ví dụ mục 4", sol: "REVOKE create, alter\nON music.bannhac\nFROM mod;", check: function () { return !session.reg.grants.mod.some(function (g) { return g.obj === "music.bannhac" && (g.priv === "CREATE" || g.priv === "ALTER"); }); } },
+        { id: "d3", scope: "all", text: "Cấp quyền UPDATE trên tất cả các bảng của CSDL music cho người dùng mod.", src: "Câu hỏi 1, mục 4", sol: "GRANT update\nON music.*\nTO mod;", check: function () { return session.reg.grants.mod.some(function (g) { return g.priv === "UPDATE" && g.obj === "music.*"; }); } },
+        { id: "d4", scope: "all", text: "Thu hồi quyền DELETE đối với bảng nhacsi của người dùng mod.", src: "Câu hỏi 2, mục 4", sol: "REVOKE delete\nON music.nhacsi\nFROM mod;", check: function () { return !session.reg.grants.mod.some(function (g) { return g.priv === "DELETE" && g.obj === "music.nhacsi"; }); } }
+      ];
+      function inScope(task) { return task.scope === "all" || task.scope === presetKey || (Array.isArray(task.scope) && task.scope.indexOf(presetKey) >= 0); }
+      function evaluateTasks() {
+        TASKS.forEach(function (t) { if (inScope(t) && !done.has(t.id)) { try { if (t.check()) done.add(t.id); } catch (e) { /* bỏ qua lỗi kiểm tra */ } } });
+        renderTasks();
+      }
+      function renderTasks() {
+        const list = TASKS.filter(inScope);
+        const finished = list.filter(function (t) { return done.has(t.id); }).length;
+        taskProgress.textContent = "Hoàn thành " + finished + "/" + list.length + " nhiệm vụ" + (finished === list.length ? " — xuất sắc!" : "");
+        taskList.replaceChildren();
+        list.forEach(function (t, i) {
+          const item = document.createElement("div"); item.className = "task-item" + (done.has(t.id) ? " done" : "");
+          const mark = document.createElement("span"); mark.className = "task-mark"; mark.textContent = done.has(t.id) ? "✓" : String(i + 1);
+          const box = document.createElement("div");
+          const p = document.createElement("p"); p.textContent = t.text;
+          const src = document.createElement("p"); src.className = "src"; src.textContent = "Nguồn: " + t.src;
+          const det = document.createElement("details"); const sum = document.createElement("summary"); sum.textContent = "Xem lệnh gợi ý";
+          const pre = document.createElement("pre"); pre.className = "sql"; setSql(pre, t.sol);
+          det.append(sum, pre); box.append(p, src, det); item.append(mark, box); taskList.append(item);
+        });
+      }
+
+      /* ----- chạy ----- */
+      function run() {
+        if (!SQL || !session) return;
+        const stmts = splitStatements(editor.value);
+        if (!stmts.length) { output.innerHTML = '<pre class="error-output">Hãy nhập ít nhất một câu lệnh SQL (kết thúc bằng dấu “;”).</pre>'; setBadge(runStatus, "Lượt chạy: Chưa có lệnh", "error"); return; }
+        let html = "", ok = 0, failed = false;
+        for (let i = 0; i < stmts.length; i++) {
+          html += '<div class="stmt-echo">mysql&gt; ' + highlightSql(stmts[i]) + "</div>";
+          try { html += resultHtml(execOne(stmts[i])); ok += 1; }
+          catch (err) {
+            const info = err && err.plain ? { text: err.message, raw: "" } : viMsg(err);
+            html += '<pre class="error-output">ERROR: ' + esc(info.text) + (info.raw ? '<span class="err-detail">Chi tiết: ' + esc(info.raw) + "</span>" : "") + "</pre>";
+            if (i < stmts.length - 1) html += '<p class="stmt-skip">Các câu lệnh phía sau chưa được thực hiện.</p>';
+            failed = true; break;
+          }
+        }
+        output.innerHTML = html;
+        setBadge(runStatus, failed ? "Lượt chạy: Có lỗi" : "Lượt chạy: Thành công (" + ok + " câu)", failed ? "error" : "ready");
+        renderDbView(); updateDbStatus(); evaluateTasks();
+      }
+      function clearOutput() { output.innerHTML = '<pre class="code-placeholder">Kết quả sẽ hiển thị tại đây.</pre>'; setBadge(runStatus, "Lượt chạy: Chưa chạy", ""); }
+      function loadPreset(key, keepEditor) {
+        presetKey = key; done.clear();
+        presetButtons.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.preset === key)); });
+        presetNote.textContent = PRESETS[key].note;
+        if (SQL) { if (session) session.db.close(); session = createSession(key); renderDbView(); updateDbStatus(); evaluateTasks(); }
+        else renderTasks();
+        if (!keepEditor) editor.value = PRESETS[key].starter;
+        clearOutput();
+      }
+      function loadExample(id) {
+        const ex = EXAMPLES[id]; if (!ex) return;
+        if (ex.preset && ex.preset !== presetKey) loadPreset(ex.preset, true);
+        editor.value = ex.sql; clearOutput();
+      }
+
+      runBtn.addEventListener("click", run);
+      clearBtn.addEventListener("click", clearOutput);
+      resetBtn.addEventListener("click", function () { loadPreset(presetKey, true); });
+      editor.addEventListener("keydown", function (e) { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); run(); } });
+      presetButtons.forEach(function (b) { b.addEventListener("click", function () { loadPreset(b.dataset.preset, false); }); });
+      Array.from(document.querySelectorAll("[data-example]")).forEach(function (b) { b.addEventListener("click", function () { loadExample(b.dataset.example); }); });
+      const privTry = el("priv-try");
+      if (privTry) privTry.addEventListener("click", function () { if (window.__privSql) { editor.value = window.__privSql; clearOutput(); } });
+
+      editor.value = PRESETS.nhac.starter; presetNote.textContent = PRESETS.nhac.note; renderTasks();
+      setBadge(engineStatus, "Bộ máy: Đang tải", "running");
+
+      function startEngine(tries) {
+        if (typeof initSqlJs === "undefined") {
+          if (tries > 60) { setBadge(engineStatus, "Bộ máy: Không tải được", "error"); output.innerHTML = '<pre class="error-output">Không tải được bộ máy SQL (cần kết nối Internet). Phần đọc bài và luyện tập vẫn dùng bình thường.</pre>'; return; }
+          window.setTimeout(function () { startEngine(tries + 1); }, 250); return;
+        }
+        initSqlJs({ locateFile: function (file) { return "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/" + file; } }).then(function (lib) {
+          SQL = lib; setBadge(engineStatus, "Bộ máy: Sẵn sàng", "ready"); runBtn.disabled = false;
+          loadPreset(presetKey, true);
+        }).catch(function () { setBadge(engineStatus, "Bộ máy: Lỗi tải", "error"); output.innerHTML = '<pre class="error-output">Không khởi tạo được bộ máy SQL. Hãy tải lại trang hoặc kiểm tra kết nối mạng.</pre>'; });
+      }
+      startEngine(0);
+    });
+  </script>
+
+  <!-- Luyện tập: phân loại và trắc nghiệm -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        const clsData = [
+          ["CREATE TABLE casi (\n  Sid CHAR(2),\n  TenCS VARCHAR(64)\n);", "DDL"],
+          ["SELECT TenBN FROM bannhac WHERE Aid = 1;", "DML"],
+          ["GRANT select ON music.* TO guest;", "DCL"],
+          ["ALTER TABLE bannhac ADD PRIMARY KEY (Mid);", "DDL"],
+          ["INSERT INTO nhacsi VALUES (5, 'Phú Quang');", "DML"],
+          ["REVOKE delete ON music.nhacsi FROM mod;", "DCL"],
+          ["UPDATE nhacsi SET TenNS = 'Hoàng Hiệp' WHERE Aid = 6;", "DML"],
+          ["CREATE DATABASE music;", "DDL"]
+        ];
+        const clsList = document.getElementById("cls-list");
+        const clsStatus = document.getElementById("cls-status");
+        if (clsList && clsStatus) {
+          const state = new Array(clsData.length).fill(null);
+          function updateStatus() {
+            const answered = state.filter(function (s) { return s !== null; }).length;
+            const right = state.filter(function (s) { return s === true; }).length;
+            clsStatus.textContent = answered === clsData.length ? "Hoàn thành: đúng " + right + "/" + clsData.length + " câu lệnh." + (right === clsData.length ? " Rất tốt!" : " Hãy xem lại các câu lệnh màu đỏ.") : "Đã trả lời " + answered + "/" + clsData.length + " – đúng " + right + ".";
+          }
+          clsData.forEach(function (row, i) {
+            const item = document.createElement("div"); item.className = "cls-item";
+            const pre = document.createElement("pre"); pre.className = "sql"; setSql(pre, row[0]);
+            const buttons = document.createElement("div"); buttons.className = "cls-buttons";
+            ["DDL", "DML", "DCL"].forEach(function (kind) {
+              const b = document.createElement("button"); b.type = "button"; b.className = "chip-btn"; b.textContent = kind;
+              b.addEventListener("click", function () {
+                const correct = kind === row[1];
+                if (state[i] === true) return;
+                state[i] = correct; item.className = "cls-item " + (correct ? "right" : "wrong");
+                if (correct) Array.from(buttons.children).forEach(function (x) { x.disabled = true; x.setAttribute("aria-pressed", String(x === b)); });
+                updateStatus();
+              });
+              buttons.append(b);
+            });
+            item.append(pre, buttons); clsList.append(item);
+          });
+        }
+
+        const quizData = [
+          { question: "So với cách viết chương trình tự duyệt từng bản ghi trong tệp, điểm khác biệt cơ bản của việc truy xuất bằng SQL là gì?", options: ["SQL chỉ dùng được với dữ liệu dạng ảnh.", "Người dùng chỉ cần nêu dữ liệu cần lấy; hệ QTCSDL tự lo cách thực hiện.", "Người dùng vẫn phải biết cấu trúc tệp và tự viết thủ tục duyệt dữ liệu.", "SQL không cần dùng đến hệ quản trị cơ sở dữ liệu."], answer: 1, correct: "Đúng! Ngôn ngữ truy vấn cho phép nêu “muốn làm gì”, không phải nghĩ “làm thế nào”.", hint: "Nhớ lại Hoạt động 1: số thao tác người dùng phải tự viết ở cách 2 là bao nhiêu?" },
+          { question: "SQL có ba thành phần chính là:", options: ["DOS, DML, DCL.", "DDL, DLL, DCL.", "DDL, DML, DCL.", "DDL, DML, DBMS."], answer: 2, correct: "Chính xác! DDL (định nghĩa), DML (thao tác) và DCL (kiểm soát dữ liệu).", hint: "Ba chữ cái đầu lần lượt là Definition, Manipulation, Control." },
+          { question: "Câu lệnh nào sau đây thuộc thành phần DML?", options: ["CREATE TABLE casi (Sid CHAR(2), TenCS VARCHAR(64));", "ALTER TABLE bannhac ADD PRIMARY KEY (Mid);", "GRANT select ON music.* TO guest;", "SELECT TenBN FROM bannhac WHERE Aid = 1;"], answer: 3, correct: "Đúng! SELECT truy xuất dữ liệu nên thuộc DML.", hint: "DML thao tác trên dữ liệu: truy xuất, thêm, xoá, sửa." },
+          { question: "Để thêm khoá chính Mid cho bảng bannhac, ta dùng câu lệnh nào?", options: ["CREATE PRIMARY KEY bannhac (Mid);", "UPDATE bannhac SET PRIMARY KEY = Mid;", "ADD PRIMARY KEY (Mid) INTO bannhac;", "ALTER TABLE bannhac ADD PRIMARY KEY (Mid);"], answer: 3, correct: "Chính xác! ALTER TABLE thay đổi định nghĩa bảng, ADD PRIMARY KEY (…) khai báo khoá chính.", hint: "Thay đổi định nghĩa của bảng đã tồn tại phải dùng ALTER TABLE." },
+          { question: "Với dữ liệu mẫu, câu lệnh SELECT Mid, TenBN FROM bannhac WHERE Aid = 1 ORDER BY TenBN; trả về bao nhiêu dòng, bao nhiêu cột?", options: ["6 dòng, 3 cột.", "2 dòng, 2 cột.", "2 dòng, 3 cột.", "1 dòng, 2 cột."], answer: 1, correct: "Đúng! Aid = 1 có 2 bản nhạc (0001 và 0005); SELECT chỉ lấy hai cột Mid và TenBN.", hint: "WHERE quyết định số dòng, SELECT quyết định số cột." },
+          { question: "Câu lệnh DELETE FROM bannhac; (không có WHERE) sẽ làm gì?", options: ["Báo lỗi vì thiếu điều kiện.", "Chỉ xoá dòng đầu tiên của bảng.", "Xoá tất cả các dòng của bảng bannhac (bảng vẫn còn).", "Xoá cả CSDL music."], answer: 2, correct: "Chính xác! Không có WHERE thì mọi dòng đều thoả điều kiện nên bị xoá hết.", hint: "Xem lại mô phỏng DELETE ở mục 3 khi bỏ chọn WHERE." },
+          { question: "Muốn đổi tên nhạc sĩ có Aid = 6 thành ‘Hoàng Hiệp’, ta viết:", options: ["UPDATE nhacsi WHERE Aid = 6 SET TenNS = 'Hoàng Hiệp';", "UPDATE nhacsi SET TenNS = 'Hoàng Hiệp' WHERE Aid = 6;", "INSERT INTO nhacsi SET TenNS = 'Hoàng Hiệp' WHERE Aid = 6;", "ALTER nhacsi SET TenNS = 'Hoàng Hiệp' WHERE Aid = 6;"], answer: 1, correct: "Đúng! Cú pháp là UPDATE <bảng> SET <trường> = <giá trị> WHERE <điều kiện>.", hint: "SET đứng trước WHERE, và việc sửa dòng đã có dùng UPDATE." },
+          { question: "Câu lệnh REVOKE create, alter ON music.bannhac FROM mod; có ý nghĩa gì?", options: ["Cấp quyền CREATE và ALTER cho mod đối với mọi bảng trong music.", "Xoá bảng bannhac khỏi CSDL music.", "Chỉ cho phép mod xem dữ liệu bảng bannhac.", "Thu hồi quyền CREATE và ALTER đối với bảng bannhac trong CSDL music của người dùng mod."], answer: 3, correct: "Chính xác! REVOKE thu hồi quyền, FROM chỉ ra người dùng bị thu hồi.", hint: "REVOKE đối lập với GRANT: một bên cấp, một bên thu hồi." }
+        ];
+        const question = document.getElementById("quiz-question");
+        const options = document.getElementById("quiz-options");
+        const feedback = document.getElementById("quiz-feedback");
+        const nextButton = document.getElementById("quiz-next");
+        const retryButton = document.getElementById("quiz-retry");
+        const quizCard = document.getElementById("quiz-card");
+        const resultCard = document.getElementById("quiz-result");
+        const count = document.getElementById("quiz-count");
+        const progressFill = document.getElementById("quiz-progress-fill");
+        const progress = document.querySelector(".quiz-progress");
+        const scoreText = document.getElementById("quiz-score");
+        const resultTitle = document.getElementById("quiz-result-title");
+        const resultText = document.getElementById("quiz-result-text");
+        const summaryScore = document.getElementById("summary-score");
+        const summaryMessage = document.getElementById("summary-message");
+        if (!question || !options || !nextButton || !retryButton) return;
+        const letters = ["A", "B", "C", "D"];
+        let current = 0, score = 0, answered = false;
+
+        function renderQuestion() {
+          const item = quizData[current];
+          question.textContent = item.question;
+          options.replaceChildren();
+          item.options.forEach(function (text, index) {
+            const label = document.createElement("label"); label.className = "quiz-option";
+            const input = document.createElement("input"); input.type = "radio"; input.name = "quiz-answer"; input.value = String(index);
+            const letter = document.createElement("span"); letter.className = "option-letter"; letter.textContent = letters[index];
+            const copy = document.createElement("span"); copy.textContent = text;
+            label.append(input, letter, copy); options.append(label);
+          });
+          count.textContent = "Câu " + (current + 1) + "/" + quizData.length;
+          progressFill.style.width = ((current + 1) / quizData.length * 100) + "%";
+          progress.setAttribute("aria-valuenow", String(current + 1));
+          feedback.className = "quiz-feedback"; feedback.textContent = "Chọn một phương án để nhận phản hồi.";
+          nextButton.disabled = true; nextButton.textContent = current === quizData.length - 1 ? "Xem kết quả" : "Câu tiếp theo"; answered = false;
+        }
+        function selectAnswer(event) {
+          const input = event.target.closest('input[name="quiz-answer"]');
+          if (!input || answered) return;
+          answered = true;
+          const chosen = Number(input.value); const item = quizData[current];
+          Array.from(options.querySelectorAll("input")).forEach(function (control) { control.disabled = true; });
+          Array.from(options.querySelectorAll(".quiz-option")).forEach(function (label, index) { if (index === item.answer) label.classList.add("correct"); if (index === chosen && chosen !== item.answer) label.classList.add("wrong"); });
+          if (chosen === item.answer) { score += 1; feedback.className = "quiz-feedback show correct"; feedback.textContent = item.correct; }
+          else { feedback.className = "quiz-feedback show wrong"; feedback.textContent = "Chưa đúng. " + item.hint; }
+          nextButton.disabled = false;
+        }
+        function showResult() {
+          const total = quizData.length;
+          quizCard.hidden = true; resultCard.classList.add("show"); scoreText.textContent = score + "/" + total;
+          resultTitle.textContent = score === total ? "Xuất sắc!" : score >= total - 1 ? "Làm rất tốt!" : score >= total * 0.6 ? "Đã nắm được kiến thức chính" : "Cần ôn lại một chút";
+          resultText.textContent = score >= total - 1 ? "Em đã hiểu tốt vai trò của SQL và các nhóm câu lệnh DDL, DML, DCL." : "Hãy xem lại các mục 2, 3, 4 và thử các nhiệm vụ trong phòng SQL để củng cố kiến thức.";
+          summaryScore.textContent = score + "/" + total; summaryMessage.textContent = resultText.textContent;
+        }
+        function nextQuestion() { if (!answered) return; if (current < quizData.length - 1) { current += 1; renderQuestion(); } else showResult(); }
+        function retryQuiz() { current = 0; score = 0; answered = false; resultCard.classList.remove("show"); quizCard.hidden = false; summaryScore.textContent = "Chưa hoàn thành"; summaryMessage.textContent = "Hãy hoàn thành 8 câu luyện tập để cập nhật kết quả tại đây."; renderQuestion(); }
+        options.addEventListener("change", selectAnswer); nextButton.addEventListener("click", nextQuestion); retryButton.addEventListener("click", retryQuiz);
+        renderQuestion();
+      } catch (error) {
+        console.error("Không thể khởi tạo phần luyện tập:", error);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Phiếu bài tập tự chấm Bài 14 – SQL, ngôn ngữ truy vấn có cấu trúc, Tin học 11 (theo Sách bài tập, Kết nối tri thức).">
+  <meta name="theme-color" content="#173F5F">
+  <title>Bài tập Bài 14 – SQL, ngôn ngữ truy vấn có cấu trúc | Tin học 11</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173F5F'/%3E%3Cellipse cx='32' cy='17' rx='18' ry='8' fill='%2335C0CD'/%3E%3Cpath d='M14 17v15c0 4.4 8.1 8 18 8s18-3.6 18-8V17M14 32v15c0 4.4 8.1 8 18 8s18-3.6 18-8V32' fill='none' stroke='white' stroke-width='4'/%3E%3C/svg%3E">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js" defer></script>
+  <style>
+    :root {
+      --navy: #173F5F;
+      --navy-deep: #0e2b42;
+      --cyan: #35C0CD;
+      --cyan-dark: #158f9b;
+      --cyan-soft: #e7f9fb;
+      --navy-soft: #eaf1f5;
+      --paper: #ffffff;
+      --page: #f3f7f9;
+      --ink: #182b3a;
+      --muted: #607485;
+      --line: #d7e2e8;
+      --success: #16805d;
+      --success-soft: #e8f8f1;
+      --warning: #b66a00;
+      --warning-soft: #fff5df;
+      --danger: #b64040;
+      --danger-soft: #fff0f0;
+      --shadow: 0 16px 42px rgba(23, 63, 95, .11);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 96% 2%, rgba(53, 192, 205, .14), transparent 18rem),
+        var(--page);
+      font-family: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { touch-action: manipulation; }
+    h1, h2, h3 { line-height: 1.25; }
+
+    .page-shell { width: min(1000px, calc(100% - 26px)); margin: 26px auto 80px; }
+
+    .top-card {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(22px, 4vw, 34px);
+      color: #fff;
+      background: linear-gradient(130deg, var(--navy-deep), var(--navy) 64%, #176f83);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .top-card::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      top: -110px;
+      width: 260px;
+      height: 260px;
+      border: 2px solid rgba(255, 255, 255, .12);
+      border-radius: 50%;
+    }
+    .eyebrow { display: flex; align-items: center; gap: 9px; margin: 0 0 10px; color: #bfeff2; font-size: .88rem; font-weight: 700; }
+    .eyebrow svg { width: 20px; height: 20px; }
+    .top-card h1 { margin: 0; font-size: clamp(1.6rem, 4.4vw, 2.5rem); letter-spacing: -.02em; }
+    .subtitle { max-width: 720px; margin: 12px 0 0; color: #d8eef4; }
+
+    .card {
+      margin-top: 18px;
+      padding: clamp(18px, 3.4vw, 26px);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .card h2 { margin: 0 0 6px; color: var(--navy); font-size: 1.25rem; }
+    .card h2 + .lead { margin: 0 0 14px; color: var(--muted); }
+
+    .info-card { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { display: grid; gap: 6px; }
+    .field label { color: var(--navy); font-weight: 700; font-size: .93rem; }
+    .field input {
+      min-height: 48px;
+      padding: 10px 13px;
+      border: 1px solid #b8cbd4;
+      border-radius: 11px;
+      background: #fff;
+    }
+
+    .progress-panel { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .progress-copy { color: var(--navy); font-weight: 800; white-space: nowrap; }
+    .progress-track { flex: 1 1 200px; height: 11px; background: #e1eaee; border-radius: 999px; overflow: hidden; }
+    .progress-bar { width: 0; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--cyan-dark)); transition: width .25s; }
+    .save-state { color: var(--muted); font-size: .85rem; }
+
+    details.summary-box { border: 1px solid var(--line); border-radius: 14px; background: #f8fbfc; }
+    details.summary-box + details.summary-box { margin-top: 10px; }
+    details.summary-box > summary { padding: 13px 16px; color: var(--navy); font-weight: 700; cursor: pointer; }
+    details.summary-box .summary-body { padding: 0 16px 16px; }
+    details.summary-box ul { margin: 0; padding-left: 20px; }
+    details.summary-box li { margin: 6px 0; }
+    .term { color: var(--navy); font-weight: 700; }
+
+    .question-card {
+      margin-top: 16px;
+      padding: clamp(16px, 3vw, 22px);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--cyan);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    .question-head { display: flex; gap: 12px; align-items: flex-start; }
+    .question-number {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      min-width: 56px;
+      height: 34px;
+      padding: 0 9px;
+      color: #fff;
+      background: var(--navy);
+      border-radius: 999px;
+      font-size: .86rem;
+      font-weight: 800;
+    }
+    .question-text { margin: 0; font-weight: 600; }
+    .question-context { margin: 6px 0 0; color: var(--muted); font-size: .93rem; }
+
+    .options { display: grid; gap: 10px; margin: 14px 0 0; }
+    .option {
+      position: relative;
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 11px;
+      padding: 12px 14px;
+      background: #f7fafb;
+      border: 1.5px solid #d3e0e5;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .option:hover { border-color: var(--cyan-dark); }
+    .option input { position: absolute; opacity: 0; }
+    .option-letter {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      color: var(--navy);
+      background: #fff;
+      border: 1px solid #aebfc8;
+      border-radius: 50%;
+      font-weight: 800;
+    }
+    .option:has(input:checked) { background: var(--cyan-soft); border-color: var(--cyan-dark); }
+    .option:has(input:checked) .option-letter { color: #fff; background: var(--cyan-dark); border-color: var(--cyan-dark); }
+    .option:focus-within { outline: 3px solid rgba(53, 192, 205, .35); outline-offset: 2px; }
+    .option.is-correct { background: var(--success-soft); border-color: var(--success); }
+    .option.is-wrong { background: var(--danger-soft); border-color: var(--danger); }
+
+    .table-wrap { margin: 14px 0 0; overflow-x: auto; border: 1px solid var(--line); border-radius: 13px; }
+    table.data { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    table.data caption { padding: 10px 12px 0; color: var(--navy); font-weight: 700; text-align: left; }
+    table.data th, table.data td { padding: 9px 11px; border-bottom: 1px solid #e2eaee; text-align: left; white-space: nowrap; }
+    table.data th { color: var(--navy); background: var(--cyan-soft); }
+    table.data tbody tr:last-child td { border-bottom: 0; }
+
+    .pick-hint { margin: 14px 0 8px; color: var(--navy); font-weight: 700; font-size: .93rem; }
+    .pick-list { display: flex; flex-wrap: wrap; gap: 9px; margin: 0; padding: 0; border: 0; }
+    .pick-chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 8px 14px;
+      background: #f7fafb;
+      border: 1.5px solid #d3e0e5;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .pick-chip input { position: absolute; opacity: 0; }
+    .pick-chip .tick {
+      display: grid;
+      place-items: center;
+      width: 21px;
+      height: 21px;
+      color: transparent;
+      background: #fff;
+      border: 1.5px solid #aebfc8;
+      border-radius: 6px;
+      font-size: .8rem;
+      font-weight: 900;
+    }
+    .pick-chip:has(input:checked) { background: var(--cyan-soft); border-color: var(--cyan-dark); }
+    .pick-chip:has(input:checked) .tick { color: #fff; background: var(--cyan-dark); border-color: var(--cyan-dark); }
+    .pick-chip:focus-within { outline: 3px solid rgba(53, 192, 205, .35); outline-offset: 2px; }
+
+    .select-row { display: grid; gap: 6px; margin-top: 14px; max-width: 420px; }
+    .select-row label { color: var(--navy); font-weight: 700; font-size: .93rem; }
+    .select-row select { min-height: 48px; padding: 10px 12px; border: 1px solid #b8cbd4; border-radius: 11px; background: #fff; }
+
+    .join-output { margin-top: 14px; }
+    .join-empty {
+      display: grid;
+      place-items: center;
+      min-height: 110px;
+      padding: 16px;
+      color: var(--muted);
+      background: #f7fafb;
+      border: 1px dashed #b9cbd5;
+      border-radius: 13px;
+      text-align: center;
+    }
+
+    .explain {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: .95rem;
+    }
+    .explain.show { display: block; }
+    .explain.good { color: #0e6548; background: var(--success-soft); border-left: 4px solid var(--success); }
+    .explain.bad { color: #794000; background: var(--warning-soft); border-left: 4px solid var(--warning); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 10px 18px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .15s, background .15s;
+    }
+    .btn svg { width: 19px; height: 19px; }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .btn:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid rgba(53, 192, 205, .4); outline-offset: 2px; }
+    .btn-primary { color: #fff; background: var(--navy); }
+    .btn-primary:hover { background: #205477; }
+    .btn-accent { color: var(--navy-deep); background: var(--cyan); }
+    .btn-accent:hover { background: #5bd1da; }
+    .btn-secondary { color: var(--navy); background: #fff; border-color: #b9cbd5; }
+    .btn-secondary:hover { background: var(--navy-soft); }
+    .actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 20px; }
+
+    .alert {
+      display: none;
+      margin-top: 16px;
+      padding: 13px 15px;
+      color: #794000;
+      background: var(--warning-soft);
+      border: 1px solid #e7c482;
+      border-radius: 12px;
+    }
+    .alert.show { display: block; }
+
+    .result-card { display: none; }
+    .result-card.show { display: block; }
+    .result-main { display: flex; flex-wrap: wrap; gap: 22px; align-items: center; }
+    .score-ring {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 138px;
+      height: 138px;
+      color: #fff;
+      background: var(--navy);
+      border: 11px solid var(--cyan);
+      border-radius: 50%;
+      text-align: center;
+    }
+    .score-ring strong { display: block; font-size: 2.3rem; line-height: 1; }
+    .score-ring span { font-size: .8rem; }
+    .result-copy { flex: 1 1 260px; }
+    .result-copy h2 { margin: 0 0 6px; color: var(--navy); }
+    .result-meta { color: var(--muted); font-size: .9rem; }
+    .result-actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 18px; }
+
+    .footer-note { margin: 22px 0 0; color: var(--muted); font-size: .86rem; text-align: center; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 60;
+      max-width: min(420px, calc(100% - 28px));
+      padding: 12px 18px;
+      color: #fff;
+      background: var(--navy-deep);
+      border-radius: 12px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, .25);
+      opacity: 0;
+      transform: translate(-50%, 14px);
+      transition: opacity .2s, transform .2s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 680px) {
+      .info-card { grid-template-columns: 1fr; }
+      .question-head { flex-direction: column; gap: 8px; }
+      .actions .btn, .result-actions .btn { flex: 1 1 150px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+    @media print {
+      body { background: #fff; }
+      .top-card { print-color-adjust: exact; }
+      .actions, .result-actions, .progress-panel, .toast { display: none !important; }
+      .question-card, .card { box-shadow: none; break-inside: avoid; }
+      .explain { display: block !important; }
+    }
+  
+    .back-to-list {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      margin-bottom: 14px;
+      padding: 8px 13px;
+      min-height: 40px;
+      border: 1px solid currentColor;
+      border-radius: 10px;
+      font-size: .84rem;
+      font-weight: 600;
+      text-decoration: none;
+      opacity: .85;
+    }
+    .back-to-list:hover { opacity: 1; }
+    @media print { .back-to-list { display: none !important; } }
+
+    /* ===== Bài 14: phần bổ sung ===== */
+    .sql-label { display: block; margin: 16px 0 6px; color: var(--navy); font-weight: 700; font-size: .93rem; }
+    textarea.sql-input {
+      width: 100%;
+      min-height: 130px;
+      padding: 14px;
+      color: #eaf8fa;
+      background: #0b1b28;
+      border: 1px solid #31556c;
+      border-radius: 12px;
+      font: 500 15px/1.65 Consolas, "Courier New", monospace;
+      resize: vertical;
+      tab-size: 2;
+    }
+    textarea.sql-input:focus-visible { outline: 3px solid rgba(53, 192, 205, .4); outline-offset: 2px; }
+    .run-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .run-row .btn { min-height: 42px; padding: 7px 14px; }
+    .run-output { display: none; margin-top: 12px; overflow: hidden; color: #dbf4f5; background: #08151f; border: 1px solid #2a4a5f; border-radius: 12px; }
+    .run-output.show { display: block; }
+    .run-output .echo { margin: 0; padding: 10px 14px 2px; color: #8ce7ed; font: 600 13px/1.6 Consolas, monospace; white-space: pre-wrap; border-top: 1px solid #1d3b4e; }
+    .run-output .echo:first-child { border-top: 0; }
+    .run-output .ok { margin: 0; padding: 2px 14px 10px; color: #9bf0b9; font: 600 13px Consolas, monospace; }
+    .run-output .err { margin: 0; padding: 4px 14px 12px; color: #ffc2c2; font-size: .9rem; white-space: pre-wrap; }
+    .run-output .err small { display: block; margin-top: 4px; color: #b88; }
+    .run-output .rs { overflow-x: auto; }
+    .run-output table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    .run-output th, .run-output td { padding: 7px 12px; border-bottom: 1px solid #254152; text-align: left; white-space: nowrap; }
+    .run-output th { color: #9ce7eb; background: #132d3d; }
+    .run-output .count { margin: 0; padding: 4px 14px 10px; color: #8eabbc; font: 500 12px Consolas, monospace; }
+    .hint-box { margin-top: 12px; border: 1px dashed #9db5c2; border-radius: 12px; background: #f7fafb; }
+    .hint-box summary { padding: 10px 14px; color: var(--cyan-dark); font-weight: 700; cursor: pointer; }
+    .hint-box .hint-body { padding: 0 14px 12px; font-size: .93rem; }
+    pre.sample { margin: 8px 0 0; padding: 12px 14px; overflow-x: auto; color: #eaf8fa; background: #0b1b28; border-radius: 10px; font: 500 14px/1.6 Consolas, monospace; white-space: pre; }
+    .explain pre.sample { margin-top: 10px; }
+    code.inline { padding: 1px 6px; color: var(--navy); background: var(--cyan-soft); border-radius: 6px; font-family: Consolas, "Courier New", monospace; font-size: .92em; }
+    .engine-note { margin: 12px 0 0; color: var(--muted); font-size: .85rem; }
+    .engine-note.bad { color: var(--danger); }
+    .quote-note { margin: 10px 0 0; padding: 10px 13px; color: #12616a; background: var(--cyan-soft); border-left: 4px solid var(--cyan); border-radius: 0 10px 10px 0; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <a class="back-to-list" href="index.html">&#8592; Về danh sách phiếu bài tập</a>
+    <header class="top-card">
+      <p class="eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"></path></svg>
+        Tin học 11 · Chủ đề F · Phiếu bài tập
+      </p>
+      <h1>Bài 14: SQL – Ngôn ngữ truy vấn có cấu trúc</h1>
+      <p class="subtitle">10 bài tập theo Sách bài tập (bài 14.1 – 14.10). Em gõ câu lệnh SQL vào ô, bấm <strong>Chạy thử</strong> để xem kết quả; khi bấm <strong>Chấm bài</strong>, máy sẽ chạy câu lệnh của em trên dữ liệu mẫu để kiểm tra và hiển thị lời giải.</p>
+    </header>
+
+    <section class="card info-card" aria-label="Thông tin học sinh">
+      <div class="field">
+        <label for="student-name">Họ và tên</label>
+        <input id="student-name" type="text" autocomplete="name" placeholder="Nhập họ và tên của em">
+      </div>
+      <div class="field">
+        <label for="student-class">Lớp</label>
+        <input id="student-class" type="text" autocomplete="off" placeholder="Ví dụ: 11A1">
+      </div>
+    </section>
+
+    <section class="card progress-panel" aria-label="Tiến độ làm bài">
+      <span class="progress-copy"><span id="answered-count">0</span>/10 bài đã làm</span>
+      <div class="progress-track" role="progressbar" aria-label="Số bài đã làm" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <span class="save-state" id="save-state">Bài làm được lưu trên máy của em</span>
+    </section>
+
+    <section class="card" id="tom-tat">
+      <h2>A. Tóm tắt kiến thức</h2>
+      <p class="lead">Đọc lại phần này trước khi làm bài tập.</p>
+      <details class="summary-box" open>
+        <summary>SQL là gì? Gồm những nhóm câu truy vấn nào?</summary>
+        <div class="summary-body">
+          <p>SQL là ngôn ngữ truy vấn có cấu trúc, được sử dụng phổ biến để xây dựng các chức năng của các hệ QTCSDL; vì vậy có thể thấy sự tương đồng giữa các nhóm câu truy vấn SQL với các nhóm chức năng của hệ QTCSDL:</p>
+          <ul>
+            <li>Nhóm câu truy vấn <span class="term">định nghĩa dữ liệu</span> (Data Definition Language – DDL).</li>
+            <li>Nhóm câu truy vấn <span class="term">cập nhật và truy xuất dữ liệu</span> (Data Manipulation Language – DML và Language Data Query Language – DQL).</li>
+            <li>Nhóm câu truy vấn hỗ trợ đảm bảo an ninh và an toàn dữ liệu (Data Control Language – DCL).</li>
+          </ul>
+        </div>
+      </details>
+      <details class="summary-box">
+        <summary>DDL, DML, DQL, DCL gồm những câu lệnh nào?</summary>
+        <div class="summary-body">
+          <ul>
+            <li><span class="term">DDL</span> gồm các câu truy vấn <code class="inline">CREATE</code> và <code class="inline">ALTER</code>. Trong đó CREATE là câu truy vấn định nghĩa và khởi tạo cấu trúc dữ liệu; ALTER dùng để sửa đổi cấu trúc dữ liệu đã có.</li>
+            <li><span class="term">DML</span> gồm các câu truy vấn <code class="inline">INSERT</code>, <code class="inline">UPDATE</code> và <code class="inline">DELETE</code> dùng để cập nhật dữ liệu. INSERT dùng để (chèn) thêm mới bản ghi, UPDATE dùng để thay đổi dữ liệu, DELETE dùng để xoá dữ liệu.</li>
+            <li><span class="term">DQL</span> chỉ đến câu truy vấn <code class="inline">SELECT</code> – chọn ra những dữ liệu theo những yêu cầu cụ thể.</li>
+            <li><span class="term">DCL</span> gồm các câu truy vấn <code class="inline">GRANT</code> và <code class="inline">REVOKE</code>. Trong đó GRANT dùng để cấp quyền cho người dùng, REVOKE dùng để thu hồi quyền nào đó đã cấp cho người dùng.</li>
+          </ul>
+        </div>
+      </details>
+      <p class="quote-note">Khi gõ lệnh, em dùng dấu nháy đơn thẳng <code class="inline">'như thế này'</code> quanh xâu kí tự. Nếu em sao chép từ sách có dấu nháy cong (‘ ’), máy sẽ tự đổi sang dấu nháy thẳng. Mỗi câu lệnh kết thúc bằng dấu chấm phẩy “;”.</p>
+    </section>
+
+    <form id="worksheet-form" novalidate>
+      <section class="card" aria-labelledby="phan-b-title">
+        <h2 id="phan-b-title">B. Bài tập và thực hành</h2>
+        <p class="lead">Các bảng A, B, C là ba bảng đã dùng ở các câu 13.4, 13.5, 13.6 (Bài 13). Mỗi bài được chạy trên dữ liệu mẫu riêng nên em có thể làm theo bất kì thứ tự nào.</p>
+        <p class="engine-note" id="engine-note">Bộ máy SQL: đang tải…</p>
+      </section>
+
+      <!-- 14.1 -->
+      <article class="question-card" id="card-q1" data-item="q1">
+        <div class="question-head">
+          <span class="question-number">14.1</span>
+          <div>
+            <p class="question-text">Hãy viết câu truy vấn SQL tạo lập bảng <em>Danh sách môn học</em> (Bảng A ở câu 13.4). Biết rằng <em>Mã môn học</em> là xâu 5 kí tự, <em>Tên môn học</em> là xâu tối đa 64 kí tự; quy định đặt tên các trường tương ứng là <code class="inline">mamh</code> và <code class="inline">tenmh</code>, tên bảng là <code class="inline">monhoc</code>.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>Danh sách môn học (Bảng A)</caption>
+            <thead><tr><th scope="col">Mã môn học</th><th scope="col">Môn học</th></tr></thead>
+            <tbody><tr><td>MAT10</td><td>Toán học</td></tr><tr><td>MAT11</td><td>Toán học</td></tr><tr><td>PHY10</td><td>Vật lí</td></tr><tr><td>PHY11</td><td>Vật lí</td></tr><tr><td>LIT10</td><td>Ngữ văn</td></tr></tbody>
+          </table>
+        </div>
+        <label class="sql-label" for="q1-sql">Câu lệnh SQL của em</label>
+        <textarea class="sql-input" id="q1-sql" name="q1-sql" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="CREATE TABLE …"></textarea>
+        <div class="run-row"><button class="btn btn-secondary run-btn" type="button" data-q="q1">▶ Chạy thử</button></div>
+        <div class="run-output" id="out-q1" aria-live="polite"></div>
+        <details class="hint-box"><summary>Gợi ý</summary><div class="hint-body">Dùng <code class="inline">CREATE TABLE tên_bảng ( tên_trường kiểu_dữ_liệu, … );</code>. Xâu có độ dài cố định n kí tự dùng <code class="inline">CHAR(n)</code>; xâu có độ dài thay đổi, tối đa n kí tự dùng <code class="inline">VARCHAR(n)</code>.</div></details>
+        <p class="explain" id="explain-q1" role="status"></p>
+      </article>
+
+      <!-- 14.2 -->
+      <article class="question-card" id="card-q2" data-item="q2">
+        <div class="question-head">
+          <span class="question-number">14.2</span>
+          <div>
+            <p class="question-text">Hãy viết câu truy vấn tạo bảng <em>Danh sách học sinh</em> (Bảng B). Biết rằng <em>Mã học sinh</em> là xâu 6 kí tự, <em>Số CCCD</em> là xâu 12 kí tự, <em>Họ và tên</em> là xâu không quá 64 kí tự, <em>Giới tính</em> 1 kí tự với quy ước 1 là nữ, 0 là nam với các trường có tên gọi tương ứng là <code class="inline">mahs</code>, <code class="inline">cccd</code>, <code class="inline">hoten</code>, <code class="inline">ngsinh</code>, <code class="inline">gt</code> và tên bảng là <code class="inline">hocsinh</code>.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>Danh sách học sinh (Bảng B)</caption>
+            <thead><tr><th scope="col">Mã học sinh</th><th scope="col">Số CCCD</th><th scope="col">Họ và tên</th><th scope="col">Ngày sinh</th><th scope="col">Giới tính</th></tr></thead>
+            <tbody><tr><td>190001</td><td>032204200141</td><td>Trần Văn An</td><td>12/01/2004</td><td>Nam</td></tr><tr><td>190002</td><td>032203210023</td><td>Nguyễn Hoàng Anh</td><td>21/08/2003</td><td>Nam</td></tr><tr><td>190003</td><td>032304003252</td><td>Phan Vàng Anh</td><td>17/05/2004</td><td>Nữ</td></tr></tbody>
+          </table>
+        </div>
+        <label class="sql-label" for="q2-sql">Câu lệnh SQL của em</label>
+        <textarea class="sql-input" id="q2-sql" name="q2-sql" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="CREATE TABLE …"></textarea>
+        <div class="run-row"><button class="btn btn-secondary run-btn" type="button" data-q="q2">▶ Chạy thử</button></div>
+        <div class="run-output" id="out-q2" aria-live="polite"></div>
+        <details class="hint-box"><summary>Gợi ý</summary><div class="hint-body">Ngày sinh dùng kiểu <code class="inline">DATE</code> (dạng ‘YYYY-MM-DD’). Mã học sinh, số CCCD và giới tính là các xâu có độ dài cố định nên dùng <code class="inline">CHAR(n)</code>. Các trường viết theo đúng thứ tự trong bảng B.</div></details>
+        <p class="explain" id="explain-q2" role="status"></p>
+      </article>
+
+      <!-- 14.3 -->
+      <article class="question-card" id="card-q3" data-item="q3">
+        <div class="question-head">
+          <span class="question-number">14.3</span>
+          <div>
+            <p class="question-text">Hãy viết câu truy vấn thay đổi tên trường <code class="inline">ngsinh</code> của bảng <code class="inline">hocsinh</code> thành <code class="inline">ngaysinh</code>.</p>
+            <p class="question-context">Máy đã tạo sẵn bảng <code class="inline">hocsinh</code> (có 3 học sinh) như ở câu 14.2. Sau khi đổi tên, dữ liệu của bảng phải còn nguyên.</p>
+          </div>
+        </div>
+        <label class="sql-label" for="q3-sql">Câu lệnh SQL của em</label>
+        <textarea class="sql-input" id="q3-sql" name="q3-sql" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="ALTER TABLE …"></textarea>
+        <div class="run-row"><button class="btn btn-secondary run-btn" type="button" data-q="q3">▶ Chạy thử</button></div>
+        <div class="run-output" id="out-q3" aria-live="polite"></div>
+        <details class="hint-box"><summary>Gợi ý</summary><div class="hint-body">Thay đổi định nghĩa của bảng đã có phải dùng <code class="inline">ALTER TABLE</code>. Có thể viết <code class="inline">ALTER TABLE tên_bảng RENAME COLUMN tên_cũ TO tên_mới;</code> hoặc <code class="inline">ALTER TABLE tên_bảng CHANGE tên_cũ tên_mới kiểu_dữ_liệu;</code> (cách thứ hai dùng trong MySQL).</div></details>
+        <p class="explain" id="explain-q3" role="status"></p>
+      </article>
+
+      <!-- 14.4 -->
+      <article class="question-card" id="card-q4" data-item="q4">
+        <div class="question-head">
+          <span class="question-number">14.4</span>
+          <div>
+            <p class="question-text">Hãy viết câu truy vấn tạo bảng <em>Điểm môn học</em> (Bảng C). Biết rằng <em>Điểm</em> là số tự nhiên không lớn hơn 10 với tên trường là <code class="inline">diem</code> và tên bảng là <code class="inline">diemmonhoc</code>.</p>
+            <p class="question-context">Hai trường còn lại là mã học sinh và mã môn học, đặt tên và chọn kiểu dữ liệu giống như ở bảng <code class="inline">hocsinh</code> (<code class="inline">mahs</code>) và <code class="inline">monhoc</code> (<code class="inline">mamh</code>). Viết các trường theo thứ tự: mahs, mamh, diem.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>Điểm môn học (Bảng C)</caption>
+            <thead><tr><th scope="col">Mã học sinh</th><th scope="col">Mã môn học</th><th scope="col">Điểm</th></tr></thead>
+            <tbody><tr><td>190001</td><td>MAT11</td><td>9</td></tr><tr><td>190001</td><td>PHY11</td><td>10</td></tr><tr><td>190002</td><td>LIT10</td><td>8</td></tr><tr><td>190002</td><td>MAT10</td><td>8</td></tr></tbody>
+          </table>
+        </div>
+        <label class="sql-label" for="q4-sql">Câu lệnh SQL của em</label>
+        <textarea class="sql-input" id="q4-sql" name="q4-sql" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="CREATE TABLE …"></textarea>
+        <div class="run-row"><button class="btn btn-secondary run-btn" type="button" data-q="q4">▶ Chạy thử</button></div>
+        <div class="run-output" id="out-q4" aria-live="polite"></div>
+        <details class="hint-box"><summary>Gợi ý</summary><div class="hint-body">Số tự nhiên dùng kiểu <code class="inline">INT</code>. Em có thể khai báo thêm khoá chính, khoá ngoài nếu muốn, nhưng chỉ cần đúng ba trường là đủ để được điểm.</div></details>
+        <p class="explain" id="explain-q4" role="status"></p>
+      </article>
+
+      <!-- 14.5 -->
+      <article class="question-card" id="card-q5" data-item="q5">
+        <div class="question-head">
+          <span class="question-number">14.5</span>
+          <div>
+            <p class="question-text">Hãy viết câu truy vấn thêm các dòng dữ liệu (‘MAT10’, ‘Toán học’), (‘MAT11’, ‘Toán học’), (‘PHY10’, ‘Vật lí’), (‘PHY11’, ‘Vật lí’), (‘LIT10’, ‘Ngữ văn’) vào bảng <code class="inline">monhoc</code>.</p>
+            <p class="question-context">Máy đã tạo sẵn bảng <code class="inline">monhoc</code> còn trống (mamh, tenmh).</p>
+          </div>
+        </div>
+        <label class="sql-label" for="q5-sql">Câu lệnh SQL của em</label>
+        <textarea class="sql-input" id="q5-sql" name="q5-sql" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="INSERT INTO …"></textarea>
+        <div class="run-row"><button class="btn btn-secondary run-btn" type="button" data-q="q5">▶ Chạy thử</button></div>
+        <div class="run-output" id="out-q5" aria-live="polite"></div>
+        <details class="hint-box"><summary>Gợi ý</summary><div class="hint-body"><code class="inline">INSERT INTO tên_bảng VALUES (giá_trị_1, giá_trị_2), (…), …;</code> – các xâu kí tự đặt trong dấu nháy đơn, ngăn cách các dòng bằng dấu phẩy.</div></details>
+        <p class="explain" id="explain-q5" role="status"></p>
+      </article>
+
+      <!-- 14.6 -->
+      <article class="question-card" id="card-q6" data-item="q6">
+        <div class="question-head">
+          <span class="question-number">14.6</span>
+          <div>
+            <p class="question-text">Hãy viết câu truy vấn sửa chữa tên môn học ‘Toan hoc’ thành ‘Toán học’ trong bảng <code class="inline">monhoc</code>.</p>
+            <p class="question-context">Giả sử khi nhập, hai dòng môn Toán bị gõ thiếu dấu. Dữ liệu hiện có của bảng:</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>Bảng monhoc (dữ liệu nhập sai)</caption>
+            <thead><tr><th scope="col">mamh</th><th scope="col">tenmh</th></tr></thead>
+            <tbody><tr><td>MAT10</td><td>Toan hoc</td></tr><tr><td>MAT11</td><td>Toan hoc</td></tr><tr><td>PHY10</td><td>Vật lí</td></tr></tbody>
+          </table>
+        </div>
+        <label class="sql-label" for="q6-sql">Câu lệnh SQL của em</label>
+        <textarea class="sql-input" id="q6-sql" name="q6-sql" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="UPDATE …"></textarea>
+        <div class="run-row"><button class="btn btn-secondary run-btn" type="button" data-q="q6">▶ Chạy thử</button></div>
+        <div class="run-output" id="out-q6" aria-live="polite"></div>
+        <details class="hint-box"><summary>Gợi ý</summary><div class="hint-body"><code class="inline">UPDATE tên_bảng SET tên_trường = giá_trị_mới WHERE điều_kiện;</code> – nhớ dùng WHERE để chỉ sửa những dòng cần sửa (dòng ‘Vật lí’ phải giữ nguyên).</div></details>
+        <p class="explain" id="explain-q6" role="status"></p>
+      </article>
+
+      <!-- 14.7 -->
+      <article class="question-card" id="card-q7" data-item="q7">
+        <div class="question-head">
+          <span class="question-number">14.7</span>
+          <div>
+            <p class="question-text">Hãy viết câu truy vấn xoá dòng (‘LIT10’, ‘Ngữ văn’) trong bảng <code class="inline">monhoc</code>.</p>
+            <p class="question-context">Máy đã nạp sẵn 5 dòng dữ liệu vào bảng <code class="inline">monhoc</code> (như Bảng A).</p>
+          </div>
+        </div>
+        <label class="sql-label" for="q7-sql">Câu lệnh SQL của em</label>
+        <textarea class="sql-input" id="q7-sql" name="q7-sql" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="DELETE FROM …"></textarea>
+        <div class="run-row"><button class="btn btn-secondary run-btn" type="button" data-q="q7">▶ Chạy thử</button></div>
+        <div class="run-output" id="out-q7" aria-live="polite"></div>
+        <details class="hint-box"><summary>Gợi ý</summary><div class="hint-body"><code class="inline">DELETE FROM tên_bảng WHERE điều_kiện;</code> – nếu quên WHERE, toàn bộ các dòng của bảng sẽ bị xoá!</div></details>
+        <p class="explain" id="explain-q7" role="status"></p>
+      </article>
+
+      <!-- 14.8 -->
+      <article class="question-card" id="card-q8" data-item="q8">
+        <div class="question-head">
+          <span class="question-number">14.8</span>
+          <div>
+            <p class="question-text">Hãy viết câu truy vấn đọc ra toàn bộ dữ liệu của bảng <code class="inline">monhoc</code>.</p>
+            <p class="question-context">Bảng <code class="inline">monhoc</code> đã có sẵn 5 dòng dữ liệu.</p>
+          </div>
+        </div>
+        <label class="sql-label" for="q8-sql">Câu lệnh SQL của em</label>
+        <textarea class="sql-input" id="q8-sql" name="q8-sql" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="SELECT …"></textarea>
+        <div class="run-row"><button class="btn btn-secondary run-btn" type="button" data-q="q8">▶ Chạy thử</button></div>
+        <div class="run-output" id="out-q8" aria-live="polite"></div>
+        <details class="hint-box"><summary>Gợi ý</summary><div class="hint-body"><code class="inline">SELECT * FROM tên_bảng;</code> – dấu <code class="inline">*</code> nghĩa là lấy tất cả các trường.</div></details>
+        <p class="explain" id="explain-q8" role="status"></p>
+      </article>
+
+      <!-- 14.9 -->
+      <article class="question-card" id="card-q9" data-item="q9">
+        <div class="question-head">
+          <span class="question-number">14.9</span>
+          <div>
+            <p class="question-text">Hãy viết câu truy vấn đọc ra các môn có tên là ‘Toán học’.</p>
+            <p class="question-context">Bảng <code class="inline">monhoc</code> đã có sẵn 5 dòng dữ liệu.</p>
+          </div>
+        </div>
+        <label class="sql-label" for="q9-sql">Câu lệnh SQL của em</label>
+        <textarea class="sql-input" id="q9-sql" name="q9-sql" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="SELECT …"></textarea>
+        <div class="run-row"><button class="btn btn-secondary run-btn" type="button" data-q="q9">▶ Chạy thử</button></div>
+        <div class="run-output" id="out-q9" aria-live="polite"></div>
+        <details class="hint-box"><summary>Gợi ý</summary><div class="hint-body">Thêm mệnh đề <code class="inline">WHERE tenmh = '…'</code> sau FROM để chỉ chọn các dòng thoả mãn điều kiện.</div></details>
+        <p class="explain" id="explain-q9" role="status"></p>
+      </article>
+
+      <!-- 14.10 -->
+      <article class="question-card" id="card-q10" data-item="q10">
+        <div class="question-head">
+          <span class="question-number">14.10</span>
+          <div>
+            <p class="question-text">Mô tả kết quả của câu truy vấn:</p>
+            <p class="question-context">Bảng <code class="inline">monhoc</code> có 5 dòng dữ liệu như Bảng A (MAT10, MAT11, PHY10, PHY11, LIT10).</p>
+            <pre class="sample" style="margin-top:10px">SELECT tenmh FROM monhoc
+WHERE mamh = 'PHY10' OR mamh = 'PHY11';</pre>
+          </div>
+        </div>
+        <div class="options" role="radiogroup" aria-label="Chọn mô tả đúng kết quả của câu truy vấn">
+          <label class="option"><input type="radio" name="q10" value="0"><span class="option-letter">A</span><span>Một cột <code class="inline">tenmh</code> gồm 1 dòng có giá trị “Vật lí”.</span></label>
+          <label class="option"><input type="radio" name="q10" value="1"><span class="option-letter">B</span><span>Một cột <code class="inline">tenmh</code> gồm 2 dòng, cả hai đều là “Vật lí” (tên của hai môn có mã PHY10 và PHY11).</span></label>
+          <label class="option"><input type="radio" name="q10" value="2"><span class="option-letter">C</span><span>Hai cột <code class="inline">mamh</code>, <code class="inline">tenmh</code> gồm 2 dòng: (PHY10, Vật lí) và (PHY11, Vật lí).</span></label>
+          <label class="option"><input type="radio" name="q10" value="3"><span class="option-letter">D</span><span>Không có dòng nào, vì <code class="inline">mamh</code> không thể vừa bằng ‘PHY10’ vừa bằng ‘PHY11’.</span></label>
+        </div>
+        <p class="explain" id="explain-q10" role="status"></p>
+      </article>
+
+      <div class="alert" id="form-alert" role="alert"></div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="submit-btn" type="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg>
+          Chấm bài
+        </button>
+        <button class="btn btn-secondary" id="clear-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 11v5M14 11v5"></path></svg>
+          Xoá bài làm
+        </button>
+      </div>
+    </form>
+
+    <section class="card result-card" id="result-card" aria-live="polite" tabindex="-1">
+      <div class="result-main">
+        <div class="score-ring">
+          <div><strong id="score-value">0</strong><span>điểm</span></div>
+        </div>
+        <div class="result-copy">
+          <h2 id="result-title">Kết quả bài làm</h2>
+          <p id="result-message"></p>
+          <p class="result-meta" id="result-meta"></p>
+        </div>
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-primary" id="copy-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>
+          Sao chép kết quả
+        </button>
+        <button class="btn btn-secondary" id="print-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 14h12v7H6z"></path></svg>
+          In / Lưu PDF
+        </button>
+        <button class="btn btn-secondary" id="retry-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>
+          Làm lại
+        </button>
+      </div>
+    </section>
+
+    <p class="footer-note">Phiếu bài tập biên soạn theo Sách bài tập Tin học 11 – Kết nối tri thức với cuộc sống, Bài 14. Bài làm chỉ lưu trên thiết bị của em, trang không gửi dữ liệu lên Internet.</p>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const NEWLINE = String.fromCharCode(10);
+      const STORAGE_KEY = "bai-tap-14-tin-hoc-11";
+      const ORDER = ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10"];
+      const el = function (id) { return document.getElementById(id); };
+      const form = el("worksheet-form"), nameInput = el("student-name"), classInput = el("student-class"), saveState = el("save-state");
+      const countLabel = el("answered-count"), bar = el("progress-bar"), track = document.querySelector(".progress-track");
+      const engineNote = el("engine-note"), alertBox = el("form-alert"), resultCard = el("result-card");
+      const scoreValue = el("score-value"), resultTitle = el("result-title"), resultMessage = el("result-message"), resultMeta = el("result-meta");
+      const toast = el("toast");
+      if (!form) return;
+
+      let SQL = null, toastTimer = null, lastReport = "";
+      function showToast(message) {
+        if (!toast) return;
+        toast.textContent = message; toast.classList.add("show");
+        if (toastTimer) window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(function () { toast.classList.remove("show"); }, 2600);
+      }
+      function esc(value) { return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+      /* ---------- dữ liệu mẫu cho từng bài ---------- */
+      const MONHOC0 = "CREATE TABLE monhoc (mamh CHAR(5), tenmh VARCHAR(64));";
+      const MONHOC5 = MONHOC0 + "INSERT INTO monhoc VALUES ('MAT10','Toán học'),('MAT11','Toán học'),('PHY10','Vật lí'),('PHY11','Vật lí'),('LIT10','Ngữ văn');";
+      const HOCSINH = "CREATE TABLE hocsinh (mahs CHAR(6), cccd CHAR(12), hoten VARCHAR(64), ngsinh DATE, gt CHAR(1));" +
+        "INSERT INTO hocsinh VALUES ('190001','032204200141','Trần Văn An','2004-01-12','0'),('190002','032203210023','Nguyễn Hoàng Anh','2003-08-21','0'),('190003','032304003252','Phan Vàng Anh','2004-05-17','1');";
+      const SETUP = {
+        q1: "", q2: "", q3: HOCSINH, q4: "", q5: MONHOC0,
+        q6: MONHOC0 + "INSERT INTO monhoc VALUES ('MAT10','Toan hoc'),('MAT11','Toan hoc'),('PHY10','Vật lí');",
+        q7: MONHOC5, q8: MONHOC5, q9: MONHOC5
+      };
+
+      /* ---------- bộ chạy SQL ---------- */
+      function normalizeInput(text) { return text.replace(/[‘’]/g, "'").replace(/[“”]/g, '"'); }
+      function splitStatements(text) {
+        const out = []; let cur = ""; let quote = null;
+        for (let i = 0; i < text.length; i++) {
+          const c = text[i], n = text[i + 1];
+          if (quote) { cur += c; if (c === quote) { if (n === quote) { cur += n; i++; } else quote = null; } continue; }
+          if (c === "'" || c === '"' || c === "`") { quote = c; cur += c; continue; }
+          if (c === "-" && n === "-") { while (i < text.length && text[i] !== "\n") i++; cur += "\n"; continue; }
+          if (c === "/" && n === "*") { const end = text.indexOf("*/", i + 2); i = end < 0 ? text.length : end + 1; cur += " "; continue; }
+          if (c === ";") { if (cur.trim()) out.push(cur.trim()); cur = ""; continue; }
+          cur += c;
+        }
+        if (cur.trim()) out.push(cur.trim());
+        return out;
+      }
+      function viMsg(err) {
+        const m = err && err.message ? err.message : String(err);
+        let hint = null;
+        if (err && err.plain) return { text: m, raw: "" };
+        if (/no such table: (.+)/i.test(m)) hint = "Bảng '" + RegExp.$1 + "' chưa tồn tại. Hãy kiểm tra lại tên bảng.";
+        else if (/no such column: (.+)/i.test(m)) hint = "Không có trường '" + RegExp.$1 + "'. Hãy kiểm tra lại tên trường.";
+        else if (/table (.+) already exists/i.test(m)) hint = "Bảng " + RegExp.$1 + " đã tồn tại.";
+        else if (/values for (\d+) columns|has (\d+) columns but (\d+) values/i.test(m)) hint = "Số giá trị trong VALUES không khớp với số trường của bảng.";
+        else if (/syntax error|incomplete input|unrecognized token/i.test(m)) hint = "Sai cú pháp. Kiểm tra dấu phẩy giữa các trường, dấu ngoặc, dấu nháy đơn quanh xâu kí tự và từ khoá.";
+        return { text: hint || m, raw: hint ? m : "" };
+      }
+      function plain(text) { const e = new Error(text); e.plain = true; return e; }
+      function runStatements(db, text) {
+        const outputs = []; let lastSelect = null;
+        const stmts = splitStatements(normalizeInput(text));
+        if (!stmts.length) return { outputs: outputs, error: "Em chưa nhập câu lệnh nào. Hãy gõ câu lệnh SQL và kết thúc bằng dấu chấm phẩy “;”.", lastSelect: null };
+        for (let i = 0; i < stmts.length; i++) {
+          const raw = stmts[i]; const flat = raw.replace(/\s+/g, " ").trim();
+          try {
+            let m;
+            if (/^(USE|CREATE\s+DATABASE)\b/i.test(flat)) { outputs.push({ sql: raw, kind: "ok", msg: "Bỏ qua: phiếu này đã có sẵn CSDL." }); continue; }
+            if ((m = /^ALTER\s+TABLE\s+`?(\w+)`?\s+CHANGE\s+(?:COLUMN\s+)?`?(\w+)`?\s+`?(\w+)`?(?:\s+.+)?$/i.exec(flat))) {
+              db.run("ALTER TABLE " + m[1] + " RENAME COLUMN " + m[2] + " TO " + m[3]); outputs.push({ sql: raw, kind: "ok", msg: "Query OK, 0 dòng bị ảnh hưởng" }); continue;
+            }
+            if ((m = /^ALTER\s+TABLE\s+`?(\w+)`?\s+ADD\s+PRIMARY\s+KEY\s*\(([^)]+)\)$/i.exec(flat))) {
+              db.run("CREATE UNIQUE INDEX pk_" + m[1] + " ON " + m[1] + " (" + m[2] + ")"); outputs.push({ sql: raw, kind: "ok", msg: "Query OK, 0 dòng bị ảnh hưởng" }); continue;
+            }
+            if (/^SELECT\b/i.test(flat)) {
+              const stmt = db.prepare(raw); const columns = stmt.getColumnNames(); const rows = [];
+              try { while (stmt.step()) rows.push(stmt.get()); } finally { stmt.free(); }
+              lastSelect = { columns: columns, rows: rows }; outputs.push({ sql: raw, kind: "rows", columns: columns, rows: rows }); continue;
+            }
+            if (/^(INSERT|UPDATE|DELETE)\b/i.test(flat)) { db.run(raw); outputs.push({ sql: raw, kind: "ok", msg: "Query OK, " + db.getRowsModified() + " dòng bị ảnh hưởng" }); continue; }
+            if (/^(CREATE\s+TABLE|ALTER\s+TABLE|DROP\s+TABLE)\b/i.test(flat)) { db.run(raw); outputs.push({ sql: raw, kind: "ok", msg: "Query OK, 0 dòng bị ảnh hưởng" }); continue; }
+            throw plain("Phiếu này hỗ trợ các câu lệnh CREATE TABLE, ALTER TABLE, INSERT, UPDATE, DELETE và SELECT.");
+          } catch (err) {
+            const info = viMsg(err); return { outputs: outputs, error: info.text, raw: info.raw, failedSql: raw, lastSelect: lastSelect };
+          }
+        }
+        return { outputs: outputs, error: null, lastSelect: lastSelect };
+      }
+      function newDb(key) { const db = new SQL.Database(); if (SETUP[key]) db.run(SETUP[key]); return db; }
+
+      /* ---------- trợ giúp kiểm tra ---------- */
+      function tableCols(db, t) {
+        try {
+          const r = db.exec('PRAGMA table_info("' + t + '")');
+          return r.length ? r[0].values.map(function (v) { return { name: String(v[1]).toLowerCase(), type: String(v[2] || "").toUpperCase().replace(/\s+/g, "") }; }) : null;
+        } catch (e) { return null; }
+      }
+      function allRows(db, sql) { const r = db.exec(sql); return r.length ? r[0].values : []; }
+      function checkSchema(db, table, expected) {
+        const cols = tableCols(db, table);
+        if (!cols || !cols.length) return { ok: false, msg: "Chưa thấy bảng " + table + ". Hãy kiểm tra tên bảng trong câu CREATE TABLE." };
+        const names = cols.map(function (c) { return c.name; }), want = expected.map(function (e) { return e[0]; });
+        if (names.join(",") !== want.join(",")) return { ok: false, msg: "Các trường của bảng " + table + " chưa đúng. Cần theo thứ tự: " + want.join(", ") + "; bảng của em có: " + names.join(", ") + "." };
+        for (let i = 0; i < expected.length; i++) {
+          if (!expected[i][1].test(cols[i].type)) return { ok: false, msg: "Kiểu dữ liệu của trường " + want[i] + " chưa phù hợp (em dùng " + (cols[i].type || "không có kiểu") + ", cần " + expected[i][2] + ")." };
+        }
+        return { ok: true, msg: "" };
+      }
+      const same = function (a, b) { return JSON.stringify(a) === JSON.stringify(b); };
+
+      const SPEC = {
+        q1: { sample: "CREATE TABLE monhoc (\n  mamh CHAR(5),\n  tenmh VARCHAR(64)\n);",
+          good: "Bảng monhoc có đúng hai trường mamh CHAR(5) và tenmh VARCHAR(64).",
+          note: "Mã môn học là xâu có độ dài cố định 5 kí tự nên dùng CHAR(5); tên môn học là xâu có độ dài thay đổi, tối đa 64 kí tự nên dùng VARCHAR(64).",
+          validate: function (db) { return checkSchema(db, "monhoc", [["mamh", /^CHAR\(5\)$/, "CHAR(5)"], ["tenmh", /^VARCHAR\(64\)$/, "VARCHAR(64)"]]); } },
+        q2: { sample: "CREATE TABLE hocsinh (\n  mahs CHAR(6),\n  cccd CHAR(12),\n  hoten VARCHAR(64),\n  ngsinh DATE,\n  gt CHAR(1)\n);",
+          good: "Bảng hocsinh có đủ năm trường với kiểu dữ liệu đúng.",
+          note: "mahs CHAR(6), cccd CHAR(12), hoten VARCHAR(64), ngsinh DATE, gt CHAR(1) (quy ước 1 là nữ, 0 là nam).",
+          validate: function (db) { return checkSchema(db, "hocsinh", [["mahs", /^CHAR\(6\)$/, "CHAR(6)"], ["cccd", /^CHAR\(12\)$/, "CHAR(12)"], ["hoten", /^VARCHAR\(64\)$/, "VARCHAR(64)"], ["ngsinh", /^DATE$/, "DATE"], ["gt", /^CHAR\(1\)$/, "CHAR(1)"]]); } },
+        q3: { sample: "ALTER TABLE hocsinh RENAME COLUMN ngsinh TO ngaysinh;\n-- hoặc (MySQL): ALTER TABLE hocsinh CHANGE ngsinh ngaysinh DATE;",
+          good: "Trường ngsinh đã được đổi thành ngaysinh và dữ liệu vẫn còn nguyên.",
+          note: "Đổi tên trường của bảng đã có là thay đổi định nghĩa bảng nên dùng ALTER TABLE.",
+          validate: function (db) {
+            const cols = tableCols(db, "hocsinh");
+            if (!cols) return { ok: false, msg: "Bảng hocsinh không còn tồn tại. Em chỉ cần sửa tên trường, không xoá bảng." };
+            const names = cols.map(function (c) { return c.name; }).join(",");
+            if (names !== "mahs,cccd,hoten,ngaysinh,gt") return { ok: false, msg: "Các trường hiện là: " + names + ". Cần là mahs, cccd, hoten, ngaysinh, gt." };
+            const n = allRows(db, "SELECT COUNT(*) FROM hocsinh")[0][0];
+            return n === 3 ? { ok: true, msg: "" } : { ok: false, msg: "Dữ liệu của bảng bị thay đổi (còn " + n + " dòng, cần 3 dòng)." };
+          } },
+        q4: { sample: "CREATE TABLE diemmonhoc (\n  mahs CHAR(6),\n  mamh CHAR(5),\n  diem INT\n);",
+          good: "Bảng diemmonhoc có ba trường mahs, mamh, diem với diem là số nguyên.",
+          note: "Điểm là số tự nhiên nên dùng kiểu INT. Có thể khai báo thêm khoá chính (mahs, mamh) và hai khoá ngoài, nhưng đề chỉ yêu cầu tạo bảng.",
+          validate: function (db) { return checkSchema(db, "diemmonhoc", [["mahs", /^CHAR\(6\)$/, "CHAR(6)"], ["mamh", /^CHAR\(5\)$/, "CHAR(5)"], ["diem", /^(INT|INTEGER|TINYINT|SMALLINT)(\(\d+\))?$/, "INT"]]); } },
+        q5: { sample: "INSERT INTO monhoc VALUES\n  ('MAT10', 'Toán học'),\n  ('MAT11', 'Toán học'),\n  ('PHY10', 'Vật lí'),\n  ('PHY11', 'Vật lí'),\n  ('LIT10', 'Ngữ văn');",
+          good: "Bảng monhoc đã có đúng 5 dòng như yêu cầu.",
+          note: "INSERT INTO … VALUES có thể thêm nhiều dòng trong một câu lệnh, các dòng cách nhau bằng dấu phẩy.",
+          validate: function (db) {
+            const rows = allRows(db, "SELECT mamh, tenmh FROM monhoc ORDER BY mamh");
+            const want = [["LIT10", "Ngữ văn"], ["MAT10", "Toán học"], ["MAT11", "Toán học"], ["PHY10", "Vật lí"], ["PHY11", "Vật lí"]];
+            return same(rows, want) ? { ok: true, msg: "" } : { ok: false, msg: "Bảng monhoc hiện có " + rows.length + " dòng và chưa khớp với yêu cầu. Kiểm tra lại từng giá trị (đủ dấu tiếng Việt) và số dòng." };
+          } },
+        q6: { sample: "UPDATE monhoc\nSET tenmh = 'Toán học'\nWHERE tenmh = 'Toan hoc';",
+          good: "Cả hai dòng ‘Toan hoc’ đã được sửa thành ‘Toán học’, dòng ‘Vật lí’ giữ nguyên.",
+          note: "Điều kiện WHERE tenmh = 'Toan hoc' chọn đúng các dòng cần sửa; thiếu WHERE thì mọi môn đều bị đổi thành ‘Toán học’.",
+          validate: function (db) {
+            const rows = allRows(db, "SELECT mamh, tenmh FROM monhoc ORDER BY mamh");
+            if (same(rows, [["MAT10", "Toán học"], ["MAT11", "Toán học"], ["PHY10", "Vật lí"]])) return { ok: true, msg: "" };
+            if (rows.every(function (r) { return r[1] === "Toán học"; })) return { ok: false, msg: "Môn ‘Vật lí’ cũng bị đổi thành ‘Toán học’. Em cần thêm mệnh đề WHERE để chỉ sửa các dòng ‘Toan hoc’." };
+            return { ok: false, msg: "Dữ liệu sau khi chạy chưa đúng: các dòng ‘Toan hoc’ phải đổi thành ‘Toán học’ (đúng dấu), còn dòng khác giữ nguyên." };
+          } },
+        q7: { sample: "DELETE FROM monhoc\nWHERE mamh = 'LIT10';",
+          good: "Dòng (‘LIT10’, ‘Ngữ văn’) đã bị xoá, 4 dòng còn lại giữ nguyên.",
+          note: "Dùng khoá chính (mã môn học) trong WHERE là cách xác định dòng cần xoá chính xác nhất.",
+          validate: function (db) {
+            const rows = allRows(db, "SELECT mamh, tenmh FROM monhoc ORDER BY mamh");
+            if (same(rows, [["MAT10", "Toán học"], ["MAT11", "Toán học"], ["PHY10", "Vật lí"], ["PHY11", "Vật lí"]])) return { ok: true, msg: "" };
+            if (!rows.length) return { ok: false, msg: "Toàn bộ các dòng bị xoá. Em cần thêm mệnh đề WHERE để chỉ xoá dòng ‘LIT10’." };
+            return { ok: false, msg: "Sau khi chạy, bảng còn " + rows.length + " dòng. Cần xoá đúng một dòng LIT10 và giữ 4 dòng còn lại." };
+          } },
+        q8: { sample: "SELECT * FROM monhoc;",
+          good: "Câu truy vấn trả về toàn bộ 5 dòng của bảng monhoc.",
+          note: "Dấu * thay cho danh sách tất cả các trường của bảng; có thể viết SELECT mamh, tenmh FROM monhoc; với kết quả như nhau.",
+          validate: function (db, last) {
+            if (!last) return { ok: false, msg: "Em chưa dùng câu lệnh SELECT để đọc dữ liệu." };
+            if (last.columns.map(function (c) { return c.toLowerCase(); }).join(",") !== "mamh,tenmh") return { ok: false, msg: "Kết quả cần có cả hai trường mamh, tenmh." };
+            return last.rows.length === 5 ? { ok: true, msg: "" } : { ok: false, msg: "Kết quả có " + last.rows.length + " dòng, cần đọc ra toàn bộ 5 dòng của bảng (không dùng WHERE)." };
+          } },
+        q9: { sample: "SELECT * FROM monhoc\nWHERE tenmh = 'Toán học';",
+          good: "Câu truy vấn chỉ trả về hai môn có tên ‘Toán học’ (MAT10 và MAT11).",
+          note: "Mệnh đề WHERE đặt điều kiện để chọn các dòng cần đọc.",
+          validate: function (db, last) {
+            if (!last) return { ok: false, msg: "Em chưa dùng câu lệnh SELECT để đọc dữ liệu." };
+            const flat = [].concat.apply([], last.rows);
+            const allowed = ["MAT10", "MAT11", "Toán học"];
+            if (last.rows.length === 2 && flat.every(function (v) { return allowed.indexOf(v) >= 0; })) return { ok: true, msg: "" };
+            return { ok: false, msg: last.rows.length === 2 ? "Kết quả có 2 dòng nhưng chưa phải các môn có tên ‘Toán học’. Hãy kiểm tra lại giá trị trong điều kiện WHERE." : "Kết quả có " + last.rows.length + " dòng. Cần đúng 2 dòng là các môn có tên ‘Toán học’ – hãy dùng WHERE tenmh = 'Toán học'." };
+          } },
+        q10: { type: "radio", correct: 1,
+          good: "Hai môn có mã PHY10 và PHY11 đều có tên ‘Vật lí’ nên kết quả là một cột tenmh gồm 2 dòng giống nhau.",
+          bad: "Đáp án đúng là B. Điều kiện mamh = 'PHY10' OR mamh = 'PHY11' đúng với các dòng có một trong hai mã (toán tử OR), nên chọn được 2 dòng. Vì SELECT chỉ lấy cột tenmh nên kết quả là hai dòng ‘Vật lí’ (cột mamh không được hiển thị)." }
+      };
+
+      /* ---------- hiển thị kết quả chạy ---------- */
+      function renderOutput(box, run) {
+        let html = "";
+        run.outputs.forEach(function (o) {
+          html += '<p class="echo">mysql&gt; ' + esc(o.sql) + "</p>";
+          if (o.kind === "ok") html += '<p class="ok">' + esc(o.msg) + "</p>";
+          else if (!o.rows.length) html += '<p class="ok">Empty set — không có dòng nào phù hợp.</p>';
+          else {
+            html += '<div class="rs"><table><thead><tr>' + o.columns.map(function (c) { return "<th>" + esc(c) + "</th>"; }).join("") + "</tr></thead><tbody>";
+            o.rows.forEach(function (row) { html += "<tr>" + row.map(function (v) { return "<td>" + esc(v === null ? "NULL" : v) + "</td>"; }).join("") + "</tr>"; });
+            html += '</tbody></table></div><p class="count">' + o.rows.length + " dòng</p>";
+          }
+        });
+        if (run.error) {
+          if (run.failedSql) html += '<p class="echo">mysql&gt; ' + esc(run.failedSql) + "</p>";
+          html += '<p class="err">ERROR: ' + esc(run.error) + (run.raw ? "<small>Chi tiết: " + esc(run.raw) + "</small>" : "") + "</p>";
+        }
+        box.innerHTML = html; box.classList.add("show");
+      }
+      function ensureEngine() {
+        if (SQL) return true;
+        showToast("Bộ máy SQL chưa sẵn sàng (cần kết nối Internet). Em hãy đợi giây lát hoặc tải lại trang.");
+        return false;
+      }
+      Array.from(document.querySelectorAll(".run-btn")).forEach(function (button) {
+        button.addEventListener("click", function () {
+          if (!ensureEngine()) return;
+          const key = button.dataset.q; const db = newDb(key);
+          try { renderOutput(el("out-" + key), runStatements(db, el(key + "-sql").value)); } finally { db.close(); }
+        });
+      });
+
+      /* ---------- tiến độ, lưu bài ---------- */
+      function answered(key) {
+        if (key === "q10") return !!form.querySelector('input[name="q10"]:checked');
+        const area = el(key + "-sql"); return !!(area && area.value.trim());
+      }
+      function updateProgress() {
+        const done = ORDER.filter(answered).length;
+        countLabel.textContent = String(done); bar.style.width = (done / ORDER.length * 100) + "%"; track.setAttribute("aria-valuenow", String(done));
+      }
+      function collect() {
+        const data = { name: nameInput.value, cls: classInput.value, texts: {}, q10: "" };
+        ORDER.forEach(function (key) { if (key !== "q10") data.texts[key] = el(key + "-sql").value; });
+        const r = form.querySelector('input[name="q10"]:checked'); if (r) data.q10 = r.value;
+        return data;
+      }
+      function save() {
+        try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(collect())); saveState.textContent = "Đã lưu trên máy của em"; }
+        catch (error) { saveState.textContent = "Không lưu được (trình duyệt chặn lưu trữ)"; }
+      }
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const data = JSON.parse(raw);
+          if (data && typeof data === "object") {
+            if (data.name) nameInput.value = data.name;
+            if (data.cls) classInput.value = data.cls;
+            Object.keys(data.texts || {}).forEach(function (key) { const area = el(key + "-sql"); if (area) area.value = data.texts[key]; });
+            if (data.q10 !== "" && data.q10 !== undefined) { const input = form.querySelector('input[name="q10"][value="' + data.q10 + '"]'); if (input) input.checked = true; }
+          }
+        }
+      } catch (error) { console.warn("Không đọc được bài làm đã lưu:", error); }
+      form.addEventListener("input", function () { updateProgress(); save(); });
+      form.addEventListener("change", function () { updateProgress(); save(); });
+      updateProgress();
+
+      /* ---------- chấm bài ---------- */
+      function setExplain(key, ok, text, sample) {
+        const box = el("explain-" + key); if (!box) return;
+        box.className = "explain show " + (ok ? "good" : "bad");
+        box.textContent = (ok ? "Đúng. " : "Chưa đúng. ") + text;
+        if (sample) { const pre = document.createElement("pre"); pre.className = "sample"; pre.textContent = sample; box.append(pre); }
+      }
+      function clearExplains() {
+        ORDER.forEach(function (key) { const box = el("explain-" + key); if (box) { box.className = "explain"; box.textContent = ""; } });
+        Array.from(form.querySelectorAll(".option")).forEach(function (o) { o.classList.remove("is-correct", "is-wrong"); });
+      }
+      function gradeItem(key) {
+        const spec = SPEC[key];
+        if (spec.type === "radio") {
+          const chosen = form.querySelector('input[name="q10"]:checked');
+          const options = Array.from(form.querySelectorAll("#card-q10 .option"));
+          options.forEach(function (o, i) { if (i === spec.correct) o.classList.add("is-correct"); });
+          const ok = !!chosen && Number(chosen.value) === spec.correct;
+          if (chosen && !ok && options[Number(chosen.value)]) options[Number(chosen.value)].classList.add("is-wrong");
+          setExplain(key, ok, ok ? spec.good : spec.bad); return ok;
+        }
+        const db = newDb(key);
+        try {
+          const run = runStatements(db, el(key + "-sql").value);
+          if (run.error) { setExplain(key, false, "Câu lệnh của em bị lỗi: " + run.error + (run.failedSql ? " (ở câu lệnh: " + run.failedSql.replace(/\s+/g, " ").slice(0, 90) + ")" : "") + " Lời giải tham khảo:", spec.sample); return false; }
+          const verdict = spec.validate(db, run.lastSelect);
+          if (verdict.ok) setExplain(key, true, spec.good + " " + spec.note, spec.sample);
+          else setExplain(key, false, verdict.msg + " " + spec.note + " Lời giải tham khảo:", spec.sample);
+          return verdict.ok;
+        } finally { db.close(); }
+      }
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        if (!ensureEngine()) { alertBox.className = "alert show"; alertBox.textContent = "Bộ máy SQL chưa tải xong nên chưa chấm được. Hãy kiểm tra kết nối Internet rồi thử lại."; return; }
+        const missing = ORDER.filter(function (key) { return !answered(key); });
+        if (missing.length) {
+          alertBox.className = "alert show";
+          alertBox.textContent = "Em còn " + missing.length + " bài chưa làm xong (bài " + missing.map(function (key) { return "14." + key.replace("q", ""); }).join(", ") + "). Hãy hoàn thành rồi chấm bài nhé.";
+          const firstCard = el("card-" + missing[0]); if (firstCard) firstCard.scrollIntoView({ block: "center" });
+          return;
+        }
+        alertBox.className = "alert"; alertBox.textContent = "";
+        clearExplains();
+        let score = 0; const detail = [];
+        ORDER.forEach(function (key) { const ok = gradeItem(key); if (ok) score += 1; detail.push("14." + key.replace("q", "") + ": " + (ok ? "Đúng" : "Chưa đúng")); });
+        scoreValue.textContent = String(score);
+        resultTitle.textContent = score === 10 ? "Xuất sắc!" : score >= 8 ? "Làm rất tốt!" : score >= 5 ? "Khá, cần xem lại vài bài" : "Cần ôn lại kiến thức Bài 14";
+        resultMessage.textContent = score >= 8
+          ? "Em đã viết tốt các câu lệnh SQL: tạo bảng, đổi cấu trúc, thêm, sửa, xoá và truy xuất dữ liệu."
+          : "Hãy đọc lại phần Tóm tắt kiến thức và lời giải tham khảo ở từng bài, chú ý tên trường, kiểu dữ liệu và mệnh đề WHERE, rồi làm lại.";
+        const who = (nameInput.value.trim() || "(chưa nhập tên)") + " · Lớp " + (classInput.value.trim() || "(chưa nhập)");
+        resultMeta.textContent = who + " · Chấm lúc " + new Date().toLocaleString("vi-VN");
+        lastReport = ["Phiếu bài tập Bài 14 - SQL, ngôn ngữ truy vấn có cấu trúc", who, "Điểm: " + score + "/10"].concat(detail).join(NEWLINE);
+        resultCard.classList.add("show"); resultCard.scrollIntoView({ block: "start" }); resultCard.focus({ preventScroll: true });
+      });
+
+      function resetAll() {
+        form.reset(); clearExplains();
+        Array.from(document.querySelectorAll(".run-output")).forEach(function (box) { box.classList.remove("show"); box.innerHTML = ""; });
+        alertBox.className = "alert"; alertBox.textContent = ""; resultCard.classList.remove("show"); lastReport = "";
+        try { window.localStorage.removeItem(STORAGE_KEY); } catch (error) { /* bỏ qua */ }
+        updateProgress(); showToast("Đã xoá bài làm, em có thể bắt đầu lại.");
+        const top = el("tom-tat"); if (top) top.scrollIntoView({ block: "start" });
+      }
+      el("clear-btn").addEventListener("click", resetAll);
+      el("retry-btn").addEventListener("click", resetAll);
+      el("copy-btn").addEventListener("click", async function () {
+        if (!lastReport) { showToast("Em hãy chấm bài trước khi sao chép kết quả."); return; }
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(lastReport); showToast("Đã sao chép kết quả vào bộ nhớ tạm."); }
+          else throw new Error("no clipboard");
+        } catch (error) { showToast("Không sao chép được. Em hãy dùng nút In / Lưu PDF."); }
+      });
+      el("print-btn").addEventListener("click", function () { window.print(); });
+
+      /* ---------- nạp bộ máy SQL ---------- */
+      function startEngine(tries) {
+        if (typeof initSqlJs === "undefined") {
+          if (tries > 60) { engineNote.textContent = "Bộ máy SQL: không tải được (cần kết nối Internet). Em vẫn xem được đề, nhưng chưa thể chạy thử hay chấm bài."; engineNote.className = "engine-note bad"; return; }
+          window.setTimeout(function () { startEngine(tries + 1); }, 250); return;
+        }
+        initSqlJs({ locateFile: function (file) { return "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/" + file; } })
+          .then(function (lib) { SQL = lib; engineNote.textContent = "Bộ máy SQL: sẵn sàng. Mỗi lần chạy thử đều bắt đầu từ dữ liệu mẫu của bài, nên em có thể chạy lại nhiều lần."; })
+          .catch(function () { engineNote.textContent = "Bộ máy SQL: lỗi khi tải. Hãy tải lại trang hoặc kiểm tra kết nối mạng."; engineNote.className = "engine-note bad"; });
+      }
+      startEngine(0);
+    });
+  </script>
+</body>
+</html>
