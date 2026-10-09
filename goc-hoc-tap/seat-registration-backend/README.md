@@ -65,3 +65,9 @@ Phần cuối `Code.gs` phục vụ trang `diem-cong.html`, dùng **chung bảng
 Lần đầu: chạy hàm `setupDiemCong` một lần (tạo tiêu đề, định dạng cột và mã đồng bộ). Không chạy `setup`, vì hàm đó dành cho trang tính đăng ký chỗ ngồi.
 
 Trang không có ô nhập mã: khi cô mở sổ bằng mật khẩu, trang gửi mật khẩu về Apps Script (so với `DC_SETTINGS.passHash`, trùng `DEFAULT_PASS_HASH` trong `diem-cong.html`) và nhận lại mã đồng bộ. Mật khẩu không được lưu. Sai 10 lần trong 15 phút thì tạm khóa đăng nhập. Nghi mã bị lộ thì chạy `resetSyncKey`, rồi trên mỗi máy bấm **Khóa lại** và mở sổ lại bằng mật khẩu.
+
+## Kết quả bài tập cộng điểm KTTX (cùng file `Code.gs`)
+
+Trang `bai-tap/kttx1-cong-diem-tin-hoc-10.html` gửi yêu cầu `kttxSubmit` khi học sinh nộp bài (dùng chung URL `/exec` trong `../diem-cong-config.js`). Mỗi lần nộp ghi một dòng vào trang tính `KTTX1_Tin10` của bảng tính sổ điểm cộng; trang tính tự tạo ở lần nộp đầu tiên, không cần chạy hàm setup nào.
+
+Cột `Lần nộp` đếm theo họ tên + lớp: nếu một em nộp nhiều lần (ví dụ xóa dữ liệu trình duyệt để làm lại), cô lấy dòng có `Lần nộp = 1`. Cột `Chi tiết trắc nghiệm` ghi dạng `3.B18#05:C✓` = câu 3 của đề là câu số 5 của Bài 18 trong ngân hàng, em chọn C, đúng.

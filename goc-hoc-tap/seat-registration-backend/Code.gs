@@ -128,6 +128,7 @@ function doPost(e) {
     var payload = JSON.parse((e.postData && e.postData.contents) || "{}");
     if (DIEM_CONG_ACTIONS.indexOf(payload.action) !== -1) return jsonResponse_(diemCongPost_(payload));
     if (payload.action === "addPayment") return jsonResponse_(addPayment_(payload));
+    if (payload.action === "kttxSubmit") return jsonResponse_(kttxSubmit_(payload));
     if (payload.action !== "register") return jsonResponse_({ ok: false, message: "Yêu cầu không hợp lệ." });
     return jsonResponse_(register_(payload));
   } catch (error) {
@@ -688,3 +689,98 @@ function newKey_() {
   return Utilities.getUuid().replace(/-/g, "").slice(0, 16).toUpperCase();
 }
 
+
+/* =====================================================================
+ * KẾT QUẢ BÀI TẬP CỘNG ĐIỂM KTTX (trang bai-tap/kttx1-cong-diem-tin-hoc-10.html)
+ *
+ * Học sinh nộp bài thì trang gửi một yêu cầu "kttxSubmit"; mỗi lần nộp ghi
+ * thành một dòng ở trang tính KTTX_SETTINGS.sheetName (tự tạo nếu chưa có),
+ * trong cùng bảng tính với sổ điểm cộng. Không cần mã đồng bộ vì chỉ ghi thêm,
+ * không đọc hay sửa được dòng nào. Cột "Lần nộp" đếm theo họ tên + lớp để cô
+ * nhận ra học sinh nộp nhiều lần.
+ * ===================================================================== */
+
+var KTTX_SETTINGS = {
+  sheetName: "KTTX1_Tin10",
+  quizId: "kttx1-tin10",
+  classes: ["TC_TIN_13", "TC_TIN_14", "TC_TIN_15", "Lớp khác"],
+  mcqMax: 9,
+  essayMax: 1
+};
+
+var KTTX_HEADERS = [
+  "Thời gian nộp",
+  "Lớp",
+  "Họ và tên",
+  "Lần nộp",
+  "Mã đề",
+  "Điểm trắc nghiệm",
+  "Số câu đúng",
+  "Điểm tự luận",
+  "Số test đúng",
+  "Tổng điểm",
+  "Thời gian làm (phút)",
+  "Bài tự luận",
+  "Chi tiết trắc nghiệm",
+  "Chương trình Python"
+];
+
+function kttxSubmit_(payload) {
+  if (cleanText_(payload.quiz, 30) !== KTTX_SETTINGS.quizId) return { ok: false, message: "Bài kiểm tra không hợp lệ." };
+  var cls = cleanText_(payload.cls, 30);
+  var name = cleanText_(payload.name, 80);
+  if (KTTX_SETTINGS.classes.indexOf(cls) === -1) return { ok: false, message: "Lớp không hợp lệ." };
+  if (!name) return { ok: false, message: "Thiếu họ tên." };
+
+  var mcq = Number(payload.mcq);
+  var correct = Number(payload.correct);
+  var essay = payload.essay === null || payload.essay === undefined ? null : Number(payload.essay);
+  var passed = Number(payload.passed);
+  if (!(mcq >= 0 && mcq <= KTTX_SETTINGS.mcqMax) || !(correct >= 0 && correct <= 18)) {
+    return { ok: false, message: "Điểm trắc nghiệm không hợp lệ." };
+  }
+  if (essay !== null && !(essay >= 0 && essay <= KTTX_SETTINGS.essayMax)) {
+    return { ok: false, message: "Điểm tự luận không hợp lệ." };
+  }
+
+  var spreadsheet = dcSpreadsheet_();
+  var sheet = spreadsheet.getSheetByName(KTTX_SETTINGS.sheetName);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(KTTX_SETTINGS.sheetName);
+    sheet.appendRow(KTTX_HEADERS);
+    sheet.setFrozenRows(1);
+    sheet.getRange(1, 1, 1, KTTX_HEADERS.length).setFontWeight("bold").setBackground("#34618f").setFontColor("#ffffff");
+    sheet.getRange("A:A").setNumberFormat("dd/mm/yyyy hh:mm:ss");
+    sheet.getRange("B:C").setNumberFormat("@");
+    sheet.getRange("E:E").setNumberFormat("@");
+    sheet.getRange("L:N").setNumberFormat("@").setWrap(false);
+  }
+
+  var key = (cls + "|" + name).toUpperCase();
+  var attempt = 1;
+  if (sheet.getLastRow() > 1) {
+    sheet.getRange(2, 2, sheet.getLastRow() - 1, 2).getValues().forEach(function (row) {
+      if ((String(row[0]) + "|" + String(row[1])).toUpperCase() === key) attempt++;
+    });
+  }
+
+  var minutes = Number(payload.minutes);
+  sheet.appendRow([
+    new Date(),
+    safeCellText_(cls),
+    safeCellText_(name),
+    attempt,
+    safeCellText_(cleanText_(payload.seed, 10)),
+    mcq,
+    correct,
+    essay === null ? "Chưa chấm" : essay,
+    essay === null ? "" : passed,
+    mcq + (essay || 0),
+    minutes >= 0 ? Math.round(minutes * 10) / 10 : "",
+    safeCellText_(cleanText_(payload.problem, 80)),
+    safeCellText_(cleanText_(payload.detail, 2000)),
+    // Giữ xuống dòng của chương trình; một ô chứa tối đa 50 000 ký tự.
+    safeCellText_(String(payload.code == null ? "" : payload.code).slice(0, 8000))
+  ]);
+  return { ok: true, attempt: attempt };
+}

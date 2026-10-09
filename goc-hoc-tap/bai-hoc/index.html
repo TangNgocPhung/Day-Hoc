@@ -141,6 +141,13 @@
   }
   .assessment-notice dt { font-weight: 700; color: var(--ink); }
   .assessment-notice dd { margin: 0; color: var(--ink-muted); }
+  .bonus-notice {
+    margin-top: 1rem;
+    border-color: color-mix(in srgb, var(--accent-1) 45%, var(--border));
+    background: color-mix(in srgb, var(--accent-1) 8%, var(--surface));
+  }
+  .bonus-notice .assessment-notice-label { color: var(--accent-1); }
+  .bonus-actions { margin-top: 0.9rem; display: flex; }
 
   .semester-block { margin-top: 2.25rem; }
   .semester-head {
@@ -263,6 +270,24 @@
       <dt>Thời gian làm bài</dt>
       <dd>20 phút (không tính thời gian phát đề).</dd>
     </dl>
+  </section>
+
+  <section class="assessment-notice bonus-notice" aria-labelledby="bonus-notice-title">
+    <div class="assessment-notice-head">
+      <span class="assessment-notice-label">BÀI TẬP CỘNG ĐIỂM</span>
+      <h2 id="bonus-notice-title">Bài tập cộng điểm KTTX lần 1</h2>
+    </div>
+    <dl>
+      <dt>Nội dung</dt>
+      <dd>Bài 16 đến Bài 20.</dd>
+      <dt>Hình thức</dt>
+      <dd>Làm trực tuyến: trắc nghiệm và tự luận viết chương trình Python, máy chấm điểm ngay.</dd>
+      <dt>Cấu trúc</dt>
+      <dd>18 câu trắc nghiệm (9 điểm) bốc ngẫu nhiên từ ngân hàng 100 câu; 1 câu viết chương trình (1 điểm) chấm bằng 10 test.</dd>
+    </dl>
+    <div class="bonus-actions">
+      <a class="lesson-status lesson-status--link" href="../bai-tap/kttx1-cong-diem-tin-hoc-10.html" target="_blank" rel="noopener">Làm bài<svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+    </div>
   </section>
 
   <section class="semester-block" id="hk1">

@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Bài tập cộng điểm KTTX lần 1 Tin học 10 — 18 câu trắc nghiệm bốc ngẫu nhiên từ ngân hàng 100 câu (Bài 16–20) và 1 câu lập trình Python chấm tự động bằng test case.">
+<title>Bài Tập Cộng Điểm KTTX1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #EFF1EC;
+    --surface: #FFFFFF;
+    --surface-2: #F6F7F1;
+    --ink: #232823;
+    --ink-muted: #5B6259;
+    --ink-faint: #8B9186;
+    --rule: #DEE2D5;
+    --border: #D6DACC;
+    --on-accent: #FFFFFF;
+
+    --accent-1: #34618F;
+    --good: #2D7A4F;
+    --bad: #A33B3B;
+    --warn: #93650F;
+    --code-bg: #1F2430;
+    --code-ink: #E6E9EF;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+    --shadow: 0 10px 30px -14px rgba(35, 40, 35, 0.28);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1B1D18;
+      --surface: #232620;
+      --surface-2: #292C24;
+      --ink: #ECEEE5;
+      --ink-muted: #ABB2A0;
+      --ink-faint: #767C6B;
+      --rule: #363A30;
+      --border: #383C31;
+      --on-accent: #15160F;
+
+      --accent-1: #82B2E1;
+      --good: #7FCB9A;
+      --bad: #E58A8A;
+      --warn: #E2B864;
+      --code-bg: #15171C;
+      --code-ink: #E6E9EF;
+
+      --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1B1D18;
+    --surface: #232620;
+    --surface-2: #292C24;
+    --ink: #ECEEE5;
+    --ink-muted: #ABB2A0;
+    --ink-faint: #767C6B;
+    --rule: #363A30;
+    --border: #383C31;
+    --on-accent: #15160F;
+
+    --accent-1: #82B2E1;
+    --good: #7FCB9A;
+    --bad: #E58A8A;
+    --warn: #E2B864;
+    --code-bg: #15171C;
+    --code-ink: #E6E9EF;
+
+    --shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+  [hidden] { display: none !important; }
+  code, pre, kbd { font-family: var(--font-mono); }
+  p code, li code, .q-text code, .opt-text code, td code {
+    font-size: 0.88em; padding: 0.05rem 0.32rem; border-radius: 5px;
+    background: color-mix(in srgb, var(--accent-1) 12%, var(--surface)); color: var(--ink);
+  }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    border-bottom: 1px solid var(--border);
+    border-top: 4px solid var(--accent-1);
+    backdrop-filter: blur(10px);
+  }
+  .topbar-inner {
+    max-width: 900px; margin: 0 auto;
+    padding: 0.7rem clamp(1rem, 4vw, 2rem);
+    display: flex; align-items: center; justify-content: space-between; gap: 0.6rem 1rem; flex-wrap: wrap;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.84rem; font-weight: 600; text-decoration: none; color: var(--ink-muted);
+  }
+  .back-link:hover { color: var(--accent-1); }
+  .back-link svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .live-status { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .live-pill {
+    font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; color: var(--ink-muted);
+    border: 1px solid var(--border); background: var(--surface-2); border-radius: 999px; padding: 0.2rem 0.6rem;
+  }
+  .live-pill strong { color: var(--accent-1); }
+
+  .page { max-width: 900px; margin: 0 auto; padding: clamp(1.75rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem) 4rem; }
+
+  .masthead { max-width: 700px; margin-bottom: 1.5rem; }
+  .masthead-eyebrow {
+    display: block; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.12em; color: var(--ink-faint); margin-bottom: 0.75rem;
+  }
+  .masthead-title {
+    font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem, 4.4vw, 2.6rem);
+    line-height: 1.08; margin: 0 0 0.6rem; text-wrap: balance;
+  }
+  .masthead-sub { font-size: 1rem; color: var(--ink-muted); margin: 0; max-width: 64ch; }
+  .summary-strip { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.25rem 0 0; }
+  .summary-pill {
+    font-family: var(--font-mono); font-size: 0.76rem; font-weight: 600; color: var(--ink-muted);
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 0.4rem 0.8rem;
+  }
+  .summary-pill strong { color: var(--accent-1); }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: clamp(1rem, 3vw, 1.4rem); box-shadow: var(--shadow); margin-top: 1.25rem;
+  }
+  .panel h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; margin: 0 0 0.35rem; }
+  .panel-note { color: var(--ink-muted); font-size: 0.9rem; margin: 0 0 1rem; }
+
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.8rem; }
+  .field label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .field select, .field input {
+    width: 100%; font: inherit; font-size: 0.92rem; color: var(--ink);
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 9px; padding: 0.55rem 0.7rem;
+  }
+  .field select:focus, .field input:focus, textarea:focus { outline: 2px solid var(--accent-1); outline-offset: 1px; }
+
+  .btn-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;
+    font: inherit; font-size: 0.86rem; font-weight: 700; cursor: pointer;
+    padding: 0.6rem 1rem; border-radius: 9px; border: 1px solid var(--accent-1);
+    background: var(--accent-1); color: var(--on-accent); transition: transform 0.14s ease;
+  }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .btn:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+  .btn--ghost { background: transparent; color: var(--accent-1); }
+  .btn--quiet { background: transparent; color: var(--ink-muted); border-color: var(--border); }
+  .btn--big { font-size: 0.95rem; padding: 0.75rem 1.3rem; }
+
+  .paper-meta {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; align-items: baseline;
+    font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-muted); margin-top: 1rem;
+    padding-top: 0.9rem; border-top: 1px dashed var(--border);
+  }
+  .paper-meta strong { color: var(--ink); font-size: 0.95rem; }
+
+  .part-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap;
+    margin: 2.25rem 0 0.9rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border);
+  }
+  .part-head h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.45rem; margin: 0; }
+  .part-head span { font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-muted); }
+
+  .q-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.8rem; }
+  .q-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 0.95rem 1.05rem; min-width: 0;
+  }
+  .q-top { display: flex; gap: 0.7rem; align-items: flex-start; }
+  .q-num {
+    flex: 0 0 auto; min-width: 2.2rem; height: 2.2rem; border-radius: 9px; padding: 0 0.3rem;
+    display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--accent-1) 14%, var(--surface)); color: var(--accent-1);
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.86rem;
+  }
+  .q-body { min-width: 0; flex: 1 1 auto; }
+  .q-tag { font-family: var(--font-mono); font-size: 0.64rem; font-weight: 600; letter-spacing: 0.06em; color: var(--ink-faint); }
+  .q-text { margin: 0.1rem 0 0.5rem; font-weight: 600; }
+  .q-code, .code-block {
+    margin: 0 0 0.7rem; padding: 0.7rem 0.85rem; border-radius: 9px; overflow-x: auto;
+    background: var(--code-bg); color: var(--code-ink); font-size: 0.84rem; line-height: 1.5; white-space: pre;
+  }
+  .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.45rem; }
+  .opt {
+    display: flex; gap: 0.55rem; align-items: flex-start; cursor: pointer;
+    border: 1px solid var(--border); border-radius: 9px; padding: 0.5rem 0.65rem; background: var(--surface-2);
+    font-size: 0.92rem; min-width: 0;
+  }
+  .opt:hover { border-color: var(--accent-1); }
+  .opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .opt-letter {
+    flex: 0 0 auto; width: 1.55rem; height: 1.55rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--ink-faint); font-family: var(--font-mono); font-size: 0.74rem; font-weight: 700; color: var(--ink-muted);
+  }
+  .opt-text { min-width: 0; overflow-wrap: anywhere; }
+  .opt input:checked + .opt-letter { background: var(--accent-1); border-color: var(--accent-1); color: var(--on-accent); }
+  .opt:has(input:checked) { border-color: var(--accent-1); background: color-mix(in srgb, var(--accent-1) 9%, var(--surface)); }
+  .opt:has(input:focus-visible) { outline: 2px solid var(--accent-1); outline-offset: 1px; }
+
+  .problem-statement p { margin: 0 0 0.6rem; }
+  .problem-statement ul { margin: 0 0 0.6rem; padding-left: 1.2rem; }
+  .io-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.6rem; margin: 0.4rem 0 0.8rem; }
+  .io-box { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface-2); }
+  .io-box h4 { margin: 0; padding: 0.4rem 0.7rem; font-size: 0.76rem; font-family: var(--font-mono); color: var(--ink-muted); border-bottom: 1px solid var(--border); }
+  .io-box .io-cols { display: grid; grid-template-columns: 1fr 1fr; }
+  .io-box pre { margin: 0; padding: 0.55rem 0.7rem; font-size: 0.84rem; white-space: pre-wrap; }
+  .io-box pre + pre { border-left: 1px solid var(--border); }
+  .io-label { display: block; font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; color: var(--ink-faint); margin-bottom: 0.15rem; }
+
+  .editor-wrap { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 0.8rem; margin-top: 0.6rem; }
+  .editor-label { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .editor-label span { font-weight: 500; color: var(--ink-faint); font-size: 0.74rem; }
+  textarea.code-input, textarea.stdin-input {
+    width: 100%; font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.55;
+    background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--border); border-radius: 10px;
+    padding: 0.7rem 0.8rem; resize: vertical; tab-size: 4;
+  }
+  textarea.code-input { min-height: 260px; }
+  textarea.stdin-input { min-height: 84px; }
+  .run-output {
+    margin: 0.3rem 0 0; min-height: 84px; max-height: 220px; overflow: auto;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+    padding: 0.6rem 0.75rem; font-size: 0.84rem; white-space: pre-wrap;
+  }
+  .run-output.is-error { color: var(--bad); }
+  .engine-status { font-family: var(--font-mono); font-size: 0.74rem; color: var(--ink-faint); }
+  .engine-status[data-kind="ready"] { color: var(--good); }
+  .engine-status[data-kind="error"] { color: var(--bad); }
+
+  .test-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1rem; margin: 1.1rem 0 0.5rem; }
+  .test-summary strong { font-family: var(--font-display); font-size: 1.25rem; }
+  .test-summary span { color: var(--ink-muted); font-size: 0.86rem; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; }
+  table.tests { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+  table.tests th, table.tests td { text-align: left; padding: 0.45rem 0.65rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  table.tests th { font-size: 0.72rem; font-family: var(--font-mono); color: var(--ink-muted); background: var(--surface-2); }
+  table.tests tr:last-child td { border-bottom: 0; }
+  table.tests pre { margin: 0; font-size: 0.8rem; white-space: pre-wrap; max-height: 7.5em; overflow: auto; }
+  .tstat { font-weight: 700; white-space: nowrap; }
+  .tstat.ok { color: var(--good); }
+  .tstat.fail { color: var(--bad); }
+  .tstat.wait { color: var(--ink-faint); }
+  .muted { color: var(--ink-faint); font-style: italic; }
+
+  .submit-zone { margin-top: 2rem; text-align: center; }
+  .submit-zone p { color: var(--ink-muted); font-size: 0.86rem; margin: 0.6rem 0 0; }
+
+  .result-card {
+    margin-top: 1.5rem; border: 2px solid var(--accent-1); border-radius: 16px; background: var(--surface);
+    padding: clamp(1rem, 3vw, 1.5rem); box-shadow: var(--shadow);
+  }
+  .result-card h2 { font-family: var(--font-display); font-weight: 600; margin: 0 0 0.2rem; font-size: 1.4rem; }
+  .result-who { color: var(--ink-muted); font-size: 0.9rem; margin: 0 0 1rem; }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.6rem; }
+  .score-tile { border: 1px solid var(--border); border-radius: 12px; padding: 0.7rem 0.85rem; background: var(--surface-2); }
+  .score-tile span { display: block; font-size: 0.74rem; font-weight: 700; color: var(--ink-muted); }
+  .score-tile strong { font-family: var(--font-display); font-size: 1.7rem; line-height: 1.2; }
+  .score-tile.total { border-color: var(--accent-1); background: color-mix(in srgb, var(--accent-1) 10%, var(--surface)); }
+  .score-tile.total strong { color: var(--accent-1); font-size: 2.1rem; }
+  .answer-string { margin: 1rem 0 0; font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-muted); overflow-wrap: anywhere; }
+  .result-note { font-size: 0.84rem; color: var(--warn); margin: 0.8rem 0 0; }
+  .sync-status { margin: 0.9rem 0 0; font-size: 0.88rem; font-weight: 600; color: var(--ink-muted); }
+  .sync-status[data-kind="ok"] { color: var(--good); }
+  .sync-status[data-kind="error"] { color: var(--bad); }
+
+  .empty-state { text-align: center; padding: 2.5rem 1rem; color: var(--ink-muted); }
+  .empty-state p { margin: 0 0 1rem; }
+
+  .site-footer { border-top: 1px solid var(--border); background: var(--surface-2); margin-top: 3rem; }
+  .footer-inner {
+    max-width: 900px; margin: 0 auto; padding: 1.4rem clamp(1.25rem, 4vw, 2rem);
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .footer-logo { width: 44px; height: 44px; object-fit: contain; flex: 0 0 auto; }
+  .footer-text { font-size: 0.82rem; color: var(--ink-muted); margin: 0; }
+  .footer-text strong { color: var(--ink); }
+
+  @media (max-width: 680px) {
+    .editor-wrap { grid-template-columns: 1fr; }
+    .opts { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  @media print {
+    :root { --bg: #fff; --surface: #fff; --surface-2: #fff; --shadow: none; }
+    .topbar, .site-footer, .btn, .btn-row, .submit-zone, .no-print, .editor-run { display: none !important; }
+    body { background: #fff; }
+    .q-card, .result-card, .panel { break-inside: avoid; }
+    .q-code, .code-block, textarea.code-input { background: #f3f3f3 !important; color: #111 !important; }
+  }
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="icon-back" viewBox="0 0 24 24"><polyline points="15,5 8,12 15,19"></polyline></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="back-link" href="../bai-hoc/index.html">
+      <svg aria-hidden="true"><use href="#icon-back"></use></svg>
+      Về bài giảng Tin học 10
+    </a>
+    <div class="live-status" aria-live="polite">
+      <span class="live-pill">Mã đề · <strong id="liveSeed">—</strong></span>
+      <span class="live-pill">Trắc nghiệm · <strong id="liveMcq">0/18</strong></span>
+      <span class="live-pill">Tự luận · <strong id="liveTests">chưa chấm</strong></span>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+  <header class="masthead">
+    <span class="masthead-eyebrow">TIN HỌC 10 · KIỂM TRA THƯỜNG XUYÊN LẦN 1</span>
+    <h1 class="masthead-title">Bài tập cộng điểm KTTX lần 1</h1>
+    <p class="masthead-sub">Nội dung từ Bài 16 đến Bài 20: Python, biến và lệnh gán, lệnh vào ra, câu lệnh rẽ nhánh <code>if</code>, câu lệnh lặp <code>for</code>. Mỗi lần bấm <em>Tạo đề</em>, máy bốc ngẫu nhiên 18 câu từ ngân hàng 100 câu và đảo thứ tự câu hỏi, đáp án.</p>
+    <div class="summary-strip">
+      <span class="summary-pill">Trắc nghiệm · <strong>18 câu · 9 điểm</strong></span>
+      <span class="summary-pill">Tự luận · <strong>1 câu lập trình · 1 điểm</strong></span>
+      <span class="summary-pill">Ngân hàng · <strong>100 câu</strong></span>
+      <span class="summary-pill">Chấm tự luận · <strong>10 test case</strong></span>
+    </div>
+  </header>
+
+  <section class="panel" aria-labelledby="infoTitle">
+    <h2 id="infoTitle">Thông tin học sinh</h2>
+    <p class="panel-note" id="infoNote">Chọn lớp và họ tên trước khi nộp bài. Mỗi em chỉ nộp <strong>một lần</strong>: nộp xong, đề được khoá lại và điểm tự động gửi về sổ của cô.</p>
+    <div class="form-grid">
+      <div class="field">
+        <label for="classSelect">Lớp</label>
+        <select id="classSelect"></select>
+      </div>
+      <div class="field">
+        <label for="nameInput">Họ và tên</label>
+        <input id="nameInput" list="nameList" autocomplete="off" placeholder="Gõ hoặc chọn tên của em">
+        <datalist id="nameList"></datalist>
+      </div>
+    </div>
+    <div class="btn-row" id="newPaperRow">
+      <button type="button" class="btn btn--big" id="newPaperBtn">Tạo đề</button>
+    </div>
+    <div class="paper-meta" id="paperMeta" hidden>
+      <span>Mã đề <strong id="seedLabel"></strong></span>
+      <span id="startedLabel"></span>
+      <span id="problemLabel"></span>
+    </div>
+  </section>
+
+  <div id="emptyState" class="empty-state">
+    <p>Chưa có đề. Bấm <strong>Tạo đề</strong> để bốc 18 câu trắc nghiệm và 1 bài lập trình.</p>
+  </div>
+
+  <div id="paper" hidden>
+    <div class="part-head">
+      <h2>Phần I · Trắc nghiệm</h2>
+      <span>18 câu · mỗi câu 0,5 điểm</span>
+    </div>
+    <ol class="q-list" id="qList"></ol>
+
+    <div class="part-head">
+      <h2>Phần II · Tự luận</h2>
+      <span>1 câu · 1 điểm · đúng mỗi test được 0,1 điểm</span>
+    </div>
+    <section class="panel" aria-labelledby="problemTitle">
+      <h2 id="problemTitle"></h2>
+      <div class="problem-statement" id="problemStatement"></div>
+
+      <div class="editor-wrap">
+        <div>
+          <div class="editor-label"><label for="codeInput">Chương trình Python của em</label><span>Phím Tab chèn 4 dấu cách</span></div>
+          <textarea id="codeInput" class="code-input" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+        </div>
+        <div class="editor-run">
+          <div class="editor-label"><label for="stdinInput">Dữ liệu vào để chạy thử</label><span>mỗi dòng một giá trị</span></div>
+          <textarea id="stdinInput" class="stdin-input" spellcheck="false"></textarea>
+          <div class="btn-row" style="margin-top:0.5rem">
+            <button type="button" class="btn btn--ghost" id="runBtn">Chạy thử</button>
+            <button type="button" class="btn" id="testBtn">Chấm bằng 10 test</button>
+          </div>
+          <div class="editor-label" style="margin-top:0.7rem">Kết quả chạy thử <span class="engine-status" id="engineStatus" data-kind="loading">Đang tải Python…</span></div>
+          <pre class="run-output" id="runOutput" aria-live="polite">Kết quả sẽ hiện ở đây.</pre>
+        </div>
+      </div>
+
+      <div class="test-summary">
+        <strong id="testScore">Chưa chấm</strong>
+        <span id="testHint">Bấm “Chấm bằng 10 test” để kiểm tra. Test 1–2 là ví dụ trong đề; test 3–10 là test ẩn, chỉ báo đúng hoặc sai.</span>
+      </div>
+      <div class="table-wrap">
+        <table class="tests">
+          <thead><tr><th>Test</th><th>Dữ liệu vào</th><th>Kết quả đúng</th><th>Chương trình em in ra</th><th>Kết luận</th></tr></thead>
+          <tbody id="testBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="submit-zone" id="submitZone">
+      <button type="button" class="btn btn--big" id="submitBtn">Nộp bài và xem điểm</button>
+      <p>Khi nộp, máy tự chấm lại phần tự luận bằng 10 test, gửi điểm về sổ của cô và khoá đề — em sẽ không xem lại đề được nữa.</p>
+    </div>
+  </div>
+
+  <section class="result-card" id="resultCard" hidden aria-labelledby="resultTitle">
+    <h2 id="resultTitle">Em đã nộp bài</h2>
+    <p class="result-who" id="resultWho"></p>
+    <div class="score-grid">
+      <div class="score-tile"><span>Trắc nghiệm</span><strong id="scoreMcq"></strong></div>
+      <div class="score-tile"><span>Tự luận</span><strong id="scoreEssay"></strong></div>
+      <div class="score-tile total"><span>Tổng điểm</span><strong id="scoreTotal"></strong></div>
+    </div>
+    <p class="result-note" id="resultNote" hidden></p>
+    <p class="answer-string" id="answerString"></p>
+    <p class="sync-status" id="syncStatus" data-kind="sending" aria-live="polite"></p>
+    <div class="btn-row">
+      <button type="button" class="btn" id="retryBtn" hidden>Gửi lại kết quả cho cô</button>
+      <button type="button" class="btn btn--ghost" id="printBtn">In / Lưu PDF</button>
+    </div>
+  </section>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <img class="footer-logo" src="../assets/logo-thpt-nguyen-khuyen.png" alt="Logo Trường THPT Nguyễn Khuyến" width="44" height="44" loading="lazy">
+    <p class="footer-text"><strong>Trường THPT Nguyễn Khuyến</strong> · Góc học tập môn Tin học · GV: Tăng Ngọc Phụng</p>
+  </div>
+</footer>
+
+<script src="../data/student-rosters.js"></script>
+<!-- Dùng chung địa chỉ /exec của Apps Script với sổ điểm cộng (xem seat-registration-backend/Code.gs, phần KTTX) -->
+<script src="../diem-cong-config.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var MCQ_COUNT = 18;
+  var MCQ_POINT = 0.5;
+  var STORE_KEY = 'kttx1-tin10-cong-diem-v1';
+  var TEST_TIMEOUT_MS = 4000;
+  var SKULPT_URLS = [
+    'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js',
+    'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js'
+  ];
+
+  /* ===== Ngân hàng 100 câu: 20 câu mỗi bài. Đáp án đúng luôn ở vị trí đầu tiên (o[0]); khi tạo đề sẽ đảo vị trí. ===== */
+  var BANK = [
+    /* ---------- Bài 16 ---------- */
+    { b: 16, q: 'Ngôn ngữ lập trình bậc cao là ngôn ngữ', o: ['gần với ngôn ngữ tự nhiên, dễ đọc, không phụ thuộc vào một loại máy cụ thể', 'chỉ gồm các dãy bit 0 và 1', 'máy tính hiểu và thực hiện trực tiếp, không cần dịch', 'chỉ chạy được trên đúng một loại máy tính'], e: 'Ngôn ngữ bậc cao gần ngôn ngữ tự nhiên, dễ viết, dễ đọc và cần chương trình dịch để máy hiểu.' },
+    { b: 16, q: 'Ngôn ngữ nào sau đây là ngôn ngữ lập trình bậc cao?', o: ['Python', 'Ngôn ngữ máy', 'Hợp ngữ (Assembly)', 'Bảng mã ASCII'], e: 'Python là ngôn ngữ bậc cao; ngôn ngữ máy và hợp ngữ là ngôn ngữ bậc thấp.' },
+    { b: 16, q: 'Muốn máy tính thực hiện được chương trình viết bằng ngôn ngữ bậc cao, cần có', o: ['chương trình dịch', 'bộ gõ tiếng Việt', 'trình duyệt web', 'phần mềm diệt virus'], e: 'Chương trình dịch chuyển chương trình bậc cao sang ngôn ngữ máy.' },
+    { b: 16, q: 'Ngôn ngữ lập trình Python do ai tạo ra?', o: ['Guido van Rossum', 'Bill Gates', 'Alan Turing', 'Steve Jobs'], e: 'Python do Guido van Rossum phát triển, công bố năm 1991.' },
+    { b: 16, q: 'Phiên bản Python đầu tiên được công bố vào năm nào?', o: ['1991', '1971', '1981', '2001'], e: 'Python được công bố lần đầu năm 1991.' },
+    { b: 16, q: 'Khi làm việc với Python, dấu nhắc `>>>` cho biết điều gì?', o: ['Python đang ở chế độ gõ lệnh trực tiếp, chờ nhập lệnh', 'Chương trình vừa gặp lỗi', 'Python đang ở chế độ soạn thảo chương trình', 'Chương trình đã chạy xong và thoát'], e: 'Dấu nhắc `>>>` xuất hiện ở chế độ gõ lệnh trực tiếp (chế độ tương tác).' },
+    { b: 16, q: 'Hai chế độ làm việc chính của Python là', o: ['chế độ gõ lệnh trực tiếp và chế độ soạn thảo chương trình', 'chế độ đồ hoạ và chế độ âm thanh', 'chế độ trực tuyến và chế độ ngoại tuyến', 'chế độ người dùng và chế độ quản trị'], e: 'Có thể gõ từng lệnh sau dấu `>>>` hoặc soạn cả chương trình rồi chạy.' },
+    { b: 16, q: 'Kết quả của biểu thức `7 // 2` là', o: ['3', '3.5', '1', '4'], e: '`//` là phép chia lấy phần nguyên: 7 // 2 = 3.' },
+    { b: 16, q: 'Kết quả của biểu thức `17 % 5` là', o: ['2', '3', '3.4', '85'], e: '`%` là phép chia lấy phần dư: 17 = 5·3 + 2.' },
+    { b: 16, q: 'Kết quả của biểu thức `2 ** 3` là', o: ['8', '6', '5', '9'], e: '`**` là phép luỹ thừa: 2³ = 8.' },
+    { b: 16, q: 'Kết quả của biểu thức `10 / 4` là', o: ['2.5', '2', '2.0', '3'], e: 'Phép chia `/` luôn cho số thực: 10 / 4 = 2.5.' },
+    { b: 16, q: 'Kết quả của biểu thức `2 + 3 * 4` là', o: ['14', '20', '24', '9'], e: 'Nhân trước, cộng sau: 2 + 12 = 14.' },
+    { b: 16, q: 'Kết quả của biểu thức `(2 + 3) * 4 ** 2` là', o: ['80', '400', '100', '28'], e: 'Luỹ thừa trước: 4 ** 2 = 16; rồi 5 * 16 = 80.' },
+    { b: 16, q: 'Biểu thức `17 // 5 + 17 % 5` có giá trị là', o: ['5', '3', '2', '6'], e: '17 // 5 = 3 và 17 % 5 = 2, tổng là 5.' },
+    { b: 16, q: 'Lệnh `print("3 + 4")` in ra màn hình', o: ['3 + 4', '7', '"3 + 4"', 'Thông báo lỗi'], e: 'Nội dung trong cặp dấu nháy là xâu kí tự nên được in nguyên văn, không tính toán.' },
+    { b: 16, q: 'Biểu thức Python nào đúng với công thức toán học (a + b) : 2?', o: ['`(a + b) / 2`', '`a + b / 2`', '`(a + b) : 2`', '`a + b : 2`'], e: 'Phép chia trong Python dùng `/`, cần ngoặc để cộng trước.' },
+    { b: 16, q: 'Khi gõ `print("Xin chào"` (thiếu dấu ngoặc đóng), Python báo loại lỗi nào?', o: ['SyntaxError', 'NameError', 'ZeroDivisionError', 'ValueError'], e: 'Viết sai cú pháp câu lệnh gây lỗi SyntaxError.' },
+    { b: 16, q: 'Khi thực hiện `5 / 0`, Python báo lỗi', o: ['ZeroDivisionError', 'SyntaxError', 'NameError', 'IndentationError'], e: 'Chia cho 0 gây lỗi ZeroDivisionError.' },
+    { b: 16, q: 'Trong cửa sổ soạn thảo, Python hiển thị từ khoá, xâu kí tự, chú thích… bằng các màu khác nhau để', o: ['giúp người viết dễ đọc chương trình và phát hiện lỗi', 'chương trình chạy nhanh hơn', 'trang trí cho đẹp, không có tác dụng gì', 'đánh dấu những dòng lệnh đã chạy xong'], e: 'Màu sắc hỗ trợ người lập trình nhận biết thành phần lệnh và sớm thấy lỗi.' },
+    { b: 16, q: 'Tệp chương trình Python thường có phần mở rộng là', o: ['.py', '.exe', '.docx', '.pyt'], e: 'Chương trình Python được lưu với đuôi .py.' },
+
+    /* ---------- Bài 17 ---------- */
+    { b: 17, q: 'Tên biến nào sau đây hợp lệ trong Python?', o: ['`so_luong`', '`2so`', '`so luong`', '`so-luong`'], e: 'Tên biến gồm chữ, số, dấu gạch dưới, không bắt đầu bằng số, không có dấu cách hay dấu trừ.' },
+    { b: 17, q: 'Tên nào sau đây KHÔNG dùng được để đặt tên biến?', o: ['`for`', '`_tong`', '`Tong2`', '`tong_tien`'], e: '`for` là từ khoá của Python nên không được đặt làm tên biến.' },
+    { b: 17, q: 'Trong Python, `Tong` và `tong` là', o: ['hai biến khác nhau vì Python phân biệt chữ hoa, chữ thường', 'cùng một biến', 'tên không hợp lệ', 'hai từ khoá của Python'], e: 'Python phân biệt chữ hoa và chữ thường.' },
+    { b: 17, q: 'Câu lệnh gán giá trị 5 cho biến `x` viết đúng là', o: ['`x = 5`', '`5 = x`', '`x == 5`', '`x <- 5`'], e: 'Lệnh gán: `tên biến = biểu thức`. Dấu `==` là phép so sánh.' },
+    { b: 17, q: 'Sau khi thực hiện đoạn lệnh, `x` có giá trị bao nhiêu?', c: 'x = 5\nx = x + 3', o: ['8', '5', '3', '13'], e: 'Vế phải tính trước: 5 + 3 = 8 rồi gán lại cho x.' },
+    { b: 17, q: 'Sau khi thực hiện đoạn lệnh, `a` và `b` có giá trị bao nhiêu?', c: 'a, b = 2, 3\na, b = a + b, a - b', o: ['a = 5, b = -1', 'a = 5, b = 2', 'a = 5, b = 1', 'a = 2, b = 3'], e: 'Vế phải được tính hết bằng giá trị cũ: 2 + 3 = 5 và 2 − 3 = −1.' },
+    { b: 17, q: 'Sau khi thực hiện đoạn lệnh, `b` có giá trị bao nhiêu?', c: 'a = 10\nb = a\na = 20', o: ['10', '20', '30', '0'], e: '`b` nhận giá trị 10 tại thời điểm gán; đổi `a` sau đó không làm `b` đổi.' },
+    { b: 17, q: 'Câu lệnh nào hoán đổi giá trị của hai biến `x` và `y`?', o: ['`x, y = y, x`', '`x = y`', '`x == y`', '`y = x`'], e: 'Lệnh gán đồng thời `x, y = y, x` đổi chỗ hai giá trị.' },
+    { b: 17, q: 'Từ khoá (keyword) trong Python là', o: ['từ dành riêng có ý nghĩa xác định, không được dùng làm tên biến', 'tên biến bất kì do người lập trình đặt', 'dòng chú thích bắt đầu bằng dấu #', 'giá trị số không đổi trong chương trình'], e: 'Ví dụ từ khoá: `if`, `else`, `for`, `in`, `and`…' },
+    { b: 17, q: 'Từ nào sau đây là từ khoá của Python?', o: ['`if`', '`print`', '`tong`', '`x1`'], e: '`if` là từ khoá; `print` là tên hàm có sẵn, không phải từ khoá.' },
+    { b: 17, q: 'Giá trị `3.0` thuộc kiểu dữ liệu nào?', o: ['Số thực (float)', 'Số nguyên (int)', 'Xâu kí tự (str)', 'Lôgic (bool)'], e: 'Số có dấu chấm thập phân là số thực float.' },
+    { b: 17, q: 'Sau khi thực hiện đoạn lệnh, `x` có giá trị bao nhiêu?', c: 'x = 7\nx = x // 2\nx = x * 3', o: ['9', '10.5', '21', '3'], e: '7 // 2 = 3, rồi 3 * 3 = 9.' },
+    { b: 17, q: 'Câu lệnh `x = x + 1` có ý nghĩa là', o: ['tăng giá trị của x thêm 1', 'so sánh x với x + 1', 'gán x bằng 1', 'lệnh sai vì x không thể bằng x + 1'], e: 'Lấy giá trị hiện tại của x cộng 1 rồi gán lại vào x.' },
+    { b: 17, q: 'Sau khi thực hiện đoạn lệnh, `c` có giá trị là', c: 'a = "Hà"\nb = "Nội"\nc = a + b', o: ['"HàNội"', '"Hà Nội"', '"Hà + Nội"', 'Lỗi, không cộng được hai xâu'], e: 'Phép `+` với hai xâu là nối xâu, không tự thêm dấu cách.' },
+    { b: 17, q: 'Biểu thức `"ab" * 3` cho kết quả là', o: ['"ababab"', '"ab3"', '"aaabbb"', 'Lỗi'], e: 'Xâu nhân số nguyên n là lặp lại xâu n lần.' },
+    { b: 17, q: 'Chạy `print(tong)` khi biến `tong` chưa được gán giá trị, Python báo lỗi', o: ['NameError', 'SyntaxError', 'ZeroDivisionError', 'Không báo lỗi, in ra 0'], e: 'Dùng biến chưa được gán giá trị gây lỗi NameError.' },
+    { b: 17, q: 'Sau khi thực hiện đoạn lệnh, `y` có giá trị bao nhiêu?', c: 'x = 2\ny = x ** 3 - x', o: ['6', '4', '8', '2'], e: '2 ** 3 = 8; 8 − 2 = 6.' },
+    { b: 17, q: 'Đoạn lệnh sau in ra', c: 'a, b, c = 1, 2, 3\nprint(a + b * c)', o: ['7', '9', '6', '123'], e: 'b * c = 6, cộng a = 1 được 7.' },
+    { b: 17, q: 'Kết quả của `10 + 2.5` thuộc kiểu dữ liệu nào?', o: ['float', 'int', 'str', 'bool'], e: 'Cộng số nguyên với số thực cho số thực: 12.5.' },
+    { b: 17, q: 'Biến trong chương trình dùng để', o: ['lưu trữ giá trị; giá trị đó có thể thay đổi khi chương trình chạy', 'lưu trữ giá trị không bao giờ thay đổi', 'ghi chú thích cho chương trình', 'đặt tên cho tệp chương trình'], e: 'Biến là tên của vùng nhớ lưu giá trị, giá trị có thể thay đổi.' },
+
+    /* ---------- Bài 18 ---------- */
+    { b: 18, q: 'Hàm `input()` luôn trả về dữ liệu kiểu', o: ['xâu kí tự (str)', 'số nguyên (int)', 'số thực (float)', 'lôgic (bool)'], e: 'Mọi dữ liệu nhập bằng `input()` đều là xâu; muốn tính toán phải chuyển kiểu.' },
+    { b: 18, q: 'Câu lệnh nào nhập một số nguyên từ bàn phím và gán cho biến `n`?', o: ['`n = int(input())`', '`n = input(int)`', '`n = int input()`', '`input(n)`'], e: 'Nhập xâu bằng `input()` rồi đổi sang số nguyên bằng `int()`.' },
+    { b: 18, q: 'Câu lệnh nào nhập một số thực từ bàn phím và gán cho biến `x`?', o: ['`x = float(input())`', '`x = input(float)`', '`x = int(input())`', '`float x = input()`'], e: 'Dùng `float()` để đổi xâu nhập vào sang số thực.' },
+    { b: 18, q: 'Lệnh `print("Tổng:", 5 + 3)` in ra', o: ['Tổng: 8', 'Tổng: 5 + 3', 'Tổng:8', '"Tổng:" 8'], e: '`print` in các giá trị, mặc định cách nhau một dấu cách; 5 + 3 được tính thành 8.' },
+    { b: 18, q: 'Lệnh `print(1, 2, 3)` in ra', o: ['1 2 3', '123', '1, 2, 3', '6'], e: 'Các giá trị trong `print` được in cách nhau một dấu cách.' },
+    { b: 18, q: 'Chạy đoạn lệnh sau, người dùng gõ 5 rồi gõ 7. Kết quả in ra là', c: 'a = input()\nb = input()\nprint(a + b)', o: ['57', '12', '5 7', 'Lỗi'], e: '`a`, `b` là xâu nên `+` là nối xâu: "5" + "7" = "57".' },
+    { b: 18, q: 'Biểu thức `int("12") + 3` có giá trị là', o: ['15', '"123"', '123', 'Lỗi'], e: '`int("12")` đổi xâu thành số 12; 12 + 3 = 15.' },
+    { b: 18, q: 'Kết quả của `int(3.9)` là', o: ['3', '4', '3.9', 'Lỗi'], e: '`int()` với số thực bỏ phần thập phân, không làm tròn.' },
+    { b: 18, q: 'Kết quả của `float("2.5") * 2` là', o: ['5.0', '"2.52.5"', '5', 'Lỗi'], e: '`float("2.5")` = 2.5; nhân 2 được số thực 5.0.' },
+    { b: 18, q: 'Kết quả của `str(15) + "5"` là', o: ['"155"', '20', '"20"', 'Lỗi'], e: '`str(15)` là xâu "15"; nối với "5" được "155".' },
+    { b: 18, q: 'Lệnh `type(3.14)` cho biết giá trị 3.14 thuộc kiểu', o: ['float', 'int', 'str', 'bool'], e: '3.14 là số thực, kiểu float.' },
+    { b: 18, q: 'Lệnh `type("10")` cho biết giá trị "10" thuộc kiểu', o: ['str', 'int', 'float', 'bool'], e: 'Có dấu nháy bao quanh nên "10" là xâu kí tự.' },
+    { b: 18, q: 'Thực hiện `int("abc")`, Python báo lỗi', o: ['ValueError', 'NameError', 'SyntaxError', 'ZeroDivisionError'], e: 'Xâu "abc" không biểu diễn số nên không đổi được sang int: ValueError.' },
+    { b: 18, q: 'Hai giá trị `True` và `False` thuộc kiểu dữ liệu', o: ['bool (lôgic)', 'int', 'str', 'float'], e: 'Kiểu lôgic bool chỉ có hai giá trị True và False.' },
+    { b: 18, q: 'Hằng trong chương trình là', o: ['giá trị cụ thể, không thay đổi, ví dụ 3.14 hay "Hà Nội"', 'biến có thể thay đổi giá trị', 'một câu lệnh vào ra', 'một từ khoá của Python'], e: 'Hằng là các giá trị số, xâu… viết trực tiếp, không đổi khi chạy.' },
+    { b: 18, q: 'Giá trị nào sau đây là một hằng xâu kí tự?', o: ['`"123"`', '`123`', '`12.3`', '`True`'], e: 'Hằng xâu được đặt trong cặp dấu nháy.' },
+    { b: 18, q: 'Lệnh `print("Kết quả là", 10 // 3)` in ra', o: ['Kết quả là 3', 'Kết quả là 3.33', 'Kết quả là 10 // 3', 'Kết quả là3'], e: '10 // 3 = 3; hai giá trị cách nhau một dấu cách.' },
+    { b: 18, q: 'Chạy đoạn lệnh sau và nhập 4. Kết quả in ra là', c: 'x = input()\nprint(x * 2)', o: ['44', '8', '4 4', 'Lỗi'], e: '`x` là xâu "4", nhân 2 là lặp xâu: "44".' },
+    { b: 18, q: 'Chạy đoạn lệnh sau và nhập 4. Kết quả in ra là', c: 'x = int(input())\nprint(x * 2)', o: ['8', '44', '4 4', 'Lỗi'], e: '`x` là số nguyên 4 nên x * 2 = 8.' },
+    { b: 18, q: 'Trong lệnh `ten = input("Nhập tên: ")`, xâu "Nhập tên: " có tác dụng', o: ['hiện lời nhắc trên màn hình trước khi người dùng nhập', 'là giá trị được gán cho biến ten', 'là tên của biến', 'quy định kiểu dữ liệu nhập vào'], e: 'Tham số của `input()` là lời nhắc; giá trị gán cho `ten` là dữ liệu người dùng gõ.' },
+
+    /* ---------- Bài 19 ---------- */
+    { b: 19, q: 'Biểu thức `5 > 3 and 2 > 4` có giá trị', o: ['False', 'True', '5', 'Lỗi'], e: '`and` chỉ đúng khi cả hai vế đúng; 2 > 4 sai.' },
+    { b: 19, q: 'Biểu thức `5 > 3 or 2 > 4` có giá trị', o: ['True', 'False', '3', 'Lỗi'], e: '`or` đúng khi có ít nhất một vế đúng; 5 > 3 đúng.' },
+    { b: 19, q: 'Biểu thức `not (3 == 3)` có giá trị', o: ['False', 'True', '3', 'Lỗi'], e: '3 == 3 là True, `not` đảo thành False.' },
+    { b: 19, q: 'Trong Python, phép so sánh "bằng nhau" được viết là', o: ['`==`', '`=`', '`:=`', '`===`'], e: '`=` là lệnh gán, `==` là so sánh bằng.' },
+    { b: 19, q: 'Trong Python, phép so sánh "khác nhau" được viết là', o: ['`!=`', '`<>`', '`=!`', '`><`'], e: 'Phép so sánh khác là `!=`.' },
+    { b: 19, q: 'Dòng lệnh `if` nào viết đúng cú pháp?', o: ['`if x > 0:`', '`if x > 0 then:`', '`if x > 0`', '`if x > 0;`'], e: 'Sau điều kiện của `if` phải có dấu hai chấm `:`.' },
+    { b: 19, q: 'Trong Python, các lệnh thuộc khối lệnh của `if` được xác định bằng', o: ['việc thụt lề vào như nhau', 'cặp dấu ngoặc nhọn { }', 'cặp từ begin … end', 'dấu chấm phẩy cuối mỗi lệnh'], e: 'Python dùng thụt lề để xác định khối lệnh.' },
+    { b: 19, q: 'Đoạn lệnh sau in ra', c: 'x = 7\nif x % 2 == 0:\n    print("Chẵn")\nelse:\n    print("Lẻ")', o: ['Lẻ', 'Chẵn', 'Chẵn Lẻ', 'Không in gì'], e: '7 % 2 = 1 ≠ 0 nên chạy nhánh `else`.' },
+    { b: 19, q: 'Câu lệnh rẽ nhánh dạng thiếu là câu lệnh', o: ['chỉ có `if`, không có `else`', 'có cả `if` và `else`', 'có `if`, `elif` và `else`', 'không có điều kiện'], e: 'Dạng thiếu: nếu điều kiện sai thì bỏ qua, không làm gì.' },
+    { b: 19, q: 'Từ khoá `elif` thường được dùng khi', o: ['cần xét nhiều hơn hai trường hợp', 'muốn lặp lại một công việc', 'muốn nhập dữ liệu từ bàn phím', 'chỉ có đúng một trường hợp'], e: '`elif` (else if) cho phép xét thêm các điều kiện khác.' },
+    { b: 19, q: 'Đoạn lệnh sau in ra', c: 'd = 7.5\nif d >= 8:\n    print("Giỏi")\nelif d >= 6.5:\n    print("Khá")\nelif d >= 5:\n    print("Trung bình")\nelse:\n    print("Yếu")', o: ['Khá', 'Giỏi', 'Trung bình', 'Khá Trung bình'], e: '7.5 không ≥ 8 nhưng ≥ 6.5; gặp nhánh đúng đầu tiên thì dừng.' },
+    { b: 19, q: 'Đoạn lệnh sau in ra', c: 'x = 5\nif x > 3:\n    x = x + 2\nprint(x)', o: ['7', '5', '2', 'Không in gì'], e: '5 > 3 đúng nên x thành 7; lệnh `print` nằm ngoài `if`.' },
+    { b: 19, q: 'Đoạn lệnh sau in ra', c: 'x = 2\nif x > 3:\n    x = x * 2\nprint(x)', o: ['2', '4', '6', 'Không in gì'], e: '2 > 3 sai nên bỏ qua lệnh trong `if`; vẫn in x = 2.' },
+    { b: 19, q: 'Điều kiện "n chia hết cho 3" được viết trong Python là', o: ['`n % 3 == 0`', '`n / 3 == 0`', '`n // 3 == 0`', '`n % 3 = 0`'], e: 'Chia hết khi phần dư bằng 0.' },
+    { b: 19, q: 'Điều kiện "x thuộc đoạn [1; 10]" được viết đúng là', o: ['`x >= 1 and x <= 10`', '`x >= 1 or x <= 10`', '`x > 1 and x < 10`', '`x >= 1 and <= 10`'], e: 'Phải thoả cả hai: x ≥ 1 và x ≤ 10.' },
+    { b: 19, q: 'Đoạn lệnh sau in ra', c: 'a, b = 3, 8\nif a > b:\n    print(a)\nelse:\n    print(b)', o: ['8', '3', '3 8', 'Không in gì'], e: 'Đoạn lệnh in số lớn hơn trong hai số.' },
+    { b: 19, q: 'Điều kiện "năm chia hết cho 4 nhưng không chia hết cho 100" viết đúng là', o: ['`nam % 4 == 0 and nam % 100 != 0`', '`nam % 4 == 0 or nam % 100 != 0`', '`nam % 4 == 0 and nam % 100 == 0`', '`nam / 4 == 0 and nam / 100 != 0`'], e: '"nhưng" nghĩa là cả hai điều kiện cùng đúng → `and`.' },
+    { b: 19, q: 'Đoạn lệnh sau in ra', c: 'x = -3\nif x > 0:\n    print("Dương")\nelif x == 0:\n    print("Không")\nelse:\n    print("Âm")', o: ['Âm', 'Dương', 'Không', 'Không in gì'], e: '-3 không > 0 và không bằng 0 nên chạy nhánh `else`.' },
+    { b: 19, q: 'Nếu lệnh bên trong khối `if` không được thụt lề, Python báo lỗi', o: ['IndentationError', 'NameError', 'ValueError', 'ZeroDivisionError'], e: 'Thiếu thụt lề cho khối lệnh gây lỗi IndentationError.' },
+    { b: 19, q: 'Đoạn lệnh sau in ra', c: 'a = 5\nb = 5\nif a > b:\n    print(">")\nelif a < b:\n    print("<")\nelse:\n    print("=")', o: ['=', '>', '<', 'Không in gì'], e: 'Hai điều kiện đầu đều sai nên chạy nhánh `else`.' },
+
+    /* ---------- Bài 20 ---------- */
+    { b: 20, q: '`range(5)` tạo ra dãy số nào?', o: ['0, 1, 2, 3, 4', '1, 2, 3, 4, 5', '0, 1, 2, 3, 4, 5', '5'], e: '`range(n)` bắt đầu từ 0 và dừng trước n.' },
+    { b: 20, q: '`range(2, 6)` tạo ra dãy số nào?', o: ['2, 3, 4, 5', '2, 3, 4, 5, 6', '3, 4, 5', '2, 6'], e: '`range(m, n)` chạy từ m đến n − 1.' },
+    { b: 20, q: 'Vòng lặp `for i in range(1, 10):` thực hiện khối lệnh bao nhiêu lần?', o: ['9 lần', '10 lần', '11 lần', '1 lần'], e: 'i nhận các giá trị 1, 2, …, 9: tổng cộng 9 lần.' },
+    { b: 20, q: 'Đoạn lệnh sau in ra', c: 's = 0\nfor i in range(1, 5):\n    s = s + i\nprint(s)', o: ['10', '15', '4', '0'], e: 's = 1 + 2 + 3 + 4 = 10.' },
+    { b: 20, q: 'Đoạn lệnh sau in ra chữ "Hi" bao nhiêu lần?', c: 'for i in range(3):\n    print("Hi")', o: ['3 lần', '2 lần', '4 lần', '1 lần'], e: 'i nhận 0, 1, 2 nên lặp 3 lần.' },
+    { b: 20, q: 'Đoạn lệnh sau in ra', c: 'for i in range(4):\n    print(i, end=" ")', o: ['0 1 2 3', '1 2 3 4', '0 1 2 3 4', '4'], e: '`end=" "` in tiếp trên cùng dòng; i chạy từ 0 đến 3.' },
+    { b: 20, q: 'Vòng lặp `for i in range(5, 2):` thực hiện khối lệnh bao nhiêu lần?', o: ['0 lần (không lặp)', '3 lần', '2 lần', 'Lặp mãi không dừng'], e: 'Giá trị đầu 5 không nhỏ hơn giá trị cuối 2 nên `range` rỗng.' },
+    { b: 20, q: 'Đoạn lệnh sau in ra', c: 't = 1\nfor i in range(1, 5):\n    t = t * i\nprint(t)', o: ['24', '120', '10', '4'], e: 't = 1·2·3·4 = 24.' },
+    { b: 20, q: 'Câu lệnh lặp `for` thích hợp nhất khi', o: ['biết trước số lần lặp', 'không biết trước số lần lặp', 'chỉ cần kiểm tra một điều kiện một lần', 'muốn nhập dữ liệu một lần'], e: '`for … in range(…)` dùng cho lặp với số lần biết trước.' },
+    { b: 20, q: 'Đoạn lệnh sau in ra', c: 'dem = 0\nfor i in range(1, 11):\n    if i % 2 == 0:\n        dem = dem + 1\nprint(dem)', o: ['5', '10', '6', '4'], e: 'Có 5 số chẵn từ 1 đến 10: 2, 4, 6, 8, 10.' },
+    { b: 20, q: 'Để biến `i` nhận lần lượt các giá trị 1, 2, …, n, ta viết', o: ['`for i in range(1, n + 1):`', '`for i in range(1, n):`', '`for i in range(n):`', '`for i in range(0, n):`'], e: '`range` dừng trước giá trị cuối nên phải viết n + 1.' },
+    { b: 20, q: 'Đoạn lệnh sau in ra', c: 's = 0\nfor i in range(10):\n    if i % 3 == 0:\n        s = s + i\nprint(s)', o: ['18', '9', '12', '30'], e: 'Các số chia hết cho 3 trong 0..9: 0, 3, 6, 9 → tổng 18.' },
+    { b: 20, q: 'Giá trị cuối cùng được in ra bởi đoạn lệnh sau là', c: 'for i in range(1, 4):\n    print(i * i)', o: ['9', '16', '4', '3'], e: 'i nhận 1, 2, 3; lần cuối in 3 * 3 = 9.' },
+    { b: 20, q: 'Đoạn lệnh sau in ra', c: 'for i in range(5):\n    pass\nprint(i)', o: ['4', '5', '0', 'Lỗi'], e: 'Sau vòng lặp, i giữ giá trị cuối cùng là 4.' },
+    { b: 20, q: 'Đoạn lệnh sau in ra', c: 's = 0\nfor i in range(5):\n    s = s + 2\nprint(s)', o: ['10', '8', '12', '2'], e: 'Lặp 5 lần, mỗi lần cộng 2: s = 10.' },
+    { b: 20, q: 'Các lệnh thuộc khối lệnh lặp của `for` phải', o: ['thụt lề vào so với dòng `for`', 'viết thẳng hàng với dòng `for`', 'đặt trong cặp ngoặc tròn', 'kết thúc bằng từ khoá end'], e: 'Giống `if`, khối lệnh của `for` xác định bằng thụt lề.' },
+    { b: 20, q: 'Đoạn lệnh sau in ra', c: 'kq = ""\nfor i in range(3):\n    kq = kq + "ab"\nprint(kq)', o: ['ababab', 'ab', 'abab', 'ab ab ab'], e: 'Nối "ab" ba lần vào xâu rỗng.' },
+    { b: 20, q: 'Đoạn lệnh sau in ra', c: 'n = 5\ns = 0\nfor i in range(1, n + 1):\n    if i % 2 == 1:\n        s = s + i\nprint(s)', o: ['9', '15', '6', '5'], e: 'Tổng các số lẻ từ 1 đến 5: 1 + 3 + 5 = 9.' },
+    { b: 20, q: 'Đoạn lệnh sau in ra những số nào?', c: 'for i in range(1, 10):\n    if i % 4 == 0:\n        print(i)', o: ['4 và 8', '4, 8 và 12', '1, 4 và 8', '0, 4 và 8'], e: 'Trong 1..9 chỉ có 4 và 8 chia hết cho 4.' },
+    { b: 20, q: 'Dòng lệnh `for` nào viết đúng cú pháp?', o: ['`for i in range(10):`', '`for i = 1 to 10:`', '`for (i = 0; i < 10; i++):`', '`for i in range(10)`'], e: 'Cú pháp: `for biến in range(...):` và có dấu hai chấm.' }
+  ];
+
+  /* ===== Bài tự luận: mỗi đề bốc 1 bài; mỗi bài 10 test (test 1–2 là ví dụ trong đề). Kết quả đúng sinh từ lời giải mẫu. ===== */
+  var PROBLEMS = [
+    {
+      id: 'p1',
+      title: 'Tổng các số chia hết cho 3 hoặc 5',
+      html: '<p>Viết chương trình nhập số nguyên dương <code>n</code> (1 ≤ n ≤ 10 000) và in ra <strong>tổng các số nguyên từ 1 đến n chia hết cho 3 hoặc chia hết cho 5</strong>.</p>' +
+            '<ul><li><strong>Dữ liệu vào:</strong> một dòng chứa số <code>n</code>.</li><li><strong>Kết quả:</strong> in ra một số nguyên là tổng cần tìm.</li></ul>' +
+            '<p>Giải thích ví dụ 1: với n = 10, các số thoả mãn là 3, 5, 6, 9, 10 nên tổng bằng 33.</p>',
+      tests: [{"in":"10","out":"33"},{"in":"15","out":"60"},{"in":"1","out":"0"},{"in":"3","out":"3"},{"in":"5","out":"8"},{"in":"6","out":"14"},{"in":"30","out":"225"},{"in":"100","out":"2418"},{"in":"999","out":"233168"},{"in":"10000","out":"23341668"}],
+      starter: 'n = int(input())\n# Viết tiếp chương trình của em ở đây\n'
+    },
+    {
+      id: 'p2',
+      title: 'Đếm số ước của n',
+      html: '<p>Viết chương trình nhập số nguyên dương <code>n</code> (1 ≤ n ≤ 10 000) và in ra <strong>số lượng ước số dương của n</strong>.</p>' +
+            '<ul><li><strong>Dữ liệu vào:</strong> một dòng chứa số <code>n</code>.</li><li><strong>Kết quả:</strong> in ra một số nguyên là số ước của n.</li></ul>' +
+            '<p>Giải thích ví dụ 1: 12 có các ước 1, 2, 3, 4, 6, 12 nên in ra 6.</p>',
+      tests: [{"in":"12","out":"6"},{"in":"7","out":"2"},{"in":"1","out":"1"},{"in":"2","out":"2"},{"in":"16","out":"5"},{"in":"36","out":"9"},{"in":"97","out":"2"},{"in":"100","out":"9"},{"in":"360","out":"24"},{"in":"10000","out":"25"}],
+      starter: 'n = int(input())\n# Viết tiếp chương trình của em ở đây\n'
+    },
+    {
+      id: 'p3',
+      title: 'Tổng các số chẵn trong dãy',
+      html: '<p>Viết chương trình nhập số nguyên dương <code>n</code> (1 ≤ n ≤ 100), sau đó nhập lần lượt <code>n</code> số nguyên (có thể âm) và in ra <strong>tổng các số chẵn</strong> trong n số vừa nhập. Nếu không có số chẵn nào thì in ra 0.</p>' +
+            '<ul><li><strong>Dữ liệu vào:</strong> dòng đầu là <code>n</code>; n dòng tiếp theo, mỗi dòng một số nguyên.</li><li><strong>Kết quả:</strong> in ra một số nguyên là tổng các số chẵn.</li></ul>' +
+            '<p>Giải thích ví dụ 2: dãy 10, −3, −8, 7 có hai số chẵn là 10 và −8, tổng bằng 2.</p>',
+      tests: [{"in":"5\n1\n2\n3\n4\n5","out":"6"},{"in":"4\n10\n-3\n-8\n7","out":"2"},{"in":"1\n7","out":"0"},{"in":"1\n8","out":"8"},{"in":"3\n1\n3\n5","out":"0"},{"in":"6\n-2\n-4\n-6\n1\n0\n9","out":"-12"},{"in":"3\n0\n0\n0","out":"0"},{"in":"5\n100\n200\n300\n400\n500","out":"1500"},{"in":"8\n-7\n14\n-21\n28\n-35\n42\n0\n1","out":"84"},{"in":"10\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10","out":"30"}],
+      starter: 'n = int(input())\n# Mỗi số trong dãy nhập bằng một lệnh int(input()) riêng\n'
+    },
+    {
+      id: 'p4',
+      title: 'Tổng đan dấu',
+      html: '<p>Viết chương trình nhập số nguyên dương <code>n</code> (1 ≤ n ≤ 10 000) và tính tổng đan dấu</p>' +
+            '<p style="text-align:center;font-family:var(--font-mono)">S = 1 − 2 + 3 − 4 + 5 − … ± n</p>' +
+            '<p>(số lẻ mang dấu cộng, số chẵn mang dấu trừ).</p>' +
+            '<ul><li><strong>Dữ liệu vào:</strong> một dòng chứa số <code>n</code>.</li><li><strong>Kết quả:</strong> in ra một số nguyên là giá trị của S.</li></ul>' +
+            '<p>Giải thích ví dụ 2: với n = 2, S = 1 − 2 = −1.</p>',
+      tests: [{"in":"1","out":"1"},{"in":"2","out":"-1"},{"in":"3","out":"2"},{"in":"4","out":"-2"},{"in":"5","out":"3"},{"in":"10","out":"-5"},{"in":"11","out":"6"},{"in":"100","out":"-50"},{"in":"999","out":"500"},{"in":"10000","out":"-5000"}],
+      starter: 'n = int(input())\n# Viết tiếp chương trình của em ở đây\n'
+    }
+  ];
+  var SAMPLE_TESTS = 2;
+
+  // Số thứ tự của từng câu trong bài của nó (1–20), dùng để ghi chi tiết bài làm lên Google Sheet
+  var BANK_NO = (function () {
+    var seen = {};
+    return BANK.map(function (q) { seen[q.b] = (seen[q.b] || 0) + 1; return seen[q.b]; });
+  })();
+
+  /* ===== Tiện ích ===== */
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function fmt(s) { return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>'); }
+  function fmtScore(x) { return (Math.round(x * 100) / 100).toLocaleString('vi-VN', { maximumFractionDigits: 2 }); }
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffle(arr, rnd) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(rnd() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+  function loadStore() {
+    try { var raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+  }
+  function saveStore() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* bỏ qua khi trình duyệt chặn lưu */ }
+  }
+  function nowText(ts) {
+    var d = new Date(ts);
+    var p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return p(d.getHours()) + ':' + p(d.getMinutes()) + ' · ' + p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear();
+  }
+
+  /* ===== Sinh đề theo mã: mỗi bài ít nhất 3 câu, 3 câu còn lại rơi vào 3 bài khác nhau ===== */
+  function buildPaper(seed) {
+    var rnd = mulberry32(seed);
+    var byLesson = {};
+    BANK.forEach(function (q, idx) { (byLesson[q.b] = byLesson[q.b] || []).push(idx); });
+    var lessons = Object.keys(byLesson).map(Number);
+    var perLesson = {};
+    lessons.forEach(function (b) { perLesson[b] = Math.floor(MCQ_COUNT / lessons.length); });
+    var extra = MCQ_COUNT - Math.floor(MCQ_COUNT / lessons.length) * lessons.length;
+    shuffle(lessons.slice(), rnd).slice(0, extra).forEach(function (b) { perLesson[b]++; });
+    var picked = [];
+    lessons.forEach(function (b) {
+      picked = picked.concat(shuffle(byLesson[b].slice(), rnd).slice(0, perLesson[b]));
+    });
+    shuffle(picked, rnd);
+    var questions = picked.map(function (idx) {
+      return { idx: idx, order: shuffle([0, 1, 2, 3], rnd) };
+    });
+    var problem = PROBLEMS[Math.floor(rnd() * PROBLEMS.length)].id;
+    return { questions: questions, problem: problem };
+  }
+  function problemById(id) {
+    for (var i = 0; i < PROBLEMS.length; i++) if (PROBLEMS[i].id === id) return PROBLEMS[i];
+    return PROBLEMS[0];
+  }
+
+  /* ===== Trạng thái ===== */
+  var state = null;
+  var paper = null;
+
+  function freshState(seed) {
+    var built = buildPaper(seed);
+    return {
+      seed: seed,
+      startedAt: Date.now(),
+      answers: {},
+      code: problemById(built.problem).starter,
+      stdin: problemById(built.problem).tests[0].in,
+      testResults: null,
+      testedCode: null,
+      submitted: false,
+      result: null,
+      cls: state ? state.cls : '',
+      name: state ? state.name : ''
+    };
+  }
+
+  /* ===== Danh sách lớp, học sinh ===== */
+  var rosters = (window.STUDENT_ROSTERS || {});
+  var classKeys = Object.keys(rosters).filter(function (k) { return /^TC_TIN_/.test(k); }).sort();
+  function fillClasses() {
+    var sel = $('classSelect');
+    var html = '<option value="">— Chọn lớp —</option>';
+    classKeys.forEach(function (k) { html += '<option value="' + esc(k) + '">' + esc(rosters[k].label || k) + '</option>'; });
+    html += '<option value="__other">Lớp khác</option>';
+    sel.innerHTML = html;
+  }
+  function fillNames() {
+    var cls = $('classSelect').value;
+    var list = (rosters[cls] && rosters[cls].students) || [];
+    $('nameList').innerHTML = list.map(function (s) { return '<option value="' + esc(s.name) + '">'; }).join('');
+  }
+
+  /* ===== Hiển thị đề ===== */
+  function renderPaper() {
+    paper = buildPaper(state.seed);
+    $('emptyState').hidden = true;
+    $('paper').hidden = false;
+    $('paperMeta').hidden = false;
+    $('seedLabel').textContent = state.seed;
+    $('liveSeed').textContent = state.seed;
+    $('startedLabel').textContent = 'Tạo lúc ' + nowText(state.startedAt);
+    var prob = problemById(paper.problem);
+    $('problemLabel').textContent = 'Tự luận: ' + prob.title;
+
+    var html = '';
+    paper.questions.forEach(function (pq, i) {
+      var q = BANK[pq.idx];
+      html += '<li class="q-card" id="q' + i + '"><div class="q-top"><span class="q-num">' + (i + 1) + '</span><div class="q-body">' +
+        '<span class="q-tag">BÀI ' + q.b + '</span>' +
+        '<p class="q-text">' + fmt(q.q) + '</p>' +
+        (q.c ? '<pre class="q-code">' + esc(q.c) + '</pre>' : '') +
+        '<div class="opts" role="radiogroup" aria-label="Câu ' + (i + 1) + '">';
+      pq.order.forEach(function (optIdx, pos) {
+        var letter = 'ABCD'.charAt(pos);
+        html += '<label class="opt" data-pos="' + pos + '"><input type="radio" name="q' + i + '" value="' + pos + '">' +
+          '<span class="opt-letter">' + letter + '</span><span class="opt-text">' + fmt(q.o[optIdx]) + '</span></label>';
+      });
+      html += '</div></div></div></li>';
+    });
+    $('qList').innerHTML = html;
+
+    Object.keys(state.answers).forEach(function (k) {
+      var input = document.querySelector('input[name="q' + k + '"][value="' + state.answers[k] + '"]');
+      if (input) input.checked = true;
+    });
+
+    $('problemTitle').textContent = 'Câu 19. ' + prob.title;
+    var ex = '<div class="io-grid">';
+    for (var t = 0; t < SAMPLE_TESTS; t++) {
+      ex += '<div class="io-box"><h4>Ví dụ ' + (t + 1) + '</h4><div class="io-cols"><pre><span class="io-label">Dữ liệu vào</span>' + esc(prob.tests[t].in) +
+        '</pre><pre><span class="io-label">Kết quả</span>' + esc(prob.tests[t].out) + '</pre></div></div>';
+    }
+    ex += '</div>';
+    $('problemStatement').innerHTML = prob.html + ex +
+      '<p class="muted" style="font-size:0.84rem">Lưu ý: dùng <code>input()</code> để nhập (có thể ghi lời nhắc), máy chấm lấy <strong>số cuối cùng</strong> chương trình in ra để so với kết quả đúng.</p>';
+
+    $('codeInput').value = state.code;
+    $('stdinInput').value = state.stdin;
+    renderTests();
+    updateLive();
+  }
+
+  function updateLive() {
+    var n = state ? Object.keys(state.answers).length : 0;
+    $('liveMcq').textContent = n + '/' + MCQ_COUNT;
+    if (!state || !state.testResults) { $('liveTests').textContent = 'chưa chấm'; return; }
+    var passed = state.testResults.filter(function (r) { return r.ok; }).length;
+    var stale = state.testedCode !== state.code && !state.submitted;
+    $('liveTests').textContent = passed + '/' + state.testResults.length + ' test' + (stale ? ' (cũ)' : '');
+  }
+
+  /* ===== Bảng test ===== */
+  function renderTests() {
+    var prob = problemById(paper.problem);
+    var rows = '';
+    prob.tests.forEach(function (t, i) {
+      var r = state.testResults && state.testResults[i];
+      var visible = i < SAMPLE_TESTS;
+      var stat = !r ? '<span class="tstat wait">Chưa chạy</span>' :
+        r.ok ? '<span class="tstat ok">✓ Đúng</span>' : '<span class="tstat fail">✗ ' + esc(r.label) + '</span>';
+      var got = !r ? '<span class="muted">—</span>' :
+        (visible || r.ok ? '<pre>' + esc(r.shown) + '</pre>' : '<span class="muted">Test ẩn</span>');
+      rows += '<tr><td><strong>' + (i + 1) + '</strong>' + (i < SAMPLE_TESTS ? '<br><span class="muted">ví dụ</span>' : '') + '</td>' +
+        '<td>' + (visible ? '<pre>' + esc(t.in) + '</pre>' : '<span class="muted">Test ẩn</span>') + '</td>' +
+        '<td>' + (visible ? '<pre>' + esc(t.out) + '</pre>' : '<span class="muted">Test ẩn</span>') + '</td>' +
+        '<td>' + got + '</td><td>' + stat + '</td></tr>';
+    });
+    $('testBody').innerHTML = rows;
+    if (state.testResults) {
+      var passed = state.testResults.filter(function (r) { return r.ok; }).length;
+      $('testScore').textContent = 'Đúng ' + passed + '/' + prob.tests.length + ' test · ' + fmtScore(passed / prob.tests.length) + ' điểm';
+      $('testHint').textContent = state.testedCode !== state.code && !state.submitted
+        ? 'Em đã sửa chương trình sau lần chấm này — bấm chấm lại để cập nhật.'
+        : (passed === prob.tests.length ? 'Tuyệt vời! Chương trình đúng với mọi test.' : 'Xem test sai để sửa. Gợi ý: thử các trường hợp biên như n = 1.');
+    } else {
+      $('testScore').textContent = 'Chưa chấm';
+    }
+    updateLive();
+  }
+
+  /* ===== Khoá bài sau khi nộp: ẩn hẳn đề, chỉ còn bảng điểm ===== */
+  function showLocked() {
+    $('paper').hidden = true;
+    $('emptyState').hidden = true;
+    $('paperMeta').hidden = true;
+    $('newPaperRow').hidden = true;
+    $('qList').innerHTML = '';
+    $('codeInput').value = '';
+    $('classSelect').disabled = true;
+    $('nameInput').disabled = true;
+    $('infoNote').textContent = 'Em đã nộp bài. Đề đã được khoá, không xem lại hay làm lại được.';
+    $('liveSeed').textContent = state.seed;
+    $('liveMcq').textContent = 'đã nộp';
+    $('liveTests').textContent = 'đã nộp';
+    $('resultCard').hidden = false;
+    renderResult();
+  }
+
+  function renderResult() {
+    var r = state.result;
+    if (!r) return;
+    $('resultWho').textContent = r.name + ' · ' + r.cls + ' · Mã đề ' + state.seed + ' · Nộp lúc ' + nowText(r.at);
+    $('scoreMcq').textContent = fmtScore(r.mcq) + ' / 9';
+    $('scoreEssay').textContent = r.essay === null ? '? / 1' : fmtScore(r.essay) + ' / 1';
+    $('scoreTotal').textContent = fmtScore(r.mcq + (r.essay || 0)) + ' / 10';
+    $('answerString').textContent = 'Đúng ' + r.correct + '/' + MCQ_COUNT + ' câu trắc nghiệm' +
+      (r.essay === null ? '' : ' · Tự luận đúng ' + r.passed + '/10 test');
+    $('resultNote').hidden = r.essay !== null;
+    $('resultNote').textContent = 'Không tải được bộ chạy Python nên phần tự luận chưa chấm tự động. Cô sẽ chấm tay dựa trên chương trình em đã viết.';
+    renderSync();
+  }
+
+  /* ===== Gửi kết quả về Google Sheet ===== */
+  var SYNC_URL = (window.DIEM_CONG_CONFIG && window.DIEM_CONG_CONFIG.apiUrl) || '';
+  var sending = false;
+
+  function renderSync() {
+    var el = $('syncStatus');
+    var sync = state.sync || {};
+    if (sync.ok) {
+      el.dataset.kind = 'ok';
+      el.textContent = '✓ Đã lưu kết quả vào sổ của cô' + (sync.attempt > 1 ? ' (lần nộp thứ ' + sync.attempt + ')' : '') + '.';
+    } else if (sending) {
+      el.dataset.kind = 'sending';
+      el.textContent = 'Đang gửi kết quả cho cô…';
+    } else {
+      el.dataset.kind = 'error';
+      el.textContent = '✗ Chưa gửi được kết quả' + (sync.message ? ' (' + sync.message + ')' : '') +
+        '. Kiểm tra Internet rồi bấm “Gửi lại”. Đừng tắt trang khi chưa gửi được.';
+    }
+    $('retryBtn').hidden = !!sync.ok || sending;
+  }
+
+  function sendResult() {
+    if (sending || !state || !state.submitted || (state.sync && state.sync.ok)) return;
+    if (!SYNC_URL) { state.sync = { ok: false, message: 'chưa cài địa chỉ Google Sheet' }; renderSync(); return; }
+    sending = true;
+    renderSync();
+    var r = state.result;
+    fetch(SYNC_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'kttxSubmit', quiz: 'kttx1-tin10',
+        cls: r.cls, name: r.name, seed: String(state.seed),
+        mcq: r.mcq, correct: r.correct, essay: r.essay, passed: r.passed,
+        minutes: (r.at - state.startedAt) / 60000,
+        problem: r.problem, detail: r.detail, code: r.code
+      })
+    }).then(function (response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return response.json();
+    }).then(function (res) {
+      if (!res.ok) throw new Error(res.message || 'Google Sheet báo lỗi');
+      state.sync = { ok: true, attempt: res.attempt || 1 };
+    }).catch(function (err) {
+      state.sync = { ok: false, message: String(err && err.message || err) };
+    }).then(function () {
+      sending = false;
+      saveStore();
+      renderSync();
+    });
+  }
+
+  /* ===== Bộ chạy Python (Skulpt trong Web Worker) ===== */
+  var worker = null, workerReady = false, readyWaiters = [], pendingRun = null, runTimer = null;
+
+  function workerSource() {
+    return [
+      'var out = "";',
+      'self.onmessage = async function (e) {',
+      '  var d = e.data;',
+      '  if (d.type === "init") {',
+      '    try { importScripts(' + SKULPT_URLS.map(function (u) { return JSON.stringify(u); }).join(', ') + ');',
+      '      if (!self.Sk || !Sk.misceval || !Sk.builtinFiles) throw new Error("Thiếu thành phần Skulpt");',
+      '      self.postMessage({ type: "ready" });',
+      '    } catch (err) { self.postMessage({ type: "loadError", error: String(err && err.message || err) }); }',
+      '    return;',
+      '  }',
+      '  if (d.type === "run") {',
+      '    out = "";',
+      '    var lines = d.stdin === "" ? [] : d.stdin.replace(/\\r/g, "").split("\\n");',
+      '    var pos = 0;',
+      '    try {',
+      '      Sk.configure({',
+      '        output: function (t) { out += t; if (out.length > 20000) throw new Error("Chương trình in ra quá nhiều dữ liệu"); },',
+      '        read: function (f) { if (!Sk.builtinFiles.files[f]) throw new Error("Không tìm thấy thư viện: " + f); return Sk.builtinFiles.files[f]; },',
+      '        inputfun: function (prompt) {',
+      '          if (pos >= lines.length) throw new Error("EOFError: Hết dữ liệu vào — chương trình gọi input() nhiều hơn số dòng dữ liệu");',
+      '          var v = lines[pos++];',
+      '          if (d.echo) out += (prompt || "") + v + "\\n";',
+      '          return v;',
+      '        },',
+      '        inputfunTakesPrompt: true,',
+      '        execLimit: ' + (TEST_TIMEOUT_MS - 500) + ',',
+      '        __future__: Sk.python3',
+      '      });',
+      '      await Sk.misceval.asyncToPromise(function () { return Sk.importMainWithBody("<stdin>", false, d.code, true); });',
+      '      self.postMessage({ type: "done", id: d.id, ok: true, out: out });',
+      '    } catch (err) {',
+      '      self.postMessage({ type: "done", id: d.id, ok: false, out: out, error: String(err && err.toString ? err.toString() : err) });',
+      '    }',
+      '  }',
+      '};'
+    ].join('\n');
+  }
+
+  function setEngine(text, kind) { var el = $('engineStatus'); el.textContent = text; el.dataset.kind = kind; }
+
+  function startWorker() {
+    if (worker) worker.terminate();
+    workerReady = false;
+    setEngine('Đang tải Python…', 'loading');
+    try {
+      var url = URL.createObjectURL(new Blob([workerSource()], { type: 'text/javascript' }));
+      worker = new Worker(url);
+    } catch (e) {
+      worker = null; setEngine('Không tạo được bộ chạy Python', 'error'); flushWaiters(false); return;
+    }
+    worker.onmessage = function (e) {
+      var d = e.data;
+      if (d.type === 'ready') { workerReady = true; setEngine('Python sẵn sàng', 'ready'); flushWaiters(true); }
+      else if (d.type === 'loadError') { setEngine('Không tải được Python (kiểm tra Internet)', 'error'); flushWaiters(false); }
+      else if (d.type === 'done' && pendingRun && pendingRun.id === d.id) {
+        clearTimeout(runTimer);
+        var cb = pendingRun.cb; pendingRun = null; cb(d);
+      }
+    };
+    worker.onerror = function () { setEngine('Không tải được Python (kiểm tra Internet)', 'error'); flushWaiters(false); };
+    worker.postMessage({ type: 'init' });
+  }
+  function flushWaiters(ok) { var w = readyWaiters; readyWaiters = []; w.forEach(function (f) { f(ok); }); }
+  function whenReady() {
+    return new Promise(function (resolve) {
+      if (workerReady) return resolve(true);
+      readyWaiters.push(resolve);
+      if (!worker) startWorker();
+      setTimeout(function () { if (!workerReady) { var i = readyWaiters.indexOf(resolve); if (i >= 0) { readyWaiters.splice(i, 1); resolve(false); } } }, 20000);
+    });
+  }
+
+  var runCounter = 0;
+  function runPython(code, stdin, echo) {
+    return whenReady().then(function (ok) {
+      if (!ok) return { ok: false, loadFailed: true, out: '', error: 'Không tải được bộ chạy Python.' };
+      return new Promise(function (resolve) {
+        var id = ++runCounter;
+        pendingRun = { id: id, cb: resolve };
+        runTimer = setTimeout(function () {
+          if (pendingRun && pendingRun.id === id) {
+            pendingRun = null;
+            resolve({ ok: false, timeout: true, out: '', error: 'Quá thời gian ' + (TEST_TIMEOUT_MS / 1000) + ' giây (có thể bị lặp vô hạn).' });
+            startWorker();
+          }
+        }, TEST_TIMEOUT_MS);
+        worker.postMessage({ type: 'run', id: id, code: code, stdin: stdin, echo: echo });
+      });
+    });
+  }
+
+  function shortError(msg) {
+    msg = String(msg || '').replace(/^ExternalError:\s*(\w*Error:\s*)?/, '');
+    var m = msg.match(/\w+Error[^\n]*/);
+    return (m ? m[0] : msg).slice(0, 160);
+  }
+
+  /* So sánh: lấy số cuối cùng chương trình in ra, so với kết quả đúng */
+  function judge(res, expected) {
+    if (res.timeout || /TimeLimitError/.test(res.error || '')) {
+      return { ok: false, timeout: true, label: 'Quá thời gian', shown: 'Chạy quá lâu, có thể bị lặp vô hạn.' };
+    }
+    if (!res.ok) return { ok: false, label: 'Lỗi chạy', shown: shortError(res.error) };
+    var nums = (res.out.match(/-?\d+(?:\.\d+)?/g) || []);
+    var shown = res.out.trim().slice(-200) || '(không in gì)';
+    if (!nums.length) return { ok: false, label: 'Sai', shown: shown };
+    var got = Number(nums[nums.length - 1]);
+    var ok = Math.abs(got - Number(expected)) < 1e-9;
+    return { ok: ok, label: ok ? 'Đúng' : 'Sai', shown: shown };
+  }
+
+  var testing = false;
+  function runAllTests() {
+    if (testing) return Promise.resolve(state.testResults);
+    testing = true;
+    var prob = problemById(paper.problem);
+    var code = state.code;
+    $('testBtn').disabled = true; $('runBtn').disabled = true; $('submitBtn').disabled = true;
+    var results = [];
+    var timeouts = 0;
+    var chain = Promise.resolve();
+    prob.tests.forEach(function (t, i) {
+      chain = chain.then(function () {
+        // Hai test liên tiếp chạy quá lâu thì coi như lặp vô hạn, không chạy các test còn lại
+        if (timeouts >= 2) {
+          results.push({ ok: false, timeout: true, label: 'Quá thời gian', shown: 'Bỏ qua vì các test trước bị lặp vô hạn.' });
+          return;
+        }
+        $('testScore').textContent = 'Đang chấm test ' + (i + 1) + '/' + prob.tests.length + '…';
+        return runPython(code, t.in, false).then(function (res) {
+          if (res.loadFailed) throw res;
+          var verdict = judge(res, t.out);
+          timeouts = verdict.timeout ? timeouts + 1 : 0;
+          results.push(verdict);
+        });
+      });
+    });
+    return chain.then(function () {
+      state.testResults = results;
+      state.testedCode = code;
+      saveStore();
+      renderTests();
+      return results;
+    }).catch(function () {
+      $('testScore').textContent = 'Không chấm được';
+      $('testHint').textContent = 'Chưa tải được bộ chạy Python. Kiểm tra kết nối Internet rồi thử lại.';
+      return null;
+    }).then(function (r) {
+      testing = false;
+      $('testBtn').disabled = state.submitted; $('runBtn').disabled = false; $('submitBtn').disabled = false;
+      return r;
+    });
+  }
+
+  /* ===== Sự kiện ===== */
+  function newPaper(seed) {
+    state = freshState(seed);
+    saveStore();
+    renderPaper();
+    window.scrollTo({ top: $('paper').offsetTop - 80, behavior: 'smooth' });
+  }
+
+  $('newPaperBtn').addEventListener('click', function () {
+    if (state && state.submitted) return;
+    if (state && Object.keys(state.answers).length > 0 &&
+        !confirm('Em đang làm dở đề ' + state.seed + '. Tạo đề mới sẽ xoá bài đang làm. Tiếp tục?')) return;
+    newPaper(100000 + Math.floor(Math.random() * 900000));
+  });
+  $('retryBtn').addEventListener('click', sendResult);
+  $('printBtn').addEventListener('click', function () { window.print(); });
+
+  $('classSelect').addEventListener('change', function () {
+    fillNames();
+    if (state) { state.cls = this.value; saveStore(); }
+  });
+  $('nameInput').addEventListener('input', function () {
+    if (state) { state.name = this.value; saveStore(); }
+  });
+
+  $('qList').addEventListener('change', function (e) {
+    var t = e.target;
+    if (!t.name || state.submitted) return;
+    state.answers[t.name.slice(1)] = Number(t.value);
+    saveStore();
+    updateLive();
+  });
+
+  var codeSaveTimer = null;
+  $('codeInput').addEventListener('input', function () {
+    state.code = this.value;
+    clearTimeout(codeSaveTimer);
+    codeSaveTimer = setTimeout(function () { saveStore(); if (state.testResults && !testing) renderTests(); else updateLive(); }, 300);
+  });
+  $('codeInput').addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab' || this.readOnly) return;
+    e.preventDefault();
+    var s = this.selectionStart, en = this.selectionEnd;
+    this.value = this.value.slice(0, s) + '    ' + this.value.slice(en);
+    this.selectionStart = this.selectionEnd = s + 4;
+    this.dispatchEvent(new Event('input'));
+  });
+  $('stdinInput').addEventListener('input', function () { state.stdin = this.value; saveStore(); });
+
+  $('runBtn').addEventListener('click', function () {
+    var out = $('runOutput');
+    out.classList.remove('is-error');
+    out.textContent = 'Đang chạy…';
+    $('runBtn').disabled = true;
+    runPython(state.code, $('stdinInput').value.replace(/\s+$/, ''), true).then(function (res) {
+      $('runBtn').disabled = false;
+      if (res.ok) { out.textContent = res.out || '(Chương trình chạy xong, không in gì)'; return; }
+      out.classList.add('is-error');
+      out.textContent = (res.out ? res.out + '\n' : '') + (res.timeout ? res.error : 'Lỗi: ' + res.error);
+    });
+  });
+  $('testBtn').addEventListener('click', runAllTests);
+
+  $('submitBtn').addEventListener('click', function () {
+    var cls = $('classSelect').value === '__other' ? 'Lớp khác' : $('classSelect').value;
+    var name = $('nameInput').value.trim();
+    if (!cls || !name) { alert('Em hãy chọn lớp và nhập họ tên trước khi nộp bài.'); $('classSelect').focus(); return; }
+    var missing = MCQ_COUNT - Object.keys(state.answers).length;
+    if (!confirm((missing ? 'Em còn ' + missing + ' câu trắc nghiệm chưa chọn. ' : '') +
+        'Nộp bài? Sau khi nộp, đề sẽ bị khoá: em không sửa, không xem lại và không làm lại được nữa.')) return;
+    state.code = $('codeInput').value;
+    // Không cho sửa bài trong lúc máy chấm lại phần tự luận
+    $('paper').inert = true;
+    $('submitBtn').textContent = 'Đang chấm và nộp bài…';
+    var need = !state.testResults || state.testedCode !== state.code;
+    (need ? runAllTests() : Promise.resolve(state.testResults)).then(function (results) {
+      var correct = 0, detail = [];
+      paper.questions.forEach(function (pq, i) {
+        var q = BANK[pq.idx];
+        var picked = state.answers[i];
+        var keyPos = pq.order.indexOf(0);
+        if (picked === keyPos) correct++;
+        // VD "3.B18#05:C✓" — câu 3 của đề là câu 5 của Bài 18 trong ngân hàng, em chọn C, đúng
+        detail.push((i + 1) + '.B' + q.b + '#' + ('0' + (BANK_NO[pq.idx])).slice(-2) + ':' +
+          (picked === undefined ? '-' : 'ABCD'.charAt(picked)) + (picked === keyPos ? '✓' : '✗'));
+      });
+      var passed = results ? results.filter(function (r) { return r.ok; }).length : 0;
+      state.result = {
+        at: Date.now(), cls: cls, name: name,
+        mcq: correct * MCQ_POINT, correct: correct,
+        essay: results ? passed / results.length : null, passed: passed,
+        problem: problemById(paper.problem).title,
+        detail: detail.join(' '),
+        code: state.code
+      };
+      state.submitted = true;
+      state.sync = null;
+      // Xoá bài làm khỏi bộ nhớ máy, chỉ giữ mã đề và kết quả
+      state.answers = {};
+      state.testResults = null;
+      saveStore();
+      showLocked();
+      sendResult();
+      window.scrollTo({ top: $('resultCard').offsetTop - 90, behavior: 'smooth' });
+    });
+  });
+
+  /* ===== Khởi động ===== */
+  fillClasses();
+  state = loadStore();
+  if (state && typeof state.seed === 'number') {
+    if (state.cls) { $('classSelect').value = state.cls; fillNames(); }
+    if (state.name) $('nameInput').value = state.name;
+    if (state.submitted) {
+      showLocked();
+      sendResult();
+    } else {
+      renderPaper();
+    }
+  } else {
+    state = null;
+  }
+  if (!state || !state.submitted) startWorker();
+})();
+</script>
+</body>
+</html>
