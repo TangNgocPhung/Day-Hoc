@@ -279,6 +279,16 @@
   .score-tile.total strong { color: var(--accent-1); font-size: 2.1rem; }
   .answer-string { margin: 1rem 0 0; font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-muted); overflow-wrap: anywhere; }
   .result-note { font-size: 0.84rem; color: var(--warn); margin: 0.8rem 0 0; }
+  .formula-box {
+    margin-top: 1.25rem; padding: 0.9rem 1.05rem; border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--accent-1) 45%, var(--border));
+    background: color-mix(in srgb, var(--accent-1) 8%, var(--surface));
+  }
+  .formula-label { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; color: var(--accent-1); }
+  .formula { margin: 0.35rem 0 0.4rem; font-weight: 700; line-height: 1.5; }
+  .formula em { font-weight: 500; color: var(--ink-muted); }
+  .formula-note { margin: 0; font-size: 0.88rem; color: var(--ink-muted); }
+  .formula-note strong { color: var(--ink); }
   .sync-status { margin: 0.9rem 0 0; font-size: 0.88rem; font-weight: 600; color: var(--ink-muted); }
   .sync-status[data-kind="ok"] { color: var(--good); }
   .sync-status[data-kind="error"] { color: var(--bad); }
@@ -337,8 +347,13 @@
     <div class="summary-strip">
       <span class="summary-pill">Trắc nghiệm · <strong>18 câu · 9 điểm</strong></span>
       <span class="summary-pill">Tự luận · <strong>1 câu lập trình · 1 điểm</strong></span>
-      <span class="summary-pill">Ngân hàng · <strong>100 câu</strong></span>
+      <span class="summary-pill">Ngân hàng · <strong>100 câu TN · 4 bài lập trình</strong></span>
       <span class="summary-pill">Chấm tự luận · <strong>10 test case</strong></span>
+    </div>
+    <div class="formula-box">
+      <span class="formula-label">CÁCH TÍNH ĐIỂM KTTX LẦN 1</span>
+      <p class="formula">Điểm KTTX1 = Điểm kiểm tra tại lớp + Điểm cộng tương tác tại lớp <em>(nếu có)</em> + Điểm bài tập cộng điểm × 0,2 <em>(nếu có làm)</em></p>
+      <p class="formula-note">Bài tập này chấm trên thang 10, nhân 0,2 nên cộng thêm tối đa <strong>2 điểm</strong>. Ví dụ: bài tập được 8 điểm → cộng 8 × 0,2 = <strong>1,6 điểm</strong> vào KTTX lần 1. Không làm thì không bị trừ điểm.</p>
     </div>
   </header>
 
@@ -427,6 +442,7 @@
       <div class="score-tile"><span>Trắc nghiệm</span><strong id="scoreMcq"></strong></div>
       <div class="score-tile"><span>Tự luận</span><strong id="scoreEssay"></strong></div>
       <div class="score-tile total"><span>Tổng điểm</span><strong id="scoreTotal"></strong></div>
+      <div class="score-tile"><span>Cộng vào KTTX1 (× 0,2)</span><strong id="scoreBonus"></strong></div>
     </div>
     <p class="result-note" id="resultNote" hidden></p>
     <p class="answer-string" id="answerString"></p>
@@ -833,6 +849,7 @@
     $('scoreMcq').textContent = fmtScore(r.mcq) + ' / 9';
     $('scoreEssay').textContent = r.essay === null ? '? / 1' : fmtScore(r.essay) + ' / 1';
     $('scoreTotal').textContent = fmtScore(r.mcq + (r.essay || 0)) + ' / 10';
+    $('scoreBonus').textContent = '+' + fmtScore((r.mcq + (r.essay || 0)) * 0.2);
     $('answerString').textContent = 'Đúng ' + r.correct + '/' + MCQ_COUNT + ' câu trắc nghiệm' +
       (r.essay === null ? '' : ' · Tự luận đúng ' + r.passed + '/10 test');
     $('resultNote').hidden = r.essay !== null;
