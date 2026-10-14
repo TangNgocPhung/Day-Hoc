@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bài 22 · Kiểu dữ liệu danh sách</title><style>
+:root{--bg:#f3f6fb;--ink:#172b46;--accent:#196b69}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 system-ui,sans-serif}header{background:#102d43;color:white;padding:38px max(6%,calc((100% - 1100px)/2))}h1{font-size:clamp(28px,4vw,46px);line-height:1.2;margin:14px 0}h2{font-size:28px}h3{margin-top:0}nav{position:sticky;top:0;background:white;z-index:2;display:flex;gap:8px;padding:12px 5%;box-shadow:0 3px 15px #132d4312;flex-wrap:wrap}button,.tag{border:0;border-radius:10px;padding:11px 17px;font:inherit}button{background:#e7eef5;color:var(--ink);cursor:pointer}button:hover{filter:brightness(.95)}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #e99727;outline-offset:2px}button.primary,nav button.active{background:var(--accent);color:white}button:disabled{opacity:.5;cursor:default}main{max-width:1100px;margin:28px auto;padding:0 22px}.panel{display:none}.panel.active{display:block}.card{background:white;border:1px solid #dae4ec;border-radius:18px;padding:25px;margin:20px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.badge{font-size:13px;letter-spacing:2px;color:#7ee5c1;text-transform:uppercase}.muted{color:#60748a}.feedback{border-left:4px solid var(--accent);background:#edf8f5;padding:14px;margin-top:14px;white-space:pre-wrap}.feedback:empty{display:none}pre{background:#102d43;color:#d9f4eb;border-radius:13px;padding:20px;overflow:auto;line-height:1.6;font-size:16px}code{font-family:ui-monospace,monospace}input,select,textarea{font:inherit;border:1px solid #a6b8c6;border-radius:8px;padding:9px;background:white;max-width:100%}textarea{width:100%;min-height:100px}label{display:block;margin:9px 0}.option{display:flex;gap:10px;align-items:flex-start;background:#f3f6fb;padding:10px;border-radius:8px}table{width:100%;border-collapse:collapse}td,th{padding:9px;border-bottom:1px solid #dce5ec;text-align:left}.scroll{max-height:320px;overflow:auto}.stat{font-size:24px;font-weight:bold}.steps{display:flex;gap:10px;flex-wrap:wrap}.steps span{background:#e8f4ef;padding:12px;border-radius:10px}footer{padding:25px;text-align:center;color:#60748a;font-size:14px}details{margin:12px 0}summary{cursor:pointer;font-weight:600}@media(max-width:750px){.grid{grid-template-columns:1fr}nav button{font-size:14px;padding:9px}header{padding:28px 22px}.card{padding:18px}}@media print{nav,button{display:none}.panel{display:block!important}header{color:black;background:white}.card{break-inside:avoid}pre{white-space:pre-wrap}}
+.executing{display:block;background:#ffd66b;color:#172b46;border-radius:5px}.codeLine{display:block;min-height:26px}.flowActive{background:#196b69!important;color:white} 
+:root{--accent:#285c91}header{background:#173653}nav a{align-self:center;color:var(--accent)}.list-view{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.list-cell{border:2px solid #c7d8e7;background:#f3f8fc;min-width:85px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:5px}.list-cell small{font-size:13px;color:#60748a}.list-cell.selected{border-color:var(--accent);background:#dcecf9}.list-cell.current{background:#ffedb9;border-color:#b47e13}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.field-row{display:flex;gap:16px;flex-wrap:wrap;align-items:end}.field-row label{flex:1;min-width:140px}.field-row input,.field-row select{width:100%}.table-wrap{overflow:auto}input[type=radio]{flex-shrink:0;margin-top:6px}h2,h3{scroll-margin-top:150px}textarea.code-answer{font-family:ui-monospace,monospace;min-height:140px}pre{max-width:100%}.top-link{color:#e5f3ff}.steps a{color:var(--accent);padding:5px}.result{font-weight:600} @media print{details>*{display:block!important}.list-cell{color:black}nav{display:none}}
+</style></head><body>
+<header><a class="top-link" href="index.html">← Danh sách bài học</a><div class="badge">Tin học 10 · Bài 22</div><h1>Kiểu dữ liệu <code>list</code></h1><p>Một danh sách, nhiều phần tử. Khám phá bằng cách chạm, thay đổi và theo dõi từng bước.</p></header>
+<nav aria-label="Các hoạt động"><button class="active" onclick="tab(0)">01 · Khởi động</button><button onclick="tab(1)">02 · Khám phá</button><button onclick="tab(2)">03 · Thực hành</button><button onclick="tab(3)">04 · Luyện tập</button><button onclick="tab(4)">05 · Bài tập 22.1–22.3</button></nav>
+<main>
+<section class="panel active"><h2>01 · Gom dữ liệu vào một danh sách</h2><div class="card"><h3>Vì sao cần list?</h3><p>Lưu tên 40 học sinh bằng 40 biến riêng sẽ khó quản lí. Một danh sách giúp gom các tên theo thứ tự, truy cập từng tên và duyệt cả lớp.</p><label for="warmAnswer">Danh sách nào có thể dùng trong thực tế?<select id="warmAnswer"><option value="">Chọn câu trả lời</option><option value="names">Tên các học sinh trong lớp</option><option value="scores">Điểm kiểm tra của một học sinh</option><option value="both">Cả hai ví dụ trên</option></select></label><button class="primary" onclick="checkWarm()">Kiểm tra</button><div class="feedback" id="warmFeedback" role="status"></div></div>
+<div class="grid"><div class="card"><h3>Sau bài này, em có thể</h3><ul><li>Khởi tạo list, xác định độ dài và chỉ số.</li><li>Truy cập, thay đổi, xóa và thêm phần tử.</li><li>Duyệt bằng <code>for i in range(len(A))</code>.</li><li>Tính tổng, trung bình, tìm giá trị lớn nhất và nhỏ nhất.</li></ul></div><div class="card"><h3>Nhớ ba điều</h3><p><code>A = [1, 2, "Việt", True]</code> là danh sách có nhiều kiểu dữ liệu.</p><p>Chỉ số không âm bắt đầu từ <b>0</b> đến <b>len(A) − 1</b>.</p><p><code>[]</code> là danh sách rỗng, độ dài bằng 0.</p></div></div><button class="primary" onclick="tab(1)">Bắt đầu khám phá →</button></section>
+<section class="panel"><h2>02 · Phòng thí nghiệm danh sách</h2><div class="card"><h3>Chạm vào một phần tử</h3><p>Mỗi thẻ có chỉ số ở trên và giá trị ở dưới. Chọn thẻ để xem <code>A[i]</code> và kiểu dữ liệu.</p><label for="preset">Danh sách mẫu<select id="preset" onchange="resetList()"><option value="mixed">A = [1, 2, 3, 10, "Việt", True]</option><option value="numbers">A = [1, -2, -3.5, 4, 6, -2.5]</option><option value="empty">A = []</option></select></label><div id="listView" class="list-view" aria-label="Các phần tử danh sách A"></div><pre id="listState"></pre><div id="selection" class="feedback" role="status"></div>
+<div class="field-row"><label for="indexInput">Chỉ số i<input id="indexInput" type="number" min="0" step="1" value="0"></label><label for="valueType">Kiểu giá trị mới<select id="valueType"><option value="number">Số (int / float)</option><option value="string">Xâu kí tự (str)</option><option value="bool">Lôgic (bool)</option></select></label><label for="valueInput">Giá trị mới<input id="valueInput" value="15" aria-describedby="valueHelp"></label></div><p class="muted" id="valueHelp">Số dùng dấu chấm thập phân. Xâu nhập trực tiếp, không cần dấu nháy. Lôgic nhập True hoặc False.</p>
+<div class="actions"><button onclick="operate('read')">Đọc A[i]</button><button onclick="operate('set')">Gán A[i] = giá trị</button><button onclick="operate('delete')">Xóa del A[i]</button><button class="primary" onclick="operate('append')">Thêm A.append(giá trị)</button><button onclick="operate('prepend')">Ghép [giá trị] + A</button><button onclick="resetList()">Đặt lại danh sách mẫu</button></div><div id="listFeedback" class="feedback" role="status"></div><p class="muted">Thêm hoặc ghép dùng giá trị mới, không dùng chỉ số i. Mô phỏng giới hạn 30 phần tử và chỉ số không âm.</p>
+<details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>A = [1, 2, 3]
+print(A[0])       # 1
+A[1] = &quot;Hai&quot;
+del A[0]
+A.append(10)
+A = [100] + A
+print(A)          # [100, &#x27;Hai&#x27;, 3, 10]</code></pre><p>Gán đổi một giá trị, độ dài không đổi. del xóa phần tử và các chỉ số phía sau dịch trái. append thêm một phần tử cuối danh sách, độ dài tăng 1. Phép + nối hai danh sách, không cộng từng cặp phần tử.</p></details></div>
+<div class="card"><h3>Duyệt từng bước: cộng các số dương</h3><p>Dùng danh sách số của Câu 22.3. Bấm từng bước để theo dõi chỉ số, điều kiện và tổng.</p><pre><code>A = [1, -2, -3.5, 4, 6, -2.5]
+s = 0
+for i in range(len(A)):
+    if A[i] &gt; 0:
+        s = s + A[i]
+print(s)</code></pre><div id="traverseView" class="list-view"></div><div class="actions"><button id="stepButton" onclick="traverseStep()">Bước tiếp theo</button><button class="primary" id="runButton" onclick="traverseAll()">Chạy đến hết</button><button onclick="resetTraverse()">Đặt lại mô phỏng</button></div><div id="traverseStatus" class="feedback" role="status"></div><div class="table-wrap"><table><thead><tr><th>i</th><th>A[i]</th><th>A[i] &gt; 0</th><th>s sau bước</th></tr></thead><tbody id="trace"></tbody></table></div><p class="muted">Đây là mô phỏng các thao tác và ví dụ cố định trong bài; chương trình Python tự viết cần chạy bằng Python.</p></div><button class="primary" onclick="tab(2)">Sang thực hành →</button></section>
+<section class="panel"><h2>03 · Thực hành theo SGK</h2><div class="card"><h3>Nhiệm vụ 1 · Nhập danh sách tên</h3><p>Nhập mỗi tên trên một dòng, quan sát danh sách và kết quả in từng tên. Các dòng trống được bỏ qua; tối đa 40 tên.</p><label for="namesInput">Danh sách tên<textarea id="namesInput">An
+Bình
+Chi</textarea></label><button class="primary" onclick="showNames()">Tạo danh sách và in</button><pre id="namesOutput" aria-live="polite"></pre><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>dsLop = []
+n = int(input(&quot;Nhập số học sinh: &quot;))
+for i in range(n):
+    name = input(&quot;Họ tên học sinh thứ &quot; + str(i + 1) + &quot;: &quot;)
+    dsLop.append(name)
+for i in range(len(dsLop)):
+    print(dsLop[i])</code></pre><p>Chỉ số i bắt đầu từ 0. Dùng i + 1 trong lời nhắc để đánh số học sinh từ 1.</p></details></div>
+<div class="card"><h3>Nhiệm vụ 2 · Tổng và trung bình</h3><p>Nhập các số nguyên, cách nhau bằng dấu cách hoặc dấu phẩy, tối đa 50 số trong khoảng −1 000 000 đến 1 000 000.</p><label for="numbersInput">Dãy số nguyên<input id="numbersInput" value="3, 2, 1, 5, 6, 10, 7, 12, 18"></label><button class="primary" onclick="analyzeNumbers()">Tính và khám phá</button><pre id="numbersOutput" aria-live="polite"></pre><p>Kết quả còn cho biết các số chẵn, giá trị lớn nhất và nhỏ nhất cùng chỉ số của chúng. Khi có nhiều phần tử bằng nhau, lấy chỉ số xuất hiện đầu tiên.</p><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>A = []
+T = 0
+n = int(input(&quot;Nhập số lượng phần tử: &quot;))
+for i in range(n):
+    num = int(input(&quot;Nhập số thứ &quot; + str(i + 1) + &quot;: &quot;))
+    A.append(num)
+    T = T + num
+for i in range(len(A)):
+    print(A[i], end=&quot; &quot;)
+print()
+print(&quot;Tổng:&quot;, T)
+if n &gt; 0:
+    print(&quot;Trung bình:&quot;, T/n)
+else:
+    print(&quot;Danh sách rỗng: không có trung bình&quot;)</code></pre><p>Tránh chia cho 0 khi danh sách rỗng. Có thể tìm số chẵn bằng điều kiện A[i] % 2 == 0.</p></details><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>if len(A) == 0:
+    print(&quot;Danh sách rỗng&quot;)
+else:
+    vi_tri_max = 0
+    vi_tri_min = 0
+    for i in range(1, len(A)):
+        if A[i] &gt; A[vi_tri_max]:
+            vi_tri_max = i
+        if A[i] &lt; A[vi_tri_min]:
+            vi_tri_min = i
+    print(&quot;Lớn nhất:&quot;, A[vi_tri_max], &quot;chỉ số:&quot;, vi_tri_max)
+    print(&quot;Nhỏ nhất:&quot;, A[vi_tri_min], &quot;chỉ số:&quot;, vi_tri_min)</code></pre><p>Đây là nhiệm vụ vận dụng trong PDF. Chỉ cập nhật khi gặp giá trị lớn hơn hoặc nhỏ hơn, nên giữ vị trí đầu tiên khi trùng giá trị.</p></details></div><button class="primary" onclick="tab(3)">Luyện tập →</button></section>
+<section class="panel"><h2>04 · Kiểm tra hiểu biết</h2><p>Mỗi câu 1 điểm. Chọn đáp án rồi chấm, đọc phản hồi và sửa lại khi cần.</p><div id="quiz"></div><div class="actions"><button class="primary" onclick="gradeQuiz()">Chấm bài</button><button onclick="resetQuiz()">Làm lại</button></div><div id="quizScore" class="feedback" role="status"></div>
+<div class="card"><h3>Hai câu luyện tập trong SGK</h3><p>1. Viết lệnh xóa phần tử cuối cùng của A bằng del.</p><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>if len(A) &gt; 0:
+    del A[len(A) - 1]</code></pre><p>Cần kiểm tra danh sách không rỗng trước khi xóa.</p></details><p>2. Có thể thêm một phần tử vào đầu danh sách không?</p><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>A = [gia_tri_moi] + A</code></pre><p>Có. Ghép một danh sách chứa phần tử mới vào trước A. append chỉ thêm vào cuối.</p></details></div><button class="primary" onclick="tab(4)">Bài tập theo ảnh →</button></section>
+<section class="panel" id="exercises"><h2>05 · Bài tập và thực hành 22.1–22.3</h2><p>Đề bài theo ảnh đã cung cấp. Mỗi ý a, b, c, d được xét độc lập từ danh sách ban đầu, không dùng kết quả của ý trước. Với 22.2 và 22.3b, nhập danh sách sau lệnh (các lệnh này không tự in nếu không có print).</p><p class="muted">Bài làm chỉ ở trình duyệt, không tự lưu và không gửi lên máy chủ. Tải bài làm trước khi đóng trang.</p>
+<article class="card" id="exercise-221"><h3>22.1 · Truy cập phần tử và độ dài</h3><p>Cho A = [1, 2, 3, 10, &quot;Việt&quot;, True]. Lệnh sau in gì?</p><pre><code>print(A[2], A[4], A[5], len(A))</code></pre><label for="221-output">Kết quả in (cách nhau bằng dấu cách)<input id="221-output" type="text" autocomplete="off"></label><button class="primary" onclick="checkExercise('221')">Kiểm tra kết quả</button><div id="feedback-221" class="feedback" role="status"></div><label for="notes-221">Giải thích của em<textarea id="notes-221" class="code-answer" placeholder="Vì sao em có kết quả này?"></textarea></label><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>3 Việt True 6</code></pre><p>Chỉ số 2 là phần tử thứ ba, chỉ số 4 là xâu Việt, chỉ số 5 là True. Khi print xâu riêng, không có dấu nháy.</p></details></article><article class="card" id="exercise-222a"><h3>22.2a · Xóa phần tử</h3><p>Bắt đầu với A = [1, 2, 3, 10, &quot;Việt&quot;, True].</p><pre><code>del A[0]</code></pre><label for="222a-list">Danh sách A sau lệnh<input id="222a-list" type="text" autocomplete="off"></label><button class="primary" onclick="checkExercise('222a')">Kiểm tra kết quả</button><div id="feedback-222a" class="feedback" role="status"></div><label for="notes-222a">Giải thích của em<textarea id="notes-222a" class="code-answer" placeholder="Vì sao em có kết quả này?"></textarea></label><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>[2, 3, 10, &quot;Việt&quot;, True]</code></pre><p>Xóa phần tử đầu tiên, các phần tử còn lại dịch trái một chỉ số.</p></details></article><article class="card" id="exercise-222b"><h3>22.2b · Ghép phía trước</h3><p>Bắt đầu với A = [1, 2, 3, 10, &quot;Việt&quot;, True].</p><pre><code>A = [0, 2] + A</code></pre><label for="222b-list">Danh sách A sau lệnh<input id="222b-list" type="text" autocomplete="off"></label><button class="primary" onclick="checkExercise('222b')">Kiểm tra kết quả</button><div id="feedback-222b" class="feedback" role="status"></div><label for="notes-222b">Giải thích của em<textarea id="notes-222b" class="code-answer" placeholder="Vì sao em có kết quả này?"></textarea></label><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>[0, 2, 1, 2, 3, 10, &quot;Việt&quot;, True]</code></pre><p>Ghép hai phần tử vào đầu; phần tử 2 có thể xuất hiện nhiều lần.</p></details></article><article class="card" id="exercise-222c"><h3>22.2c · Thay đổi giá trị</h3><p>Bắt đầu với A = [1, 2, 3, 10, &quot;Việt&quot;, True].</p><pre><code>A[1] = A[1] * 2</code></pre><label for="222c-list">Danh sách A sau lệnh<input id="222c-list" type="text" autocomplete="off"></label><button class="primary" onclick="checkExercise('222c')">Kiểm tra kết quả</button><div id="feedback-222c" class="feedback" role="status"></div><label for="notes-222c">Giải thích của em<textarea id="notes-222c" class="code-answer" placeholder="Vì sao em có kết quả này?"></textarea></label><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>[1, 4, 3, 10, &quot;Việt&quot;, True]</code></pre><p>A[1] ban đầu bằng 2. Nhân đôi thành 4; độ dài không đổi.</p></details></article><article class="card" id="exercise-222d"><h3>22.2d · Ghép phía sau</h3><p>Bắt đầu với A = [1, 2, 3, 10, &quot;Việt&quot;, True].</p><pre><code>A = A + [15]</code></pre><label for="222d-list">Danh sách A sau lệnh<input id="222d-list" type="text" autocomplete="off"></label><button class="primary" onclick="checkExercise('222d')">Kiểm tra kết quả</button><div id="feedback-222d" class="feedback" role="status"></div><label for="notes-222d">Giải thích của em<textarea id="notes-222d" class="code-answer" placeholder="Vì sao em có kết quả này?"></textarea></label><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>[1, 2, 3, 10, &quot;Việt&quot;, True, 15]</code></pre><p>Nối danh sách [15] vào cuối. Giá trị A thu được giống khi dùng A.append(15).</p></details></article><article class="card" id="exercise-223a"><h3>22.3a · Tổng các số dương</h3><p>Bắt đầu với A = [1, -2, -3.5, 4, 6, -2.5].</p><pre><code>s = 0
+for i in range(len(A)):
+    if A[i] &gt; 0:
+        s = s + A[i]
+print(s)</code></pre><label for="223a-number">Giá trị s được in<input id="223a-number" type="number" step="any" autocomplete="off"></label><button class="primary" onclick="checkExercise('223a')">Kiểm tra kết quả</button><div id="feedback-223a" class="feedback" role="status"></div><label for="notes-223a">Giải thích của em<textarea id="notes-223a" class="code-answer" placeholder="Vì sao em có kết quả này?"></textarea></label><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>11</code></pre><p>Chỉ cộng 1, 4 và 6, nên s = 11.</p></details></article><article class="card" id="exercise-223b"><h3>22.3b · Cập nhật từng phần tử</h3><p>Bắt đầu với A = [1, -2, -3.5, 4, 6, -2.5].</p><pre><code>for i in range(len(A)):
+    A[i] = A[i] + 3</code></pre><label for="223b-list">Danh sách A sau vòng lặp<input id="223b-list" type="text" autocomplete="off"></label><button class="primary" onclick="checkExercise('223b')">Kiểm tra kết quả</button><div id="feedback-223b" class="feedback" role="status"></div><label for="notes-223b">Giải thích của em<textarea id="notes-223b" class="code-answer" placeholder="Vì sao em có kết quả này?"></textarea></label><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>[4, 1, -0.5, 7, 9, 0.5]</code></pre><p>Mỗi phần tử tăng thêm 3, số phần tử không đổi. Đoạn lệnh không tự in kết quả.</p></details></article><article class="card" id="exercise-223c"><h3>22.3c · Đếm trên một khoảng chỉ số</h3><p>Bắt đầu với A = [1, -2, -3.5, 4, 6, -2.5].</p><pre><code>k = 0
+for i in range(1, 4):
+    if A[i] &lt; 0:
+        k = k + 1
+print(k)</code></pre><label for="223c-number">Giá trị k được in<input id="223c-number" type="number" step="any" autocomplete="off"></label><button class="primary" onclick="checkExercise('223c')">Kiểm tra kết quả</button><div id="feedback-223c" class="feedback" role="status"></div><label for="notes-223c">Giải thích của em<textarea id="notes-223c" class="code-answer" placeholder="Vì sao em có kết quả này?"></textarea></label><details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>2</code></pre><p>range(1, 4) duyệt chỉ số 1, 2, 3: các giá trị −2, −3.5, 4; có hai số âm. Không xét A[5].</p></details></article><button class="primary" onclick="downloadWork()">Tải bài làm (.txt)</button></section></main><footer>Nội dung dựa trên Bài 22 trong PDF SGK đã cung cấp (trang in 111–114) và ảnh bài tập 22.1–22.3.<br>Học liệu tương tác bổ sung · Dùng ngoại tuyến, không cần cài thêm thư viện.</footer><script>
+'use strict';
+const $ = id => document.getElementById(id);
+const repr = v => v instanceof Number ? (Number.isInteger(Number(v)) ? Number(v).toFixed(1) : String(v)) : typeof v === 'boolean' ? (v ? 'True' : 'False') : typeof v === 'string' ? JSON.stringify(v) : String(v);
+const listRepr = a => '[' + a.map(repr).join(', ') + ']';
+function tab(n) {
+ document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+ document.querySelectorAll('nav button').forEach((b,i)=>b.classList.toggle('active',i===n));
+ window.scrollTo({top:0,behavior:'instant'});
+}
+function checkWarm() { $('warmFeedback').textContent = $('warmAnswer').value === 'both' ? '✓ Đúng. Cả tên học sinh và điểm kiểm tra đều có thể lưu theo danh sách.' : 'Hãy nghĩ đến các dữ liệu cần lưu nhiều giá trị theo thứ tự: cả hai ví dụ đều phù hợp.'; }
+const samples = {mixed:[1,2,3,10,'Việt',true],numbers:[1,-2,-3.5,4,6,-2.5],empty:[]};
+let A=[],selected=-1;
+function drawList(container,values,active,clickable=false) {
+ container.replaceChildren();
+ if (!values.length) {container.textContent='Danh sách rỗng: chưa có phần tử để truy cập.';return;}
+ values.forEach((v,i)=>{
+  const cell=document.createElement(clickable?'button':'div');
+  cell.className='list-cell'+(i===active?(clickable?' selected':' current'):'');
+  const label=document.createElement('small');label.textContent='Chỉ số '+i;
+  const value=document.createElement('strong');value.textContent=repr(v);
+  cell.append(label,value);
+  if(clickable){cell.type='button';cell.setAttribute('aria-label','A['+i+'] = '+repr(v));cell.setAttribute('aria-pressed',String(i===active));cell.onclick=()=>{selected=i;$('indexInput').value=i;renderList();};}
+  container.append(cell);
+ });
+}
+function renderList() {
+ drawList($('listView'),A,selected,true);
+ $('listState').textContent='A = '+listRepr(A)+'\nlen(A) = '+A.length;
+ if(selected<0||selected>=A.length){$('selection').textContent='Chọn một thẻ hoặc nhập chỉ số để đọc phần tử.';return;}
+ const value=A[selected],type=value instanceof Number?'float':typeof value==='boolean'?'bool':typeof value==='string'?'str':Number.isInteger(value)?'int':'float';
+ $('selection').textContent='A['+selected+'] = '+repr(value)+' · Kiểu dữ liệu: '+type;
+}
+function resetList() {A=[...samples[$('preset').value]];selected=-1;$('indexInput').value=0;$('listFeedback').textContent='';renderList();}
+function getIndex(){const raw=$('indexInput').value.trim(),i=Number(raw);if(!raw||!Number.isInteger(i)||i<0||i>=A.length)throw Error(A.length?'IndexError: cần chỉ số nguyên từ 0 đến '+(A.length-1)+'.':'IndexError: danh sách rỗng, không thể đọc, gán hoặc xóa phần tử.');return i;}
+function getValue(){const raw=$('valueInput').value,type=$('valueType').value;if(type==='string'){if(raw.length>80)throw Error('Xâu tối đa 80 kí tự.');return raw;}if(type==='bool'){if(raw.trim()==='True')return true;if(raw.trim()==='False')return false;throw Error('Giá trị bool phải là True hoặc False.');}if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(raw.trim())||!Number.isFinite(Number(raw))||Math.abs(Number(raw))>1000000)throw Error('Nhập số hợp lệ trong khoảng −1 000 000 đến 1 000 000.');return raw.includes('.') ? new Number(raw) : Number(raw);}
+function operate(action){try{
+ let command;
+ if(action==='read'){selected=getIndex();command='Đọc A['+selected+'] → '+repr(A[selected]);}
+ else if(action==='delete'){const i=getIndex();command='del A['+i+']';A.splice(i,1);selected=-1;}
+ else if(action==='set'){const i=getIndex(),v=getValue();A[i]=v;selected=i;command='A['+i+'] = '+repr(v);}
+ else {if(A.length>=30)throw Error('Mô phỏng tối đa 30 phần tử. Hãy xóa bớt trước khi thêm.');const v=getValue();if(action==='append'){A.push(v);selected=A.length-1;command='A.append('+repr(v)+')';}else{A=[v,...A];selected=0;command='A = ['+repr(v)+'] + A';}}
+ if(selected>=0)$('indexInput').value=selected;
+ renderList();$('listFeedback').textContent=command+'\nA = '+listRepr(A);
+ }catch(e){$('listFeedback').textContent=e.message;}}
+const traversal=[1,-2,-3.5,4,6,-2.5];let cursor=0,total=0;
+function resetTraverse(){cursor=0;total=0;$('trace').replaceChildren();$('stepButton').disabled=false;$('runButton').disabled=false;$('traverseStatus').textContent='Khởi tạo s = 0. Chuẩn bị duyệt chỉ số 0 đến 5.';drawList($('traverseView'),traversal,-1);}
+function traverseStep(){if(cursor>=traversal.length)return;const i=cursor,v=traversal[i],yes=v>0;if(yes)total+=v;const row=document.createElement('tr');[i,v,yes?'True':'False',total].forEach(v=>{const cell=document.createElement('td');cell.textContent=v;row.append(cell);});$('trace').append(row);drawList($('traverseView'),traversal,i);cursor++;$('traverseStatus').textContent='i = '+i+' · A[i] = '+v+' · '+(yes?'Cộng vào s':'Bỏ qua')+' · s = '+total;if(cursor===traversal.length){$('traverseStatus').textContent+='\nDuyệt xong 6 phần tử. print(s) in 11.';$('stepButton').disabled=true;$('runButton').disabled=true;}}
+function traverseAll(){while(cursor<traversal.length)traverseStep();}
+function showNames(){const names=$('namesInput').value.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);if(names.length>40||names.some(v=>v.length>100)){$('namesOutput').textContent='Nhập tối đa 40 tên, mỗi tên tối đa 100 kí tự.';return;}$('namesOutput').textContent='dsLop = '+listRepr(names)+'\nlen(dsLop) = '+names.length+'\n\nMàn hình kết quả:\n'+(names.join('\n')||'(Chưa có tên nào)');}
+function analyzeNumbers(){const raw=$('numbersInput').value.trim();if(!raw){$('numbersOutput').textContent='A = []\nTổng = 0. Danh sách rỗng: không có trung bình, giá trị lớn nhất hay nhỏ nhất.';return;}const tokens=raw.split(/[,\s]+/);if(raw.split(',').some(part=>!part.trim())||tokens.length>50||tokens.some(v=>!/^[-+]?\d+$/.test(v)||Math.abs(Number(v))>1000000)){$('numbersOutput').textContent='Hãy nhập tối đa 50 số nguyên hợp lệ trong khoảng −1 000 000 đến 1 000 000.';return;}const a=tokens.map(Number),sum=a.reduce((s,v)=>s+v,0),max=Math.max(...a),min=Math.min(...a);$('numbersOutput').textContent='A = '+listRepr(a)+'\nDãy trên một hàng: '+a.join(' ')+'\nTổng = '+sum+'\nTrung bình = '+(sum/a.length)+'\nCác số chẵn: '+listRepr(a.filter(v=>v%2===0))+'\nLớn nhất = '+max+' · chỉ số đầu tiên = '+a.indexOf(max)+'\nNhỏ nhất = '+min+' · chỉ số đầu tiên = '+a.indexOf(min);}
+const quiz=[
+ ['Chỉ số không âm đầu tiên của list là?', ['0','1','Phụ thuộc độ dài'],0,'Chỉ số bắt đầu từ 0.'],
+ ['A = [1, "Việt", True]. len(A) bằng?', ['2','3','4'],1,'Có ba phần tử, dù chúng có kiểu dữ liệu khác nhau.'],
+ ['A = [10, 20, 30]. A[2] bằng?', ['10','20','30'],2,'Chỉ số 2 là phần tử thứ ba.'],
+ ['A = [1, 2]. A.append(10) làm A trở thành?', ['[1, 2, 10]','[10, 1, 2]','[11, 12]'],0,'append thêm một phần tử ở cuối.'],
+ ['A = [3, 5, 7]. del A[1] cho A bằng?', ['[5, 7]','[3, 7]','[3, 5]'],1,'Xóa giá trị 5 ở chỉ số 1; 7 chuyển về chỉ số 1.'],
+ ['A = [4, 6]. A[len(A)] sẽ thế nào?', ['Cho 6','Cho 4','Báo IndexError'],2,'len(A) = 2, nhưng chỉ số hợp lệ là 0 và 1.'],
+ ['for i in range(2, 5) duyệt các chỉ số nào?', ['2, 3, 4','2, 3, 4, 5','0, 1, 2, 3, 4'],0,'Giá trị cuối 5 không thuộc range(2, 5).'],
+ ['[1, 2] + [3, 4] bằng?', ['[4, 6]','[1, 2, 3, 4]','[1, 3, 2, 4]'],1,'Phép + ghép hai danh sách theo thứ tự.']
+];
+function renderQuiz(){$('quiz').replaceChildren();quiz.forEach((q,i)=>{const card=document.createElement('div');card.className='card';const title=document.createElement('h3');title.textContent='Câu '+(i+1)+'. '+q[0];card.append(title);q[1].forEach((option,j)=>{const label=document.createElement('label');label.className='option';const input=document.createElement('input');input.type='radio';input.name='q'+i;input.value=j;label.append(input,document.createTextNode(option));card.append(label);});const feedback=document.createElement('div');feedback.className='feedback';feedback.id='qFeedback'+i;card.append(feedback);$('quiz').append(card);});}
+function gradeQuiz(){let score=0,answered=0;quiz.forEach((q,i)=>{const chosen=document.querySelector('input[name="q'+i+'"]:checked');if(chosen)answered++;const ok=chosen&&Number(chosen.value)===q[2];if(ok)score++;$('qFeedback'+i).textContent=(ok?'✓ Đúng. ':chosen?'Chưa đúng. ':'Chưa trả lời. ')+q[3];});$('quizScore').textContent='Kết quả: '+score+'/8 điểm · Đã trả lời '+answered+'/8 câu.';}
+function resetQuiz(){renderQuiz();$('quizScore').textContent='';}
+const exerciseChecks = {"221-output": {"kind": "text", "expected": "3 Việt True 6"}, "222a-list": {"kind": "list", "expected": "[2, 3, 10, \"Việt\", True]"}, "222b-list": {"kind": "list", "expected": "[0, 2, 1, 2, 3, 10, \"Việt\", True]"}, "222c-list": {"kind": "list", "expected": "[1, 4, 3, 10, \"Việt\", True]"}, "222d-list": {"kind": "list", "expected": "[1, 2, 3, 10, \"Việt\", True, 15]"}, "223a-number": {"kind": "number", "expected": 11}, "223b-list": {"kind": "list", "expected": "[4, 1, -0.5, 7, 9, 0.5]"}, "223c-number": {"kind": "number", "expected": 2}};
+
+function parseList(raw) {
+ const text=raw.trim();
+ if(!text.startsWith('[')||!text.endsWith(']'))throw Error('Nhập danh sách trong dấu [ ].');
+ const body=text.slice(1,-1).trim();if(!body)return [];
+ const token= /\s*("(?:\\.|[^"\\])*"|'[^'\\]*'|True|False|[+-]?(?:\d+(?:\.\d*)?|\.\d+))\s*(,|$)/gy;
+ const result=[];let pos=0;
+ while(pos<body.length){token.lastIndex=pos;const m=token.exec(body);if(!m)throw Error('Kiểm tra dấu phẩy, dấu nháy và giá trị True / False trong danh sách.');const v=m[1];result.push(v==='True'?true:v==='False'?false:v[0]==='"'?JSON.parse(v):v[0]==="'"?v.slice(1,-1):Number(v));pos=token.lastIndex;if(result.length>50)throw Error('Danh sách tối đa 50 phần tử.');}
+ return result;
+}
+function checkExercise(key){
+ const id=Object.keys(exerciseChecks).find(id=>id.startsWith(key+'-')),config=exerciseChecks[id],raw=$(id).value.trim();
+ if(!raw){$('feedback-'+key).textContent='Em chưa nhập câu trả lời.';return;}
+ try{
+ let ok=false;
+ if(config.kind==='list')ok=JSON.stringify(parseList(raw))===JSON.stringify(parseList(config.expected));
+ else if(config.kind==='number')ok=$(id).validity.valid&&Number.isFinite(Number(raw))&&Number(raw)===config.expected;
+ else ok=raw.replace(/\s+/g,' ')===config.expected;
+ $('feedback-'+key).textContent=ok?'✓ Chính xác! Hãy giải thích vì sao em có kết quả này.':'Chưa đúng. Kiểm tra lại chỉ số, danh sách ban đầu và giới hạn range; có thể mở gợi ý sau khi thử lại.';
+ }catch(e){$('feedback-'+key).textContent=e.message;}
+}
+function downloadWork(){const notes=Array.from($('exercises').querySelectorAll('article')).map(card=>card.querySelector('h3').textContent+'\nKết quả: '+(card.querySelector('input').value||'(Chưa trả lời)')+'\nGiải thích: '+(card.querySelector('textarea').value||'(Chưa làm)')).join('\n\n');const url=URL.createObjectURL(new Blob(['BÀI 22 — BÀI LÀM\n\n'+notes],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='Bai22_BaiLam.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+resetList();resetTraverse();showNames();analyzeNumbers();renderQuiz();
+</script></body></html>
