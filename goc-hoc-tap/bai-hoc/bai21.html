@@ -1,6 +1,6 @@
 <!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bài 21 · Câu lệnh lặp while</title><style>
 :root{--bg:#f3f6fb;--ink:#172b46;--accent:#196b69}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 system-ui,sans-serif}header{background:#102d43;color:white;padding:38px max(6%,calc((100% - 1100px)/2))}h1{font-size:clamp(28px,4vw,46px);line-height:1.2;margin:14px 0}h2{font-size:28px}h3{margin-top:0}nav{position:sticky;top:0;background:white;z-index:2;display:flex;gap:8px;padding:12px 5%;box-shadow:0 3px 15px #132d4312;flex-wrap:wrap}button,.tag{border:0;border-radius:10px;padding:11px 17px;font:inherit}button{background:#e7eef5;color:var(--ink);cursor:pointer}button:hover{filter:brightness(.95)}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #e99727;outline-offset:2px}button.primary,nav button.active{background:var(--accent);color:white}button:disabled{opacity:.5;cursor:default}main{max-width:1100px;margin:28px auto;padding:0 22px}.panel{display:none}.panel.active{display:block}.card{background:white;border:1px solid #dae4ec;border-radius:18px;padding:25px;margin:20px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.badge{font-size:13px;letter-spacing:2px;color:#7ee5c1;text-transform:uppercase}.muted{color:#60748a}.feedback{border-left:4px solid var(--accent);background:#edf8f5;padding:14px;margin-top:14px;white-space:pre-wrap}.feedback:empty{display:none}pre{background:#102d43;color:#d9f4eb;border-radius:13px;padding:20px;overflow:auto;line-height:1.6;font-size:16px}code{font-family:ui-monospace,monospace}input,select,textarea{font:inherit;border:1px solid #a6b8c6;border-radius:8px;padding:9px;background:white;max-width:100%}textarea{width:100%;min-height:100px}label{display:block;margin:9px 0}.option{display:flex;gap:10px;align-items:flex-start;background:#f3f6fb;padding:10px;border-radius:8px}table{width:100%;border-collapse:collapse}td,th{padding:9px;border-bottom:1px solid #dce5ec;text-align:left}.scroll{max-height:320px;overflow:auto}.stat{font-size:24px;font-weight:bold}.steps{display:flex;gap:10px;flex-wrap:wrap}.steps span{background:#e8f4ef;padding:12px;border-radius:10px}footer{padding:25px;text-align:center;color:#60748a;font-size:14px}details{margin:12px 0}summary{cursor:pointer;font-weight:600}@media(max-width:750px){.grid{grid-template-columns:1fr}nav button{font-size:14px;padding:9px}header{padding:28px 22px}.card{padding:18px}}@media print{nav,button{display:none}.panel{display:block!important}header{color:black;background:white}.card{break-inside:avoid}pre{white-space:pre-wrap}}
-.executing{display:block;background:#ffd66b;color:#172b46;border-radius:5px}.codeLine{display:block;min-height:26px}.flowActive{background:#196b69!important;color:white} </style><header><div class="badge">Tin học 10 · Bài 21</div><h1>Câu lệnh lặp <code>while</code></h1><p>Lặp lại một hành động — cho đến khi điều kiện không còn đúng.</p><div>Khởi động → Khám phá → Luyện tập → Vận dụng</div></header><nav aria-label="Các hoạt động"><button class="active" onclick="tab(0)">01 · Khởi động</button><button onclick="tab(1)">02 · Khám phá</button><button onclick="tab(2)">03 · Luyện tập</button><button onclick="tab(3)">04 · Vận dụng</button><button onclick="document.documentElement.requestFullscreen?.().catch(()=>{})">⛶ Toàn màn hình</button></nav><main>
+.executing{display:block;background:#ffd66b;color:#172b46;border-radius:5px}.codeLine{display:block;min-height:26px}.flowActive{background:#196b69!important;color:white} </style><header><div class="badge">Tin học 10 · Bài 21</div><h1>Câu lệnh lặp <code>while</code></h1><p>Lặp lại một hành động — cho đến khi điều kiện không còn đúng.</p><div>Khởi động → Khám phá → Luyện tập → Vận dụng → Bài tập</div></header><nav aria-label="Các hoạt động"><button class="active" onclick="tab(0)">01 · Khởi động</button><button onclick="tab(1)">02 · Khám phá</button><button onclick="tab(2)">03 · Luyện tập</button><button onclick="tab(3)">04 · Vận dụng</button><button onclick="tab(4)">05 · Bài tập</button><button onclick="document.documentElement.requestFullscreen?.().catch(()=>{})">⛶ Toàn màn hình</button></nav><main>
 <section class="panel active"><h2>01 · Khi nào thì dừng?</h2><p class="muted">Gợi ý tổ chức: 5–8 phút · Cá nhân dự đoán, trao đổi theo cặp.</p><div class="card"><h3>Mục tiêu bài học</h3><ul><li>Viết đúng cú pháp, giải thích điều kiện và cơ chế hoạt động của <code>while</code>.</li><li>Theo dõi giá trị biến, xác định kết quả và nhận diện nguy cơ lặp vô hạn.</li><li>Phân biệt tuần tự, rẽ nhánh, lặp; vận dụng để giải các bài toán trong SGK.</li></ul></div><div class="card"><h3>Thử thách: chọn cách mô tả việc lặp</h3><p>Chọn “biết trước số lần” hoặc “dừng theo điều kiện” cho từng tình huống.</p><div id="warm"></div><button class="primary" onclick="checkWarm()">Kiểm tra dự đoán</button><div id="warmFb" class="feedback" role="status"></div></div><div class="card"><h3>Thảo luận nhanh</h3><p>“Xách nước cho đến khi đầy thùng”: hành động lặp là gì? Điều kiện để <em>tiếp tục</em> là gì? Điều kiện để dừng là gì?</p><details><summary>Mở gợi ý sau khi thảo luận</summary>Hành động: xách và đổ nước. Tiếp tục khi thùng chưa đầy. Dừng khi thùng đầy. Số lần xách phụ thuộc dung tích thùng và lượng nước mỗi lần.</details></div><button class="primary" onclick="tab(1)">Bắt đầu khám phá →</button></section>
 <section class="panel"><h2>02 · Điều khiển vòng lặp</h2><p class="muted">Gợi ý tổ chức: 20–25 phút · Dự đoán trước, chạy mô phỏng sau.</p><div class="grid"><div class="card"><h3>Cú pháp Python</h3><pre>while &lt;điều kiện&gt;:
     &lt;khối lệnh&gt;</pre><p>Điều kiện được kiểm tra <b>trước</b> mỗi vòng. Đúng → thực hiện khối lệnh rồi kiểm tra lại. Sai → thoát vòng lặp.</p><p>Sau dấu <code>:</code>, các lệnh trong khối phải thụt lề nhất quán, thường dùng 4 dấu cách.</p><div class="steps"><span>Kiểm tra</span><span>Đúng → thực hiện → kiểm tra lại</span><span>Sai → thoát</span></div></div><div class="card"><h3>Đừng quên điều kiện dừng</h3><pre>k = 1
@@ -41,12 +41,218 @@ while k &lt; 100:
         dem = dem + 1
     k = k + 1
 print(dem)</pre><p>Dùng một điều kiện <code>or</code> để số thỏa cả hai tiêu chí chỉ được đếm một lần. Nếu dùng 1–100 thì kết quả cũng là 47.</p></details></div></div><div class="card"><h3>Phiếu rời lớp</h3><label>1. Khi nào vòng lặp while dừng?<textarea placeholder="Viết câu trả lời của em..."></textarea></label><label>2. Một lỗi có thể gây lặp vô hạn và cách sửa?<textarea placeholder="Nêu ví dụ cụ thể..."></textarea></label><label>3. Em sẽ kiểm tra chương trình bảng số bằng cách nào?<textarea placeholder="Số đầu, số cuối, số hàng, số phần tử..."></textarea></label><button onclick="downloadNotes()">Tải câu trả lời (.txt)</button><p class="muted">Tải câu trả lời trước khi đóng trang. Nội dung nhập không gửi đi và không tự lưu.</p></div></section>
-</main><footer>Dựa trên Bài 21, SGK Tin học 10, phần nội dung trong PDF đính kèm (số trang in: 108–110).<br>Học liệu bổ sung do AI hỗ trợ biên soạn · Một tệp HTML, dùng ngoại tuyến · Giáo viên có thể linh hoạt điều chỉnh thời lượng.</footer><script>
+<section class="panel" id="exercises21"><h2>05 · Bài tập và thực hành</h2>
+<p>14 bài tập theo ảnh tài liệu bạn cung cấp. Hãy tự làm trước khi mở lời giải. Các ô “Kiểm tra kết quả” kiểm tra câu trả lời số; bài làm Python và nhận xét cần tự đối chiếu lời giải.</p>
+<p class="muted">Nội dung nhập chỉ ở trình duyệt, không tự lưu và không gửi lên máy chủ. Tải bài làm trước khi đóng trang. Chương trình Python tham khảo cần chạy bằng Python trên máy của em.</p>
+<div class="steps"><a href="#exercise21-1">21.1</a><a href="#exercise21-2">21.2</a><a href="#exercise21-3">21.3</a><a href="#exercise21-4">21.4</a><a href="#exercise21-5">21.5</a><a href="#exercise21-6">21.6</a><a href="#exercise21-7">21.7</a><a href="#exercise21-8">21.8</a><a href="#exercise21-9">21.9</a><a href="#exercise21-10">21.10</a><a href="#exercise21-11">21.11</a><a href="#exercise21-12">21.12</a><a href="#exercise21-13">21.13</a><a href="#exercise21-14">21.14</a></div>
+<article class="card" id="exercise21-1">
+<h3>21.1. Dự đoán kết quả và điều kiện dừng</h3><p>Cho biết hai đoạn chương trình in gì và khi nào quá trình in kết thúc.</p><pre><code># a)
+i = 1
+while i &lt; 5:
+    print(1/(i + 2), end=&quot; &quot;)
+    i = i + 1
+
+# b)
+i = 5
+while i &lt; 5:
+    print(1/(i + 2), end=&quot; &quot;)
+    i = i + 1</code></pre>
+<label for="ex21-answer-1">Bài làm của em<textarea id="ex21-answer-1" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+<label for="ex21-1-0">Số lần in ở a) <input id="ex21-1-0" type="number" step="any"></label><label for="ex21-1-1">Giá trị i khi a) dừng <input id="ex21-1-1" type="number" step="any"></label><label for="ex21-1-2">Số lần in ở b) <input id="ex21-1-2" type="number" step="any"></label><button class="primary" type="button" onclick="checkExercise21(1)">Kiểm tra kết quả</button><div id="ex21-feedback-1" class="feedback" role="status"></div>
+<details><summary>Gợi ý và lời giải tham khảo</summary><p>a) In 0.3333333333333333 0.25 0.2 0.16666666666666666 (tức 1/3, 1/4, 1/5, 1/6). Dừng khi i = 5 vì i &lt; 5 sai. b) Không in gì: điều kiện sai ngay lần kiểm tra đầu.</p></details>
+</article>
+<article class="card" id="exercise21-2">
+<h3>21.2. Nhập thu nhập đến khi dừng</h3><p>Đoạn chương trình thực hiện công việc gì? Khi nào vòng lặp kết thúc?</p><pre><code>x = 1
+while x &gt; 0:
+    x = int(input(&quot;Thu nhập của hộ tiếp theo: &quot;))</code></pre>
+<label for="ex21-answer-2">Bài làm của em<textarea id="ex21-answer-2" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+
+<details><summary>Gợi ý và lời giải tham khảo</summary><p>Chương trình liên tục nhập thu nhập của hộ tiếp theo khi giá trị vừa nhập còn dương. Vòng lặp kết thúc khi nhập x ≤ 0 (số 0 hoặc một số âm). Không có lệnh tính tổng hay đếm hộ trong đoạn này.</p></details>
+</article>
+<article class="card" id="exercise21-3">
+<h3>21.3. So sánh for và while</h3><p>Cho biết kết quả thực hiện của hai đoạn chương trình sau.</p><pre><code># a)
+s = 0
+for i in range(1, 11):
+    s = s + i
+print(s)
+
+# b)
+s = 0
+i = 1
+while i &lt; 11:
+    s = s + i
+    i = i + 1
+print(s)</code></pre>
+<label for="ex21-answer-3">Bài làm của em<textarea id="ex21-answer-3" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+<label for="ex21-3-0">Kết quả a) <input id="ex21-3-0" type="number" step="any"></label><label for="ex21-3-1">Kết quả b) <input id="ex21-3-1" type="number" step="any"></label><button class="primary" type="button" onclick="checkExercise21(3)">Kiểm tra kết quả</button><div id="ex21-feedback-3" class="feedback" role="status"></div>
+<details><summary>Gợi ý và lời giải tham khảo</summary><p>Cả hai chương trình tính tổng 1 + 2 + … + 10 và in 55. Ở b), i tăng đến 11 thì vòng lặp dừng. range(1, 11) không bao gồm 11.</p></details>
+</article>
+<article class="card" id="exercise21-4">
+<h3>21.4. Thay for bằng while</h3><p>Viết lại đoạn chương trình bằng câu lệnh while.</p><pre><code>s = 0
+for i in range(5, 11):
+    s = s + i*i
+print(s)</code></pre>
+<label for="ex21-answer-4">Bài làm của em<textarea id="ex21-answer-4" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+<label for="ex21-4-0">Giá trị s được in <input id="ex21-4-0" type="number" step="any"></label><button class="primary" type="button" onclick="checkExercise21(4)">Kiểm tra kết quả</button><div id="ex21-feedback-4" class="feedback" role="status"></div>
+<details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>s = 0
+i = 5
+while i &lt; 11:
+    s = s + i*i
+    i = i + 1
+print(s)</code></pre><p>Cộng bình phương các số từ 5 đến 10, được 355. Phải khởi tạo i = 5 và tăng i sau mỗi lượt.</p></details>
+</article>
+<article class="card" id="exercise21-5">
+<h3>21.5. Quy tắc chuyển đổi tổng quát</h3><p>Dựa vào 21.3 và 21.4, thay câu lệnh for dạng dưới đây bằng nhóm lệnh while tương ứng.</p><pre><code>for bien in range(gia_tri1, gia_tri2):
+    # khối lệnh</code></pre>
+<label for="ex21-answer-5">Bài làm của em<textarea id="ex21-answer-5" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+
+<details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>bien = gia_tri1
+while bien &lt; gia_tri2:
+    # khối lệnh
+    bien = bien + 1</code></pre><p>Dạng range có hai đối số dùng bước tăng 1 và không gồm gia_tri2. Quy tắc này áp dụng khi khối lệnh không thay đổi biến đếm, các giá trị giới hạn và không dùng continue làm bỏ qua bước tăng; nếu có, cần xử lý riêng để giữ đúng hành vi.</p></details>
+</article>
+<article class="card" id="exercise21-6">
+<h3>21.6. Tổng nghịch đảo</h3><p>Đoạn chương trình thực hiện công việc gì? Xác định giá trị i được in.</p><pre><code>s = 0
+i = 0
+while s &lt; 2:
+    i = i + 1
+    s = s + 1/i
+print(&quot;Giá trị i cần tìm = &quot;, i)</code></pre>
+<label for="ex21-answer-6">Bài làm của em<textarea id="ex21-answer-6" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+<label for="ex21-6-0">Giá trị i được in <input id="ex21-6-0" type="number" step="any"></label><button class="primary" type="button" onclick="checkExercise21(6)">Kiểm tra kết quả</button><div id="ex21-feedback-6" class="feedback" role="status"></div>
+<details><summary>Gợi ý và lời giải tham khảo</summary><p>Tìm số nguyên dương i nhỏ nhất sao cho 1 + 1/2 + … + 1/i ≥ 2. Với i = 3, tổng là 11/6 &lt; 2; với i = 4, tổng là 25/12 ≥ 2. Chương trình in Giá trị i cần tìm = 4.</p></details>
+</article>
+<article class="card" id="exercise21-7">
+<h3>21.7. Đếm số thỏa điều kiện</h3><p>Viết chương trình đếm các số trong 100 số tự nhiên đầu tiên chia hết cho 5 hoặc chia 3 dư 1. Quy ước dùng các số từ 0 đến 99.</p>
+<label for="ex21-answer-7">Bài làm của em<textarea id="ex21-answer-7" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+<label for="ex21-7-0">Số lượng tìm được <input id="ex21-7-0" type="number" step="any"></label><button class="primary" type="button" onclick="checkExercise21(7)">Kiểm tra kết quả</button><div id="ex21-feedback-7" class="feedback" role="status"></div>
+<details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>i = 0
+dem = 0
+while i &lt; 100:
+    if i % 5 == 0 or i % 3 == 1:
+        dem = dem + 1
+    i = i + 1
+print(dem)</code></pre><p>Kết quả là 47: 20 số chia hết cho 5, 33 số chia 3 dư 1, có 6 số thỏa cả hai. Dùng or để không đếm trùng.</p></details>
+</article>
+<article class="card" id="exercise21-8">
+<h3>21.8. Bài toán Gà và Chó</h3><p>Sử dụng while để giải bài toán Gà và Chó được nhắc ở Câu 20.9. Ảnh không có đề Câu 20.9; chương trình tham khảo dưới đây cho nhập tổng số con và tổng số chân để dùng với số liệu của đề đó.</p>
+<label for="ex21-answer-8">Bài làm của em<textarea id="ex21-answer-8" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+
+<details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>tong_con = int(input(&quot;Tổng số con: &quot;))
+tong_chan = int(input(&quot;Tổng số chân: &quot;))
+ga = 0
+co_nghiem = False
+while ga &lt;= tong_con:
+    cho = tong_con - ga
+    if 2*ga + 4*cho == tong_chan:
+        print(&quot;Gà:&quot;, ga, &quot;Chó:&quot;, cho)
+        co_nghiem = True
+    ga = ga + 1
+if not co_nghiem:
+    print(&quot;Không có nghiệm phù hợp&quot;)</code></pre><p>Duyệt số gà từ 0 đến tổng số con; số chó bằng tổng số con trừ số gà. Chỉ nhận nghiệm có đúng tổng số chân. Ví dụ tự kiểm tra (không phải số liệu xác nhận của Câu 20.9): 36 con, 100 chân → 22 gà và 14 chó.</p></details>
+</article>
+<article class="card" id="exercise21-9">
+<h3>21.9. Tổng chữ số</h3><p>Viết chương trình tính tổng các chữ số của một số tự nhiên n nhập từ bàn phím.</p>
+<label for="ex21-answer-9">Bài làm của em<textarea id="ex21-answer-9" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+<label for="ex21-9-0">Tổng chữ số của 12034 <input id="ex21-9-0" type="number" step="any"></label><button class="primary" type="button" onclick="checkExercise21(9)">Kiểm tra kết quả</button><div id="ex21-feedback-9" class="feedback" role="status"></div>
+<details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>n = int(input(&quot;Nhập số tự nhiên n: &quot;))
+s = 0
+while n &gt; 0:
+    s = s + n % 10
+    n = n // 10
+print(&quot;Tổng chữ số:&quot;, s)</code></pre><p>n % 10 lấy chữ số cuối; n // 10 bỏ chữ số cuối. Với n = 0, tổng bằng 0; với n = 12034, tổng bằng 10. Đầu vào là số nguyên không âm.</p></details>
+</article>
+<article class="card" id="exercise21-10">
+<h3>21.10. Bảng số 10 × 10</h3><p>In các số tự nhiên từ 1 đến 100 thành 10 hàng, mỗi hàng có 10 số theo thứ tự từ trái qua phải, từ trên xuống dưới.</p>
+<label for="ex21-answer-10">Bài làm của em<textarea id="ex21-answer-10" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+
+<details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>i = 1
+while i &lt;= 100:
+    print(f&quot;{i:3}&quot;, end=&quot; &quot;)
+    if i % 10 == 0:
+        print()
+    i = i + 1</code></pre><p>Xuống dòng khi i chia hết cho 10. Hàng đầu có 1–10, hàng cuối có 91–100. Vòng lặp dừng khi i = 101.</p></details>
+</article>
+<article class="card" id="exercise21-11">
+<h3>21.11. Khảo sát thu nhập hộ gia đình</h3><p>Nhập lần lượt thu nhập các hộ, kết thúc khi nhập 0. Tính thu nhập bình quân và xác định các hộ có thu nhập dưới 20 triệu đồng cũng như dưới mức bình quân. Dùng đơn vị triệu đồng; số hộ khảo sát lớn hơn 0.</p>
+<label for="ex21-answer-11">Bài làm của em<textarea id="ex21-answer-11" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+<label for="ex21-11-0">Bình quân của các hộ 10, 20, 30 (triệu đồng) <input id="ex21-11-0" type="number" step="any"></label><button class="primary" type="button" onclick="checkExercise21(11)">Kiểm tra kết quả</button><div id="ex21-feedback-11" class="feedback" role="status"></div>
+<details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>thu_nhap = []
+x = float(input(&quot;Thu nhập hộ tiếp theo (triệu đồng, 0 để dừng): &quot;))
+while x != 0:
+    if x &gt; 0:
+        thu_nhap.append(x)
+    else:
+        print(&quot;Thu nhập phải dương; 0 dùng để kết thúc.&quot;)
+    x = float(input(&quot;Thu nhập hộ tiếp theo (triệu đồng, 0 để dừng): &quot;))
+
+if len(thu_nhap) == 0:
+    print(&quot;Chưa có hộ nào được khảo sát&quot;)
+else:
+    tong = 0
+    i = 0
+    while i &lt; len(thu_nhap):
+        tong = tong + thu_nhap[i]
+        i = i + 1
+    trung_binh = tong / len(thu_nhap)
+    print(&quot;Thu nhập bình quân:&quot;, trung_binh, &quot;triệu đồng&quot;)
+    i = 0
+    while i &lt; len(thu_nhap):
+        if thu_nhap[i] &lt; 20:
+            print(&quot;Hộ&quot;, i + 1, &quot;có thu nhập dưới 20 triệu đồng&quot;)
+        if thu_nhap[i] &lt; trung_binh:
+            print(&quot;Hộ&quot;, i + 1, &quot;có thu nhập dưới bình quân&quot;)
+        i = i + 1</code></pre><p>Cần lưu thu nhập để so sánh sau khi biết bình quân. Hai tiêu chí được xét riêng; một hộ có thể thỏa cả hai. Nếu đề yêu cầu đồng thời cả hai, dùng and. Với các thu nhập 10, 20, 30 rồi 0: bình quân 20 triệu; chỉ hộ 1 dưới 20 và dưới bình quân.</p></details>
+</article>
+<article class="card" id="exercise21-12">
+<h3>21.12. Nhận diện cấu trúc lập trình</h3><p>Trong chương trình giải Câu 21.11, chỉ ra các khối lệnh tương ứng với cấu trúc tuần tự, rẽ nhánh và lặp.</p>
+<label for="ex21-answer-12">Bài làm của em<textarea id="ex21-answer-12" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+
+<details><summary>Gợi ý và lời giải tham khảo</summary><p>Tuần tự: khởi tạo danh sách, nhập dữ liệu, tính trung_binh rồi in. Rẽ nhánh: if x &gt; 0, if len(thu_nhap) == 0 và các if kiểm tra thu nhập. Lặp: while x != 0 để nhập nhiều hộ; các while duyệt danh sách để tính tổng và phân loại.</p></details>
+</article>
+<article class="card" id="exercise21-13">
+<h3>21.13. Số Palindrom</h3><p>Số Palindrom có các chữ số đọc ngược vẫn bằng số ban đầu (ví dụ 121, 1345431). Viết chương trình kiểm tra một số tự nhiên nhập từ bàn phím.</p>
+<label for="ex21-answer-13">Bài làm của em<textarea id="ex21-answer-13" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+
+<details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>n = int(input(&quot;Nhập số tự nhiên n: &quot;))
+goc = n
+nguoc = 0
+while n &gt; 0:
+    nguoc = nguoc * 10 + n % 10
+    n = n // 10
+if nguoc == goc:
+    print(&quot;Là số Palindrom&quot;)
+else:
+    print(&quot;Không phải số Palindrom&quot;)</code></pre><p>Lưu số ban đầu để đối chiếu với số đảo. 121 và 1345431 là Palindrom; 120 không phải; 0 là Palindrom. Chỉ xét số nguyên không âm.</p></details>
+</article>
+<article class="card" id="exercise21-14">
+<h3>21.14. Số hoàn hảo tiếp theo</h3><p>Số hoàn hảo bằng tổng các ước thực sự (ước dương nhỏ hơn chính nó). Ví dụ: 6, 28, 496, 8128. Viết chương trình tìm số hoàn hảo đầu tiên lớn hơn số tự nhiên n nhập vào.</p>
+<label for="ex21-answer-14">Bài làm của em<textarea id="ex21-answer-14" placeholder="Viết nhận xét hoặc chương trình Python của em ở đây..."></textarea></label>
+<label for="ex21-14-0">Số hoàn hảo đầu tiên lớn hơn 6 <input id="ex21-14-0" type="number" step="any"></label><label for="ex21-14-1">Số hoàn hảo đầu tiên lớn hơn 28 <input id="ex21-14-1" type="number" step="any"></label><button class="primary" type="button" onclick="checkExercise21(14)">Kiểm tra kết quả</button><div id="ex21-feedback-14" class="feedback" role="status"></div>
+<details><summary>Gợi ý và lời giải tham khảo</summary><pre><code>n = int(input(&quot;Nhập số tự nhiên n: &quot;))
+m = n + 1
+while True:
+    tong_uoc = 0
+    if m &gt; 1:
+        tong_uoc = 1
+        d = 2
+        while d*d &lt;= m:
+            if m % d == 0:
+                tong_uoc = tong_uoc + d
+                if d != m // d:
+                    tong_uoc = tong_uoc + m // d
+            d = d + 1
+    if m &gt; 1 and tong_uoc == m:
+        print(&quot;Số hoàn hảo cần tìm:&quot;, m)
+        break
+    m = m + 1</code></pre><p>Duyệt m &gt; n, cộng các ước theo cặp d và m // d; không cộng hai lần khi d*d = m. Với n = 6, kết quả là 28; với n = 28, kết quả là 496. Đây là cách tìm kiếm phục vụ học tập, có thể rất chậm khi n lớn (đặc biệt từ 8128 trở lên). Chạy thử với số nhỏ trong Python.</p></details>
+</article><button class="primary" type="button" onclick="downloadExercises21()">Tải bài làm 21.1–21.14 (.txt)</button></section>
+</main><footer>Dựa trên Bài 21, SGK Tin học 10; phần bài tập 21.1–21.14 theo ảnh tài liệu được cung cấp.<br>Học liệu bổ sung do AI hỗ trợ biên soạn · Một tệp HTML, dùng ngoại tuyến · Giáo viên có thể linh hoạt điều chỉnh thời lượng.</footer><script>
 const $=id=>document.getElementById(id);function tab(n){document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));document.querySelectorAll('nav button').forEach((b,i)=>b.classList.toggle('active',i===n));window.scrollTo({top:0,behavior:'smooth'})}
 const situations=[['Chạy 20 vòng quanh sân.',0],['Chạy cho đến khi hết 2 giờ.',1],['Làm 5 bài tập được giao.',0],['Làm bài cho đến giờ ăn cơm.',1],['Xách 15 xô nước.',0],['Xách nước cho đến khi đầy thùng.',1]];$('warm').innerHTML=situations.map((s,i)=>`<label>${i+1}. ${s[0]} <select id="w${i}"><option value="">Chọn...</option><option value="0">Biết trước số lần</option><option value="1">Dừng theo điều kiện</option></select></label>`).join('');function checkWarm(){let n=0,lines=[];situations.forEach((s,i)=>{const v=$('w'+i).value,ok=v===String(s[1]);if(ok)n++;lines.push(`${i+1}. ${ok?'✓':'✗'} ${s[1]?'Dừng theo điều kiện; số lần thực hiện chưa biết trước.':'Số lần đã xác định trong yêu cầu.'}`)});$('warmFb').textContent=`Đúng ${n}/6.\n`+lines.join('\n')}
 let k=1,S=0,checks=0,done=false;function renderState(){$('state').textContent=`k = ${k} · S = ${S} · ${done?'Đã dừng':'Đang chờ kiểm tra'}`}function resetSim(){k=1;S=0;checks=0;done=false;$('trace').innerHTML='';$('simFb').textContent='';renderState()}$('limit').addEventListener('change',resetSim);function step(){const lim=Number($('limit').value);if(!Number.isInteger(lim)||lim<2||lim>200){$('simFb').textContent='Nhập giới hạn là số nguyên từ 2 đến 200.';return}if(done)return;const before=k,truth=k<lim;checks++;if(truth){S+=k;k+=7}else{done=true;$('simFb').textContent=`Điều kiện ${k} < ${lim} là sai. Thoát vòng lặp, in S = ${S}. Khối lệnh đã thực hiện ${checks-1} lần.`}$('trace').insertAdjacentHTML('beforeend',`<tr><td>${checks}</td><td>${before}</td><td>${truth?'Đúng':'Sai → dừng'}</td><td>${S}</td><td>${k}</td></tr>`);renderState()}function run(){const lim=Number($('limit').value);if(!Number.isInteger(lim)||lim<2||lim>200){step();return}for(let i=0;i<31&&!done;i++)step()}resetSim();
 const qs=[['while kiểm tra điều kiện khi nào?',['Trước mỗi lần thực hiện khối lệnh','Sau mỗi lần thực hiện khối lệnh','Chỉ kiểm tra một lần ở đầu chương trình'],0,'while là vòng lặp kiểm tra trước. Sau khối lệnh, chương trình quay lại kiểm tra cho lần tiếp theo.'],['Nếu điều kiện sai ngay lần kiểm tra đầu, khối lệnh chạy mấy lần?',['0 lần','1 lần','Vô hạn'],0,'Khối lệnh chỉ chạy khi điều kiện đúng; không bắt buộc chạy một lần.'],['k = 2; while k < 50: in k rồi k = k + 3. Số cuối được in?',['47','50','49'],0,'Dãy là 2, 5, …, 47. Giá trị tiếp theo là 50 nên điều kiện k < 50 sai. 49 không thuộc dãy.'],['S = 0; k = 1; while k*k < 100: S += k*k; k += 1. Tổng S?',['285','385','100'],0,'Cộng bình phương từ 1 đến 9 được 285. 385 gồm cả 10², nhưng 100 không nhỏ hơn 100.'],['k = 1; while k < 5: print(k). Vì sao lặp vô hạn?',['k không thay đổi nên điều kiện luôn đúng','Lệnh print tự làm k tăng','while không được dùng với số nguyên'],0,'k luôn bằng 1. Cần cập nhật k, ví dụ k = k + 1. print chỉ in, không làm biến tăng.'],['Cấu trúc if / else thuộc loại nào?',['Tuần tự','Rẽ nhánh','Lặp'],1,'if / else chọn nhánh theo điều kiện. Lặp dùng for / while; tuần tự thực hiện các lệnh theo thứ tự.'],['Phần tử lớn nhất của dãy 1, 4, 7, 10, … nhỏ hơn 100?',['100','98','97'],2,'Dãy có dạng 1 + 3n. 97 thuộc dãy; số tiếp theo 100 bị loại. 98 không thuộc dãy.'],['for k in range(10): in k rồi nếu k == 5 thì break. Dãy in ra?',['0 1 2 3 4','0 1 2 3 4 5','0 1 2 3 4 5 6 7 8 9'],1,'Lệnh in đứng trước kiểm tra break, nên 5 vẫn được in. break dừng vòng lặp ngay sau đó.']];
-$('quiz').innerHTML=qs.map((q,i)=>`<div class="card"><h3>Câu ${i+1}. ${q[0]}</h3>${q[1].map((o,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}"><span>${String.fromCharCode(65+j)}. ${o}</span></label>`).join('')}<div id="f${i}" class="feedback"></div></div>`).join('');function grade(){let score=0,answered=0;qs.forEach((q,i)=>{let v=document.querySelector(`input[name=q${i}]:checked`);if(v)answered++;let ok=v&&Number(v.value)===q[2];if(ok)score++;$('f'+i).textContent=(ok?'✓ Đúng. ':v?'✗ Chưa đúng. ':'Chưa trả lời. ')+`Đáp án ${String.fromCharCode(65+q[2])}. ${q[3]}`});$('score').textContent=`Kết quả: ${score}/${qs.length} điểm · Đã trả lời ${answered}/${qs.length} câu. ${score===qs.length?'Em đã nắm tốt kiến thức!':'Đọc phản hồi, sửa đáp án và chấm lại để củng cố.'}`}function clearQuiz(){document.querySelectorAll('#quiz input').forEach(e=>e.checked=false);qs.forEach((_,i)=>$('f'+i).textContent='');$('score').textContent=''}function checkEven(){const ok=$('cond').value==='k <= 100'&&Number($('inc').value)===2;$('evenFb').textContent=ok?'✓ Chính xác! Tổng là 2550; có 50 số chẵn.':'Cần k <= 100 để gồm cả 100 và bước tăng 2 để chỉ cộng số chẵn. Tổng đúng: 2550.'}function gridRun(){if($('newline').value!=='k % 10 == 0'){$('gridFb').textContent='Chọn k % 10 == 0: các số 10, 20, …, 100 là cuối mỗi hàng. k == 10 chỉ xuống dòng một lần; k % 10 == 1 xuống dòng ở đầu nhóm.';$('numbers').hidden=true;return}$('gridFb').textContent='✓ Đúng. Mỗi bội của 10 kết thúc một hàng; k cuối cùng bằng 101.';$('numbers').hidden=false;$('numbers').textContent=Array.from({length:10},(_,r)=>Array.from({length:10},(_,c)=>String(r*10+c+1).padStart(3)).join(' ')).join('\n')}function checkCount(){let count=0;for(let i=0;i<100;i++)if(i%5===0||i%3===1)count++;$('countFb').textContent=(Number($('countAns').value)===count&&$('countAns').value!==''?'✓ Chính xác. ':'Chưa đúng. ')+`Có ${count} số: 20 số chia hết cho 5, 33 số chia 3 dư 1, trùng 6 số. Vậy 20 + 33 − 6 = 47.`}function downloadNotes(){const notes=Array.from(document.querySelectorAll('textarea')).map((t,i)=>`${i+1}. ${t.value||'(Chưa trả lời)'}`).join('\n\n');const u=URL.createObjectURL(new Blob(['BÀI 21 — PHIẾU RỜI LỚP\n\n'+notes],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download='Phieu_roi_lop_Bai21.txt';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+$('quiz').innerHTML=qs.map((q,i)=>`<div class="card"><h3>Câu ${i+1}. ${q[0]}</h3>${q[1].map((o,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}"><span>${String.fromCharCode(65+j)}. ${o}</span></label>`).join('')}<div id="f${i}" class="feedback"></div></div>`).join('');function grade(){let score=0,answered=0;qs.forEach((q,i)=>{let v=document.querySelector(`input[name=q${i}]:checked`);if(v)answered++;let ok=v&&Number(v.value)===q[2];if(ok)score++;$('f'+i).textContent=(ok?'✓ Đúng. ':v?'✗ Chưa đúng. ':'Chưa trả lời. ')+`Đáp án ${String.fromCharCode(65+q[2])}. ${q[3]}`});$('score').textContent=`Kết quả: ${score}/${qs.length} điểm · Đã trả lời ${answered}/${qs.length} câu. ${score===qs.length?'Em đã nắm tốt kiến thức!':'Đọc phản hồi, sửa đáp án và chấm lại để củng cố.'}`}function clearQuiz(){document.querySelectorAll('#quiz input').forEach(e=>e.checked=false);qs.forEach((_,i)=>$('f'+i).textContent='');$('score').textContent=''}function checkEven(){const ok=$('cond').value==='k <= 100'&&Number($('inc').value)===2;$('evenFb').textContent=ok?'✓ Chính xác! Tổng là 2550; có 50 số chẵn.':'Cần k <= 100 để gồm cả 100 và bước tăng 2 để chỉ cộng số chẵn. Tổng đúng: 2550.'}function gridRun(){if($('newline').value!=='k % 10 == 0'){$('gridFb').textContent='Chọn k % 10 == 0: các số 10, 20, …, 100 là cuối mỗi hàng. k == 10 chỉ xuống dòng một lần; k % 10 == 1 xuống dòng ở đầu nhóm.';$('numbers').hidden=true;return}$('gridFb').textContent='✓ Đúng. Mỗi bội của 10 kết thúc một hàng; k cuối cùng bằng 101.';$('numbers').hidden=false;$('numbers').textContent=Array.from({length:10},(_,r)=>Array.from({length:10},(_,c)=>String(r*10+c+1).padStart(3)).join(' ')).join('\n')}function checkCount(){let count=0;for(let i=0;i<100;i++)if(i%5===0||i%3===1)count++;$('countFb').textContent=(Number($('countAns').value)===count&&$('countAns').value!==''?'✓ Chính xác. ':'Chưa đúng. ')+`Có ${count} số: 20 số chia hết cho 5, 33 số chia 3 dư 1, trùng 6 số. Vậy 20 + 33 − 6 = 47.`}function downloadNotes(){const notes=Array.from(document.querySelectorAll('.panel:nth-of-type(4) textarea')).map((t,i)=>`${i+1}. ${t.value||'(Chưa trả lời)'}`).join('\n\n');const u=URL.createObjectURL(new Blob(['BÀI 21 — PHIẾU RỜI LỚP\n\n'+notes],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download='Phieu_roi_lop_Bai21.txt';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 
 let animTimer=null,animPhase=0,animK=null,animN=0,animDone=false,animText=[];
 function animPause(){if(animTimer!==null)clearInterval(animTimer);animTimer=null;$('animPlay').textContent='▶ Chạy tự động'}
@@ -62,4 +268,35 @@ else if(animPhase===4){animHighlight(1,4);$('animExplain').textContent='Đã h�
 else{animHighlight(4,4);animText.push('Đã thoát vòng lặp');$('animOutput').textContent=animText.join('\n');$('animExplain').textContent=`Thực hiện lệnh sau while. Kết thúc: k = ${animK}, thân vòng lặp được thực hiện ${animN} lần.`;animFinish()}}
 function animPlay(){if(animDone)return;animPause();$('animPlay').textContent='▶ Đang chạy…';animTimer=setInterval(animStep,Number($('animSpeed').value))}
 $('animExample').addEventListener('change',animReset);$('animSpeed').addEventListener('change',()=>{if(animTimer!==null)animPlay()});animReset();
+
+const exercise21Answers = {"ex21-1-0": 4, "ex21-1-1": 5, "ex21-1-2": 0, "ex21-3-0": 55, "ex21-3-1": 55, "ex21-4-0": 355, "ex21-6-0": 4, "ex21-7-0": 47, "ex21-9-0": 10, "ex21-11-0": 20, "ex21-14-0": 28, "ex21-14-1": 496};
+function checkExercise21(n) {
+    const keys = Object.keys(exercise21Answers).filter(key => key.startsWith('ex21-' + n + '-'));
+    let correct = 0;
+    const feedback = keys.map((key, i) => {
+        const value = $(key).value.trim();
+        if (!value) return (i + 1) + '. Em chưa nhập câu trả lời.';
+        if (!$(key).validity.valid || !Number.isFinite(Number(value))) return (i + 1) + '. Hãy nhập một số hợp lệ.';
+        if (Number(value) === exercise21Answers[key]) {
+            correct++;
+            return (i + 1) + '. ✓ Chính xác.';
+        }
+        return (i + 1) + '. Chưa đúng. Hãy theo dõi lại giá trị biến và điều kiện dừng.';
+    });
+    $('ex21-feedback-' + n).textContent = 'Đúng ' + correct + '/' + keys.length + ' kết quả.\n' + feedback.join('\n');
+}
+function downloadExercises21() {
+    const notes = Array.from($('exercises21').querySelectorAll('article')).map(card => {
+        const answer = card.querySelector('textarea').value.trim() || '(Chưa làm)';
+        const results = Array.from(card.querySelectorAll('input')).map(input =>
+            input.closest('label').textContent.trim() + ': ' + (input.value || '(Chưa trả lời)'));
+        return card.querySelector('h3').textContent + '\n' + answer + '\n' + results.join('\n');
+    }).join('\n\n');
+    const url = URL.createObjectURL(new Blob(['BÀI 21 — BÀI TẬP VÀ THỰC HÀNH\n\n' + notes], {type: 'text/plain;charset=utf-8'}));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'Bai21_BaiTap_BaiLam.txt';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 </script></html>
