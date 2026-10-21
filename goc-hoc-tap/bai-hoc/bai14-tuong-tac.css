@@ -69,6 +69,15 @@
 .sql-fill-card .btn { min-height:42px; padding:8px 12px; font-size:.86rem; }
 .sql-fill-actions { padding:12px 0; }
 .sql-fill-empty { padding:12px; color:var(--muted); }
+.sql-fill-level-description { padding:12px 14px; background:var(--cyan-soft); color:var(--navy); border-radius:9px; }
+.sql-fill-data { margin-top:18px; padding-top:14px; padding-bottom:14px; }
+.sql-fill-data summary { min-height:44px; display:list-item; padding:8px 0; color:var(--navy); font-weight:800; cursor:pointer; }
+.sql-fill-data .grid-2 > * { min-width:0; }
+.sql-fill-task { margin:0 0 12px; color:var(--ink); }
+.sql-fill-reference { margin-bottom:12px; }
+.sql-fill-solution { margin-top:14px; padding-top:10px; border-top:1px solid var(--line); }
+.sql-fill-solution h4 { margin:0 0 8px; color:var(--navy); }
+.sql-fill-reference pre.sql, .sql-fill-solution pre.sql { white-space:pre-wrap; overflow-wrap:anywhere; }
 @media (max-width:1000px) {
   .sql-map-branches { grid-template-columns:repeat(2,minmax(0,1fr)); padding-left:20px; border-left:2px solid #9fb8c6; }
   .sql-map-branches::before { display:none; }
