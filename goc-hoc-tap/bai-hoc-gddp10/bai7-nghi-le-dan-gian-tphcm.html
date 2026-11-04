@@ -23,6 +23,66 @@
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
     @media print{.top,.hero-actions,.jump,.game-controls,.timer button,.toast{display:none!important}body{background:white}.wrap{max-width:none}.hero{box-shadow:none;print-color-adjust:exact}section{box-shadow:none;break-inside:avoid}}
   </style>
++<style>
+.journey{padding:clamp(16px,3vw,24px);border:1px solid #e4d096;border-radius:20px;background:linear-gradient(140deg,#fff8e7,#f5e8cf);box-shadow:0 12px 30px #39251a0b}
+.journey-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.journey-head h3{font:700 1.3rem Georgia,serif;color:var(--red);margin:6px 0 3px}
+.journey-head p{margin:0;color:var(--soft);font-size:.86rem;max-width:55ch}
+.journey-kicker{display:inline-block;padding:4px 8px;border-radius:7px;background:#f4df9e;color:#634914;font-size:.67rem;font-weight:900;letter-spacing:.1em}
+.journey-tools{display:grid;grid-template-columns:minmax(180px,.8fr) minmax(260px,1.2fr);gap:12px;align-items:start;margin:16px 0}
+.team-picker,.team-board{padding:12px;border:1px solid var(--line);border-radius:14px;background:#fffdf7}
+.team-picker label{display:block;font-size:.76rem;font-weight:900;color:var(--soft);margin-bottom:5px}
+.team-picker select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-weight:700}
+.team-board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.team-row{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:7px 9px;border-radius:9px;background:#f7f1e5;font-size:.75rem}
+.team-row.current{outline:2px solid var(--gold);background:#fff4d4}
+.team-row strong{color:var(--red);white-space:nowrap}
+.journey-progress{height:10px;border-radius:999px;background:#e7ddc8;overflow:hidden;margin:14px 0 6px}
+.journey-progress span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#3f7965,#75a75c);transition:width .35s ease}
+.journey-progress-label{display:flex;justify-content:space-between;gap:10px;color:var(--soft);font-size:.75rem;font-weight:800}
+.station-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:15px 0}
+.station-card{display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-width:0;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fffdf8;transition:transform .15s,border-color .15s,opacity .15s}
+.station-card.open{border:2px solid var(--gold);background:#fff8e3;box-shadow:0 5px 16px #b47e2530}
+.station-card.cleared{border-color:#a8c7b1;background:#edf5ee}
+.station-card.locked{opacity:.7;background:#f3f0e8}
+.station-number{width:31px;height:31px;display:grid;place-items:center;border-radius:50%;background:#eee3ce;color:var(--red);font-weight:900}
+.station-card.open .station-number{background:var(--gold);color:#38271b}
+.station-card.cleared .station-number{background:var(--green);color:white}
+.station-card h4{font:700 .98rem Georgia,serif;margin:0;color:var(--ink)}
+.station-card p{font-size:.73rem;line-height:1.45;margin:0;color:var(--soft);flex:1}
+.station-stamp{font-size:.67rem;font-weight:900;color:var(--green);min-height:1.3em}
+.station-visit{width:100%;border:0;border-radius:9px;padding:8px 7px;background:var(--red);color:white;font-size:.75rem;font-weight:900}
+.station-visit:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+.station-visit:disabled{background:#d6d0c4;color:#77736b;cursor:default}
+.mission-intro,.mission-panel,.finish-panel{margin-top:12px;padding:16px;border-radius:15px;background:#fffdf8;border:1px solid var(--line)}
+.mission-intro{color:var(--soft);font-weight:700}
+.mission-panel{border-color:#d7bf7b;background:#fffaf0}
+.mission-label{font-size:.68rem;letter-spacing:.1em;font-weight:900;color:var(--red)}
+.mission-panel h4{font:700 1.25rem Georgia,serif;margin:5px 0;color:var(--ink)}
+.mission-panel p{margin:5px 0 12px;color:var(--soft)}
+.mission-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.mission-option{padding:10px 12px;border:1px solid var(--line);border-radius:11px;text-align:left;background:white;color:var(--ink);font-weight:700;font-size:.84rem}
+.mission-option:hover{border-color:var(--gold)}
+.mission-option.selected{border-color:var(--red);background:#f8e8df}
+.mission-option.correct{border-color:#72a986;background:#e5f2e8}
+.mission-option.wrong{border-color:#d99080;background:#fae7e1}
+.mission-feedback{min-height:26px;margin:9px 0!important;font-weight:800}
+.mission-feedback.good{color:var(--green)}
+.mission-feedback.bad{color:var(--red)}
+.mission-actions{display:flex;flex-wrap:wrap;gap:8px}
+.finish-panel{display:flex;align-items:flex-start;gap:12px;border-color:#b9d5c0;background:linear-gradient(135deg,#edf7ee,#fffaf0)}
+.finish-medal{font-size:2.1rem;line-height:1}
+.finish-panel h4{font:700 1.25rem Georgia,serif;color:var(--green);margin:0 0 4px}
+.finish-panel p{margin:0;color:var(--soft)}
+.stamp-collection{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}
+.stamp-pill{padding:5px 8px;border-radius:999px;background:#dcece4;color:#285b49;font-size:.72rem;font-weight:900}
+.journey-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:13px}
+.journey-bottom small{color:var(--soft)}
+.journey-reset{border:1px solid #b99b66;border-radius:999px;padding:7px 11px;background:transparent;color:#6c5429;font-size:.75rem;font-weight:800}
+[hidden]{display:none!important}
+@media(max-width:760px){.station-map{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){.journey-tools{grid-template-columns:1fr}.mission-options{grid-template-columns:1fr}.team-board{grid-template-columns:1fr 1fr}.station-card{padding:10px}.station-card h4{font-size:.9rem}}
+</style>
 </head>
 <body>
   <header class="top"><div class="top-inner"><a class="back" href="index.html">← Danh mục Giáo dục địa phương 10</a><span class="top-tag">BÀI 7 · NỘI DUNG 2 · TIẾT 9</span></div></header>
@@ -56,11 +116,25 @@
     </section>
 
     <section id="tro-choi">
-      <div class="section-head"><span class="section-icon">⚡</span><div><h2>Trò chơi: “Thám tử lễ hội”</h2><p>Chọn đáp án nhanh. Mỗi câu đúng được 10 điểm; cả đội cùng cổ vũ nhé!</p></div></div>
-      <div class="game" role="group" aria-label="Trò chơi trắc nghiệm">
-        <div class="game-top"><strong id="roundLabel">Câu 1 / 5</strong><span class="score">⭐ Điểm: <span id="score">0</span></span></div>
-        <div class="question" id="question"></div><div class="choices" id="choices"></div><p class="feedback" id="feedback" aria-live="polite"></p>
-        <div class="game-controls"><button class="btn btn-red" id="nextBtn" hidden>Câu tiếp theo →</button><button class="btn btn-outline" id="restartBtn" hidden>Chơi lại 🔄</button></div>
+      <div class="section-head"><span class="section-icon">🗺️</span><div><h2>Trò chơi: “Hành trình về nguồn”</h2><p>Chia lớp thành 4 đội. Mỗi đội ghé 4 trạm theo thứ tự, đúng nhiệm vụ để gom điểm và dấu mộc.</p></div></div>
+      <div class="journey" role="group" aria-label="Hành trình qua bốn trạm">
+        <div class="journey-head"><div><span class="journey-kicker">BẢN ĐỒ CỘI NGUỒN</span><h3>Đội mình đã đi đến đâu?</h3><p>Mỗi trạm đúng nhận <strong>25 điểm</strong> và một dấu mộc. Hoàn thành cả hành trình để mở huy hiệu Đại sứ cội nguồn.</p></div></div>
+        <div class="journey-tools">
+          <div class="team-picker"><label for="teamSelect">ĐỘI ĐANG CHƠI</label><select id="teamSelect"><option value="0">Đội 1 · Mầm xanh</option><option value="1">Đội 2 · Nước nguồn</option><option value="2">Đội 3 · Gieo hạt</option><option value="3">Đội 4 · Tri ân</option></select></div>
+          <div><div class="team-board" id="teamBoard" aria-label="Bảng điểm các đội"></div></div>
+        </div>
+        <div class="journey-progress"><span id="journeyFill"></span></div>
+        <div class="journey-progress-label"><span id="journeyCount">0/4 trạm</span><span><b id="journeyPoints">0</b> điểm thưởng</span></div>
+        <div class="station-map" id="stationMap"></div>
+        <div class="mission-intro" id="stationIntro">Chọn trạm đang mở trên bản đồ để bắt đầu. Mỗi đội đi theo lộ trình riêng!</div>
+        <div class="mission-panel" id="stationMission" hidden>
+          <span class="mission-label" id="missionLabel"></span><h4 id="missionTitle"></h4><p id="missionPrompt"></p>
+          <div class="mission-options" id="missionOptions"></div>
+          <p class="mission-feedback" id="missionFeedback" aria-live="polite"></p>
+          <div class="mission-actions"><button class="btn btn-red" id="missionCheck" hidden>Chốt đáp án</button><button class="btn btn-gold" id="missionClaim" hidden>Nhận dấu mộc +25 ⭐</button></div>
+        </div>
+        <div class="finish-panel" id="journeyFinish" hidden></div>
+        <div class="journey-bottom"><small>⏳ Mỗi đội có thể thảo luận 20 giây tại mỗi trạm.</small><button class="journey-reset" id="journeyReset">Đặt lại điểm các đội</button></div>
       </div>
     </section>
 
@@ -79,21 +153,28 @@
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
-    const questions=[
-      {q:"Lễ Kỳ yên ở đình chủ yếu là lễ gì?",a:["Lễ cầu an, tế Thành Hoàng","Lễ mừng năm học mới","Lễ khai trương chợ","Lễ hội thể thao"],ok:0,why:"Đúng rồi! Kỳ yên là lễ cầu an và tế Thành Hoàng lớn nhất trong năm ở đình."},
-      {q:"Lễ Kỳ yên thường có hai phần nào?",a:["Khai mạc và bế mạc","Phần lễ và phần hội","Thi đấu và trao giải","Học tập và lao động"],ok:1,why:"Chính xác: phần lễ trang trọng, phần hội sôi nổi."},
-      {q:"Miếu/miễu thường thờ ai?",a:["Các vị thần","Chỉ các vị vua","Chỉ tổ tiên trong gia đình","Các nhân vật trong truyện cổ tích"],ok:0,why:"Đúng! Miếu thờ các vị thần, tên gọi thường gắn với vị được thờ."},
-      {q:"Ngày chính của lễ Giỗ Tổ Hùng Vương là ngày nào?",a:["Mùng 1 tháng Giêng âm lịch","Mùng 10 tháng 3 âm lịch","Rằm tháng Bảy âm lịch","Ngày 2 tháng 9 dương lịch"],ok:1,why:"Đúng rồi, mùng 10 tháng 3 âm lịch."},
-      {q:"Điểm chung của những nghi lễ vừa tìm hiểu là gì?",a:["Chỉ để mua bán","Gợi lòng biết ơn và hướng về cội nguồn","Chỉ dành cho người lớn tuổi","Không liên quan đến cộng đồng"],ok:1,why:"Tuy hình thức khác nhau, các nghi lễ đều giúp lưu giữ ký ức và lòng biết ơn."}
-    ];
-    let qi=0,score=0,locked=false,timerId=null,seconds=60;
-    const $=id=>document.getElementById(id), toast=t=>{const el=$("toast");el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2100)};
-    function renderQuestion(){locked=false;const x=questions[qi];$("roundLabel").textContent=`Câu ${qi+1} / ${questions.length}`;$("question").textContent=x.q;$("feedback").textContent="";$("feedback").className="feedback";$("choices").innerHTML="";$("nextBtn").hidden=true;$("restartBtn").hidden=true;x.a.forEach((txt,i)=>{const b=document.createElement("button");b.className="choice";b.textContent=`${String.fromCharCode(65+i)}. ${txt}`;b.addEventListener("click",()=>answer(i,b));$("choices").appendChild(b)});$("score").textContent=score}
-    function answer(i,button){if(locked)return;locked=true;const x=questions[qi];[...$("choices").children].forEach((b,n)=>{b.disabled=true;if(n===x.ok)b.classList.add("correct")});if(i===x.ok){score+=10;$("feedback").textContent="✅ "+x.why;$("feedback").classList.add("good");toast("+10 điểm! Cả đội quá nhanh! 🎉")}else{$("feedback").textContent="💡 Chưa đúng. "+x.why;$("feedback").classList.add("bad");button.classList.add("wrong")}$("score").textContent=score;if(qi<questions.length-1)$("nextBtn").hidden=false;else{$("feedback").textContent+=` Kết thúc: ${score}/50 điểm!`;$("restartBtn").hidden=false;if(score>=40)toast("Đội mình là Đại sứ cội nguồn! 🏅")}}
-    $("nextBtn").addEventListener("click",()=>{qi++;renderQuestion()});$("restartBtn").addEventListener("click",()=>{qi=0;score=0;renderQuestion()});renderQuestion();
-    document.querySelectorAll(".flip").forEach(b=>b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")==="true";b.setAttribute("aria-pressed",String(!on))}));
-    $("timerBtn").addEventListener("click",()=>{if(timerId){clearInterval(timerId);timerId=null;$("timerBtn").textContent="Tiếp tục ▶️";$("timerMsg").textContent="Đã tạm dừng";return}if(seconds===0)seconds=60;$("timerBtn").textContent="Tạm dừng ⏸️";$("timerMsg").textContent="Bản tin đang lên sóng!";timerId=setInterval(()=>{seconds--;$("timer").textContent=`00:${String(seconds).padStart(2,"0")}`;if(seconds<=0){clearInterval(timerId);timerId=null;$("timerBtn").textContent="Bắt đầu lại 🔄";$("timerMsg").textContent="Hết giờ — vỗ tay cho các đội!";toast("Hết giờ phát sóng! 👏")}},1000)});
-    $("exitBtn").addEventListener("click",()=>{const good=$("exitChoice").value==="b";$("exitAnswer").classList.add("show");$("exitAnswer").textContent=good?"Chính xác! Mỗi nghi lễ kể một câu chuyện về những người đi trước và cộng đồng hôm nay.":"Gợi ý: chọn ý nói về lòng biết ơn, ký ức và sự gắn kết cộng đồng nhé.";if(good)toast("Vé ra cửa hợp lệ! 🎫")});
-  </script>
+const $=id=>document.getElementById(id);
+const cfg={"key":"bai7-hanh-trinh","unit":"trạm","badge":"Đại sứ cội nguồn","teams":["Đội 1 · Mầm xanh","Đội 2 · Nước nguồn","Đội 3 · Gieo hạt","Đội 4 · Tri ân"],"stations":[{"title":"Đình làng","short":"Nơi cộng đồng gửi gắm niềm tin","question":"Đình làng thường thờ ai?","choices":["Thành hoàng làng","Tổ tiên của từng gia đình","Người khai sáng nghề kim hoàn","Nhân vật truyện cổ tích"],"answer":0,"explain":"Đình thường thờ Thành hoàng và là nơi sinh hoạt chung của cộng đồng."},{"title":"Lễ Kỳ yên","short":"Tìm hiểu phần lễ và phần hội","question":"Lễ Kỳ yên thường có những phần nào?","choices":["Phần lễ trang trọng và phần hội sôi nổi","Thi đấu thể thao và trao giải","Khai giảng và bế giảng","Học tập và lao động"],"answer":0,"explain":"Lễ Kỳ yên thường gồm phần lễ và phần hội."},{"title":"Miếu và đền","short":"Phân biệt không gian thờ tự","question":"Miếu thường thờ đối tượng nào?","choices":["Các vị thần","Chỉ các vị vua","Chỉ tổ tiên trong gia đình","Nhân vật truyện cổ"],"answer":0,"explain":"Miếu thường thờ các vị thần; tên gọi thường gắn với vị được thờ."},{"title":"Giỗ Tổ Hùng Vương","short":"Nhớ ngày hướng về cội nguồn","question":"Ngày chính của Giỗ Tổ Hùng Vương là ngày nào?","choices":["Mùng 1 tháng Giêng âm lịch","Mùng 10 tháng 3 âm lịch","Rằm tháng Bảy âm lịch","Ngày 2 tháng 9 dương lịch"],"answer":1,"explain":"Ngày chính là mùng 10 tháng 3 âm lịch."}]};
+const toast=m=>{const e=$("toast");if(!e)return;e.textContent=m;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2100)};
+const key="gddp10-"+cfg.key, fresh=()=>({teams:cfg.teams.map(()=>({progress:0,points:0}))});
+let game;try{game=JSON.parse(sessionStorage.getItem(key))||fresh()}catch(_){game=fresh()}
+if(!game.teams||game.teams.length!==cfg.teams.length)game=fresh();
+game.teams=game.teams.map(t=>({progress:Math.max(0,Math.min(4,+t.progress||0)),points:Math.max(0,+t.points||0)}));
+let team=0,active=null,chosen=null,solved=false;
+const save=()=>{try{sessionStorage.setItem(key,JSON.stringify(game))}catch(_){}};
+function renderBoard(){ $("teamBoard").innerHTML=game.teams.map((t,i)=>'<div class="team-row'+(i===team?' current':'')+'"><span>'+cfg.teams[i]+'</span><strong>'+t.points+' điểm · '+t.progress+'/4</strong></div>').join("")}
+function renderMap(){const n=game.teams[team].progress;$("stationMap").innerHTML=cfg.stations.map((s,i)=>{const done=i<n,open=i===n&&n<4,cls=done?'cleared':open?'open':'locked',label=done?'Đã đóng dấu ✓':open?'Ghé '+cfg.unit:'Chưa mở';return '<article class="station-card '+cls+'"><span class="station-number">'+(done?'✓':i+1)+'</span><h4>'+s.title+'</h4><p>'+s.short+'</p><span class="station-stamp">'+(done?'✦ Đã nhận dấu mộc':open?'★ Trạm kế tiếp':'🔒')+'</span><button class="station-visit" data-i="'+i+'"'+(open?'':' disabled')+'>'+label+'</button></article>'}).join("");document.querySelectorAll(".station-visit:not(:disabled)").forEach(b=>b.addEventListener("click",()=>openStation(+b.dataset.i)))}
+function render(){const t=game.teams[team],n=t.progress;$("journeyFill").style.width=(n*25)+"%";$("journeyCount").textContent=n+"/4 "+cfg.unit;$("journeyPoints").textContent=t.points;renderBoard();renderMap();$("stationMission").hidden=true;$("journeyFinish").hidden=n<4;$("stationIntro").hidden=n>=4;$("stationIntro").textContent=n>=4?"":(n===0?"Đội mình sẵn sàng chưa? Ghé trạm đầu tiên để bắt đầu!":"Đội mình đã nhận "+n+" dấu mộc. Ghé "+cfg.unit+" tiếp theo để đi tiếp!");if(n>=4)$("journeyFinish").innerHTML='<span style="font-size:2rem">🏅</span><div><strong>Chúc mừng '+cfg.teams[team]+'!</strong><br>Đội đạt '+t.points+' điểm và nhận huy hiệu <b>'+cfg.badge+'</b>.</div>';active=null;chosen=null;solved=false}
+function openStation(i){if(i!==game.teams[team].progress||i>=4)return;active=i;chosen=null;solved=false;const s=cfg.stations[i];$("stationIntro").hidden=true;$("journeyFinish").hidden=true;$("stationMission").hidden=false;$("missionLabel").textContent=cfg.unit.toUpperCase()+" "+(i+1)+" · THẢO LUẬN 20 GIÂY";$("missionTitle").textContent=s.title;$("missionPrompt").textContent=s.question;$("missionFeedback").textContent="";$("missionFeedback").className="mission-feedback";$("missionCheck").hidden=true;$("missionClaim").hidden=true;$("missionOptions").innerHTML=s.choices.map((x,j)=>'<button type="button" class="mission-option" data-j="'+j+'">'+String.fromCharCode(65+j)+'. '+x+'</button>').join("");document.querySelectorAll(".mission-option").forEach(b=>b.addEventListener("click",()=>{if(solved)return;chosen=+b.dataset.j;document.querySelectorAll(".mission-option").forEach(q=>q.classList.toggle("selected",q===b));$("missionCheck").hidden=false;$("missionFeedback").textContent="";$("missionFeedback").className="mission-feedback"}))}
+$("missionCheck").addEventListener("click",()=>{if(active===null||chosen===null||solved)return;const s=cfg.stations[active];if(chosen===s.answer){solved=true;document.querySelectorAll(".mission-option").forEach((b,i)=>{b.disabled=true;if(i===s.answer)b.classList.add("correct")});$("missionFeedback").textContent="Chính xác! "+s.explain;$("missionFeedback").className="mission-feedback good";$("missionCheck").hidden=true;$("missionClaim").hidden=false}else{const b=document.querySelector('.mission-option[data-j="'+chosen+'"]');if(b)b.classList.add("wrong");$("missionFeedback").textContent="Chưa đúng, đội hãy trao đổi thêm rồi chọn lại nhé.";$("missionFeedback").className="mission-feedback bad"}});
+$("missionClaim").addEventListener("click",()=>{if(!solved||active===null)return;game.teams[team].progress++;game.teams[team].points+=25;save();toast("Nhận dấu mộc thành công! +25 điểm ⭐");render()});
+$("teamSelect").addEventListener("change",e=>{team=+e.target.value;render()});
+$("journeyReset").addEventListener("click",()=>{if(!confirm("Đặt lại điểm và dấu mộc của cả 4 đội?"))return;game=fresh();team=0;$("teamSelect").value="0";save();render();toast("Đã sẵn sàng cho lượt chơi mới!")});
+render();
+document.querySelectorAll(".flip").forEach(b=>b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")==="true";b.setAttribute("aria-pressed",String(!on))}));
+let timerId=null,seconds=60;
+$("timerBtn").addEventListener("click",()=>{if(timerId){clearInterval(timerId);timerId=null;$("timerBtn").textContent="Tiếp tục ⏯";$("timerMsg").textContent="Đã tạm dừng";return}if(seconds===0)seconds=60;$("timerBtn").textContent="Tạm dừng ⏸";$("timerMsg").textContent="Bản tin đang lên sóng!";timerId=setInterval(()=>{seconds--;$("timer").textContent="00:"+String(seconds).padStart(2,"0");if(seconds<=0){clearInterval(timerId);timerId=null;$("timerBtn").textContent="Bắt đầu lại ↻";$("timerMsg").textContent="Hết giờ – vỗ tay cho các đội!";toast("Hết giờ phát sóng! 🎉")}},1000)});
+$("exitBtn").addEventListener("click",()=>{const good=$("exitChoice").value==="b";$("exitAnswer").classList.add("show");$("exitAnswer").textContent=good?"Chính xác! Mỗi nghi lễ kể câu chuyện về người đi trước và cộng đồng hôm nay.":"Gợi ý: chọn ý nói về lòng biết ơn, ký ức và sự gắn kết cộng đồng nhé.";if(good)toast("Mở được cánh cửa! 🎉")});
+</script>
 </body>
 </html>
