@@ -348,6 +348,9 @@
   .detail-block { margin-bottom: 0.55rem; }
   .detail-block p { margin: 0; font-size: 0.82rem; line-height: 1.55; color: var(--ink-muted); }
   .detail-block:last-child { margin-bottom: 0; }
+  .lesson-open { display: inline-block; margin-top: 0.6rem; padding: 0.6rem 0.85rem; border: 1px solid var(--accent); border-radius: 9px; color: var(--ink); text-decoration: none; font-size: 0.82rem; font-weight: 700; background: var(--surface); }
+  .lesson-open:hover { text-decoration: underline; }
+  .lesson-open:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
   @media (prefers-reduced-motion: reduce) {
     .children-grid, .chevron, .node-card, .exam-pill { transition: none !important; animation: none !important; }
@@ -410,6 +413,8 @@ function el(tag, cls, text) {
   return e;
 }
 
+const LESSON_RESOURCES = {"l-11":{"number":9,"href":"goc-hoc-tap/bai-hoc-gddp10/bai9-bao-ton-gia-tri-nghi-le.html"},"l-12":{"number":10,"href":"goc-hoc-tap/bai-hoc-gddp10/bai10-giai-phap-bao-ton-nghi-le.html"},"l-13":{"number":11,"href":"goc-hoc-tap/bai-hoc-gddp10/bai11-du-an-tiep-noi-tri-an.html"}};
+
 function renderLessonDetail(lesson) {
   const wrapEl = el('div', 'lesson-detail');
 
@@ -425,6 +430,15 @@ function renderLessonDetail(lesson) {
     block.appendChild(el('span', 'detail-label', 'Nội dung'));
     block.appendChild(el('p', null, lesson.content));
     wrapEl.appendChild(block);
+  }
+
+  const resource = LESSON_RESOURCES[lesson.id];
+  if (resource) {
+    const link = el('a', 'lesson-open', 'Mở Bài ' + resource.number + ' · Bài giảng & trò chơi →');
+    link.href = resource.href;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    wrapEl.appendChild(link);
   }
 
   return wrapEl;
